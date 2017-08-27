@@ -424,11 +424,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         return doc
 
     def getDoc(s):
-        if not configBE.gesturesFileExists:
-            return ui.message(_("No braille display supported found."))
         doc = u''
-        doc += u'<h1>' + _('{0}\'s documentation{1}: {2} braille display').format(
-            configBE._addonName, configBE.sep, configBE.curBD.capitalize()) + '</h1>'
+        doc += u'<h1>' + _('{0}\'s documentation{1}{2}').format(
+            configBE._addonName, configBE.sep, ': '+_('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '') + '</h1>'
         doc += u'<p>Version {0}<br />{1}<br />{2}</p>'.format(
             configBE._addonVersion,
             configBE._addonAuthor.replace(
@@ -442,63 +440,69 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             configBE._addonURL +
             '</a>')
         doc += '<pre>' + configBE._addonDesc + '</pre>'
-        mKB = OrderedDict()
-        mNV = OrderedDict()
-        mW = OrderedDict()
-        for g in configBE.iniGestures['globalCommands.GlobalCommands'].keys():
-            if 'kb:' in g:
-                if '+' in g:
-                    mW[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
+        if configBE.gesturesFileExists:
+            mKB = OrderedDict()
+            mNV = OrderedDict()
+            mW = OrderedDict()
+            for g in configBE.iniGestures['globalCommands.GlobalCommands'].keys():
+                if 'kb:' in g:
+                    if '+' in g:
+                        mW[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
+                    else:
+                        mKB[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
                 else:
-                    mKB[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
-            else:
-                mNV[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
-        doc += ('<h2>' + _('Simple keys') +
-                ' (%s)</h2>') % str(len(mKB))
-        doc += s.translateLst(mKB)
-        doc += ('<h2>' + _('Usual shortcuts') +
-                ' (%s)</h2>') % str(len(mW))
-        doc += s.translateLst(mW)
+                    mNV[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
+            doc += ('<h2>' + _('Simple keys') +
+                    ' (%s)</h2>') % str(len(mKB))
+            doc += s.translateLst(mKB)
+            doc += ('<h2>' + _('Usual shortcuts') +
+                    ' (%s)</h2>') % str(len(mW))
+            doc += s.translateLst(mW)
 
-        doc += ('<h2>' + _('Standard NVDA commands') +
-                ' (%s)</h2>') % str(len(mNV))
-        doc += s.translateLst(mNV)
-        doc += '<h2>{0} ({1})</h2>'.format(_('Modifier keys'), len(configBE.iniProfile["modifierKeys"]))
-        doc += s.translateLst(configBE.iniProfile["modifierKeys"])
-        doc += '<h2>' + _('Quick navigation keys') + '</h2>'
-        doc += _(u'<p>In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:</p>')
-        doc += s.translateLst(configBE.iniGestures['cursorManager.CursorManager'])
-        doc += ('<h2>' + _('Gadget commands') +
-                ' (%s)</h2>') % str(len(configBE.iniProfile["miscs"]))
-        doc += s.translateLst(configBE.iniProfile["miscs"])
-        doc += ('<h2>' + _('Shortcuts on system keyboard specific to the add-on') +
-                ' (%s)</h2>') % str(len(s.__gestures))
+            doc += ('<h2>' + _('Standard NVDA commands') +
+                    ' (%s)</h2>') % str(len(mNV))
+            doc += s.translateLst(mNV)
+            doc += '<h2>{0} ({1})</h2>'.format(_('Modifier keys'), len(configBE.iniProfile["modifierKeys"]))
+            doc += s.translateLst(configBE.iniProfile["modifierKeys"])
+            doc += '<h2>' + _('Quick navigation keys') + '</h2>'
+            doc += _(u'<p>In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:</p>')
+            doc += s.translateLst(configBE.iniGestures['cursorManager.CursorManager'])
+            doc += ('<h2>' + _('Gadget commands') +
+                    ' (%s)</h2>') % str(len(configBE.iniProfile["miscs"]))
+            doc += s.translateLst(configBE.iniProfile["miscs"])
+            doc += u'<h2>{0} ({1})</h2>'.format(_('Shortcuts defined outside add-on'), len(braille.handler.display.gestureMap._map))
+            doc += '<ul>'
+            for g in braille.handler.display.gestureMap._map:
+                doc += (u'<li>{0}{1}: {2}{3};</li>').format(
+                utils.beautifulSht(g).capitalize(),
+                configBE.sep,
+                utils.uncapitalize(re.sub('^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(braille.handler.display.gestureMap._map[g]))),
+                configBE.sep)
+            doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
+            doc += '</ul>'
+
+            # list keyboard layouts
+            if not noKC and 'keyboardLayouts' in configBE.iniProfile:
+                lb = s.getKeyboardLayouts()
+                doc += '<h2>{}</h2>'.format(_('Keyboard configurations provided'))
+                doc += u'<p>{}{}:</p><ol>'.format(
+                    _('Keyboard configurations are'), configBE.sep)
+                for l in lb:
+                    doc += u'<li>{}.</li>'.format(l)
+                doc += '</ol>'
+        else:
+            doc += (
+                '<h2>'+_(u"Warning:")+'</h2>'+
+                _(u"BrailleExtender doesn't seem to support your braille display.")+'<br />'+
+                _(u'However, you can reassign most of these features in the "Command Gestures" dialog in the "Preferences" of NVDA.')+'</p>'
+            )
+        doc += ('<h2>' + _('Shortcuts on system keyboard specific to the add-on') +' (%s)</h2>') % str(len(s.__gestures)-3)
         doc += '<ul>'
         for g in s.__gestures:
-            doc += (u'<li>{0}{1}: {2}{3};</li>').format(utils.getKeysTranslation(g), configBE.sep, re.sub(
-                '^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(s.__gestures[g])), configBE.sep)
+            if g.lower() not in ['kb:volumeup','kb:volumedown','kb:volumemute']:
+                doc += (u'<li>{0}{1}: {2}{3};</li>').format(utils.getKeysTranslation(g), configBE.sep, re.sub('^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(s.__gestures[g])), configBE.sep)
         doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
         doc += '</ul>'
-        doc += u'<h2>{0} ({1})</h2>'.format(_('Shortcuts defined outside add-on'), len(braille.handler.display.gestureMap._map))
-        doc += '<ul>'
-        for g in braille.handler.display.gestureMap._map:
-            doc += (u'<li>{0}{1}: {2}{3};</li>').format(
-            utils.beautifulSht(g).capitalize(),
-            configBE.sep,
-            utils.uncapitalize(re.sub('^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(braille.handler.display.gestureMap._map[g]))),
-            configBE.sep)
-        doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
-        doc += '</ul>'
-
-        # list keyboard layouts
-        if not noKC and 'keyboardLayouts' in configBE.iniProfile:
-            lb = s.getKeyboardLayouts()
-            doc += '<h2>{}</h2>'.format(_('Keyboard configurations provided'))
-            doc += u'<p>{}{}:</p><ol>'.format(
-                _('Keyboard configurations are'), configBE.sep)
-            for l in lb:
-                doc += u'<li>{}.</li>'.format(l)
-            doc += '</ol>'
         return ui.browseableMessage(
             doc, _(u'%s\'s documentation') %
             configBE._addonName, True)
@@ -540,25 +544,35 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     script_switchKeyboardLayout.__doc__ = _(
         "Switch between different braille keyboard configurations.")
 
-    def script_switchBrailleTable(self, gesture):
+    def script_switchInputBrailleTable(self, gesture):
         if configBE.noUnicodeTable:
             return ui.message(_("Please use NVDA 2017.3 minimum for this feature"))
-        iTables = configBE.conf['general']['iTables']
-        lTables = [t[0] for t in brailleTables.listTables()]
-        if not type(iTables) == list:
-            iTables = iTables.replace(', ',',').split(',')
-        iTables = [t for t in iTables if t in lTables]
-        if len(iTables) < 2:
+        if len(configBE.iTables) < 2:
             return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
-        if not config.conf["braille"]["inputTable"] in iTables:
-            iTables.append(config.conf["braille"]["inputTable"])
-        id = iTables.index(config.conf["braille"]["inputTable"])
-        nID = id+1 if id+1<len(iTables) else 0
-        brailleInput.handler.table = brailleTables.listTables()[lTables.index(iTables[nID])]
+        if not config.conf["braille"]["inputTable"] in configBE.iTables:
+            configBE.iTables.append(config.conf["braille"]["inputTable"])
+        id = configBE.iTables.index(config.conf["braille"]["inputTable"])
+        nID = id+1 if id+1<len(configBE.iTables) else 0
+        brailleInput.handler.table = brailleTables.listTables()[configBE.tablesFN.index(configBE.iTables[nID])]
         return ui.message(brailleInput.handler.table.displayName)
+    
+    script_switchInputBrailleTable.__doc__ = _("Switch between his favorite input braille tables")
+    
+    def script_switchOutputBrailleTable(self, gesture):
+        if configBE.noUnicodeTable:
+            return ui.message(_("Please use NVDA 2017.3 minimum for this feature"))
+        if len(configBE.oTables) < 2:
+            return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
+        if not config.conf["braille"]["translationTable"] in configBE.oTables:
+            configBE.oTables.append(config.conf["braille"]["translationTable"])
+        id = configBE.oTables.index(config.conf["braille"]["translationTable"])
+        nID = id+1 if id+1<len(configBE.oTables) else 0
+        config.conf["braille"]["translationTable"] = configBE.oTables[nID]
+        braille.handler.mainBuffer.updateDisplay()
+        return ui.message(configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
 
-    script_switchBrailleTable.__doc__ = _("Switch between his favorite input braille tables")
-
+    script_switchOutputBrailleTable.__doc__ = _("Switch between his favorite output braille tables")
+    
     def script_brlDescChar(self, gesture):
         utils.currentCharDesc()
     script_brlDescChar.__doc__ = _(
@@ -568,10 +582,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
     def script_showConstructST(self, gesture):
         configBE.conf['general']['showConstructST'] = not configBE.conf['general']['showConstructST']
-        if configBE.conf['general']['showConstructST']:
-            return ui.message(_("Disabled (assist shortcuts)."))
-        else:
-            return ui.message(_("Enabled (assist shortcuts)."))
+        return ui.message("%s" % (_('Turn on') if configBE.conf['general']['showConstructST'] else _('Turn off')))
 
     script_showConstructST.__doc__ = _('Turn on/off the assistance shortcuts.')
 
@@ -679,7 +690,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         return self.sendComb(sht)
 
     def script_end_combKeysChar(self, gesture):
-        self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0]) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > - 1 and configBE.conf['general']['iTableSht'] < nbTables else self.getActualModifiers(False) + utils.bkToChar(gesture.dots))
+        self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0]) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > - 1 and configBE.conf['general']['iTableSht'] < len(brailleTables.listTables()) else self.getActualModifiers(False) + utils.bkToChar(gesture.dots))
 
     def sendComb(self, sht):
         self.clearMessageFlash()
@@ -689,7 +700,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             try:
                 return self.sendCombKeys(sht)
             except BaseException:
-                return ui.message('Unable to send %s' % sht)
+                return ui.message(_('Unable to send %s') % sht)
         elif not NVDASht: # and 'nvda' in sht.lower()
             return ui.message(_(u'%s is not part of a basic NVDA commands') % sht)
 
@@ -697,13 +708,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.bindGestures(self._tGestures) if self.lenModifiers() == 1 else None
 
     def getActualModifiers(self, short=True):
+        if self.lenModifiers() == 0:
+            return self.script_cancelShortcut(None)
         s = ""
         t = {'windows': _('WIN'),'control': _('CTRL'),'shift': _('SHIFT'),'alt': _('ALT'),'nvda': 'NVDA'}
+        for k in [k for k in self.modifiers if self.modifiers[k]]:
+            s += t[k] + '+' if short else k + '+'
+        if not short:
+            return s
         if configBE.conf['general']['showConstructST']:
-            for k in [k for k in self.modifiers if self.modifiers[k]]:
-                s += t[k] + '+' if short else k + '+'
-        return ui.message(s + '...') if short and self.lenModifiers() != 0 else s if not short else self.script_cancelShortcut(None)
-
+            return ui.message(u'%s...' % s)
+        
     def script_ctrl(self, gesture = None, sil=True):
         self.modifiers["control"] = not self.modifiers["control"]
         self.getActualModifiers() if sil else None
@@ -810,12 +825,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                                                 docS[1])
 
     def onSettings(self, event):
-        settings.Settings(configBE.curBD, configBE.reviewModeApps, configBE.noUnicodeTable, noKC, configBE.gesturesFileExists, configBE.iniProfile, configBE.quickLaunch, configBE.quickLaunchS, instanceGP, self.getKeyboardLayouts(), configBE.backupDisplaySize, configBE.conf['general']['iTables'])
+        settings.Settings(configBE.curBD, configBE.reviewModeApps, configBE.noUnicodeTable, noKC, configBE.gesturesFileExists, configBE.iniProfile, configBE.quickLaunch, configBE.quickLaunchS, instanceGP, self.getKeyboardLayouts(), configBE.backupDisplaySize, configBE.iTables, configBE.oTables)
 
-    __gestures = {
-        "kb:nvda+k": "reload_brailledisplay",
-        "kb:nvda+shift+k": "reload_brailledisplay",
-        "kb:windows+nvda+k": "reloadAddon"}
+    __gestures = OrderedDict()
+    __gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
+    __gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
+    __gestures["kb:nvda+k"] = "reload_brailledisplay"
+    __gestures["kb:nvda+shift+k"] = "reload_brailledisplay"
+    __gestures["kb:nvda+windows+k"] = "reloadAddon"
+    __gestures["kb:volumeMute" ]= "toggleVolume"
+    __gestures["kb:volumeUp"] = "volumePlus"
+    __gestures["kb:volumeDown"] = "volumeMinus"
 
 class CheckUpdates(wx.Dialog):
     def __init__(self, sil = False):

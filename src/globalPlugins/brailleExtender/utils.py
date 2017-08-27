@@ -230,12 +230,18 @@ def sendCombKeysNVDA(sht):
                 eval('.'.join(place.split('.')[:-1])+'.script_' + tSht + '(None)')
                 return True
             except BaseException:
-                gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-                gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-                if 'kb:'+sht in gesN:
-                    script = cursorManager.CursorManager._CursorManager__gestures[gesO[gesN.index('kb:'+sht)]]
-                    eval('cursorManager.CursorManager().script_'+script+'(None)')
-                    return True
+                pass
+    return False
+    try:
+        gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in cursorManager.CursorManager._CursorManager__gestures]
+        gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in cursorManager.CursorManager._CursorManager__gestures]
+        if 'kb:'+sht in gesN:
+            a=cursorManager.CursorManager()
+            script = a._CursorManager__gestures[gesO[gesN.index('kb:'+sht)]]
+            eval('cursorManager.CursorManager().script_'+script+'(None)')
+        return True
+    except:
+        return False
     return False
 
 

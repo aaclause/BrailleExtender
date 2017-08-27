@@ -26,7 +26,7 @@ profileFileExists = gesturesFileExists = False
 lang = languageHandler.getLanguage().split('_')[-1].lower()
 noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
 sep = u' ' if 'fr' in lang else ''
-
+oTables = iTables = None
 _addonDir = osp.join(osp.dirname(__file__), "..", "..").decode("mbcs")
 _addonName = addonHandler.Addon(_addonDir).manifest['name']
 _addonVersion = addonHandler.Addon(_addonDir).manifest['version']
@@ -39,12 +39,14 @@ log.error('Profiles\' path not found') if not osp.exists(profilesDir) else log.d
 
 try:
     import brailleTables
+    tablesFN = [t[0] for t in brailleTables.listTables()]
+    tablesTR = [t[1] for t in brailleTables.listTables()]
     noUnicodeTable = False
 except BaseException:
     noUnicodeTable = True
 
 def loadConf():
-    global conf, reviewModeApps, quickLaunch, quickLaunchS, gesturesFileExists
+    global conf, reviewModeApps, quickLaunch, quickLaunchS, gesturesFileExists, iTables, oTables
     kld = iniProfile['keyboardLayouts'].keys()[0] if gesturesFileExists else None
     confspec = ConfigObj(StringIO("""
     [general]
@@ -63,11 +65,13 @@ def loadConf():
         ignoreBlankLineScroll = boolean(default=True)
         iTableSht = integer(min=-1, default=-1, max={MAX_TABLES})
         iTables = string(default="{ITABLE}")
+        oTables = string(default="{OTABLE}")
         quickLaunch_{CUR_BD} = string(default="notepad; wordpad; calc; cmd")
     """.format(
             CUR_BD=curBD,
             MAX_BD=42,
-            ITABLE=config.conf["braille"]["inputTable"],
+            ITABLE=config.conf["braille"]["inputTable"]+', unicode-braille.utb',
+            OTABLE=config.conf["braille"]["translationTable"],
             MAX_CELLS=420,
             MAX_DELAYSCROLL=999,
             MAX_TABLES=420,
@@ -83,6 +87,7 @@ def loadConf():
     result = conf.validate(Validator())
     if result is not True:
         log.error('Malformed configuration file')
+        return False
     else:
         if conf['general']['limitCells_' +
                            curBD] <= backupDisplaySize and conf['general']['limitCells_' +
@@ -95,7 +100,18 @@ def loadConf():
             reviewModeApps).split(',')
     quickLaunchS = ''.join(conf['general']['quickLaunch_'+curBD].strip().lower().split(';')) if type(conf['general']['quickLaunch_'+curBD]) == list else conf['general']['quickLaunch_'+curBD].strip().lower().split(';')
     quickLaunchS = [k.strip() for k in quickLaunchS]
-    return conf
+    if not noUnicodeTable:
+        lITables = [table[0] for table in brailleTables.listTables() if table.input]
+        lOTables = [table[0] for table in brailleTables.listTables() if table.output]
+        iTables = conf['general']['iTables']
+        oTables = conf['general']['oTables']
+        if not type(iTables) == list:
+            iTables = iTables.replace(', ',',').split(',')
+        if not type(oTables) == list:
+            oTables = oTables.replace(', ',',').split(',')
+        iTables = [t for t in iTables if t in lITables]
+        oTables = [t for t in oTables if t in lOTables]
+    return True
 
 
 def loadGestures():

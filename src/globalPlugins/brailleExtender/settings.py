@@ -16,13 +16,11 @@ import configBE
 
 class Settings(wx.Dialog):
     def __init__(self, *args):
-        global curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, keyboardLayouts, instanceGP, backupDisplaySize, iTables
-        (curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, instanceGP, keyboardLayouts, backupDisplaySize, iTables) = args
+        global curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, keyboardLayouts, instanceGP, backupDisplaySize, iTables, oTables
+        (curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, instanceGP, keyboardLayouts, backupDisplaySize, iTables, oTables) = args
         if instanceGP.instanceST != None:
             return
         instanceGP.instanceST = self
-        if not type(iTables) == list:
-            iTables = iTables.replace(', ',',').split(',')
         wx.Dialog.__init__(self, None, title=_('BrailleExtender settings'))
         self.p = wx.Panel(self)
         self.nb = wx.Notebook(self.p)
@@ -51,23 +49,18 @@ class Settings(wx.Dialog):
         return
 
     def onSave(self, evt):
-        i = 0
         configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
         configBE.conf['general']['reportvolumeb'] = self.general.reportvolumeb.GetValue()
         configBE.conf['general']['reportvolumes'] = self.general.reportvolumes.GetValue()
         configBE.conf['general']['hourDynamic'] = self.general.hourDynamic.GetValue()
         configBE.conf['general']['delayScroll_' + curBD] = self.reading.delayScroll.GetValue()
         try:
-            if int(
-                    self.general.limitCells.GetValue()) > backupDisplaySize or int(
-                    self.general.limitCells.GetValue()) < 0:
+            if int(self.general.limitCells.GetValue()) > backupDisplaySize or int(self.general.limitCells.GetValue()) < 0:
                 configBE.conf['general']['limitCells_' + curBD] = 0
             else:
-                if configBE.conf['general']['limitCells_' +
-                                   curBD] != 0 and int(self.general.limitCells.GetValue()) == 0:
+                if configBE.conf['general']['limitCells_' +curBD] != 0 and int(self.general.limitCells.GetValue()) == 0:
                     braille.handler.displaySize = backupDisplaySize
-                configBE.conf['general']['limitCells_' +
-                                curBD] = int(self.general.limitCells.GetValue())
+                configBE.conf['general']['limitCells_' +curBD] = int(self.general.limitCells.GetValue())
         except BaseException:
             configBE.conf['general']['limitCells_' + curBD] = 0
         configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
@@ -82,8 +75,8 @@ class Settings(wx.Dialog):
             for app in quickLaunchS:
                 tApps.append(app.strip())
             configBE.conf['general']['quickLaunch_'+curBD] = '; '.join(tApps)
-            configBE.conf['general']['iTables'] = ','.join(iTables)
-        
+        configBE.conf['general']['iTables'] = ','.join(iTables)
+        configBE.conf['general']['oTables'] = ','.join(oTables)
         configBE.conf['general']['favbd1'] = self.general.favbd1.GetSelection()
         configBE.conf['general']['favbd2'] = self.general.favbd2.GetSelection()
         self.buttonC.SetFocus()
@@ -253,20 +246,31 @@ class Keyboard(wx.Panel):
         kbCfg = wx.BoxSizer(wx.VERTICAL)
         if not noUnicodeTable:
             lt = [_('Use the current input table')]
-            [lt.append(tables[i][1]) for i in range(len(tables))]
+            [lt.append(table[1]) for table in tables if table.input]
             kbCfg.Add(wx.StaticText(self, -1, label=_(u'Input braille table for keyboard shortcut keys')))
             self.iTableSht = wx.Choice(self, pos=(-1, -1), choices=lt)
             self.iTableSht.SetSelection(configBE.conf['general']['iTableSht'] + 1)
-            kbCfg.Add(wx.StaticText(self, -1, label=_(u'Input braille table present in the switch')))
-            self.iTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.tablesInSwitch())
+            
+            kbCfg.Add(wx.StaticText(self, -1, label=_(u'Input braille tables present in the switch')))
+            self.iTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesInSwitch())
             self.iTablesPresent.SetSelection(0)
-            self.deleteTableInSwitch = wx.Button(self, label=_('&Remove'))
-            self.deleteTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteTableInSwitch)
-            kbCfg.Add(wx.StaticText(self, -1, label=_(u'Input braille table for switch to add')))
-            self.iTables = wx.Choice(self, pos=(-1, -1), choices=self.tablesNotInSwitch())
+            self.deleteInputTableInSwitch = wx.Button(self, label=_('&Remove'))
+            self.deleteInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteInputTableInSwitch)
+            kbCfg.Add(wx.StaticText(self, -1, label=_(u'Input tables not present in the switch')))
+            self.iTables = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesNotInSwitch())
             self.iTables.SetSelection(0)
-            self.addTableInSwitch = wx.Button(self, label=_('&Add'))
-            self.addTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddTableInSwitch)
+            self.addInputTableInSwitch = wx.Button(self, label=_('&Add'))
+            self.addInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddInputTableInSwitch)
+            kbCfg.Add(wx.StaticText(self, -1, label=_(u'Output braille tables present in the switch')))
+            self.oTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.outputTablesInSwitch())
+            self.oTablesPresent.SetSelection(0)
+            self.deleteOutputTableInSwitch = wx.Button(self, label=_('&Remove'))
+            self.deleteOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteOutputTableInSwitch)
+            kbCfg.Add(wx.StaticText(self, -1, label=_(u'Output tables not present in the switch')))
+            self.oTables = wx.Choice(self, pos=(-1, -1), choices=self.outputTablesNotInSwitch())
+            self.oTables.SetSelection(0)
+            self.addOutputTableInSwitch = wx.Button(self, label=_('&Add'))
+            self.addOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
         if gesturesFileExists and not noKC:
             lb = keyboardLayouts
             kbCfg.Add(wx.StaticText(self, -1, label=_('Braille keyboard configuration')))
@@ -274,33 +278,54 @@ class Keyboard(wx.Panel):
             self.KBMode.SetSelection(iniProfile['keyboardLayouts'].keys().index(configBE.conf['general']['keyboardLayout_' + curBD]) if configBE.conf['general']['keyboardLayout_' +configBE.curBD] != None and configBE.conf['general']['keyboardLayout_'+curBD] in iniProfile['keyboardLayouts'].keys() else 0)
             kbCfg.Add(self.KBMode)
 
-    def onDeleteTableInSwitch(self, event):
+    def onDeleteInputTableInSwitch(self, event):
         if self.iTablesPresent.GetStringSelection() != '':
-            iTables.remove(tablesFN[tablesTR.index(self.iTablesPresent.GetStringSelection())])
-            self.iTables.SetItems(self.tablesNotInSwitch())
+            iTables.remove(configBE.tablesFN[configBE.tablesTR.index(self.iTablesPresent.GetStringSelection())])
+            self.iTables.SetItems(self.inputTablesNotInSwitch())
             self.iTables.SetSelection(0)
-            self.iTablesPresent.SetItems(self.tablesInSwitch())
+            self.iTablesPresent.SetItems(self.inputTablesInSwitch())
             self.iTablesPresent.SetSelection(0)
             self.iTablesPresent.SetFocus()
         else:
             ui.message(_(u"You have no input tables present in the switch"))
         return
 
-    def onAddTableInSwitch(self, event):
+    def onAddInputTableInSwitch(self, event):
         if self.iTables.GetStringSelection() != '':
-            iTables.append(tablesFN[tablesTR.index(self.iTables.GetStringSelection())])
-            self.iTables.SetItems(self.tablesNotInSwitch())
+            iTables.append(configBE.tablesFN[configBE.tablesTR.index(self.iTables.GetStringSelection())])
+            self.iTables.SetItems(self.inputTablesNotInSwitch())
             self.iTables.SetSelection(0)
-            self.iTablesPresent.SetItems(self.tablesInSwitch())
+            self.iTablesPresent.SetItems(self.inputTablesInSwitch())
             self.iTablesPresent.SetSelection(0)
             self.iTablesPresent.SetFocus()
+    
+    def onDeleteOutputTableInSwitch(self, event):
+        if self.oTablesPresent.GetStringSelection() != '':
+            oTables.remove(configBE.tablesFN[configBE.tablesTR.index(self.oTablesPresent.GetStringSelection())])
+            self.oTables.SetItems(self.outputTablesNotInSwitch())
+            self.oTables.SetSelection(0)
+            self.oTablesPresent.SetItems(self.outputTablesInSwitch())
+            self.oTablesPresent.SetSelection(0)
+            self.oTablesPresent.SetFocus()
+        else:
+            ui.message(_(u"You have no output tables present in the switch"))
+        return
 
-    global tables, tablesFN, tablesTR
+    def onAddOutputTableInSwitch(self, event):
+        if self.oTables.GetStringSelection() != '':
+            oTables.append(configBE.tablesFN[configBE.tablesTR.index(self.oTables.GetStringSelection())])
+            self.oTables.SetItems(self.outputTablesNotInSwitch())
+            self.oTables.SetSelection(0)
+            self.oTablesPresent.SetItems(self.outputTablesInSwitch())
+            self.oTablesPresent.SetSelection(0)
+            self.oTablesPresent.SetFocus()
+
+    global tables
     tables = brailleTables.listTables()
-    tablesFN = [t[0] for t in tables]
-    tablesTR = [t[1] for t in tables]
-    tablesNotInSwitch = lambda s: [tables[i][1] for i in range(len(tables)) if tables[i][0] not in iTables]
-    tablesInSwitch = lambda s: [tablesTR[tablesFN.index(table)] for table in iTables if table != ''] if (len(iTables)>0 and iTables[0] != '') or len(tables) > 2 else []
+    inputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.input and table[0] not in iTables]
+    inputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in iTables if table != ''] if (len(iTables)>0 and iTables[0] != '') or len(tables) > 2 else []
+    outputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.output and table[0] not in oTables]
+    outputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in oTables if table != ''] if (len(oTables)>0 and oTables[0] != '') or len(tables) > 2 else []
 
 class QuickLaunch(wx.Panel):
     

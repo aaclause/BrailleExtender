@@ -1,23 +1,24 @@
 # coding: utf-8
 import os.path as osp
+import re
+
+import api
 import braille
 import brailleInput
 import cursorManager
+import globalCommands
+import globalPlugins
 import inputCore
 import louis
 import config
 import ui
 import addonHandler
-import api
-import re
-import textInfos
 import scriptHandler
-import globalCommands
-from logHandler import log
+import textInfos
 from keyboardHandler import KeyboardInputGesture
-#import treeInterceptorHandler
-import languageHandler
 addonHandler.initTranslation()
+
+
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -178,7 +179,9 @@ def bkToChar(dots, inTable=config.conf["braille"]["inputTable"]):
          "braille-patterns.cti"],
         char, mode=louis.dotsIO)
     chars = text[0]
-    return chars
+    if len(chars) == 1 and chars.isupper():
+        chars = 'shift+'+chars.lower()
+    return chars if chars != ' ' else 'space'
 
 
 def reload_brailledisplay(bd_name):
@@ -214,8 +217,9 @@ def currentCharDesc():
     except BaseException:
         ui.message(_('Not a character.'))
 
-
 def sendCombKeysNVDA(sht):
+
+    # To improve!!! 
     if 'kb:' not in sht:
         sht = 'kb:' + sht
     shtO = sht
@@ -231,17 +235,34 @@ def sendCombKeysNVDA(sht):
                 return True
             except BaseException:
                 pass
-    return False
     try:
-        gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-        gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-        if 'kb:'+sht in gesN:
-            a=cursorManager.CursorManager()
-            script = a._CursorManager__gestures[gesO[gesN.index('kb:'+sht)]]
-            eval('cursorManager.CursorManager().script_'+script+'(None)')
-        return True
-    except:
-        return False
+        obj = api.getFocusObject()
+        if obj.treeInterceptor != None:
+            obj = obj.treeInterceptor
+            gesS=obj._CursorManager__gestures.values()+obj._BrowseModeDocumentTreeInterceptor__gestures.values()+obj._BrowseModeTreeInterceptor__gestures.values()
+            gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in obj._CursorManager__gestures.keys()+obj._BrowseModeDocumentTreeInterceptor__gestures.keys()+obj._BrowseModeTreeInterceptor__gestures.keys()]
+            gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in gesO]
+            script = gesS[gesN.index('kb:'+sht)]
+            eval('obj.script_'+script+'(None)')
+            return True
+        else:
+            gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in cursorManager.CursorManager._CursorManager__gestures]
+            gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in cursorManager.CursorManager._CursorManager__gestures]
+            if 'kb:'+sht in gesN:
+                a=cursorManager.CursorManager()
+                a.makeTextInfo = obj.makeTextInfo
+                script = a._CursorManager__gestures[gesO[gesN.index('kb:'+sht)]]
+                eval('a.script_'+script+'(None)')
+                return True
+    except BaseException, e:
+        pass
+    shtPlugins = {p: eval('globalPlugins.'+p+'.GlobalPlugin._GlobalPlugin__gestures') for p in globalPlugins.__dict__.keys() if not p.startswith('_') and hasattr(eval('globalPlugins.'+p+'.GlobalPlugin'),'_GlobalPlugin__gestures')}
+    for k in shtPlugins:
+        shtPlugins[k] = {re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g.lower().replace(' ','')): shtPlugins[k][g] for g in shtPlugins[k] if g.lower().startswith('kb:')}
+    for p in shtPlugins.keys():
+        if 'kb:'+sht in shtPlugins[p]:
+            eval('globalPlugins.'+p+'.GlobalPlugin().script_'+shtPlugins[p]['kb:'+sht]+'(None)')
+            return True
     return False
 
 

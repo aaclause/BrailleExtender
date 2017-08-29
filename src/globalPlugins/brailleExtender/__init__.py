@@ -64,7 +64,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.gesturesInit()
         if not self.createMenu():
             log.error(u'Impossible to create menu')
-        if time.time()-configBE.conf['general']['lastCheckUpdate'] > 172800:
+        if configBE.conf['general']['autoCheckUpdate'] and time.time()-configBE.conf['general']['lastCheckUpdate'] > 172800:
             CheckUpdates(True)
             configBE.conf['general']['lastCheckUpdate'] = time.time()
         return
@@ -94,7 +94,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, self.item)
             self.item = self.menu.Append(
                 wx.ID_ANY,
-                _("Changelog"),
+                _("Change log"),
                 _("Opens the addon's changelog.")
             )
             gui.mainFrame.sysTrayIcon.Bind(
@@ -285,8 +285,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             self.backupShowCursor = config.conf["braille"]["showCursor"]
             config.conf["braille"]["showCursor"] = False
             self.autoScrollTimer = wx.PyTimer(self.autoScroll)
-            self.autoScrollTimer.Start(
-                configBE.conf['general']['delayScroll_' + configBE.curBD] * 1000)
+            self.autoScrollTimer.Start(configBE.conf['general']['delayScroll_' + configBE.curBD] * 1000)
         self.autoScrollRunning = not self.autoScrollRunning
         return
 
@@ -717,7 +716,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         if not short:
             return s
         if configBE.conf['general']['showConstructST']:
-            return ui.message(u'%s...' % s)
+            return braille.handler.message(u'%s...' % s)
         
     def script_ctrl(self, gesture = None, sil=True):
         self.modifiers["control"] = not self.modifiers["control"]
@@ -830,6 +829,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     __gestures = OrderedDict()
     __gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
     __gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
+    __gestures["kb:shift+NVDA+y"] = "autoScroll"
     __gestures["kb:nvda+k"] = "reload_brailledisplay"
     __gestures["kb:nvda+shift+k"] = "reload_brailledisplay"
     __gestures["kb:nvda+windows+k"] = "reloadAddon"

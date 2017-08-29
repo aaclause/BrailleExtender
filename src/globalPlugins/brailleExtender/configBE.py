@@ -50,6 +50,7 @@ def loadConf():
     kld = iniProfile['keyboardLayouts'].keys()[0] if gesturesFileExists else None
     confspec = ConfigObj(StringIO("""
     [general]
+        autoCheckUpdate = boolean(default=True)
         lastCheckUpdate=float(min=0, default=0)
         keyboardLayout_{CUR_BD} =string(default={KEYBOARDLAYOUT})
         showConstructST=boolean(default=True)

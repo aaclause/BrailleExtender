@@ -49,6 +49,7 @@ class Settings(wx.Dialog):
         return
 
     def onSave(self, evt):
+        configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
         configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
         configBE.conf['general']['reportvolumeb'] = self.general.reportvolumeb.GetValue()
         configBE.conf['general']['reportvolumes'] = self.general.reportvolumes.GetValue()
@@ -93,7 +94,9 @@ class General(wx.Panel):
         wx.Panel.__init__(self, parent)
         settings = wx.BoxSizer(wx.VERTICAL)
         loadBDs = wx.BoxSizer(wx.VERTICAL)
-        i = 0
+        self.autoCheckUpdate = wx.CheckBox(self, label=_('Check for updates automatically'))
+        if configBE.conf['general']['autoCheckUpdate']:
+            self.autoCheckUpdate.SetValue(True)
         self.assistS = wx.CheckBox(self, label=_('Detail the progress of a keyboard shortcut when it is typed'))
         if configBE.conf['general']['showConstructST']:
             self.assistS.SetValue(True)

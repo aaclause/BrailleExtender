@@ -233,7 +233,7 @@ def sendCombKeysNVDA(sht):
                 tSht = eval('scriptHandler.getScriptName('+place+'[\'kb'+layout+':'+sht+'\'])')
                 eval('.'.join(place.split('.')[:-1])+'.script_' + tSht + '(None)')
                 return True
-            except BaseException:
+            except:
                 pass
     try:
         obj = api.getFocusObject()
@@ -267,12 +267,16 @@ def sendCombKeysNVDA(sht):
 
 
 def getKeysTranslation(n):
+    o = n
     n = n.lower()
     nk = 'NVDA+' if 'nvda+' in n else ''
     if not 'br(' in n:
         n = n.replace('kb:', '').replace('nvda+', '')
-        n = KeyboardInputGesture.fromName(n).displayName
-        n = re.sub('([^a-zA-Z]|^)f([0-9])', r'\1F\2', n)
+        try:
+            n = KeyboardInputGesture.fromName(n).displayName
+            n = re.sub('([^a-zA-Z]|^)f([0-9])', r'\1F\2', n)
+        except:
+            return o
         return nk + n
 
 

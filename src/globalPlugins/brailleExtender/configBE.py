@@ -56,13 +56,14 @@ def loadConf():
         showConstructST=boolean(default=True)
         favbd1 = integer(min=-1, default=-1, max={MAX_BD})
         favbd2 = integer(min=-1, default=-1, max={MAX_BD})
-        reportvolumeb = boolean(default=True)
+        reportvolumeb = boolean(default=False)
         reportvolumes = boolean(default=True)
         reviewModeApps = string(default="cmd, putty")
         hourDynamic = boolean(default=True)
         limitCells_{CUR_BD} = integer(min=0, default=0, max={MAX_CELLS})
         delayScroll_{CUR_BD} = float(min=0, default=3, max={MAX_DELAYSCROLL})
-        smartDelayScroll = boolean(default=True)
+        smartDelayScroll = boolean(default=False)
+        reverseScroll = boolean(default=False)
         ignoreBlankLineScroll = boolean(default=True)
         iTableSht = integer(min=-1, default=-1, max={MAX_TABLES})
         iTables = string(default="{ITABLE}")
@@ -130,6 +131,12 @@ def loadGestures():
             tmp = [line.strip().replace(' ','').replace('$',iniProfile['general']['nameBK']).replace('=', '=br(%s):'% curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
             tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
             inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})        
+    try:
+        if conf['general']['reverseScroll']:
+            scbtns = [inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollBack']+[inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollForward']
+            inputCore.manager.localeGestureMap.update({'globalCommands.GlobalCommands':{"braille_scrollForward": ', '.join(scbtns[0]), "braille_scrollBack": ', '.join(scbtns[1])}})
+    except:
+        pass
     return
 
 

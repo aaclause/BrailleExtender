@@ -55,6 +55,7 @@ class Settings(wx.Dialog):
         configBE.conf['general']['reportvolumes'] = self.general.reportvolumes.GetValue()
         configBE.conf['general']['hourDynamic'] = self.general.hourDynamic.GetValue()
         configBE.conf['general']['delayScroll_' + curBD] = self.reading.delayScroll.GetValue()
+        configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue()
         try:
             if int(self.general.limitCells.GetValue()) > backupDisplaySize or int(self.general.limitCells.GetValue()) < 0:
                 configBE.conf['general']['limitCells_' + curBD] = 0
@@ -196,6 +197,9 @@ class Reading(wx.Panel):
             self.smartDelayScroll.SetValue(True)
         self.smartDelayScroll.Bind(wx.wx.EVT_CHECKBOX, self.onSmartDelay)
         self.smartDelayScroll.Disable()
+        self.reverseScroll = wx.CheckBox(self, label=_('Reverse forward scroll and back scroll buttons'))
+        if configBE.conf['general']['reverseScroll']:
+            self.reverseScroll.SetValue(True)
 
     def onDelayScroll(self, event):
         keycode = event.GetKeyCode()

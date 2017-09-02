@@ -7,7 +7,6 @@ from collections import OrderedDict
 
 import gui
 import wx
-
 import addonHandler
 addonHandler.initTranslation()
 import braille
@@ -16,6 +15,7 @@ import brailleTables
 import config
 import cursorManager
 import globalPluginHandler
+import globalVars
 import globalCommands
 import inputCore
 import languageHandler
@@ -64,7 +64,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         self.gesturesInit()
         if not self.createMenu():
             log.error(u'Impossible to create menu')
-        if configBE.conf['general']['autoCheckUpdate'] and time.time()-configBE.conf['general']['lastCheckUpdate'] > 172800:
+        if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time()-configBE.conf['general']['lastCheckUpdate'] > 172800:
             CheckUpdates(True)
             configBE.conf['general']['lastCheckUpdate'] = time.time()
         return
@@ -185,7 +185,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                     else:
                         gK['kb:' + k] = inputCore.normalizeGestureIdentifier(
                             'br(' + configBE.curBD + '):' + cK[k])
-                elif k == 'braille_dots':
+                elif k in ['braille_dots','braille_enter','braille_translate']:
                     if isinstance(cK[k], list):
                         for i in range(len(cK[k])):
                             if ':' not in cK[k][i]:
@@ -213,16 +213,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         }
         if configBE.gesturesFileExists:
             for g in configBE.iniGestures['globalCommands.GlobalCommands']:
-                if isinstance(
-                        configBE.iniGestures['globalCommands.GlobalCommands'][g],
-                        list):
-                    for h in range(
-                            len(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
-                        self._tGestures[inputCore.normalizeGestureIdentifier(
-                            str(configBE.iniGestures['globalCommands.GlobalCommands'][g][h]))] = "end_combKeys"
-                elif ('kb:' in g and g not in ['kb:alt', 'kb:ctrl', 'kb:windows', 'kb:control', 'kb:applications']):
-                    self._tGestures[inputCore.normalizeGestureIdentifier(
-                        str(configBE.iniGestures['globalCommands.GlobalCommands'][g]))] = "end_combKeys"
+                if isinstance(configBE.iniGestures['globalCommands.GlobalCommands'][g], list):
+                    for h in range(len(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
+                        self._tGestures[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g][h]))] = "end_combKeys"
+                elif ('kb:' in g and g.lower() not in ['kb:alt', 'kb:control', 'kb:windows', 'kb:control', 'kb:applications']):
+                    self._tGestures[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g]))] = "end_combKeys"
         
             self._pGestures = {}
             for k, v in configBE.iniProfile["modifierKeys"].items()+configBE.iniProfile["miscs"].items():
@@ -231,11 +226,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                         if k == 'shortcutsOn':
                             pass
                         else:
-                            self._pGestures[inputCore.normalizeGestureIdentifier(
-                                'br(' + configBE.curBD + '):' + v[i])] = k
+                            self._pGestures[inputCore.normalizeGestureIdentifier('br(' + configBE.curBD + '):' + v[i])] = k
                 else:
-                    self._pGestures[inputCore.normalizeGestureIdentifier(
-                        'br(' + configBE.curBD + '):' + v)] = k
+                    self._pGestures[inputCore.normalizeGestureIdentifier('br(' + configBE.curBD + '):' + v)] = k
             self.bindGestures(self._pGestures)
         return
 
@@ -270,8 +263,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     script_hourDate.__doc__ = _('Hour and date with autorefresh')
 
     def showHourDate(self):
-        currentHourDate = time.strftime(
-            u'%X %x (%a, %W/53, %b)', time.localtime())
+        currentHourDate = time.strftime(u'%X %x (%a, %W/53, %b)', time.localtime())
         return braille.handler.message(currentHourDate.decode('mbcs'))
 
     def script_autoScroll(self, gesture):
@@ -340,13 +332,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             for layout in configBE.iniProfile['keyboardLayouts']:
                 t = []
                 for lk in configBE.iniProfile['keyboardLayouts'][layout]:
-                    if lk == 'braille_dots':
+                    if lk in ['braille_dots','braille_enter','braille_translate']:
                         if isinstance(configBE.iniProfile['keyboardLayouts'][layout][lk], list):
                             t.append(utils.beautifulSht(
-                                ' / '.join(configBE.iniProfile['keyboardLayouts'][layout][lk]), 1) + configBE.sep + ': ' + _(u'input braille dot'))
+                                ' / '.join(configBE.iniProfile['keyboardLayouts'][layout][lk]), 1) + configBE.sep + ': ' + eval('globalCommands.GlobalCommands.script_'+lk+'.__doc__'))
                         else:
                             t.append(utils.beautifulSht(
-                                str(configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + _(u'input braille dot'))
+                                str(configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + eval('globalCommands.GlobalCommands.script_'+lk+'.__doc__'))
                     else:
                         if isinstance(configBE.iniProfile['keyboardLayouts'][layout][lk], list):
                             t.append(utils.beautifulSht(
@@ -381,63 +373,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                 else:
                     doc += u'<li>{0} ≡ {1}{2};</li>'.format(utils.beautifulSht(str(lst[g])), utils.getKeysTranslation(g), configBE.sep)
             elif 'kb:' in g:
-                gt = _('caps lock') if 'capsLock' in g else g
-                doc += u'<li>{0} ≡ {1}{2};</li>'.format(
-                    utils.beautifulSht(
-                        lst[g]).replace(
-                        'br(' + configBE.curBD + '):',
-                        ''),
-                    gt.replace(
-                        'kb:',
-                        ''),
-                    configBE.sep)
+                gt = _(u'caps lock') if 'capsLock' in g else g
+                doc += u'<li>{0} ≡ {1}{2};</li>'.format(utils.beautifulSht(lst[g]).replace('br(' + configBE.curBD + '):',''), gt.replace('kb:',''), configBE.sep)
             else:
                 if isinstance(lst[g], list):
-                    doc += u'<li>{0}{1}: {2}{3};</li>'.format(
-                        utils.beautifulSht(
-                            ' / '.join(
-                                lst[g]).replace(
-                                'br(' + configBE.curBD + '):',
-                                ''),
-                            1),
-                        configBE.sep,
-                        re.sub(
-                            '^([A-Z])',
-                            lambda m: m.group(1).lower(),
-                            utils.uncapitalize(s.getDocScript(g))),
-                        configBE.sep)
+                    doc += u'<li>{0}{1}: {2}{3};</li>'.format(utils.beautifulSht(' / '.join(lst[g]).replace('br(' + configBE.curBD + '):',''),1),configBE.sep, re.sub('^([A-Z])', lambda m: m.group(1).lower(), utils.uncapitalize(s.getDocScript(g))), configBE.sep)
                 else:
-                    doc += u'<li>{0}{1}: {2}{3};</li>'.format(
-                        utils.beautifulSht(
-                            lst[g]).replace(
-                            'br(' + configBE.curBD + '):',
-                            ''),
-                        configBE.sep,
-                        re.sub(
-                            '^([A-Z])',
-                            lambda m: m.group(1).lower(),
-                            utils.uncapitalize(s.getDocScript(g))),
-                        configBE.sep)
+                    doc += u'<li>{0}{1}: {2}{3};</li>'.format(utils.beautifulSht(lst[g]).replace('br(' + configBE.curBD + '):',''),configBE.sep, re.sub('^([A-Z])',lambda m: m.group(1).lower(), utils.uncapitalize(s.getDocScript(g))), configBE.sep)
         doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
         doc += u'</ul>'
         return doc
 
     def getDoc(s):
         doc = u''
-        doc += u'<h1>' + _('{0}\'s documentation{1}{2}').format(
-            configBE._addonName, configBE.sep, ': '+_('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '') + '</h1>'
-        doc += u'<p>Version {0}<br />{1}<br />{2}</p>'.format(
-            configBE._addonVersion,
-            configBE._addonAuthor.replace(
-                '<',
-                '&lt;').replace(
-                '>',
-                '&gt;'),
-            '<a href="' +
-            configBE._addonURL +
-            '">' +
-            configBE._addonURL +
-            '</a>')
+        doc += u'<h1>' + _('{0}\'s documentation{1}{2}').format(configBE._addonName, configBE.sep, ': '+_('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '') + '</h1>'
+        doc += u'<p>Version {0}<br />{1}<br />{2}</p>'.format(configBE._addonVersion, configBE._addonAuthor.replace('<', '&lt;').replace('>','&gt;'),'<a href="' +configBE._addonURL +'">' +configBE._addonURL +'</a>')
         doc += '<pre>' + configBE._addonDesc + '</pre>'
         if configBE.gesturesFileExists:
             mKB = OrderedDict()
@@ -451,32 +401,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
                         mKB[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
                 else:
                     mNV[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
-            doc += ('<h2>' + _('Simple keys') +
-                    ' (%s)</h2>') % str(len(mKB))
+            doc += ('<h2>' + _('Simple keys') +' (%s)</h2>') % str(len(mKB))
             doc += s.translateLst(mKB)
-            doc += ('<h2>' + _('Usual shortcuts') +
-                    ' (%s)</h2>') % str(len(mW))
+            doc += ('<h2>' + _('Usual shortcuts') +' (%s)</h2>') % str(len(mW))
             doc += s.translateLst(mW)
-
-            doc += ('<h2>' + _('Standard NVDA commands') +
-                    ' (%s)</h2>') % str(len(mNV))
+            doc += ('<h2>' + _('Standard NVDA commands') +' (%s)</h2>') % str(len(mNV))
             doc += s.translateLst(mNV)
             doc += '<h2>{0} ({1})</h2>'.format(_('Modifier keys'), len(configBE.iniProfile["modifierKeys"]))
             doc += s.translateLst(configBE.iniProfile["modifierKeys"])
             doc += '<h2>' + _('Quick navigation keys') + '</h2>'
             doc += _(u'<p>In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:</p>')
             doc += s.translateLst(configBE.iniGestures['cursorManager.CursorManager'])
-            doc += ('<h2>' + _('Gadget commands') +
-                    ' (%s)</h2>') % str(len(configBE.iniProfile["miscs"]))
+            doc += ('<h2>' + _('Gadget commands') +' (%s)</h2>') % str(len(configBE.iniProfile["miscs"]))
             doc += s.translateLst(configBE.iniProfile["miscs"])
             doc += u'<h2>{0} ({1})</h2>'.format(_('Shortcuts defined outside add-on'), len(braille.handler.display.gestureMap._map))
             doc += '<ul>'
             for g in braille.handler.display.gestureMap._map:
-                doc += (u'<li>{0}{1}: {2}{3};</li>').format(
-                utils.beautifulSht(g).capitalize(),
-                configBE.sep,
-                utils.uncapitalize(re.sub('^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(braille.handler.display.gestureMap._map[g]))),
-                configBE.sep)
+                doc += (u'<li>{0}{1}: {2}{3};</li>').format(utils.beautifulSht(g).capitalize(), configBE.sep, utils.uncapitalize(re.sub('^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(braille.handler.display.gestureMap._map[g]))), configBE.sep)
             doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
             doc += '</ul>'
 
@@ -484,14 +425,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             if not noKC and 'keyboardLayouts' in configBE.iniProfile:
                 lb = s.getKeyboardLayouts()
                 doc += '<h2>{}</h2>'.format(_('Keyboard configurations provided'))
-                doc += u'<p>{}{}:</p><ol>'.format(
-                    _('Keyboard configurations are'), configBE.sep)
+                doc += u'<p>{}{}:</p><ol>'.format(_('Keyboard configurations are'), configBE.sep)
                 for l in lb:
                     doc += u'<li>{}.</li>'.format(l)
                 doc += '</ol>'
         else:
-            doc += (
-                '<h2>'+_(u"Warning:")+'</h2>'+
+            doc += ('<h2>'+_(u"Warning:")+'</h2>'+
                 _(u"BrailleExtender doesn't seem to support your braille display.")+'<br />'+
                 _(u'However, you can reassign most of these features in the "Command Gestures" dialog in the "Preferences" of NVDA.')+'</p>'
             )
@@ -514,11 +453,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     script_quickLaunch.__doc__=_('Opens a custom program/file. Go to settings to define them')
 
     def script_checkUpdate(self, gesture):
-        CheckUpdates()
+        if not globalVars.appArgs.secure:
+            CheckUpdates()
         return
 
-    script_checkUpdate.__doc__ = _(
-        'Check for %s updates, and starts the download if there is one') % configBE._addonName
+    script_checkUpdate.__doc__ = _('Check for %s updates, and starts the download if there is one') % configBE._addonName
+
     def increaseDelayAutoScroll():
         return
 
@@ -529,19 +469,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     def script_switchKeyboardLayout(self, gesture):
         self.clearGestureBindings()
         ls = configBE.iniProfile['keyboardLayouts'].keys()
-        if (configBE.conf['general']['keyboardLayout_' + configBE.curBD] in ls
-            and ls.index(configBE.conf['general']['keyboardLayout_'+configBE.curBD]) < len(ls)):
-            id = ls.index(configBE.conf['general']['keyboardLayout_' + configBE.curBD])
-            (nId,id) = (ls[id+1], id+1) if id+1 < len(ls) else (ls[0],0)
-        else:
-            (nId, id) = (ls[0],0)
+        kid = ls.index(configBE.conf['general']['keyboardLayout_'+configBE.curBD]) if configBE.conf['general']['keyboardLayout_'+configBE.curBD] in ls else 0
+        nId = ls[kid+1] if kid+1 < len(ls) else ls[0]
         configBE.conf['general']['keyboardLayout_' + configBE.curBD] = nId
-        ui.message(_("Configuration {0} ({1})").format(str(ls.index(nId)+1), self.getKeyboardLayouts()[id]))
+        ui.message(_("Configuration {0} ({1})").format(str(ls.index(nId)+1), self.getKeyboardLayouts()[ls.index(nId)]))
         configBE.saveSettings()
         return self.onReload(None, True)
 
-    script_switchKeyboardLayout.__doc__ = _(
-        "Switch between different braille keyboard configurations.")
+    script_switchKeyboardLayout.__doc__ = _("Switch between different braille keyboard configurations.")
 
     def script_switchInputBrailleTable(self, gesture):
         if configBE.noUnicodeTable:
@@ -550,8 +485,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
         if not config.conf["braille"]["inputTable"] in configBE.iTables:
             configBE.iTables.append(config.conf["braille"]["inputTable"])
-        id = configBE.iTables.index(config.conf["braille"]["inputTable"])
-        nID = id+1 if id+1<len(configBE.iTables) else 0
+        tid = configBE.iTables.index(config.conf["braille"]["inputTable"])
+        nID = tid+1 if tid+1<len(configBE.iTables) else 0
         brailleInput.handler.table = brailleTables.listTables()[configBE.tablesFN.index(configBE.iTables[nID])]
         return ui.message(brailleInput.handler.table.displayName)
     
@@ -564,8 +499,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
         if not config.conf["braille"]["translationTable"] in configBE.oTables:
             configBE.oTables.append(config.conf["braille"]["translationTable"])
-        id = configBE.oTables.index(config.conf["braille"]["translationTable"])
-        nID = id+1 if id+1<len(configBE.oTables) else 0
+        tid = configBE.oTables.index(config.conf["braille"]["translationTable"])
+        nID = tid+1 if tid+1<len(configBE.oTables) else 0
         config.conf["braille"]["translationTable"] = configBE.oTables[nID]
         braille.handler.mainBuffer.updateDisplay()
         return ui.message(configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
@@ -798,30 +733,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         return self.sendCombKeys("", False)
 
     # /* docstrings for modifier keys */
-    docS = [_('Emulate pressing down '), _(' on the system keyboard')]
-    script_ctrl.__doc__ = docS[0] + "CTRL" + docS[1]
-    script_alt.__doc__ = docS[0] + "ALT" + docS[1]
-    script_win.__doc__ = docS[0] + "Windows" + docS[1]
-    script_shift.__doc__ = docS[0] + "SHIFT" + docS[1]
-    script_nvda.__doc__ = docS[0] + "NVDA" + docS[1]
-    script_altShift.__doc__ = docS[0] + "ALT+SHIFT" + docS[1]
-    script_ctrlShift.__doc__ = docS[0] + "CTRL+SHIFT" + docS[1]
-    script_ctrlAlt.__doc__ = docS[0] + "CTRL+Alt" + docS[1]
-    script_ctrlAltShift.__doc__ = docS[0] + \
-        "CTRL+Alt+SHIFT" + docS[1]
-    script_ctrlWin.__doc__ = docS[0] + "CTRL+Windows" + docS[1]
-    script_altWin.__doc__ = docS[0] + "ALT+Windows" + docS[1]
-    script_winShift.__doc__ = docS[0] + "Windows+SHIFT" + docS[1]
-    script_altWinShift.__doc__ = docS[0] + \
-        "ALT+Windows+SHIFT" + docS[1]
-    script_ctrlWinShift.__doc__ = (docS[0] +
-                                             "CTRL+SHIFT+Windows" +
-                                             docS[1])
-    script_ctrlAltWin.__doc__ = docS[0] + \
-        "CTRL+Alt+Windows" + docS[1]
-    script_ctrlAltWinShift.__doc__ = (docS[0] +
-                                                "CTRL+Alt+SHIFT+Windows" +
-                                                docS[1])
+    docModKeys = lambda k: _('Emulate pressing down ')+'+'.join([utils.getKeysTranslation(l) for l in k.split('+')])+_(' on the system keyboard')
+    script_ctrl.__doc__ = docModKeys('control')
+    script_alt.__doc__ = docModKeys('ALT')
+    script_win.__doc__ = docModKeys('windows')
+    script_shift.__doc__ = docModKeys('SHIFT')
+    script_nvda.__doc__ = docModKeys('NVDA')
+    script_altShift.__doc__ = docModKeys('ALT+SHIFT')
+    script_ctrlShift.__doc__ = docModKeys('control+SHIFT')
+    script_ctrlAlt.__doc__ = docModKeys('control+ALT')
+    script_ctrlAltShift.__doc__ = docModKeys('control+ALT+SHIFT')
+    script_ctrlWin.__doc__ = docModKeys('control+windows')
+    script_altWin.__doc__ = docModKeys('ALT+windows')
+    script_winShift.__doc__ = docModKeys('Windows+Shift')
+    script_altWinShift.__doc__ = docModKeys('ALT+Windows+Shift')
+    script_ctrlWinShift.__doc__ = docModKeys('control+Windows+SHIFT')
+    script_ctrlAltWin.__doc__ = docModKeys('control+ALT+Windows')
+    script_ctrlAltWinShift.__doc__ = docModKeys('control+ALT+Windows+SHIFT')
 
     def onSettings(self, event):
         settings.Settings(configBE.curBD, configBE.reviewModeApps, configBE.noUnicodeTable, noKC, configBE.gesturesFileExists, configBE.iniProfile, configBE.quickLaunch, configBE.quickLaunchS, instanceGP, self.getKeyboardLayouts(), configBE.backupDisplaySize, configBE.iTables, configBE.oTables)
@@ -853,11 +781,9 @@ class CheckUpdates(wx.Dialog):
                 "installed": config.isInstalledCopy(),
                }
         url = '{0}BrailleExtender.latest?{1}'.format(configBE._addonURL, urllib.urlencode(params))
-        log.info(url)
         try:
             page = urllib.urlopen(url)
-            pageContent = page.read()
-            pageContent = re.sub('\s+$', '', pageContent)
+            pageContent = page.read().strip()
             if (page.code == 200 and pageContent.replace('_', '-') != configBE._addonVersion and len(pageContent) < 20):
                 newUpdate = True
                 msg = _("New version available, version %s. Do you want download it now?") % pageContent.strip()

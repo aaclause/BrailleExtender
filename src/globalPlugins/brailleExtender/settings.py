@@ -11,9 +11,12 @@ import inputCore
 import ui
 addonHandler.initTranslation()
 from logHandler import log
-
+from colors import RGB
 import configBE
-
+inProcessMsg = _('Feature Not Implemented Yet')
+CaptureMsg = _('Please enter the desired gesture for this command, now')
+endCaptureMsg = _('OK. The gesture captured is %s')
+failCaptureMsg = _('Unable to associate this gesture. Please enter another, now')
 class Settings(wx.Dialog):
     def __init__(self, *args):
         global curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, keyboardLayouts, instanceGP, backupDisplaySize, iTables, oTables
@@ -22,14 +25,17 @@ class Settings(wx.Dialog):
             return
         instanceGP.instanceST = self
         wx.Dialog.__init__(self, None, title=_('BrailleExtender settings'))
+        configBE.loadConfAttribra()
         self.p = wx.Panel(self)
         self.nb = wx.Notebook(self.p)
         self.general = General(self.nb)
         self.reading = Reading(self.nb)
+        self.attribra = Attribra(self.nb)
         self.keyboard = Keyboard(self.nb)
         self.quickLaunch = QuickLaunch(self.nb)
         self.nb.AddPage(self.general, _("General"))
         self.nb.AddPage(self.reading, _("Reading"))
+        self.nb.AddPage(self.attribra, _("Attribra"))
         self.nb.AddPage(self.keyboard, _("Braille keyboard"))
         self.nb.AddPage(self.quickLaunch, _("Quick launches"))
         self.sizer = wx.BoxSizer()
@@ -54,8 +60,13 @@ class Settings(wx.Dialog):
         configBE.conf['general']['reportvolumeb'] = self.general.reportvolumeb.GetValue()
         configBE.conf['general']['reportvolumes'] = self.general.reportvolumes.GetValue()
         configBE.conf['general']['hourDynamic'] = self.general.hourDynamic.GetValue()
+        if configBE.conf['general']['reverseScroll'] != self.reading.reverseScroll.GetValue():
+            if self.reading.reverseScroll.GetValue():
+                instanceGP.reverseScrollBtns()
+            else:
+                instanceGP.reverseScrollBtns(None, True)
+            configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue()
         configBE.conf['general']['delayScroll_' + curBD] = self.reading.delayScroll.GetValue()
-        configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue()
         try:
             if int(self.general.limitCells.GetValue()) > backupDisplaySize or int(self.general.limitCells.GetValue()) < 0:
                 configBE.conf['general']['limitCells_' + curBD] = 0
@@ -66,6 +77,7 @@ class Settings(wx.Dialog):
         except BaseException:
             configBE.conf['general']['limitCells_' + curBD] = 0
         configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
+        configBE.conf['general']['attribra'] = self.attribra.attribraEnabled.GetValue()
         configBE.conf['general']['reviewModeApps'] = self.general.reviewModeApps.GetValue()
         if not noUnicodeTable:
             configBE.conf['general']['iTableSht'] = self.keyboard.iTableSht.GetSelection() - 1
@@ -73,6 +85,7 @@ class Settings(wx.Dialog):
             configBE.conf['general']['ignoreBlankLineScroll'] = self.reading.ignoreBlankLineScroll.GetValue()
         if gesturesFileExists:
             configBE.conf['general']['keyboardLayout_' +curBD] = iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]
+            
             tApps = []
             for app in quickLaunchS:
                 tApps.append(app.strip())
@@ -82,6 +95,7 @@ class Settings(wx.Dialog):
         configBE.conf['general']['favbd1'] = self.general.favbd1.GetSelection()
         configBE.conf['general']['favbd2'] = self.general.favbd2.GetSelection()
         self.buttonC.SetFocus()
+        configBE.saveSettingsAttribra()
         configBE.saveSettings()
         return instanceGP.onReload(None,True)
 
@@ -247,6 +261,153 @@ class Reading(wx.Panel):
         else:
             self.ignoreBlankLineScroll.Enable()
         return
+
+class Attribra(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        self.attribraEnabled = wx.CheckBox(self, label=_('Enable Attribra'))
+        if configBE.conf['general']['attribra']:
+            self.attribraEnabled.SetValue(True)
+        self.profilesLabel = wx.StaticText(self, -1, label=_(u'Profile'))
+        self.profiles = wx.Choice(self, pos=(-1, -1), choices=self.getListProfiles())
+        self.profiles.SetSelection(0)
+        self.profiles.Bind(wx.EVT_CHOICE, self.onProfiles)
+        self.bold = wx.CheckBox(self, label=_('Bold'))
+        self.italic = wx.CheckBox(self, label=_('Italic'))
+        self.underline = wx.CheckBox(self, label=_('Underline'))
+        self.spellingErrors = wx.CheckBox(self, label=_('Spelling errors'))
+        self.advancedRulesLabel = wx.StaticText(self, -1, label=_(u'Advanced rules'))
+        self.advancedRules = wx.Choice(self, pos=(-1, -1), choices=[])
+        self.editRuleBtn = wx.Button(self, label=_('&Edit this rule'))
+        self.removeRuleBtn = wx.Button(self, label=_('&Remove this rule'))
+        self.addRuleBtn = wx.Button(self, label=_('&Add a rule'))
+
+        self.addProfileBtn = wx.Button(self, label=_('Add a profile'))
+        self.editProfileBtn = wx.Button(self, label=_('Edit this profile'))
+        self.removeProfileBtn = wx.Button(self, label=_('Remove this profile'))
+        
+        self.addRuleBtn.Bind(wx.EVT_BUTTON, self.onAddRuleBtn)
+        self.editRuleBtn.Bind(wx.EVT_BUTTON, self.onEditRuleBtn)
+        self.removeRuleBtn.Bind(wx.EVT_BUTTON, self.onRemoveRuleBtn)
+        self.addProfileBtn.Bind(wx.EVT_BUTTON, self.onAddProfileBtn)
+        self.editProfileBtn.Bind(wx.EVT_BUTTON, self.onEditProfileBtn)
+        self.removeProfileBtn.Bind(wx.EVT_BUTTON, self.onRemoveProfileBtn)
+
+        self.spellingErrors.Bind(wx.EVT_CHECKBOX, self.onSpellingErrors)
+        self.bold.Bind(wx.EVT_CHECKBOX, self.onBold)
+        self.italic.Bind(wx.EVT_CHECKBOX, self.onItalic)
+        self.underline.Bind(wx.EVT_CHECKBOX, self.onUnderline)
+        return self.onProfiles()
+
+    def onBold(self, event):
+        if self.bold.GetValue():
+            if not 'bold' in configBE.confAttribra[self.getCurrentProfile()]:
+                configBE.confAttribra[self.getCurrentProfile()]['bold'] = [1]
+            configBE.confAttribra[self.getCurrentProfile()]['bold'][0] = 1
+        else:
+            if 'bold' in configBE.confAttribra[self.getCurrentProfile()]:
+                del configBE.confAttribra[self.getCurrentProfile()]['bold']
+        return
+
+    def onItalic(self, event):
+        if self.italic.GetValue():
+            if not 'italic' in configBE.confAttribra[self.getCurrentProfile()]:
+                configBE.confAttribra[self.getCurrentProfile()]['italic'] = [1]
+            configBE.confAttribra[self.getCurrentProfile()]['italic'][0] = 1
+        else:
+            if 'italic' in configBE.confAttribra[self.getCurrentProfile()]:
+                del configBE.confAttribra[self.getCurrentProfile()]['italic']
+        return
+
+    def onUnderline(self, event):
+        if self.underline.GetValue():
+            if not 'underline' in configBE.confAttribra[self.getCurrentProfile()]:
+                configBE.confAttribra[self.getCurrentProfile()]['underline'] = [1]
+            configBE.confAttribra[self.getCurrentProfile()]['underline'][0] = 1
+        else:
+            if 'underline' in configBE.confAttribra[self.getCurrentProfile()]:
+                del configBE.confAttribra[self.getCurrentProfile()]['underline']
+        return
+
+    def onSpellingErrors(self, event):
+        if self.spellingErrors.GetValue():
+            if not 'invalid-spelling' in configBE.confAttribra[self.getCurrentProfile()]:
+                configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling'] = [1]
+            configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling'][0] = 1
+        else:
+            if 'invalid-spelling' in configBE.confAttribra[self.getCurrentProfile()]:
+                del configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling']
+        return
+
+
+    def onAddRuleBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+    def onEditRuleBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+
+    def onRemoveRuleBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+
+    def onAddProfileBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+
+    def onEditProfileBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+
+    def onRemoveProfileBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+
+    getCurrentProfile = lambda self: 'global' if self.profiles.GetSelection() == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
+
+    def getAdvancedRules(self):
+        profileId = 'global' if self.profiles.GetSelection() == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
+        return [k+': '+configBE.translateRule(configBE.confAttribra[profileId][k]) for k in configBE.confAttribra[profileId].keys() if k not in ['bold','italic','underline','invalid-spelling']]
+
+    getListProfiles = lambda self, t = True: ['Default']+[self.translateApp(k) if t else k for k in configBE.confAttribra.keys() if k != 'global']
+
+    def onProfiles(self, event = None):
+        profileId = self.profiles.GetSelection()
+        app = 'global' if profileId == 0 else self.getListProfiles(False)[profileId]
+        if 'bold' in configBE.confAttribra[app].keys() and self.bold.GetValue() != configBE.confAttribra[app]['bold']:
+            self.bold.SetValue(not self.bold.GetValue())
+        if not 'bold' in configBE.confAttribra[app].keys():
+            self.bold.SetValue(False)
+        if 'italic' in configBE.confAttribra[app].keys() and self.italic.GetValue() != configBE.confAttribra[app]['italic']:
+            self.italic.SetValue(not self.italic.GetValue())
+        if not 'italic' in configBE.confAttribra[app].keys():
+            self.italic.SetValue(False)
+        if 'underline' in configBE.confAttribra[app].keys() and self.underline.GetValue() != configBE.confAttribra[app]['underline']:
+            self.underline.SetValue(not self.underline.GetValue())
+        if not 'underline' in configBE.confAttribra[app].keys():
+            self.underline.SetValue(False)
+        if 'invalid-spelling' in configBE.confAttribra[app].keys() and self.spellingErrors.GetValue() != configBE.confAttribra[app]['invalid-spelling']:
+            self.spellingErrors.SetValue(not self.spellingErrors.GetValue())
+        if not 'invalid-spelling' in configBE.confAttribra[app].keys():
+            self.spellingErrors.SetValue(False)
+        self.advancedRules.SetItems(self.getAdvancedRules())
+        if len(self.getAdvancedRules()) > 0:
+            self.advancedRules.SetSelection(0)
+            self.advancedRules.Enable()
+            self.editRuleBtn.Enable()
+            self.removeRuleBtn.Enable()
+        else:
+            self.advancedRules.Disable()
+            self.editRuleBtn.Disable()
+            self.removeRuleBtn.Disable()
+        return
+
+    def translateApp(self, app):
+        tApps = {
+            'winword': 'Microsoft Word',
+        }
+        return tApps[app]+' (%s)' % app if app in tApps else app.capitalize()
+
 class Keyboard(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -339,18 +500,29 @@ class QuickLaunch(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         shts = wx.BoxSizer(wx.VERTICAL)
-        t = wx.StaticText(self, -1, "This is a PageTwo object", (40,40))
         if gesturesFileExists:
-            self.quickKeysT = wx.StaticText(self, -1, label=_('Combination keys for the quick launches'))
+            self.quickKeysT = wx.StaticText(self, -1, label=_('Gestures for the quick launches'))
             self.quickKeys = wx.Choice(self, pos=(-1, -1), choices=self.getQuickLaunchList())
             self.quickKeys.SetSelection(0)
             self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
             self.target = wx.TextCtrl(self, -1, value=quickLaunchS[0])
             self.target.Bind(wx.wx.EVT_TEXT, self.onTarget)
-            self.browse = wx.Button(self, -1, label=_(u'&Browse...'))
-            self.Bind(wx.EVT_BUTTON, self.onBrowse, self.browse)
+            self.browseBtn = wx.Button(self, -1, label=_(u'&Browse...'))
+            self.removeGestureBtn = wx.Button(self, -1, label=_(u'&Remove this gesture'))
+            self.addGestureBtn = wx.Button(self, -1, label=_(u'&Add a quick launch'))
+            self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
+            self.removeGestureBtn.Bind(wx.EVT_BUTTON, self.onRemoveGestureBtn)
+            self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
 
     getQuickLaunchList = lambda s: [quickLaunch[k]+configBE.sep+': '+quickLaunchS[k] for k in range(len(quickLaunch))]
+
+    def onRemoveGestureBtn(self, event):
+        ui.message(inProcessMsg)
+        return
+
+    def onAddGestureBtn(self, event):
+        ui.message(inProcessMsg)
+        return
     
     def onTarget(self, event):
         oldS = self.quickKeys.GetSelection()
@@ -359,9 +531,10 @@ class QuickLaunch(wx.Panel):
         return self.quickKeys.SetSelection(oldS)
 
     def onQuickKeys(self, event):
-        return self.target.SetValue(self.quickKeys.GetStringSelection().split(': ')[1])
+        self.target.SetValue(self.quickKeys.GetStringSelection().split(': ')[1]) if not self.quickKeys.GetStringSelection().strip().startswith(':') else self.target.SetValue('')
+        return
 
-    def onBrowse(self, event):
+    def onBrowseBtn(self, event):
         oldS = self.quickKeys.GetSelection()
         dlg = wx.FileDialog(None,
                             _("Choose a file for {0}".format(quickLaunch[self.quickKeys.GetSelection()])),

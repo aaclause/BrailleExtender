@@ -3,9 +3,10 @@ from os import path as osp
 import ui
 import re
 from cStringIO import StringIO
-
 from configobj import ConfigObj
 from validate import Validator
+
+from colors import RGB
 
 import addonHandler
 addonHandler.initTranslation()
@@ -17,11 +18,15 @@ from logHandler import log
 
 curBD = config.conf["braille"]["display"]
 cfgFile = config.getUserDefaultConfigPath() + '\\BrailleExtender.conf'
+cfgFileAttribra = config.getUserDefaultConfigPath() + '\\attribra-BE.ini'
 reviewModeApps = []
 quickLaunch = []
 quickLaunchS = []
 backupDisplaySize = braille.handler.displaySize
-conf = iniGestures = iniProfile = None
+conf = {}
+iniGestures = {}
+iniProfile = {}
+confAttribra = {}
 profileFileExists = gesturesFileExists = False
 lang = languageHandler.getLanguage().split('_')[-1].lower()
 noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
@@ -36,7 +41,10 @@ _addonDesc = addonHandler.Addon(_addonDir).manifest['description']
 profilesDir = osp.join(osp.dirname(__file__), "", "") + \
     ('Profiles/').decode('utf-8').encode('mbcs')
 log.error('Profiles\' path not found') if not osp.exists(profilesDir) else log.debug('Profiles\' path (%s) found' % profilesDir)
-
+begFileAttribra = """# Attribra for BrailleExtender
+# Thanks to Alberto Zanella
+# -> https://github.com/albzan/attribra/
+"""
 try:
     import brailleTables
     tablesFN = [t[0] for t in brailleTables.listTables()]
@@ -69,6 +77,7 @@ def loadConf():
         iTables = string(default="{ITABLE}")
         oTables = string(default="{OTABLE}")
         quickLaunch_{CUR_BD} = string(default="notepad; wordpad; calc; cmd")
+        attribra = boolean(default=True)
     """.format(
             CUR_BD=curBD,
             MAX_BD=42,
@@ -79,9 +88,7 @@ def loadConf():
             MAX_TABLES=420,
             KEYBOARDLAYOUT=kld
         )), encoding="UTF-8", list_values=False)
-    confspec.initial_comment = [
-        _addonName + ' (' + _addonVersion + ')'
-        ' - Configuration file', _addonURL]
+    confspec.initial_comment = ['%s (%s)' % (_addonName, _addonVersion), _addonURL]
     confspec.final_comment = ['End Of File']
     confspec.newlines = "\n"
     conf = ConfigObj(cfgFile, configspec=confspec,
@@ -130,13 +137,7 @@ def loadGestures():
             f = open(fn)
             tmp = [line.strip().replace(' ','').replace('$',iniProfile['general']['nameBK']).replace('=', '=br(%s):'% curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
             tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
-            inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})        
-    try:
-        if conf['general']['reverseScroll']:
-            scbtns = [inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollBack']+[inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollForward']
-            inputCore.manager.localeGestureMap.update({'globalCommands.GlobalCommands':{"braille_scrollForward": ', '.join(scbtns[0]), "braille_scrollBack": ', '.join(scbtns[1])}})
-    except:
-        pass
+            inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
     return
 
 
@@ -153,6 +154,34 @@ def saveSettings():
         log.exception('Cannot save Configuration')
     return
 
+def translateRule(E):
+        r = []
+        for e in E:
+            if type(e) == RGB:
+                r.append('"RGB(%s, %s, %s)"' % (e.red, e.green, e.blue))
+            else:
+                r.append('"%s"'% e)
+        return ', '.join(r)
+
+def saveSettingsAttribra():
+    global confAttribra
+    try:
+        f = open(config.getUserDefaultConfigPath() + '\\attribra-BE.ini', "w")
+        c = begFileAttribra+'\n'
+        for k in sorted(confAttribra.keys()):
+            c += '[%s]\n' % k
+            for kk, v in confAttribra[k].items():
+                if kk not in ['bold','italic','underline','invalid-spelling']:
+                    vv = translateRule(v)
+                else:
+                    vv = v[0]
+                c += '%s = %s\n' % (kk, vv)
+            c += '\n'
+        f.write(c)
+        f.close()
+    except BaseException, e:
+        ui.message('Error: '+str(e))
+    return
 
 def checkConfigPath():
     global profileFileExists, iniProfile, quickLaunch
@@ -217,5 +246,50 @@ def initGestures():
                     iniGestures['globalCommands.GlobalCommands'][g])).replace('br(' + curBD + '):', '')] = g
     return gesturesFileExists, iniGestures
 
+def loadConfAttribra():
+    global confAttribra
+    try:
+        cfg = ConfigObj(cfgFileAttribra, encoding="UTF-8")
+        for app, map in cfg.iteritems():
+            mappings = {}
+            for name, value in map.iteritems():
+                if isinstance(value, basestring):
+                    if value.startswith("RGB("): #it's an RGB Object
+                        rgbval = value.split("RGB(")[1]
+                        rgbval = rgbval.split(")")[0]
+                        rgbval = rgbval.split(",")
+                        mappings[name] = [RGB(int(rgbval[0]),int(rgbval[1]),int(rgbval[2]))]
+                    else:
+                        try:
+                            #if possible adds the value and its int
+                            mappings[name] = [value, int(value)]
+                        except ValueError:
+                            mappings[name] = [value]
+                else: mappings[name] = value
+            confAttribra[app] = mappings
+    except IOError:
+        log.debugWarning("No Attribra config file found")
+    
 checkConfigPath()
 loadConf()
+
+if not osp.exists(cfgFileAttribra):
+    f = open(config.getUserDefaultConfigPath() + '\\attribra-BE.ini', "w")
+    f.write(begFileAttribra+"""
+
+[global]
+    bold = 1
+
+[winword]
+    invalid-spelling = 1
+
+[eclipse]
+    background-color = "rgb(24420045)", "rgb(2550128)"
+
+[firefox]
+    color = "RGB(255,0,0)"
+
+[thunderbird]
+    invalid-spelling = 1
+    """)    
+    f.close()

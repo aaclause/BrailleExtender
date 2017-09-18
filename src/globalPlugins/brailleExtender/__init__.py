@@ -1,22 +1,32 @@
 # coding: utf-8
+# BrailleExtender Addon for NVDA
+# This file is covered by the GNU General Public License.
+# See the file COPYING for more details.
+# Copyright (C) 2017 André-Abush CLAUSE <dev@andreabc.net>
+#
+# Additional third party copyrighted code is included:
+#   - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
+#   -> https://github.com/albzan/attribra/
+
 import os
 import re
 import time
 import urllib
 from collections import OrderedDict
-
+from configobj import ConfigObj
 import gui
 import wx
 import addonHandler
 addonHandler.initTranslation()
+import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
 import config
 import cursorManager
+import globalCommands
 import globalPluginHandler
 import globalVars
-import globalCommands
 import inputCore
 import languageHandler
 import speech
@@ -24,7 +34,6 @@ import ui
 import versionInfo
 from keyboardHandler import KeyboardInputGesture
 from logHandler import log
-
 import configBE
 import settings
 import utils
@@ -33,6 +42,45 @@ instanceGP = None
 instanceUP = None
 noKC = None
 lang = configBE.lang
+ATTRS = {}
+logTextInfo = False
+
+def decorator(fn, str):
+    def _getTypeformFromFormatField(self, field):
+        #convention: to mark we put 4 (bold for liblouis)
+        for attr,value in ATTRS.iteritems():
+            fval = field.get(attr,False)
+            if fval in value:
+                return 4
+        # if COMPLCOLORS != None:
+            # col = field.get("color",False)
+            # if col and (col != COMPLCOLORS):
+                # return 4
+        return 0
+    
+    def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
+        conf = formatConfig.copy()
+        conf["reportFontAttributes"]=True
+        conf["reportColor"]=True
+        conf["reportSpellingErrors"]=True
+        if logTextInfo:
+            log.info(info.getTextWithFields(conf))
+        fn(self, info, conf, isSelection)
+
+    def update(self):
+        fn(self)
+        DOT7 = 64
+        DOT8 = 128
+        for i in xrange(0,len(self.rawTextTypeforms)):
+            if self.rawTextTypeforms[i] == 4:
+                self.brailleCells[i] |= DOT7 | DOT8
+
+    if str == "addTextWithFields":
+        return addTextWithFields_edit
+    if str == "update":
+        return update
+    if str == "_getTypeformFromFormatField":
+        return _getTypeformFromFormatField
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     scriptCategory = configBE._addonName
@@ -40,10 +88,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     autoScrollRunning = False
     modifiers = {
         'control': False,
-        'alt': False,
+        'alt'    : False,
         'windows': False,
-        'shift': False,
-        'nvda': False,
+        'shift'  : False,
+        'nvda'   : False,
     }
     _tGestures = OrderedDict()
     _pGestures = OrderedDict()
@@ -54,6 +102,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     backupTether = braille.handler.tether
     switchedMode = False
     instanceST = None
+    currentPid = ""
+    
     def __init__(self):
         super(globalPluginHandler.GlobalPlugin, self).__init__()
         global instanceGP
@@ -67,6 +117,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time()-configBE.conf['general']['lastCheckUpdate'] > 172800:
             CheckUpdates(True)
             configBE.conf['general']['lastCheckUpdate'] = time.time()
+        if configBE.conf['general']['attribra']:
+            configBE.loadConfAttribra() #parse configuration
+            if len(configBE.confAttribra) > 0: #If no cfg then do not replace functions
+                braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields,"addTextWithFields")
+                braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update,"update")
+                braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField,"_getTypeformFromFormatField")                    
+        if configBE.conf['general']['reverseScroll']:
+            self.reverseScrollBtns()
+        if not configBE.conf['general']['reverseScroll'] and configBE.curBD.lower() in ["brailliantb"]:
+            self.__gestures["br(brailliantB):c2"] = "braille_scrollBack"
+            self.__gestures["br(brailliantB):c5"] = "braille_scrollForward"
+            self.bindGestures(self.__gestures)
         return
 
     def event_gainFocus(self, obj, nextHandler):
@@ -82,6 +144,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             braille.handler.tether = self.backupTether
             self.switchedMode = False
         nextHandler()
+        pid = obj.processID
+        if self.currentPid != pid:
+            self.populateAttrs(pid)
+            self.currentPid = pid
+
+    def populateAttrs(self,pid):
+        if (len(configBE.confAttribra) == 0): return
+        global ATTRS #We are changing the global variable
+        appname = appModuleHandler.getAppNameFromProcessID(pid)
+        if (appname in configBE.confAttribra):
+            ATTRS = configBE.confAttribra[appname]
+        elif ("global" in configBE.confAttribra):
+            ATTRS = configBE.confAttribra["global"]
+        else: ATTRS = {}
 
     def createMenu(self):
         try:
@@ -150,6 +226,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             return False
 
     def terminate(self):
+        super(GlobalPlugin, self).terminate()
+        if self.instanceST != None:
+            self.instanceST.onClose(None)
+        if instanceUP != None:
+            instanceUP.onClose(None)
         inputCore.manager.localeGestureMap.clear()
         self.removeMenu()
         if configBE.noUnicodeTable:
@@ -385,10 +466,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         return doc
 
     def getDoc(s):
-        doc = u''
-        doc += u'<h1>' + _('{0}\'s documentation{1}{2}').format(configBE._addonName, configBE.sep, ': '+_('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '') + '</h1>'
-        doc += u'<p>Version {0}<br />{1}<br />{2}</p>'.format(configBE._addonVersion, configBE._addonAuthor.replace('<', '&lt;').replace('>','&gt;'),'<a href="' +configBE._addonURL +'">' +configBE._addonURL +'</a>')
-        doc += '<pre>' + configBE._addonDesc + '</pre>'
+        doc = u"""
+        <h1>{NAME}{DISPLAY}</h1>
+        <p>Version {VERSION}<br />
+        {AUTHOR}<br />
+        {URL}</p>
+        <pre>{DESC}</pre>
+        """.format(
+            NAME=configBE._addonName,
+            DISPLAY=configBE.sep+': '+_('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '',
+            VERSION=configBE._addonVersion,
+            AUTHOR=configBE._addonAuthor.replace('<', '&lt;').replace('>','&gt;'),
+            URL='<a href="' +configBE._addonURL +'">' +configBE._addonURL +'</a>',
+            DESC=configBE._addonDesc
+        )
         if configBE.gesturesFileExists:
             mKB = OrderedDict()
             mNV = OrderedDict()
@@ -410,7 +501,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             doc += '<h2>{0} ({1})</h2>'.format(_('Modifier keys'), len(configBE.iniProfile["modifierKeys"]))
             doc += s.translateLst(configBE.iniProfile["modifierKeys"])
             doc += '<h2>' + _('Quick navigation keys') + '</h2>'
-            doc += _(u'<p>In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:</p>')
+            doc += "<p>"+_(u'In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:')+"</p>"
             doc += s.translateLst(configBE.iniGestures['cursorManager.CursorManager'])
             doc += ('<h2>' + _('Gadget commands') +' (%s)</h2>') % str(len(configBE.iniProfile["miscs"]))
             doc += s.translateLst(configBE.iniProfile["miscs"])
@@ -436,7 +527,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             )
         doc += ('<h2>' + _('Shortcuts on system keyboard specific to the add-on') +' (%s)</h2>') % str(len(s.__gestures)-3)
         doc += '<ul>'
-        for g in s.__gestures:
+        for g in [k for k in s.__gestures if k.lower().startswith('kb:')]:
             if g.lower() not in ['kb:volumeup','kb:volumedown','kb:volumemute']:
                 doc += (u'<li>{0}{1}: {2}{3};</li>').format(utils.getKeysTranslation(g), configBE.sep, re.sub('^([A-Z])', lambda m: m.group(1).lower(), s.getDocScript(s.__gestures[g])), configBE.sep)
         doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
@@ -446,6 +537,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
             configBE._addonName, True)
 
     def script_quickLaunch(self, gesture):
+        if gesture.id not in configBE.quickLaunch:
+            configBE.quickLaunch.append(gesture.id)
+            configBE.quickLaunchS.append('')
+            return ui.message(gesture.id+' added')
+            
         try:
             return os.startfile(configBE.quickLaunchS[configBE.quickLaunch.index('+'.join(sorted((gesture.id).lower().split('+'))))].strip())
         except BaseException:
@@ -530,6 +626,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         return os.startfile(loc if ok else '\\'.join(os.path.abspath(__file__).split('\\')[:-3]) + "\\doc\\fr\\changelog.html")
 
     def onReload(self, evt=None, sil=False, sv=False):
+        inputCore.manager.localeGestureMap.clear()
         if sv:
             configBE.saveSettings()
         configBE.checkConfigPath()
@@ -537,6 +634,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         configBE.loadConf()
         configBE.loadGestures()
         self.gesturesInit()
+        configBE.loadConfAttribra()
+        if configBE.conf['general']['reverseScroll']:
+            self.reverseScrollBtns()
+        if not configBE.conf['general']['reverseScroll'] and configBE.curBD.lower() in ["brailliantb"]:
+            self.__gestures["br(brailliantB):c2"] = "braille_scrollBack"
+            self.__gestures["br(brailliantB):c5"] = "braille_scrollForward"
+            self.bindGestures(self.__gestures)
         if not sil:
             ui.message(_('%s reloaded') % configBE._addonName)
         return
@@ -545,17 +649,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
         return CheckUpdates()
         
     def onAbout(self, evt):
-        msg = (
-            _(u"Copyright (C) 2017 André-Abush Clause, and other contributors:") +
-            "\r\n" +
-            _(u"* All testers."))
-        msg += "\nURL: " + configBE._addonURL + "\n"
-        dlg = wx.MessageDialog(
-            None, msg, _(
-                "About %s" %
-                (configBE._addonName) + " " + configBE._addonVersion), wx.OK)
-        dlg.ShowModal()
-        dlg.Destroy()
+        msg = ('\n'.join([
+            "<p>",
+            _(u"Copyright (C) 2017 André-Abush Clause, and other contributors:"),"</p>",
+            "<ul><li>Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;: "+_("Persian translation")+";</li>",
+            "<li>Corentin"+configBE.sep+": "+_("changelog french and many tests")+".</li></ul>",
+            "<p>"+_(u"Additional third party copyrighted code is included:")+"</p>",
+            u"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
+        """.format(SEP=configBE.sep),u"</ul>"])
+        )
+        msg += "<p>URL"+configBE.sep+": " + configBE._addonURL + "</p>"
+        ui.browseableMessage(msg, _("About {0} {1}").format(configBE._addonName, configBE._addonVersion),True)
         return
 
     def onWebsite(self, evt):
@@ -751,10 +855,47 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     script_ctrlAltWin.__doc__ = docModKeys('control+ALT+Windows')
     script_ctrlAltWinShift.__doc__ = docModKeys('control+ALT+Windows+SHIFT')
 
+    def script_braille_scrollBack(self, gesture):
+        braille.handler.scrollBack()
+    script_braille_scrollBack.bypassInputHelp = True
+
+    def script_braille_scrollForward(self, gesture):
+        braille.handler.scrollForward()
+    script_braille_scrollForward.bypassInputHelp = True
+
+    def reverseScrollBtns(self, gesture = None, cancel = False):
+        if configBE.curBD.lower() == 'brailliantb':
+            if cancel:
+                self.__gestures["br(brailliantB):c2"] = "braille_scrollBack"
+                self.__gestures["br(brailliantB):c5"] = "braille_scrollForward"
+            else:
+                self.__gestures["br(brailliantB):c5"] = "braille_scrollBack"
+                self.__gestures["br(brailliantB):c2"] = "braille_scrollForward"
+            return self.bindGestures(self.__gestures)
+        if cancel:
+            scbtns = [inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollForward']+[inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollBack']
+        else:
+            scbtns = [inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollBack']+[inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollForward']
+        for k in scbtns[0]:
+            if k.lower() not in ['br(freedomscientific):leftwizwheelup','br(freedomscientific):leftwizwheeldown']:
+                self.__gestures[k] = "braille_scrollForward"
+        for k in scbtns[1]:
+            if k.lower() not in ['br(freedomscientific):leftwizwheelup','br(freedomscientific):leftwizwheeldown']:
+                self.__gestures[k] = "braille_scrollBack"
+        self.bindGestures(self.__gestures)
+        return
+
     def onSettings(self, event):
         settings.Settings(configBE.curBD, configBE.reviewModeApps, configBE.noUnicodeTable, noKC, configBE.gesturesFileExists, configBE.iniProfile, configBE.quickLaunch, configBE.quickLaunchS, instanceGP, self.getKeyboardLayouts(), configBE.backupDisplaySize, configBE.iTables, configBE.oTables)
 
+    def script_logFieldsAtCursor(self, gesture) :
+        global logTextInfo
+        logTextInfo = not logTextInfo
+        msg = ["stop","start"]
+        ui.message("debug textInfo "+msg[logTextInfo])
+        
     __gestures = OrderedDict()
+    __gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
     __gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
     __gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
     __gestures["kb:shift+NVDA+y"] = "autoScroll"
@@ -764,7 +905,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
     __gestures["kb:volumeMute" ]= "toggleVolume"
     __gestures["kb:volumeUp"] = "volumePlus"
     __gestures["kb:volumeDown"] = "volumeMinus"
-
+                
 class CheckUpdates(wx.Dialog):
     def __init__(self, sil = False):
         global instanceUP

@@ -14,10 +14,11 @@ import config
 import ui
 import addonHandler
 import scriptHandler
+import speech
 import textInfos
 from keyboardHandler import KeyboardInputGesture
 addonHandler.initTranslation()
-
+from logHandler import log
 
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
@@ -187,7 +188,7 @@ def bkToChar(dots, inTable=config.conf["braille"]["inputTable"]):
 def reload_brailledisplay(bd_name):
     try:
         if braille.handler.setDisplayByName(bd_name):
-            ui.message(_("%s display found. Successful reloading.")
+            speech.speakMessage(_("%s display found. Successful reloading.")
                        % bd_name.capitalize())
             return True
         else:
@@ -216,54 +217,6 @@ def currentCharDesc():
             ui.message(u'"{0}" copied to clipboard.'.format(s))
     except BaseException:
         ui.message(_('Not a character.'))
-
-def sendCombKeysNVDA(sht):
-
-    # To improve!!! 
-    if 'kb:' not in sht:
-        sht = 'kb:' + sht
-    shtO = sht
-    add = '+nvda' if 'nvda+' in sht else ''
-    sht = '+'.join(sorted((inputCore.normalizeGestureIdentifier(sht.replace('nvda+','')).replace('kb:','') +add).split('+')))
-    layouts = ['','(laptop)','(desktop)']
-    places = ['globalCommands.commands._gestureMap']
-    for layout in layouts:
-        for place in places:
-            try:
-                tSht = eval('scriptHandler.getScriptName('+place+'[\'kb'+layout+':'+sht+'\'])')
-                eval('.'.join(place.split('.')[:-1])+'.script_' + tSht + '(None)')
-                return True
-            except:
-                pass
-    try:
-        obj = api.getFocusObject()
-        if obj.treeInterceptor != None:
-            obj = obj.treeInterceptor
-            gesS=obj._CursorManager__gestures.values()+obj._BrowseModeDocumentTreeInterceptor__gestures.values()+obj._BrowseModeTreeInterceptor__gestures.values()
-            gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in obj._CursorManager__gestures.keys()+obj._BrowseModeDocumentTreeInterceptor__gestures.keys()+obj._BrowseModeTreeInterceptor__gestures.keys()]
-            gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in gesO]
-            script = gesS[gesN.index('kb:'+sht)]
-            eval('obj.script_'+script+'(None)')
-            return True
-        else:
-            gesO = [re.sub(':(.+)$',lambda m: m.group(0), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-            gesN = [re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-            if 'kb:'+sht in gesN:
-                a=cursorManager.CursorManager()
-                a.makeTextInfo = obj.makeTextInfo
-                script = a._CursorManager__gestures[gesO[gesN.index('kb:'+sht)]]
-                eval('a.script_'+script+'(None)')
-                return True
-    except BaseException, e:
-        pass
-    shtPlugins = {p: eval('globalPlugins.'+p+'.GlobalPlugin._GlobalPlugin__gestures') for p in globalPlugins.__dict__.keys() if not p.startswith('_') and hasattr(eval('globalPlugins.'+p+'.GlobalPlugin'),'_GlobalPlugin__gestures')}
-    for k in shtPlugins:
-        shtPlugins[k] = {re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g.lower().replace(' ','')): shtPlugins[k][g] for g in shtPlugins[k] if g.lower().startswith('kb:')}
-    for p in shtPlugins.keys():
-        if 'kb:'+sht in shtPlugins[p]:
-            eval('globalPlugins.'+p+'.GlobalPlugin().script_'+shtPlugins[p]['kb:'+sht]+'(None)')
-            return True
-    return False
 
 
 def getKeysTranslation(n):

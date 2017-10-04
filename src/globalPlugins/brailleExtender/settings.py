@@ -57,8 +57,8 @@ class Settings(wx.Dialog):
     def onSave(self, evt):
         configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
         configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
-        configBE.conf['general']['reportvolumeb'] = self.general.reportvolumeb.GetValue()
-        configBE.conf['general']['reportvolumes'] = self.general.reportvolumes.GetValue()
+        configBE.conf['general']['reportVolumeBraille'] = self.general.reportVolumeBraille.GetValue()
+        configBE.conf['general']['reportVolumeSpeech'] = self.general.reportVolumeSpeech.GetValue()
         configBE.conf['general']['hourDynamic'] = self.general.hourDynamic.GetValue()
         if configBE.conf['general']['reverseScroll'] != self.reading.reverseScroll.GetValue():
             if self.reading.reverseScroll.GetValue():
@@ -92,8 +92,8 @@ class Settings(wx.Dialog):
             configBE.conf['general']['quickLaunch_'+curBD] = '; '.join(tApps)
         configBE.conf['general']['iTables'] = ','.join(iTables)
         configBE.conf['general']['oTables'] = ','.join(oTables)
-        configBE.conf['general']['favbd1'] = self.general.favbd1.GetSelection()
-        configBE.conf['general']['favbd2'] = self.general.favbd2.GetSelection()
+        configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[self.general.brailleDisplay1.GetSelection()][0]
+        configBE.conf['general']['brailleDisplay2'] = braille.getDisplayList()[self.general.brailleDisplay2.GetSelection()][0]
         self.buttonC.SetFocus()
         configBE.saveSettingsAttribra()
         configBE.saveSettings()
@@ -116,14 +116,14 @@ class General(wx.Panel):
         if configBE.conf['general']['showConstructST']:
             self.assistS.SetValue(True)
         settings.Add(self.assistS)
-        self.reportvolumeb = wx.CheckBox(self, label=_('Report of the new volume in braille'))
-        if configBE.conf['general']['reportvolumeb']:
-            self.reportvolumeb.SetValue(True)
-        settings.Add(self.reportvolumeb)
-        self.reportvolumes = wx.CheckBox(self, label=_('Report of the new volume in speech'))
-        if configBE.conf['general']['reportvolumes']:
-            self.reportvolumes.SetValue(True)
-        settings.Add(self.reportvolumes)
+        self.reportVolumeBraille = wx.CheckBox(self, label=_('Report of the new volume in braille'))
+        if configBE.conf['general']['reportVolumeBraille']:
+            self.reportVolumeBraille.SetValue(True)
+        settings.Add(self.reportVolumeBraille)
+        self.reportVolumeSpeech = wx.CheckBox(self, label=_('Report of the new volume in speech'))
+        if configBE.conf['general']['reportVolumeSpeech']:
+            self.reportVolumeSpeech.SetValue(True)
+        settings.Add(self.reportVolumeSpeech)
         self.hourDynamic = wx.CheckBox(self, label=_(u'Display time and date infinitely'))
         if configBE.conf['general']['hourDynamic']:
             self.hourDynamic.SetValue(True)
@@ -146,23 +146,23 @@ class General(wx.Panel):
         loadBDs.Add(
             wx.StaticText(
                 self, -1, label=_('Braille display to load on NVDA+&k')))
-        self.favbd1 = wx.Choice(self, pos=(-1, -1),
+        self.brailleDisplay1 = wx.Choice(self, pos=(-1, -1),
                                 choices=lbl)
-        if configBE.conf['general']['favbd1'] == -1:
-            self.favbd1.SetSelection(len(lbl) - 1)
+        if configBE.conf['general']['brailleDisplay1'] == -1:
+            self.brailleDisplay1.SetSelection(len(lbl) - 1)
         else:
-            self.favbd1.SetSelection(configBE.conf['general']['favbd1'])
+            self.brailleDisplay1.SetSelection(self.getIdBD(configBE.conf['general']['brailleDisplay1']))
         loadBDs.Add(
             wx.StaticText(
                 self, -1, label=_('Braille display to load on NVDA+Shift+k')))
-        self.favbd2 = wx.Choice(self, pos=(-1, -1),
+        self.brailleDisplay2 = wx.Choice(self, pos=(-1, -1),
                                 choices=lbl)
-        if configBE.conf['general']['favbd2'] == -1:
-            self.favbd2.SetSelection(len(lbl) - 1)
+        if configBE.conf['general']['brailleDisplay2'] == -1:
+            self.brailleDisplay2.SetSelection(len(lbl) - 1)
         else:
-            self.favbd2.SetSelection(configBE.conf['general']['favbd2'])
-        loadBDs.Add(self.favbd1)
-        loadBDs.Add(self.favbd2)
+            self.brailleDisplay2.SetSelection(self.getIdBD(configBE.conf['general']['brailleDisplay2']))
+        loadBDs.Add(self.brailleDisplay1)
+        loadBDs.Add(self.brailleDisplay2)
         settings.Add(loadBDs)
         return
 
@@ -194,6 +194,7 @@ class General(wx.Panel):
         if keycode > 255 or keycode < 32 or re.match('[0-9]', chr(keycode)):
             event.Skip()
         return
+    getIdBD = lambda self, name: [k[0] for k in braille.getDisplayList()].index(name) if name in [k[0] for k in braille.getDisplayList()] else len(braille.getDisplayList())-1
 
 class Reading(wx.Panel):
     def __init__(self, parent):

@@ -8,15 +8,27 @@ import braille
 import brailleInput
 import brailleTables
 import inputCore
+import scriptHandler
 import ui
 addonHandler.initTranslation()
 from logHandler import log
 from colors import RGB
 import configBE
 inProcessMsg = _('Feature Not Implemented Yet')
-CaptureMsg = _('Please enter the desired gesture for this command, now')
-endCaptureMsg = _('OK. The gesture captured is %s')
-failCaptureMsg = _('Unable to associate this gesture. Please enter another, now')
+lastCaptured = None
+
+def captureNow():
+	def getCaptured(gesture):
+		if gesture.isModifier:
+			return False
+		if scriptHandler.findScript(gesture) != None:
+			ui.message(_('Unable to associate this gesture. Please enter another, now'))
+			return False
+		if not ':escape' in gesture.normalizedIdentifiers[0]:
+			ui.message(_(u'OK. The gesture captured is %s') % gesture.normalizedIdentifiers[0].split(':')[1])
+		inputCore.manager._captureFunc = None
+	inputCore.manager._captureFunc = getCaptured
+
 class Settings(wx.Dialog):
 	def __init__(self, *args):
 		global curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, keyboardLayouts, instanceGP, backupDisplaySize, iTables, oTables
@@ -522,7 +534,8 @@ class QuickLaunch(wx.Panel):
 		return
 
 	def onAddGestureBtn(self, event):
-		ui.message(inProcessMsg)
+		captureNow()
+		ui.message(_('Please enter the desired gesture for this command, now'))
 		return
 	
 	def onTarget(self, event):

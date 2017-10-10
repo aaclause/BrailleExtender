@@ -15,6 +15,7 @@ import urllib
 from collections import OrderedDict
 from configobj import ConfigObj
 import gui
+from subprocess import Popen
 import wx
 import addonHandler
 addonHandler.initTranslation()
@@ -23,6 +24,7 @@ import braille
 import brailleInput
 import brailleTables
 import config
+import controlTypes
 import core
 import cursorManager
 import globalCommands
@@ -246,7 +248,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.menu = gui.mainFrame.sysTrayIcon.menu.InsertMenu(
 				2,
 				wx.ID_ANY,
-				configBE._addonName,
+				'%s (%s)' % (configBE._addonName, configBE._addonVersion),
 				self.menu
 			)
 			return True
@@ -370,6 +372,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def showBrailleObj(self):
 		s=[]
 		obj = api.getNavigatorObject()
+		s.append(controlTypes.roleLabels[obj.role])
 		if obj.name:
 			s.append(obj.name)
 		if obj.value:
@@ -380,11 +383,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			s.append(obj.description)
 		if obj.keyboardShortcut:
 			s.append('=> '+api.getNavigatorObject().keyboardShortcut)
+		if obj.location:
+			s.append('[%s]' %(', '.join([str(k) for k in obj.location])))
 		if s!= []:
 			braille.handler.message(' '.join(s))
-		else:
-			braille.handler.message(_('Unknown'))
 		return
+
 	def script_priorRotor(self, gesture):
 		global rotorItem
 		if rotorItem > 0:
@@ -402,6 +406,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			rotorItem += 1
 		self.bindRotorGES()
 		return ui.message(rotorItems[rotorItem])
+
 	def script_nextEltRotor(self, gesture):
 		if rotorItem == ROTOR_DEF:
 			return self.sendComb('rightarrow', gesture)
@@ -713,9 +718,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			configBE.quickLaunch.append(gesture.id)
 			configBE.quickLaunchS.append('')
 			return ui.message(gesture.id+' added')
-			
 		try:
-			return os.startfile(configBE.quickLaunchS[configBE.quickLaunch.index('+'.join(sorted((gesture.id).lower().split('+'))))].strip())
+			return Popen(configBE.quickLaunchS[configBE.quickLaunch.index('+'.join(sorted((gesture.id).lower().split('+'))))].strip())
 		except BaseException:
 			return ui.message(_("No such file or directory"))
 	script_quickLaunch.__doc__=_('Opens a custom program/file. Go to settings to define them')
@@ -1171,7 +1175,7 @@ class CheckUpdates(wx.Dialog):
 			else:
 				msg = _("You are up-to-date. %s is the latest version.") % configBE._addonVersion
 		except BaseException:
-			msg = _("Unable to Check for Update.")
+			msg = _("Oops! there was a problem checking for updates. Please retry later.")
 		if not newUpdate and sil:
 			return
 		wx.Dialog.__init__(self, None, title=_("BrailleExtender's Update"))
@@ -1227,6 +1231,9 @@ class CheckUpdates(wx.Dialog):
 
 	def onClose(self, event):
 		global instanceUP
-		self.Destroy()
+		try:
+			self.Destroy()
+		except:
+			pass
 		instanceUP = None
 		return

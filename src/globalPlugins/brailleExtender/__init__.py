@@ -323,7 +323,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		except BaseException:
 			log.debug('No keyboard conf found')
 			noKC = True
-
+		# for NVDA remote
+		if 'fr' in lang:
+			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789²)=^$ù*<,;:!"
+		else:
+			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789`-=[];'\\,./"
+		nvdaremote_gestures2 = ["escape","home","end","pageup","pagedown","backspace","leftarrow","rightarrow","uparrow","downarrow","enter","delete","space","ACCENT CIRCONFLEXE"]
 		self._tGestures = {
 			"bk:dots": "end_combKeysChar",
 			"br(" + configBE.curBD + "):routing": "cancelShortcut",
@@ -333,6 +338,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			"br(" + configBE.curBD + "):left": "end_combKeys",
 			"br(" + configBE.curBD + "):right": "end_combKeys",
 		}
+		for k in nvdaremote_gestures:
+			self._tGestures['kb:%s' % k] = "end_combKeysChar"
+		for k in range(0, 13):
+			self._tGestures['kb:f%s' % k] = "end_combKeysChar"
+		for k in nvdaremote_gestures2:
+			self._tGestures['kb:%s' % k] = "end_combKeysChar"
 		if configBE.gesturesFileExists:
 			for g in configBE.iniGestures['globalCommands.GlobalCommands']:
 				if isinstance(configBE.iniGestures['globalCommands.GlobalCommands'][g], list):
@@ -413,7 +424,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		elif rotorItem == ROTOR_WORD:
 			return self.sendComb('control+rightarrow', gesture)
 		elif rotorItem == ROTOR_OBJ:
-			self.sendComb('nvda+shift+rightarrow')
+			self.sendComb('nvda+shift+rightarrow', gesture)
 			self.showBrailleObj()
 		elif rotorItem == ROTOR_ERR:
 			obj = api.getFocusObject()
@@ -432,7 +443,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		elif rotorItem == ROTOR_WORD:
 			return self.sendComb('control+leftarrow', gesture)
 		elif rotorItem == ROTOR_OBJ:
-			self.sendComb('nvda+shift+leftarrow')
+			self.sendComb('nvda+shift+leftarrow', gesture)
 			self.showBrailleObj()
 		elif rotorItem == ROTOR_ERR:
 			obj = api.getFocusObject()
@@ -445,25 +456,25 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_nextSetRotor(self,gesture):
 		if rotorItem == ROTOR_OBJ:
-			self.sendComb('nvda+shift+downarrow')
+			self.sendComb('nvda+shift+downarrow', gesture)
 			self.showBrailleObj()
 		else:
-			return self.sendComb('downarrow')
+			return self.sendComb('downarrow', gesture)
 	def script_priorSetRotor(self,gesture):
 		if rotorItem == ROTOR_OBJ:
-			self.sendComb('nvda+shift+uparrow')
+			self.sendComb('nvda+shift+uparrow', gesture)
 			self.showBrailleObj()
 			return
 		else:
-			return self.sendComb('uparrow')
+			return self.sendComb('uparrow', gesture)
 	script_priorEltRotor.__doc__ = _('Move to previous item depending rotor setting')
 	script_nextEltRotor.__doc__ = _('Move to next item depending rotor setting')
 
 	def script_selectElt(self,gesture):
 		if rotorItem == ROTOR_OBJ:
-			return self.sendComb('NVDA+enter')
+			return self.sendComb('NVDA+enter', gesture)
 		else:
-			return self.sendComb('enter')
+			return self.sendComb('enter', gesture)
 	script_selectElt.__doc__ = _('Varies depending on rotor setting. Eg: in object mode, it\'s similar to NVDA+enter')
 
 	script_priorSetRotor.__doc__ = _('Move to previous item using rotor setting')
@@ -871,6 +882,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_reloadAddon.__doc__ = _('Reload %s') % configBE._addonName
 
 	def script_reload_brailledisplay(self, gesture):
+		if hasattr(gesture, 'id'):
+			ui.message(_(u'Please use the keyboard for this feature'))
+			return
 		i = 2 if 'shift' in gesture.normalizedIdentifiers[0] else 1
 		if configBE.conf['general']['brailleDisplay'+str(i)] == 'noBraille':
 			if config.conf["braille"]["display"] == 'noBraille':
@@ -932,10 +946,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_end_combKeysChar(self, gesture):
 		self.clearMessageFlash()
-		self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0]) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > - 1 and configBE.conf['general']['iTableSht'] < len(brailleTables.listTables()) else self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
+		if not hasattr(gesture, 'id'):
+			ch = gesture.normalizedIdentifiers[0].split(':')[1]
+			#if ch.isupper:
+				#ch = 'shift+%s'% ch
+			self.sendComb(self.getActualModifiers(False) + ch, gesture)
+		else:
+			self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0], gesture) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > - 1 and configBE.conf['general']['iTableSht'] < len(brailleTables.listTables()) else self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
 		self.clearModifiers()
 
-	def sendComb(self, sht, gesture = None):
+	def sendComb(self, sht, gesture):
 		NVDASht = self.sendCombKeysNVDA(sht, gesture)
 		if not NVDASht and not 'nvda' in sht.lower():
 			try:
@@ -943,24 +963,52 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			except BaseException:
 				return ui.message(_('Unable to send %s') % sht)
 		elif not NVDASht: # and 'nvda' in sht.lower()
-			return ui.message(_(u'%s is not part of a basic NVDA commands') % sht)
-	def sendCombKeysNVDA(self, sht, gesture = None):
-		# To improve!!!
+			return ui.message(_(u'%s is not part of a NVDA commands') % sht)
+
+	def sendCombKeysNVDA(self, sht, gesture):
+		# to improve + not finished
 		if 'kb:' not in sht:
 			sht = 'kb:' + sht
 		shtO = sht
 		add = '+nvda' if 'nvda+' in sht else ''
 		sht = '+'.join(sorted((inputCore.normalizeGestureIdentifier(sht.replace('nvda+','')).replace('kb:','') +add).split('+')))
-		layouts = ['','(laptop)','(desktop)']
-		places = ['globalCommands.commands._gestureMap']
-		for layout in layouts:
-			for place in places:
-				try:
-					tSht = eval('scriptHandler.getScriptName('+place+'[\'kb'+layout+':'+sht+'\'])')
-					eval('scriptHandler.executeScript('+'.'.join(place.split('.')[:-1])+'.script_'+tSht+',gesture)')
+
+		# Gesture specific scriptable object.
+		obj = gesture.scriptableObject
+		log.debug(gesture)
+		if obj:
+			ui.message('Gesture specific scriptable object present:')
+			log.debug(obj)
+		"""
+		obj = gesture.scriptableObject
+		if obj:
+			func = _getObjScript(obj, gesture, globalMapScripts)
+			if func:
+				return func
+		"""
+
+		# Global plugin level
+		shtPlugins = {p: eval('globalPlugins.'+p+'.GlobalPlugin._GlobalPlugin__gestures') for p in globalPlugins.__dict__.keys() if not p.startswith('_') and hasattr(eval('globalPlugins.'+p+'.GlobalPlugin'),'_GlobalPlugin__gestures')}
+		for k in shtPlugins:
+			shtPlugins[k] = {re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g.lower().replace(' ','')): shtPlugins[k][g] for g in shtPlugins[k] if g.lower().startswith('kb:')}
+		for p in shtPlugins.keys():
+			if 'kb:'+sht in shtPlugins[p]:
+				if self.callScript('globalPlugins.%s' % p, 'script_%s' % shtPlugins[p]['kb:'+sht], gesture):
 					return True
-				except:
-					pass
+
+		# App module level.
+		focus = api.getFocusObject()
+		app = focus.appModule
+		for k in focus.appModule._gestureMap:
+			ui.message(k)
+			pass
+			if app and cls=='AppModule' and module==app.__module__:
+				func = getattr(app, "script_%s" % scriptName, None)
+				if func:
+					func(gesture)
+					return True
+
+		# Tree interceptor level.
 		try:
 			obj = api.getFocusObject()
 			if obj.treeInterceptor != None:
@@ -982,14 +1030,50 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					return True
 		except BaseException, e:
 			pass
-		shtPlugins = {p: eval('globalPlugins.'+p+'.GlobalPlugin._GlobalPlugin__gestures') for p in globalPlugins.__dict__.keys() if not p.startswith('_') and hasattr(eval('globalPlugins.'+p+'.GlobalPlugin'),'_GlobalPlugin__gestures')}
-		for k in shtPlugins:
-			shtPlugins[k] = {re.sub(':(.+)$',lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g.lower().replace(' ','')): shtPlugins[k][g] for g in shtPlugins[k] if g.lower().startswith('kb:')}
-		for p in shtPlugins.keys():
-			if 'kb:'+sht in shtPlugins[p]:
-				eval('scriptHandler.executeScript(globalPlugins.%s.GlobalPlugin().script_%s, gesture)' % (p, shtPlugins[p]['kb:'+sht]))
-				return True
+		"""
+		treeInterceptor = focus.treeInterceptor
+		if treeInterceptor and treeInterceptor.isReady:
+			func = getattr(treeInterceptor , "script_%s" % scriptName, None)
+			# We are no keyboard input
+			return func
+		"""
+
+		# NVDAObject level.
+		log.info(dir(focus))
+		""" TODO !
+		func = getattr(focus, "script_%s" % scriptName, None)
+		if func:
+			return func
+		for obj in reversed(api.getFocusAncestors()):
+			func = getattr(obj, "script_%s" % scriptName, None)
+			if func and getattr(func, 'canPropagate', False):
+				return func
+			"""
+
+		# Global Commands level.
+		layouts = ['','(laptop)','(desktop)']
+		places = ['globalCommands.commands._gestureMap']
+		for layout in layouts:
+			for place in places:
+				try:
+					tSht = eval('scriptHandler.getScriptName(%s[\'kb%s:%s\'])' % (place, layout, sht))
+					func = getattr(globalCommands.commands, "script_%s" % tSht, None)
+					if func:
+						func(gesture)
+						return True
+				except:
+					pass
 		return False
+
+	def callScript(self,cls, f, gesture):
+		for plugin in globalPluginHandler.runningPlugins:
+			if plugin.__module__ == cls:
+				func = getattr(plugin, f)
+				if func:
+					func(gesture)
+					return True
+				else:
+					return false
 
 	def initCombKeys(self):
 		self.bindGestures(self._tGestures) if self.lenModifiers() == 1 else None
@@ -1015,7 +1099,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.modifiers["nvda"] = not self.modifiers["nvda"]
 		self.getActualModifiers()
 		return self.initCombKeys()
-
 	def script_alt(self, gesture = None, sil=True):
 		self.modifiers["alt"] = not self.modifiers["alt"]
 		self.getActualModifiers() if sil else None
@@ -1086,7 +1169,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.clearMessageFlash()
 		ui.message(_("Keyboard shortcut cancelled"))
 		return
+	script_nvda.bypassInputHelp = True
+	script_alt.bypassInputHelp = True
+	script_ctrl.bypassInputHelp = True
+	script_cancelShortcut.bypassInputHelp = True
+	script_end_combKeys.bypassInputHelp = True
+	script_end_combKeysChar.bypassInputHelp = True
 
+	
 	# /* docstrings for modifier keys */
 	docModKeys = lambda k: _('Emulate pressing down ')+'+'.join([utils.getKeysTranslation(l) for l in k.split('+')])+_(' on the system keyboard')
 	script_ctrl.__doc__ = docModKeys('control')

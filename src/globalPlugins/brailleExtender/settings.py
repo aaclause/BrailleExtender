@@ -51,20 +51,22 @@ class Settings(wx.Dialog):
 		self.nb.AddPage(self.keyboard, _("Braille keyboard"))
 		self.nb.AddPage(self.quickLaunch, _("Quick launches"))
 		self.sizer = wx.BoxSizer()
-		self.btnS = wx.BoxSizer(wx.HORIZONTAL)
 		self.sizer.Add(self.nb, 1, wx.EXPAND)
 		self.p.SetSizer(self.sizer)
-		self.buttonS = wx.Button(self, label=_('&Save'))
-		self.btnS.Add(self.buttonS)
-		self.buttonC = wx.Button(self, label=_('&Close'), id=wx.ID_CLOSE)
-		self.btnS.Add(self.buttonC)
+		self.buttonOK = wx.Button(self, label=_('OK'))
+		self.buttonS = wx.Button(self, label=_('Appl&y'))
+		self.buttonC = wx.Button(self, label=_('Close'), id=wx.ID_CLOSE)
+		self.buttonOK.Bind(wx.EVT_BUTTON, self.onOK)
 		self.buttonS.Bind(wx.EVT_BUTTON, self.onSave)
 		self.buttonC.Bind(wx.EVT_BUTTON, self.onClose)
-		self.sizer.Add(self.btnS)
 		self.Bind(wx.EVT_CLOSE, self.onClose)
 		self.EscapeId = wx.ID_CLOSE
 		self.Show()
 		return
+
+	def onOK(self, evt):
+		self.onSave(None)
+		self.onClose(None)
 
 	def onSave(self, evt):
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
@@ -534,6 +536,8 @@ class QuickLaunch(wx.Panel):
 		return
 
 	def onAddGestureBtn(self, event):
+		ui.message(inProcessMsg)
+		return
 		captureNow()
 		ui.message(_('Please enter the desired gesture for this command, now'))
 		return

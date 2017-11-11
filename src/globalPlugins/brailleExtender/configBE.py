@@ -66,7 +66,7 @@ def loadConf():
         brailleDisplay2 = string(default="noBraille")
         reportVolumeBraille = boolean(default=True)
         reportVolumeSpeech = boolean(default=False)
-        reviewModeApps = string(default="cmd, putty")
+        reviewModeApps = string(default="cmd, putty, bash, powershell")
         hourDynamic = boolean(default=True)
         limitCells_{CUR_BD} = integer(min=0, default=0, max={MAX_CELLS})
         delayScroll_{CUR_BD} = float(min=0, default=3, max={MAX_DELAYSCROLL})

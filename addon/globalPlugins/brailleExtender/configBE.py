@@ -16,7 +16,7 @@ import inputCore
 import languageHandler
 from logHandler import log
 
-curBD = config.conf["braille"]["display"]
+curBD = braille.handler.display.name
 cfgFile = config.getUserDefaultConfigPath() + '\\BrailleExtender.conf'
 cfgFileAttribra = config.getUserDefaultConfigPath() + '\\attribra-BE.ini'
 reviewModeApps = []

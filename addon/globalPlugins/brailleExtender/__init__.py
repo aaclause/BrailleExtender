@@ -71,7 +71,7 @@ paramsDL = lambda: {
 	"versionNVDA": versionInfo.version,
 	"language": languageHandler.getLanguage(),
 	"installed": config.isInstalledCopy(),
-	"brailledisplay": config.conf["braille"]["display"],
+	"brailledisplay": braille.handler.display.name,
 	}
 
 
@@ -674,10 +674,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		<div lang="en"><h2>Last changes</h2>
 		<p>Coming soon: gesture profiles, other rotor functions, finalizing tabs in settings, some shortcuts revisions...</p>
 		<ul>
-			<li>translations in polish and croatian. Thanks to Zvonimir stanecic!</li>
+			<li>Translations in polish and croatian. Thanks to Zvonimir stanecic!</li>
 			<li>Bug fix concerning scroll gestures with Brailliant display;</li>
 			<li>NVDARemote support (partially).</li>
-		</ul>
 		</ul>
 		</div>
 		"""
@@ -882,10 +881,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				return ui.message(_('No braille display specified. No reload to do')) 
 			else:
 				utils.reload_brailledisplay(config.conf["braille"]["display"])
-				configBE.curBD = config.conf["braille"]["display"]
-		else:
+				configBE.curBD = braille.handler.display.name
+		elif config.conf["braille"]["display"] != "auto":
 			utils.reload_brailledisplay(configBE.conf['general']['brailleDisplay'+str(i)])
 			configBE.curBD = configBE.conf['general']['brailleDisplay'+str(i)]
+		else:
+			speech.speakMessage(_("Profile reloaded"))
 		self.refreshBD()
 		return self.onReload(None, True)
 

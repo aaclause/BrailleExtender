@@ -17,20 +17,20 @@ addon_info = {
 	"addon_summary" : _("BrailleExtender"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description" : _("""This NVDA add-on adds some features at braille level. It allows:
-* reload two favorite braille display with shortcuts;
-* automatically switch in review mode in apps (default: PuTTY, Powershell, bash, cmd);
-* auto scroll;
-* switch between several input/output braille tables;
-* define custom rules to mark text with special fields option with braille dots 7 and 8.
-
-Besides, for some braille displays, it extends the mapping:
-* access to function keys, multimedia keys, quick navigation;
-* emulate modifier keys, and thus any keyboard shortcut;
-* offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace;
-* launch an application quickly;
-* rotor (implementation in progress).
-"""),
+	"addon_description" : '\n'.join([
+	_("This NVDA add-on adds some features at braille level")+". "+_("It allows")+":",
+	"* "+_("reload two favorite braille display with shortcuts")+";",
+	"* "+_("automatically switch in review mode in apps (default: PuTTY, Powershell, bash, cmd)")+";",
+	"* "+_("auto scroll")+";",
+	"* "+_("switch between several input/output braille tables")+";",
+	"* "+_("define custom rules to mark text with special fields option with braille dots 7 and 8")+".",
+	"",_("Besides, for some braille displays, it extends the mapping")+":",
+	"* "+_("access to function keys, multimedia keys, quick navigation")+";",
+	"* "+_("emulate modifier keys, and thus any keyboard shortcut")+";",
+	"* "+_("offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace")+";",
+	"* "+_("launch an application quickly")+";",
+	"* "+_("rotor (implementation in progress)")+"."
+]),
 	# version
 	"addon_version" : "17.11.11",
 	# Author(s)

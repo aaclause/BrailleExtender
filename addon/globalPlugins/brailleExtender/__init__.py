@@ -887,6 +887,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			configBE.curBD = configBE.conf['general']['brailleDisplay'+str(i)]
 		else:
 			speech.speakMessage(_("Profile reloaded"))
+			configBE.curBD = braille.handler.display.name
 		self.refreshBD()
 		return self.onReload(None, True)
 

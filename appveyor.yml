@@ -2,8 +2,8 @@ version: "{branch}-{build}"
 environment:
  PY_PYTHON: 2.7-32
 install:
-  - py -m pip install markdown
-  - py -m pip install --egg scons
+  - python -m pip install markdown
+  - python -m pip install scons==2.5.1
   
 
 build_script:
@@ -25,5 +25,3 @@ deploy:
   artifact: addon
   draft: false
   prerelease: false
-  on:
-    appveyor_repo_tag: false

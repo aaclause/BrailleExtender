@@ -12,16 +12,16 @@ build_script:
 
 artifacts:
   - path: '*.nvda-addon'
-	name: addon
-	type: application/x-nvda-addon
+    name: addon
+    type: application/x-nvda-addon
   - path: '*.pot'
-	type: application/x-pot
+    type: application/x-pot
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: $(APPVEYOR_REPO_TAG_NAME)
   provider: GitHub
   auth_token:
-	secure: MNplXXIOH01US4PzhZi6h4bbmSFcG1yQDYmBoppOYRPoC/otLha7hcMYebTD+2NI
+    secure: MNplXXIOH01US4PzhZi6h4bbmSFcG1yQDYmBoppOYRPoC/otLha7hcMYebTD+2NI
   artifact: addon
   draft: false
   prerelease: false

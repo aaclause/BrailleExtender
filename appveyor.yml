@@ -17,8 +17,8 @@ artifacts:
   - path: '*.pot'
     type: application/x-pot
 deploy:
-  release: $(APPVEYOR_REPO_TAG_NAME)
-  description: $(APPVEYOR_REPO_TAG_NAME)
+  release: dev
+  description: dev
   provider: GitHub
   auth_token:
     secure: MNplXXIOH01US4PzhZi6h4bbmSFcG1yQDYmBoppOYRPoC/otLha7hcMYebTD+2NI

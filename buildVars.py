@@ -32,7 +32,7 @@ addon_info = {
 	"* "+_("rotor (implementation in progress)")+"."
 ]),
 	# version
-	"addon_version" : "17.11.11",
+	"addon_version" : "dev",
 	# Author(s)
 	"addon_author" : u"André-Abush Clause <dev@andreabc.net>",
 	# URL for the add-on documentation support

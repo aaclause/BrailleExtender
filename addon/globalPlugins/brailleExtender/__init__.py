@@ -36,6 +36,7 @@ import languageHandler
 import scriptHandler
 import speech
 import treeInterceptorHandler
+import thread
 import virtualBuffers
 
 import ui
@@ -157,6 +158,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField,"_getTypeformFromFormatField")					
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScrollBtns()
+		thread.start_new_thread(self.autoreload_profile,())
 		return
 
 	def event_gainFocus(self, obj, nextHandler):
@@ -870,6 +872,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_reloadAddon(self, gesture):
 		return self.onReload()
 	script_reloadAddon.__doc__ = _('Reload %s') % configBE._addonName
+
+	def autoreload_profile(self):
+		while True:
+			if configBE.curBD != braille.handler.display.name:
+				configBE.curBD = braille.handler.display.name
+				self.onReload(None, False)
+		return
 
 	def script_reload_brailledisplay(self, gesture):
 		if hasattr(gesture, 'id'):

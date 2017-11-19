@@ -10,7 +10,6 @@
 
 import os
 import re
-import time
 import urllib
 from collections import OrderedDict
 from configobj import ConfigObj
@@ -36,7 +35,8 @@ import languageHandler
 import scriptHandler
 import speech
 import treeInterceptorHandler
-import thread
+from threading import Thread
+import time
 import virtualBuffers
 
 import ui
@@ -112,6 +112,20 @@ def decorator(fn, str):
 		return update
 	if str == "_getTypeformFromFormatField":
 		return _getTypeformFromFormatField
+class Autoreload_profile(Thread):
+	end = False
+	def __init__(self):
+		Thread.__init__(self)
+		return
+
+	def run(self):
+		while not  self.end:
+			instanceGP.autoreload_profile()
+		return
+
+	def stop(self):
+		ui.message('stopping...')
+		self.end = True
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
@@ -136,6 +150,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	switchedMode = False
 	instanceST = None
 	currentPid = ""
+	thread1 = Autoreload_profile()
 
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
@@ -158,7 +173,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField,"_getTypeformFromFormatField")					
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScrollBtns()
-		thread.start_new_thread(self.autoreload_profile,())
+		self.thread1.start()
 		return
 
 	def event_gainFocus(self, obj, nextHandler):
@@ -241,6 +256,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()
+		self.thread1.stop()
+		self.thread1.join()
 		if self.instanceST != None:
 			self.instanceST.onClose(None)
 		if instanceUP != None:
@@ -874,10 +891,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_reloadAddon.__doc__ = _('Reload %s') % configBE._addonName
 
 	def autoreload_profile(self):
-		while True:
-			if configBE.curBD != braille.handler.display.name:
-				configBE.curBD = braille.handler.display.name
-				self.onReload(None, False)
+		#ui.message('hello')
+		if configBE.curBD != braille.handler.display.name:
+			configBE.curBD = braille.handler.display.name
+			self.onReload(None, 1)
+		time.sleep(2)
 		return
 
 	def script_reload_brailledisplay(self, gesture):

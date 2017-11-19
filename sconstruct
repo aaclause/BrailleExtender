@@ -116,7 +116,7 @@ def generateTranslatedManifest(source, language, out):
 	_ = gettext.translation("nvda", localedir=os.path.join("addon", "locale"), languages=[language]).ugettext
 	vars = {}
 	for var in ("addon_summary", "addon_description"):
-		vars[var] = _(buildVars.addon_info[var])
+		vars[var] = _(buildVars.addon_info[var]) if type(buildVars.addon_info[var]) == str else ''.join([_(l) for l in buildVars.addon_info[var]])
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
 	result = manifest_template.format(**vars)

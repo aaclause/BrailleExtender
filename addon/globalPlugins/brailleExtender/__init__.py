@@ -56,12 +56,14 @@ logTextInfo = False
 ROTOR_DEF = 0
 ROTOR_WORD = 1
 ROTOR_OBJ = 2
-ROTOR_ERR = 3
+ROTOR_REVIEW = 3
+ROTOR_ERR = 4
 
 rotorItems = [
 	_('Default'),
 	_('Words'),
 	_('Objects'),
+	_('Review mode'),
 	_('Spelling errors')
 ]
 rotorItem = 0
@@ -373,7 +375,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					pass
 		if rotorItem == ROTOR_DEF:
 			return
-		if rotorItem == ROTOR_OBJ:
+		if rotorItem in [ROTOR_OBJ, ROTOR_REVIEW]:
 			self.bindGestures(self.rotorGES)
 		else:
 			for k in self.rotorGES:
@@ -427,6 +429,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+rightarrow', gesture)
 			self.showBrailleObj()
+		elif rotorItem == ROTOR_REVIEW:
+			scriptHandler.executeScript(globalCommands.commands.script_braille_scrollForward, gesture)
 		elif rotorItem == ROTOR_ERR:
 			obj = api.getFocusObject()
 			if obj.treeInterceptor != None:
@@ -446,6 +450,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+leftarrow', gesture)
 			self.showBrailleObj()
+		elif rotorItem == ROTOR_REVIEW:
+			scriptHandler.executeScript(globalCommands.commands.script_braille_scrollBack, gesture)
 		elif rotorItem == ROTOR_ERR:
 			obj = api.getFocusObject()
 			if obj.treeInterceptor != None:
@@ -459,13 +465,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+downarrow', gesture)
 			self.showBrailleObj()
+		elif rotorItem == ROTOR_REVIEW:
+			scriptHandler.executeScript(globalCommands.commands.script_braille_nextLine, gesture)
 		else:
 			return self.sendComb('downarrow', gesture)
+
 	def script_priorSetRotor(self,gesture):
 		if rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+uparrow', gesture)
 			self.showBrailleObj()
 			return
+		elif rotorItem == ROTOR_REVIEW:
+			scriptHandler.executeScript(globalCommands.commands.script_braille_previousLine, gesture)
 		else:
 			return self.sendComb('uparrow', gesture)
 	script_priorEltRotor.__doc__ = _('Move to previous item depending rotor setting')

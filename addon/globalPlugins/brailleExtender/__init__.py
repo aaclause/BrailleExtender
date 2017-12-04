@@ -983,7 +983,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				#ch = 'shift+%s'% ch
 			self.sendComb(self.getActualModifiers(False) + ch, gesture)
 		else:
-			self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0], gesture) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > - 1 and configBE.conf['general']['iTableSht'] < len(brailleTables.listTables()) else self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
+			self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0]), gesture) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > -1 and configBE.conf['general']['iTableSht'] < len(brailleTables.listTables()) else self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):

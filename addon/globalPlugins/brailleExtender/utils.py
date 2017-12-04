@@ -173,7 +173,9 @@ def getVolume():
 	return int(round(volume.GetMasterVolumeLevelScalar() * 100))
 
 
-def bkToChar(dots, inTable=config.conf["braille"]["inputTable"]):
+def bkToChar(dots, inTable = -1):
+	if inTable == -1:
+		inTable = config.conf["braille"]["inputTable"]
 	char = unichr(dots | 0x8000)
 	text = louis.backTranslate(
 		[osp.join(r"louis\tables", inTable),
@@ -348,3 +350,4 @@ def getPosition():
 		ui.message(_('Not text'))
 uncapitalize = lambda s: s[:1].lower() + s[1:] if s else ''
 translatePercent = lambda p, q = braille.handler.displaySize-4: '[%s]' % ''.join(['#' if k <= int(float(p)/100.*float(q-2))-1 else '-' for k in range(q-2)])
+

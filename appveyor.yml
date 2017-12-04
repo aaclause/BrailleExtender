@@ -17,7 +17,7 @@ artifacts:
   - path: '*.pot'
     type: application/x-pot
 deploy:
-  release: master
+  release: {branch}-{build}
   description: dev
   provider: GitHub
   auth_token:

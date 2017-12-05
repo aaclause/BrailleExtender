@@ -18,7 +18,7 @@ artifacts:
     type: application/x-pot
 deploy:
   release: $(APPVEYOR_PROJECT_NAME)-$(APPVEYOR_REPO_COMMIT)
-  description: This is a dev version (automatically generated)
+  description: This is a dev version (automatically generated). Based on $(APPVEYOR_REPO_BRANCH), commit $(APPVEYOR_REPO_COMMIT).
   provider: GitHub
   auth_token:
     secure: MNplXXIOH01US4PzhZi6h4bbmSFcG1yQDYmBoppOYRPoC/otLha7hcMYebTD+2NI

@@ -54,16 +54,22 @@ lang = configBE.lang
 ATTRS = {}
 logTextInfo = False
 ROTOR_DEF = 0
-ROTOR_WORD = 1
-ROTOR_OBJ = 2
-ROTOR_REVIEW = 3
-ROTOR_ERR = 4
+ROTOR_MOVE = 1
+ROTOR_SELECT = 2
+ROTOR_OBJ = 3
+ROTOR_REVIEW = 4
+ROTOR_TABLES = 5
+ROTOR_ERR = 6
+ROTOR_RANGE = 1
+
 
 rotorItems = [
 	_('Default'),
-	_('Words'),
+	_('Moving in the text'),
+	_('Text selection'),
 	_('Objects'),
 	_('Review mode'),
+	_('Tables'),
 	_('Spelling errors')
 ]
 rotorItem = 0
@@ -183,18 +189,38 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.script_hourDate(None)
 		if self.autoScrollRunning:
 			self.script_autoScroll(None)
-		if obj.appModule.appName in configBE.reviewModeApps and not self.switchedMode:
-			self.backupTether = braille.handler.tether
-			self.switchedMode = True
-			braille.handler.tether = braille.handler.TETHER_REVIEW
-		elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps:
-			braille.handler.tether = self.backupTether
-			self.switchedMode = False
-		nextHandler()
+
 		pid = obj.processID
 		if self.currentPid != pid:
 			self.populateAttrs(pid)
 			self.currentPid = pid
+		if obj.appModule.appName in configBE.reviewModeApps and not self.switchedMode:
+			try:
+				if config.conf["braille"]["autoTether"]:
+					self.backupTether = braille.handler.TETHER_AUTO
+					config.conf["braille"]["autoTether"] = False
+				else:
+					self.backupTether = braille.handler.tether
+				braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
+				braille.handler.handleReviewMove(shouldAutoTether=False)
+			except:
+				self.backupTether = braille.handler.tether
+				braille.handler.tether = braille.handler.TETHER_REVIEW
+			self.switchedMode = True
+		elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps:
+			try:
+				if self.backupTether == braille.handler.TETHER_AUTO:
+					config.conf["braille"]["autoTether"] = True
+					config.conf["braille"]["tetherTo"] = braille.handler.TETHER_FOCUS
+				else:
+					config.conf["braille"]["autoTether"] = False
+					braille.handler.setTether(self.backupTether, auto=False)
+					braille.handler.handleGainFocus(api.getFocusObject(),shouldAutoTether=False)
+			except:
+				braille.handler.tether = self.backupTether
+			self.switchedMode = False
+		nextHandler()
+		return
 
 	def populateAttrs(self,pid):
 		if (len(configBE.confAttribra) == 0): return
@@ -375,7 +401,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					pass
 		if rotorItem == ROTOR_DEF:
 			return
-		if rotorItem in [ROTOR_OBJ, ROTOR_REVIEW]:
+		if rotorItem in [ROTOR_OBJ, ROTOR_REVIEW, ROTOR_SELECT, ROTOR_MOVE, ROTOR_TABLES]:
 			self.bindGestures(self.rotorGES)
 		else:
 			for k in self.rotorGES:
@@ -420,17 +446,39 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			rotorItem += 1
 		self.bindRotorGES()
 		return ui.message(rotorItems[rotorItem])
+	
+	def getCurrentSelectionRange(self, pretty = True, back = False):
+		if pretty:
+			labels = [_('Character'), _('Word'), _('Line'), _('Paragraph'), _('Page'), _('Document')]
+			return labels[ROTOR_RANGE]
+		else:
+			keys = [('leftarrow', 'rightarrow'), ('control+leftarrow', 'control+rightarrow'), ('uparrow', 'downarrow'), ('control+uparrow', 'control+downarrow'), ('pageup', 'pagedown'), ('control+home', 'control+end')]
+			if rotorItem == ROTOR_SELECT:
+				return 'shift+%s' %(keys[ROTOR_RANGE][0] if back else keys[ROTOR_RANGE][1])
+			else:
+				return keys[ROTOR_RANGE][0] if back else keys[ROTOR_RANGE][1]
+
+	def switchSelectionRange(self, previous = False):
+		global ROTOR_RANGE
+		if previous:
+			ROTOR_RANGE = ROTOR_RANGE-1 if ROTOR_RANGE > 0 else 5
+		else:
+			ROTOR_RANGE = ROTOR_RANGE+1 if ROTOR_RANGE < 5 else 0
+		ui.message(self.getCurrentSelectionRange())
+		return
 
 	def script_nextEltRotor(self, gesture):
 		if rotorItem == ROTOR_DEF:
 			return self.sendComb('rightarrow', gesture)
-		elif rotorItem == ROTOR_WORD:
-			return self.sendComb('control+rightarrow', gesture)
+		elif rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+			return self.sendComb(self.getCurrentSelectionRange(False), gesture)
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+rightarrow', gesture)
 			self.showBrailleObj()
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(globalCommands.commands.script_braille_scrollForward, gesture)
+		elif rotorItem == ROTOR_TABLES:
+			self.sendComb('control+alt+rightarrow', gesture)
 		elif rotorItem == ROTOR_ERR:
 			obj = api.getFocusObject()
 			if obj.treeInterceptor != None:
@@ -445,13 +493,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_priorEltRotor(self,gesture):
 		if rotorItem == ROTOR_DEF:
 			return self.sendComb('leftarrow', gesture)
-		elif rotorItem == ROTOR_WORD:
-			return self.sendComb('control+leftarrow', gesture)
+		elif rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+			return self.sendComb(self.getCurrentSelectionRange(False, True), gesture)
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+leftarrow', gesture)
 			self.showBrailleObj()
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(globalCommands.commands.script_braille_scrollBack, gesture)
+		elif rotorItem == ROTOR_TABLES:
+			self.sendComb('control+alt+leftarrow', gesture)
 		elif rotorItem == ROTOR_ERR:
 			obj = api.getFocusObject()
 			if obj.treeInterceptor != None:
@@ -462,21 +512,29 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return ui.message('Not implemented yet')
 
 	def script_nextSetRotor(self,gesture):
-		if rotorItem == ROTOR_OBJ:
+		if rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+			return self.switchSelectionRange()
+		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+downarrow', gesture)
 			self.showBrailleObj()
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(globalCommands.commands.script_braille_nextLine, gesture)
+		elif rotorItem == ROTOR_TABLES:
+			self.sendComb('control+alt+downarrow', gesture)
 		else:
 			return self.sendComb('downarrow', gesture)
 
 	def script_priorSetRotor(self,gesture):
-		if rotorItem == ROTOR_OBJ:
+		if rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+			return self.switchSelectionRange(True)
+		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+uparrow', gesture)
 			self.showBrailleObj()
 			return
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(globalCommands.commands.script_braille_previousLine, gesture)
+		elif rotorItem == ROTOR_TABLES:
+			self.sendComb('control+alt+uparrow', gesture)
 		else:
 			return self.sendComb('uparrow', gesture)
 	script_priorEltRotor.__doc__ = _('Move to previous item depending rotor setting')

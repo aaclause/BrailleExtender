@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2017-12-03 23:54+0100\n"
-"PO-Revision-Date: 2017-12-03 23:55+0100\n"
+"POT-Creation-Date: 2017-12-06 14:15+0100\n"
+"PO-Revision-Date: 2017-12-06 14:15+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -17,229 +17,261 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: globalPlugins/brailleExtender/__init__.py:63
+#: addon/globalPlugins/brailleExtender/__init__.py:67
 msgid "Default"
 msgstr "Podrazumjevano"
 
-#: globalPlugins/brailleExtender/__init__.py:64
-msgid "Words"
-msgstr "Riječi"
+#: addon/globalPlugins/brailleExtender/__init__.py:68
+msgid "Moving in the text"
+msgstr "premještanje po tekstu"
 
-#: globalPlugins/brailleExtender/__init__.py:65
+#: addon/globalPlugins/brailleExtender/__init__.py:69
+msgid "Text selection"
+msgstr "označavanje teksta"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:70
 msgid "Objects"
 msgstr "Objekti"
 
-#: globalPlugins/brailleExtender/__init__.py:66
+#: addon/globalPlugins/brailleExtender/__init__.py:71
 msgid "Review mode"
 msgstr "Način pregleda"
 
-#: globalPlugins/brailleExtender/__init__.py:67
-#: globalPlugins/brailleExtender/settings.py:293
+#: addon/globalPlugins/brailleExtender/__init__.py:72
+msgid "Tables"
+msgstr "tablice"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:73
+#: addon/globalPlugins/brailleExtender/settings.py:293
 msgid "Spelling errors"
 msgstr "Pravopisne pogreške"
 
-#: globalPlugins/brailleExtender/__init__.py:214
+#: addon/globalPlugins/brailleExtender/__init__.py:240
 msgid "Documentation"
 msgstr "Pomoč"
 
-#: globalPlugins/brailleExtender/__init__.py:215
+#: addon/globalPlugins/brailleExtender/__init__.py:241
 msgid "Opens the addon's documentation."
 msgstr "Otvara pomoc dodatka."
 
-#: globalPlugins/brailleExtender/__init__.py:220
+#: addon/globalPlugins/brailleExtender/__init__.py:246
 msgid "Settings..."
 msgstr "Postavke..."
 
-#: globalPlugins/brailleExtender/__init__.py:221
+#: addon/globalPlugins/brailleExtender/__init__.py:247
 msgid "Opens the addon's settings."
 msgstr "Otvara postavke dodatka."
 
-#: globalPlugins/brailleExtender/__init__.py:227
+#: addon/globalPlugins/brailleExtender/__init__.py:253
 msgid "Reload add-on"
 msgstr "Ponovno učitaj dodatak"
 
-#: globalPlugins/brailleExtender/__init__.py:228
+#: addon/globalPlugins/brailleExtender/__init__.py:254
 msgid "Reload this add-on."
 msgstr "Ponovno učitava dodatak."
 
-#: globalPlugins/brailleExtender/__init__.py:234
+#: addon/globalPlugins/brailleExtender/__init__.py:260
 msgid "&Check for update..."
 msgstr "&Provjera nove inačice..."
 
-#: globalPlugins/brailleExtender/__init__.py:235
+#: addon/globalPlugins/brailleExtender/__init__.py:261
 msgid "Checks if update is available"
 msgstr "Provjerava, postoji li nadogradnja"
 
-#: globalPlugins/brailleExtender/__init__.py:244
+#: addon/globalPlugins/brailleExtender/__init__.py:270
 msgid "&Website"
 msgstr "&Web stranica"
 
-#: globalPlugins/brailleExtender/__init__.py:245
+#: addon/globalPlugins/brailleExtender/__init__.py:271
 msgid "Open addon's website."
 msgstr "Otvara web stranicu dodatka."
 
-#: globalPlugins/brailleExtender/__init__.py:439
-#: globalPlugins/brailleExtender/__init__.py:460
+#: addon/globalPlugins/brailleExtender/__init__.py:452
+msgid "Character"
+msgstr "Znak"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:452
+msgid "Word"
+msgstr "Riječ"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:452
+msgid "Line"
+msgstr "Redak"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:452
+msgid "Paragraph"
+msgstr "Odlomak"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:452
+msgid "Page"
+msgstr "Stranica"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:452
+msgid "Document"
+msgstr "Dokument"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:487
+#: addon/globalPlugins/brailleExtender/__init__.py:510
 msgid "Not supported here or browse mode not enabled"
 msgstr "Nije podržano ovdje, ili način pregleda nije uključen"
 
-#: globalPlugins/brailleExtender/__init__.py:441
+#: addon/globalPlugins/brailleExtender/__init__.py:489
 msgid "Not implemented yet"
 msgstr "Funkcija još uvijek nije implementirana"
 
-#: globalPlugins/brailleExtender/__init__.py:442
+#: addon/globalPlugins/brailleExtender/__init__.py:490
 msgid "Select previous rotor setting"
 msgstr "Označi prethodnu postavku rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:443
+#: addon/globalPlugins/brailleExtender/__init__.py:491
 msgid "Select next rotor setting"
 msgstr "Označi slijedeću postavku rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:482
+#: addon/globalPlugins/brailleExtender/__init__.py:540
 msgid "Move to previous item depending rotor setting"
 msgstr "Prebacuje se na prethodnu ovisnu stavku rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:483
+#: addon/globalPlugins/brailleExtender/__init__.py:541
 msgid "Move to next item depending rotor setting"
 msgstr "Prebacuje se na sljedeću stavku rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:490
+#: addon/globalPlugins/brailleExtender/__init__.py:548
 msgid ""
 "Varies depending on rotor setting. Eg: in object mode, it's similar to NVDA"
 "+enter"
 msgstr ""
 "Varira ovisno o postavci rotora. NPR: u načinu objekta, slično kao NVDA+enter"
 
-#: globalPlugins/brailleExtender/__init__.py:492
+#: addon/globalPlugins/brailleExtender/__init__.py:550
 msgid "Move to previous item using rotor setting"
 msgstr "Prebacuje se na prethodnu stavku koristeći postavku rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:493
+#: addon/globalPlugins/brailleExtender/__init__.py:551
 msgid "Move to next item using rotor setting"
 msgstr "prebacuje se na sljedeću postavku koristeći postavku rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:498
+#: addon/globalPlugins/brailleExtender/__init__.py:556
 msgid "Speech on"
 msgstr "Govor je uključen"
 
-#: globalPlugins/brailleExtender/__init__.py:501
+#: addon/globalPlugins/brailleExtender/__init__.py:559
 msgid "Speech off"
 msgstr "Govor je isključen"
 
-#: globalPlugins/brailleExtender/__init__.py:503
+#: addon/globalPlugins/brailleExtender/__init__.py:561
 msgid "Toggle speech on or off"
 msgstr "Uključuje ili isključuje govor"
 
-#: globalPlugins/brailleExtender/__init__.py:507
+#: addon/globalPlugins/brailleExtender/__init__.py:565
 msgid "Get the cursor position of text"
 msgstr "Dohvati položaj teksta ispod pokazivača"
 
-#: globalPlugins/brailleExtender/__init__.py:533
+#: addon/globalPlugins/brailleExtender/__init__.py:591
 msgid "Hour and date with autorefresh"
 msgstr "Datum i vrijeme s automatskim osvježavanjem"
 
-#: globalPlugins/brailleExtender/__init__.py:545
+#: addon/globalPlugins/brailleExtender/__init__.py:603
 msgid "Autoscroll stopped"
 msgstr "automatsko čitanje je zaustavljeno"
 
-#: globalPlugins/brailleExtender/__init__.py:555
+#: addon/globalPlugins/brailleExtender/__init__.py:613
 msgid "Enable/disable autoscroll"
 msgstr "Uključuje ili isključuje automatsko čitanje"
 
-#: globalPlugins/brailleExtender/__init__.py:566
+#: addon/globalPlugins/brailleExtender/__init__.py:624
 msgid "Increase the master volume"
 msgstr "povećava vrijednost automatske glasnoće"
 
-#: globalPlugins/brailleExtender/__init__.py:588
+#: addon/globalPlugins/brailleExtender/__init__.py:646
 msgid "Decrease the master volume"
 msgstr "Smanjuje vrijednost glavne glasnoće"
 
-#: globalPlugins/brailleExtender/__init__.py:593
+#: addon/globalPlugins/brailleExtender/__init__.py:651
 msgid "Muted sound"
 msgstr "zvuk je utišan"
 
-#: globalPlugins/brailleExtender/__init__.py:594
+#: addon/globalPlugins/brailleExtender/__init__.py:652
 #, python-format
 msgid "Unmuted sound (%3d%%)"
 msgstr "Ottišan zvuk (%3d%%)"
 
-#: globalPlugins/brailleExtender/__init__.py:601
+#: addon/globalPlugins/brailleExtender/__init__.py:659
 msgid "Mute or unmute sound"
 msgstr "utišaj ili ottišaj zvuk"
 
-#: globalPlugins/brailleExtender/__init__.py:605
+#: addon/globalPlugins/brailleExtender/__init__.py:663
 #, python-format
 msgid "Show the %s documentation"
 msgstr "Prikazuje pomoć %s"
 
-#: globalPlugins/brailleExtender/__init__.py:636
+#: addon/globalPlugins/brailleExtender/__init__.py:694
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "Oponaša pritisak %s na tipkovnici sustava"
 
-#: globalPlugins/brailleExtender/__init__.py:644
+#: addon/globalPlugins/brailleExtender/__init__.py:702
 msgid "description currently unavailable for this shortcut"
 msgstr "Opis je trenutno nedostupan za ovaj prečac"
 
-#: globalPlugins/brailleExtender/__init__.py:661
+#: addon/globalPlugins/brailleExtender/__init__.py:719
 msgid "caps lock"
 msgstr "caps lock"
 
-#: globalPlugins/brailleExtender/__init__.py:684
+#: addon/globalPlugins/brailleExtender/__init__.py:742
 #, python-format
 msgid "%s braille display"
 msgstr "%s brajični redak"
 
-#: globalPlugins/brailleExtender/__init__.py:692
+#: addon/globalPlugins/brailleExtender/__init__.py:750
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr "Autorska prava (C) 2017 André-Abush Clause, i drugi doprinositelji:"
 
-#: globalPlugins/brailleExtender/__init__.py:693
+#: addon/globalPlugins/brailleExtender/__init__.py:751
 msgid "Persian translation"
 msgstr "Perzijski prijevod"
 
-#: globalPlugins/brailleExtender/__init__.py:694
+#: addon/globalPlugins/brailleExtender/__init__.py:752
 msgid "Polish and Croatian translations"
 msgstr "Poljski i hrvatski prijevod"
 
-#: globalPlugins/brailleExtender/__init__.py:695
+#: addon/globalPlugins/brailleExtender/__init__.py:753
 msgid "Additional third party copyrighted code is included:"
 msgstr "Dodan je kod treće strane, zaštićen autorskim pravima:"
 
-#: globalPlugins/brailleExtender/__init__.py:698
+#: addon/globalPlugins/brailleExtender/__init__.py:756
 msgid "Thanks also to"
 msgstr "također zahvaljujem"
 
-#: globalPlugins/brailleExtender/__init__.py:699
-#: globalPlugins/brailleExtender/__init__.py:700
+#: addon/globalPlugins/brailleExtender/__init__.py:757
+#: addon/globalPlugins/brailleExtender/__init__.py:758
 msgid "for his tests and suggestions with"
 msgstr "Za njegove testowe i sugestije"
 
-#: globalPlugins/brailleExtender/__init__.py:701
+#: addon/globalPlugins/brailleExtender/__init__.py:759
 msgid "And Thank you very much for all your feedback and comments via email."
 msgstr "i hvala ti za sve tvoje povratne informacje i e-mail komentare"
 
-#: globalPlugins/brailleExtender/__init__.py:725
+#: addon/globalPlugins/brailleExtender/__init__.py:783
 msgid "Simple keys"
 msgstr "jednostavne tipke"
 
-#: globalPlugins/brailleExtender/__init__.py:727
+#: addon/globalPlugins/brailleExtender/__init__.py:785
 msgid "Usual shortcuts"
 msgstr "uobičajeni prečaci"
 
-#: globalPlugins/brailleExtender/__init__.py:729
+#: addon/globalPlugins/brailleExtender/__init__.py:787
 msgid "Standard NVDA commands"
 msgstr "standardni NVDA prečaci"
 
-#: globalPlugins/brailleExtender/__init__.py:731
+#: addon/globalPlugins/brailleExtender/__init__.py:789
 msgid "Modifier keys"
 msgstr "Modifikacijske tipke"
 
-#: globalPlugins/brailleExtender/__init__.py:733
+#: addon/globalPlugins/brailleExtender/__init__.py:791
 msgid "Quick navigation keys"
 msgstr "Tipke za brzu navigaciju"
 
-#: globalPlugins/brailleExtender/__init__.py:734
+#: addon/globalPlugins/brailleExtender/__init__.py:792
 msgid ""
 "In virtual documents (HTML/PDF/…) you can navigate element type by element "
 "type using keyboard. These navigation keys should work with your braille "
@@ -250,35 +282,35 @@ msgstr ""
 "elemenata koristeći tipkovnicu. ovi tipkovnički prečaci bi trebali raditi sa "
 "vašim brajičnim retkom podjednako.</p><p>Postoje također i dodatni prečaci:"
 
-#: globalPlugins/brailleExtender/__init__.py:736
+#: addon/globalPlugins/brailleExtender/__init__.py:794
 msgid "Rotor feature"
 msgstr "značajka rotora"
 
-#: globalPlugins/brailleExtender/__init__.py:738
+#: addon/globalPlugins/brailleExtender/__init__.py:796
 msgid "Gadget commands"
 msgstr "komande gadgeti"
 
-#: globalPlugins/brailleExtender/__init__.py:740
+#: addon/globalPlugins/brailleExtender/__init__.py:798
 msgid "Shortcuts defined outside add-on"
 msgstr "Prečaci definirani izvan dodatka"
 
-#: globalPlugins/brailleExtender/__init__.py:750
+#: addon/globalPlugins/brailleExtender/__init__.py:808
 msgid "Keyboard configurations provided"
 msgstr "Omogućene konfiguracije tipkovnice"
 
-#: globalPlugins/brailleExtender/__init__.py:751
+#: addon/globalPlugins/brailleExtender/__init__.py:809
 msgid "Keyboard configurations are"
 msgstr "tipkovničke konfiguracije su"
 
-#: globalPlugins/brailleExtender/__init__.py:756
+#: addon/globalPlugins/brailleExtender/__init__.py:814
 msgid "Warning:"
 msgstr "Upozorenje:"
 
-#: globalPlugins/brailleExtender/__init__.py:757
+#: addon/globalPlugins/brailleExtender/__init__.py:815
 msgid "BrailleExtender doesn't seem to support your braille display."
 msgstr "Čini se da BrailleExtender ne podržava vaš brajični redak."
 
-#: globalPlugins/brailleExtender/__init__.py:758
+#: addon/globalPlugins/brailleExtender/__init__.py:816
 msgid ""
 "However, you can reassign most of these features in the \"Command Gestures\" "
 "dialog in the \"Preferences\" of NVDA."
@@ -286,55 +318,55 @@ msgstr ""
 "Međutim, možete prenamijeniti te geste koristeći dijaloški okvir \"ulazne "
 "geste\" u NVDA \"postavkama\"."
 
-#: globalPlugins/brailleExtender/__init__.py:760
+#: addon/globalPlugins/brailleExtender/__init__.py:818
 msgid "Shortcuts on system keyboard specific to the add-on"
 msgstr ""
 "Tipkovnički prečaci na tipkovnici sustava specifični samo za ovaj dodatak"
 
-#: globalPlugins/brailleExtender/__init__.py:768
+#: addon/globalPlugins/brailleExtender/__init__.py:826
 #, python-format
 msgid "%s's documentation"
 msgstr "%s's pomoć"
 
-#: globalPlugins/brailleExtender/__init__.py:779
+#: addon/globalPlugins/brailleExtender/__init__.py:837
 msgid "No such file or directory"
 msgstr "Nema takve mape ili datoteke"
 
-#: globalPlugins/brailleExtender/__init__.py:780
+#: addon/globalPlugins/brailleExtender/__init__.py:838
 msgid "Opens a custom program/file. Go to settings to define them"
 msgstr ""
 "Otvara prilagođeni program/datoteku. Otvorite postavke, kako biste ih "
 "definirali"
 
-#: globalPlugins/brailleExtender/__init__.py:787
+#: addon/globalPlugins/brailleExtender/__init__.py:845
 #, python-format
 msgid "Check for %s updates, and starts the download if there is one"
 msgstr "Provjerava postoji li nadogradnja %s, i preuzima istu"
 
-#: globalPlugins/brailleExtender/__init__.py:814
+#: addon/globalPlugins/brailleExtender/__init__.py:872
 msgid "Increase autoscroll delay"
 msgstr "povećaj brzinu automatskog čitanja"
 
-#: globalPlugins/brailleExtender/__init__.py:815
+#: addon/globalPlugins/brailleExtender/__init__.py:873
 msgid "Decrease autoscroll delay"
 msgstr "Smanji brzinu automatskog čitanja"
 
-#: globalPlugins/brailleExtender/__init__.py:823
+#: addon/globalPlugins/brailleExtender/__init__.py:881
 #, python-brace-format
 msgid "Configuration {0} ({1})"
 msgstr "Konfiguracija {0} ({1})"
 
-#: globalPlugins/brailleExtender/__init__.py:827
+#: addon/globalPlugins/brailleExtender/__init__.py:885
 msgid "Switch between different braille keyboard configurations."
 msgstr "Prebacuje između više različitih konfiguracija brajične tipkovnice."
 
-#: globalPlugins/brailleExtender/__init__.py:831
-#: globalPlugins/brailleExtender/__init__.py:845
+#: addon/globalPlugins/brailleExtender/__init__.py:889
+#: addon/globalPlugins/brailleExtender/__init__.py:903
 msgid "Please use NVDA 2017.3 minimum for this feature"
 msgstr "Molimo koristite NVDA minimalno 2017.3 kako bi ova značajka radila"
 
-#: globalPlugins/brailleExtender/__init__.py:833
-#: globalPlugins/brailleExtender/__init__.py:847
+#: addon/globalPlugins/brailleExtender/__init__.py:891
+#: addon/globalPlugins/brailleExtender/__init__.py:905
 msgid ""
 "You must choose at least two tables for this feature. Please fill in the "
 "settings"
@@ -342,15 +374,15 @@ msgstr ""
 "Morate koristiti najmanje dvije tablice za ovu mogučnost. Molimo popunite "
 "postavke"
 
-#: globalPlugins/brailleExtender/__init__.py:841
+#: addon/globalPlugins/brailleExtender/__init__.py:899
 msgid "Switch between his favorite input braille tables"
 msgstr "Prebacuje između ulaznih brajičnih tablica"
 
-#: globalPlugins/brailleExtender/__init__.py:856
+#: addon/globalPlugins/brailleExtender/__init__.py:914
 msgid "Switch between his favorite output braille tables"
 msgstr "Prebacuje između izlaznih brajičnih tablica"
 
-#: globalPlugins/brailleExtender/__init__.py:861
+#: addon/globalPlugins/brailleExtender/__init__.py:919
 msgid ""
 "Gives the Unicode value of the character where the cursor is located and the "
 "decimal, binary and octal equivalent."
@@ -358,45 +390,45 @@ msgstr ""
 "Dohvaća Unicode vrijednost znaka tamo gje se načazi pokazivač. Također "
 "dodaje binarnu, oktalnu, te heksadecimalnu vrijednost."
 
-#: globalPlugins/brailleExtender/__init__.py:867
+#: addon/globalPlugins/brailleExtender/__init__.py:925
 msgid "Turn on"
 msgstr "Uključi"
 
-#: globalPlugins/brailleExtender/__init__.py:867
+#: addon/globalPlugins/brailleExtender/__init__.py:925
 msgid "Turn off"
 msgstr "Isključi"
 
-#: globalPlugins/brailleExtender/__init__.py:869
+#: addon/globalPlugins/brailleExtender/__init__.py:927
 msgid "Turn on/off the assistance shortcuts."
 msgstr "Isključuje prečace asistencije."
 
-#: globalPlugins/brailleExtender/__init__.py:887
+#: addon/globalPlugins/brailleExtender/__init__.py:945
 #, python-format
 msgid "%s reloaded"
 msgstr "%s je ponovno učitan"
 
-#: globalPlugins/brailleExtender/__init__.py:895
+#: addon/globalPlugins/brailleExtender/__init__.py:953
 msgid "Show the \"about\" window"
 msgstr "Pokazuje dijaloški okvir s informacijama o programu"
 
-#: globalPlugins/brailleExtender/__init__.py:902
+#: addon/globalPlugins/brailleExtender/__init__.py:960
 #, python-format
 msgid "Reload %s"
 msgstr "Ponovno učitaj %s"
 
-#: globalPlugins/brailleExtender/__init__.py:914
+#: addon/globalPlugins/brailleExtender/__init__.py:972
 msgid "Please use the keyboard for this feature"
 msgstr "Molimo koristite tipkovnicu za ovu značajku"
 
-#: globalPlugins/brailleExtender/__init__.py:919
+#: addon/globalPlugins/brailleExtender/__init__.py:977
 msgid "No braille display specified. No reload to do"
 msgstr "Nije određen brajični redak. Ništa nije potrebno ponovno pokretati"
 
-#: globalPlugins/brailleExtender/__init__.py:927
+#: addon/globalPlugins/brailleExtender/__init__.py:985
 msgid "Profile reloaded"
 msgstr "Profil je ponovno učitaqn"
 
-#: globalPlugins/brailleExtender/__init__.py:932
+#: addon/globalPlugins/brailleExtender/__init__.py:990
 msgid ""
 "Reload the driver of an favorite or last braille display. Practical if the "
 "braille display is not plugged immediately or that the latter is "
@@ -405,408 +437,426 @@ msgstr ""
 "Ponovno učitava brajični redak. Praktično, ako je brajični redak isključen, "
 "pa ponovno uključen, ili ako nije uključen odmah"
 
-#: globalPlugins/brailleExtender/__init__.py:995
+#: addon/globalPlugins/brailleExtender/__init__.py:1053
 #, python-format
 msgid "Unable to send %s"
 msgstr "Ne mogu poslati %s"
 
-#: globalPlugins/brailleExtender/__init__.py:997
+#. and 'nvda' in sht.lower()
+#: addon/globalPlugins/brailleExtender/__init__.py:1055
 #, python-format
 msgid "%s is not part of a NVDA commands"
 msgstr "%s nije dio NVDA komandi"
 
-#: globalPlugins/brailleExtender/__init__.py:1116
+#: addon/globalPlugins/brailleExtender/__init__.py:1174
 msgid "WIN"
 msgstr "WIN"
 
-#: globalPlugins/brailleExtender/__init__.py:1116
+#: addon/globalPlugins/brailleExtender/__init__.py:1174
 msgid "CTRL"
 msgstr "CTRL"
 
-#: globalPlugins/brailleExtender/__init__.py:1116
+#: addon/globalPlugins/brailleExtender/__init__.py:1174
 msgid "SHIFT"
 msgstr "SHIFT"
 
-#: globalPlugins/brailleExtender/__init__.py:1116
+#: addon/globalPlugins/brailleExtender/__init__.py:1174
 msgid "ALT"
 msgstr "ALT"
 
-#: globalPlugins/brailleExtender/__init__.py:1201
+#: addon/globalPlugins/brailleExtender/__init__.py:1259
 msgid "Keyboard shortcut cancelled"
 msgstr "Prečac je odbačen"
 
-#: globalPlugins/brailleExtender/__init__.py:1212
+#. /* docstrings for modifier keys */
+#: addon/globalPlugins/brailleExtender/__init__.py:1270
 msgid "Emulate pressing down "
 msgstr "Oponaša pritisak strelice dolje "
 
-#: globalPlugins/brailleExtender/__init__.py:1212
+#: addon/globalPlugins/brailleExtender/__init__.py:1270
 msgid " on the system keyboard"
 msgstr " na tipkovnici sustava"
 
-#: globalPlugins/brailleExtender/__init__.py:1279
+#: addon/globalPlugins/brailleExtender/__init__.py:1337
 #, python-brace-format
 msgid "{0} update"
 msgstr "{0} nadogradnja"
 
-#: globalPlugins/brailleExtender/__init__.py:1287
+#: addon/globalPlugins/brailleExtender/__init__.py:1345
 #, python-format
 msgid "New version available, version %s. Do you want download it now?"
 msgstr "Nova inačica je dostupna, inačica %s. Želite li ju ponovvno preuzeti?"
 
-#: globalPlugins/brailleExtender/__init__.py:1289
+#: addon/globalPlugins/brailleExtender/__init__.py:1347
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
 msgstr "Koristite posljednju inačicu. %s je posljednja inačica."
 
-#: globalPlugins/brailleExtender/__init__.py:1291
+#: addon/globalPlugins/brailleExtender/__init__.py:1349
 msgid "Oops! There was a problem checking for updates. Please retry later."
 msgstr "Ups! Postoji problem pri provjeri nadogradnje. Please retry later."
 
-#: globalPlugins/brailleExtender/__init__.py:1294
+#: addon/globalPlugins/brailleExtender/__init__.py:1352
 msgid "BrailleExtender's Update"
 msgstr "Nadogradnja BrailleExtendera"
 
-#: globalPlugins/brailleExtender/__init__.py:1297
+#: addon/globalPlugins/brailleExtender/__init__.py:1355
 msgid "&Yes"
 msgstr "&Da"
 
-#: globalPlugins/brailleExtender/__init__.py:1298
+#: addon/globalPlugins/brailleExtender/__init__.py:1356
 msgid "&No"
 msgstr "&Ne"
 
-#: globalPlugins/brailleExtender/__init__.py:1302
-#: globalPlugins/brailleExtender/settings.py:56
+#: addon/globalPlugins/brailleExtender/__init__.py:1360
+#: addon/globalPlugins/brailleExtender/settings.py:56
 msgid "OK"
 msgstr "U redu"
 
-#: globalPlugins/brailleExtender/__init__.py:1339
+#: addon/globalPlugins/brailleExtender/__init__.py:1397
 msgid "Unable to save or download update file. Opening your browser"
 msgstr ""
 "Nije moguče otvoriti ili spremiti datoteku. Otvaram vaš internetski "
 "preglednik"
 
-#: globalPlugins/brailleExtender/settings.py:17
+#: addon/globalPlugins/brailleExtender/settings.py:17
 msgid "Feature Not Implemented Yet"
 msgstr "Značajka još uvijek nije implementirana"
 
-#: globalPlugins/brailleExtender/settings.py:25
+#: addon/globalPlugins/brailleExtender/settings.py:25
 msgid "Unable to associate this gesture. Please enter another, now"
 msgstr "Ne mogu pridjeliti tu gestu. Upišite drugu, sada"
 
-#: globalPlugins/brailleExtender/settings.py:28
+#: addon/globalPlugins/brailleExtender/settings.py:28
 #, python-format
 msgid "OK. The gesture captured is %s"
 msgstr "U redu. Primljena gesta je %s"
 
-#: globalPlugins/brailleExtender/settings.py:39
+#: addon/globalPlugins/brailleExtender/settings.py:39
 msgid "BrailleExtender settings"
 msgstr "Postavke BrailleExtendera"
 
-#: globalPlugins/brailleExtender/settings.py:48
+#: addon/globalPlugins/brailleExtender/settings.py:48
 msgid "General"
 msgstr "Općenito"
 
-#: globalPlugins/brailleExtender/settings.py:49
+#: addon/globalPlugins/brailleExtender/settings.py:49
 msgid "Reading"
 msgstr "čitanje"
 
-#: globalPlugins/brailleExtender/settings.py:50
+#: addon/globalPlugins/brailleExtender/settings.py:50
 msgid "Attribra"
 msgstr "Attribra"
 
-#: globalPlugins/brailleExtender/settings.py:51
+#: addon/globalPlugins/brailleExtender/settings.py:51
 msgid "Braille keyboard"
 msgstr "Brajična tipkovnica"
 
-#: globalPlugins/brailleExtender/settings.py:52
+#: addon/globalPlugins/brailleExtender/settings.py:52
 msgid "Quick launches"
 msgstr "Brza pokretanja"
 
-#: globalPlugins/brailleExtender/settings.py:57
+#: addon/globalPlugins/brailleExtender/settings.py:57
 msgid "Appl&y"
 msgstr "&Primjeni"
 
-#: globalPlugins/brailleExtender/settings.py:58
+#: addon/globalPlugins/brailleExtender/settings.py:58
 msgid "Close"
 msgstr "Zatvori"
 
-#: globalPlugins/brailleExtender/settings.py:126
+#: addon/globalPlugins/brailleExtender/settings.py:126
 msgid "Check for updates automatically"
 msgstr "Provjeri automatski, postoji li nadogradnja"
 
-#: globalPlugins/brailleExtender/settings.py:129
+#: addon/globalPlugins/brailleExtender/settings.py:129
 msgid "Detail the progress of a keyboard shortcut when it is typed"
 msgstr "Detaljiziraj postotak tipkovničkog prečaca kada se upisuje"
 
-#: globalPlugins/brailleExtender/settings.py:133
+#: addon/globalPlugins/brailleExtender/settings.py:133
 msgid "Report of the new volume in braille"
 msgstr "Prikaz nove glasnoće brajicom"
 
-#: globalPlugins/brailleExtender/settings.py:137
+#: addon/globalPlugins/brailleExtender/settings.py:137
 msgid "Report of the new volume in speech"
 msgstr "Izgovor glasnoće"
 
-#: globalPlugins/brailleExtender/settings.py:141
+#: addon/globalPlugins/brailleExtender/settings.py:141
 msgid "Display time and date infinitely"
 msgstr "Beskonačno prikazuj vrijeme i datum"
 
-#: globalPlugins/brailleExtender/settings.py:145
+#: addon/globalPlugins/brailleExtender/settings.py:145
 msgid "Re&view mode in"
 msgstr "&način pregleda u"
 
-#: globalPlugins/brailleExtender/settings.py:149
+#: addon/globalPlugins/brailleExtender/settings.py:149
 msgid "experimental, works poorly with Baum devices"
 msgstr "ksperimentalno, radi slabo sa Baumovim uređajima"
 
-#: globalPlugins/brailleExtender/settings.py:149
+#: addon/globalPlugins/brailleExtender/settings.py:149
 msgid "&Limit number of cells to (0 for no limit)"
 msgstr "&Ograniči broj ćelija na (0 bez ograničenja)"
 
-#: globalPlugins/brailleExtender/settings.py:157
+#: addon/globalPlugins/brailleExtender/settings.py:157
 msgid "Last known"
 msgstr "zadni poznat"
 
-#: globalPlugins/brailleExtender/settings.py:162
+#: addon/globalPlugins/brailleExtender/settings.py:162
 msgid "Braille display to load on NVDA+&k"
 msgstr "Brajični redak koji će se pokrenuti na pritisak NVDA+&k"
 
-#: globalPlugins/brailleExtender/settings.py:171
+#: addon/globalPlugins/brailleExtender/settings.py:171
 msgid "Braille display to load on NVDA+Shift+k"
 msgstr "Brajični redak koji će se pokretati na pritisak NVDA+Shift+k"
 
-#: globalPlugins/brailleExtender/settings.py:216
+#: addon/globalPlugins/brailleExtender/settings.py:216
 msgid "&Delay for scroll"
 msgstr "&zadrška pri automatskom čitanju"
 
-#: globalPlugins/brailleExtender/settings.py:219
+#: addon/globalPlugins/brailleExtender/settings.py:219
 msgid "Hide empty views during autoscroll"
 msgstr "Skrij prazne retke prilikom automatskog čitanja"
 
-#: globalPlugins/brailleExtender/settings.py:224
+#: addon/globalPlugins/brailleExtender/settings.py:224
 msgid "Adjust the delay autoscroll to the content"
 msgstr "Prilagodi zadršku automatskog čitanja sadržaju"
 
-#: globalPlugins/brailleExtender/settings.py:229
+#: addon/globalPlugins/brailleExtender/settings.py:229
 msgid "Reverse forward scroll and back scroll buttons"
 msgstr "zamjeni mjesta tipkama za čitanje napred /nazad"
 
-#: globalPlugins/brailleExtender/settings.py:283
+#: addon/globalPlugins/brailleExtender/settings.py:283
 msgid "Enable Attribra"
 msgstr "Omogući Attribru"
 
-#: globalPlugins/brailleExtender/settings.py:286
+#: addon/globalPlugins/brailleExtender/settings.py:286
 msgid "Profile"
 msgstr "Profil"
 
-#: globalPlugins/brailleExtender/settings.py:290
+#: addon/globalPlugins/brailleExtender/settings.py:290
 msgid "Bold"
 msgstr "podebljanje"
 
-#: globalPlugins/brailleExtender/settings.py:291
+#: addon/globalPlugins/brailleExtender/settings.py:291
 msgid "Italic"
 msgstr "Kosa slova"
 
-#: globalPlugins/brailleExtender/settings.py:292
+#: addon/globalPlugins/brailleExtender/settings.py:292
 msgid "Underline"
 msgstr "Podcrtanje"
 
-#: globalPlugins/brailleExtender/settings.py:294
+#: addon/globalPlugins/brailleExtender/settings.py:294
 msgid "Advanced rules"
 msgstr "Napredna pravila"
 
-#: globalPlugins/brailleExtender/settings.py:296
+#: addon/globalPlugins/brailleExtender/settings.py:296
 msgid "&Edit this rule"
 msgstr "&Uredi ovo pravilo"
 
-#: globalPlugins/brailleExtender/settings.py:297
+#: addon/globalPlugins/brailleExtender/settings.py:297
 msgid "&Remove this rule"
 msgstr "&Ukloni ovo pravilo"
 
-#: globalPlugins/brailleExtender/settings.py:298
+#: addon/globalPlugins/brailleExtender/settings.py:298
 msgid "&Add a rule"
 msgstr "&Dodaj pravilo"
 
-#: globalPlugins/brailleExtender/settings.py:300
+#: addon/globalPlugins/brailleExtender/settings.py:300
 msgid "Add a profile"
 msgstr "Dodaj prvilo"
 
-#: globalPlugins/brailleExtender/settings.py:301
+#: addon/globalPlugins/brailleExtender/settings.py:301
 msgid "Edit this profile"
 msgstr "Uredi ovaj profil"
 
-#: globalPlugins/brailleExtender/settings.py:302
+#: addon/globalPlugins/brailleExtender/settings.py:302
 msgid "Remove this profile"
 msgstr "Izbriši ovaj profil"
 
-#: globalPlugins/brailleExtender/settings.py:431
+#: addon/globalPlugins/brailleExtender/settings.py:431
 msgid "Use the current input table"
 msgstr "Koristi trenutnu ulaznu tablicu"
 
-#: globalPlugins/brailleExtender/settings.py:433
+#: addon/globalPlugins/brailleExtender/settings.py:433
 msgid "Input braille table for keyboard shortcut keys"
 msgstr "Ulazna brajična tablica za tipkovničke prečace na tipkovnici"
 
-#: globalPlugins/brailleExtender/settings.py:437
+#: addon/globalPlugins/brailleExtender/settings.py:437
 msgid "Input braille tables present in the switch"
 msgstr "Ulazne brajične tablice, koje se nalaze u preklopniku"
 
-#: globalPlugins/brailleExtender/settings.py:440
-#: globalPlugins/brailleExtender/settings.py:450
+#: addon/globalPlugins/brailleExtender/settings.py:440
+#: addon/globalPlugins/brailleExtender/settings.py:450
 msgid "&Remove"
 msgstr "&Ukloni"
 
-#: globalPlugins/brailleExtender/settings.py:442
+#: addon/globalPlugins/brailleExtender/settings.py:442
 msgid "Input tables not present in the switch"
 msgstr "Ulazne brajične tablice koje se ne nalaze u preklopniku. "
 
-#: globalPlugins/brailleExtender/settings.py:445
-#: globalPlugins/brailleExtender/settings.py:455
+#: addon/globalPlugins/brailleExtender/settings.py:445
+#: addon/globalPlugins/brailleExtender/settings.py:455
 msgid "&Add"
 msgstr "&Dodaj"
 
-#: globalPlugins/brailleExtender/settings.py:447
+#: addon/globalPlugins/brailleExtender/settings.py:447
 msgid "Output braille tables present in the switch"
 msgstr "Izlazne brajične tablice koje se nalaze u prilagodniku"
 
-#: globalPlugins/brailleExtender/settings.py:452
+#: addon/globalPlugins/brailleExtender/settings.py:452
 msgid "Output tables not present in the switch"
 msgstr "Izlazne brajične tablice koje se ne nalaze u prilagodniku"
 
-#: globalPlugins/brailleExtender/settings.py:459
+#: addon/globalPlugins/brailleExtender/settings.py:459
 msgid "Braille keyboard configuration"
 msgstr "Konfiguracija brajične tipkovnice"
 
-#: globalPlugins/brailleExtender/settings.py:473
+#: addon/globalPlugins/brailleExtender/settings.py:473
 msgid "You have no input tables present in the switch"
 msgstr "Nemate ulaznih brajičnih tablica u prilagodniku"
 
-#: globalPlugins/brailleExtender/settings.py:494
+#: addon/globalPlugins/brailleExtender/settings.py:494
 msgid "You have no output tables present in the switch"
 msgstr "Nemate izlaznih tablica u prilagodniku"
 
-#: globalPlugins/brailleExtender/settings.py:519
+#: addon/globalPlugins/brailleExtender/settings.py:519
 msgid "Gestures for the quick launches"
 msgstr "Geste za brzo pokretanje"
 
-#: globalPlugins/brailleExtender/settings.py:525
+#: addon/globalPlugins/brailleExtender/settings.py:525
 msgid "&Browse..."
 msgstr "&Pregledaj"
 
-#: globalPlugins/brailleExtender/settings.py:526
+#: addon/globalPlugins/brailleExtender/settings.py:526
 msgid "&Remove this gesture"
 msgstr "&Izbriši ovu gestu"
 
-#: globalPlugins/brailleExtender/settings.py:527
+#: addon/globalPlugins/brailleExtender/settings.py:527
 msgid "&Add a quick launch"
 msgstr "&Dodaj brzo pokretanje"
 
-#: globalPlugins/brailleExtender/settings.py:542
+#: addon/globalPlugins/brailleExtender/settings.py:542
 msgid "Please enter the desired gesture for this command, now"
 msgstr "Molimo upišite željeni prečac za gestu, sada"
 
-#: globalPlugins/brailleExtender/settings.py:558
+#: addon/globalPlugins/brailleExtender/settings.py:558
 #, python-brace-format
 msgid "Choose a file for {0}"
 msgstr "Odaberite datoteku za {0}"
 
-#: globalPlugins/brailleExtender/utils.py:191
+#: addon/globalPlugins/brailleExtender/utils.py:193
 #, python-format
 msgid "%s device reloaded"
 msgstr "Uređaj %s je ponovno učitan"
 
-#: globalPlugins/brailleExtender/utils.py:195
-#: globalPlugins/brailleExtender/utils.py:199
+#: addon/globalPlugins/brailleExtender/utils.py:197
+#: addon/globalPlugins/brailleExtender/utils.py:201
 #, python-format
 msgid "No %s display found"
 msgstr "Brajični redak %s nije pronađen"
 
-#: globalPlugins/brailleExtender/utils.py:219
+#: addon/globalPlugins/brailleExtender/utils.py:221
 msgid "Not a character."
 msgstr "Nije znak."
 
-#: globalPlugins/brailleExtender/utils.py:263
+#: addon/globalPlugins/brailleExtender/utils.py:265
 msgid "space"
 msgstr "razmak"
 
-#: globalPlugins/brailleExtender/utils.py:264
+#: addon/globalPlugins/brailleExtender/utils.py:266
 msgid "left SHIFT"
 msgstr "Lijevi SHIFT"
 
-#: globalPlugins/brailleExtender/utils.py:265
+#: addon/globalPlugins/brailleExtender/utils.py:267
 msgid "right SHIFT"
 msgstr "desni SHIFT"
 
-#: globalPlugins/brailleExtender/utils.py:266
+#: addon/globalPlugins/brailleExtender/utils.py:268
 msgid "left selector"
 msgstr "Lijevi odabirnik"
 
-#: globalPlugins/brailleExtender/utils.py:267
+#: addon/globalPlugins/brailleExtender/utils.py:269
 msgid "right selector"
 msgstr "Desni odabirnik"
 
-#: globalPlugins/brailleExtender/utils.py:268
+#: addon/globalPlugins/brailleExtender/utils.py:270
 msgid "Dot"
 msgstr "točkica"
 
-#: globalPlugins/brailleExtender/utils.py:341
+#: addon/globalPlugins/brailleExtender/utils.py:343
 msgid "No text"
 msgstr "Nema teksta"
 
-#: globalPlugins/brailleExtender/utils.py:348
+#: addon/globalPlugins/brailleExtender/utils.py:350
 msgid "Not text"
 msgstr "Nije tekst"
 
-#~ msgid "BrailleExtender"
-#~ msgstr "BrailleExtender"
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on to be shown on installation and add-on information.
+#: buildVars.py:17
+msgid "BrailleExtender"
+msgstr "BrailleExtender"
 
-#~ msgid "This NVDA add-on adds some features at braille level"
-#~ msgstr "Ovaj NVDA dodatak dodaje neke funkcije na nivou brajice"
+#: buildVars.py:21
+msgid "This NVDA add-on adds some features at braille level"
+msgstr "Ovaj NVDA dodatak dodaje neke funkcije na nivou brajice"
 
-#~ msgid "It allows"
-#~ msgstr "Omogućava slijedeće:"
+#: buildVars.py:21
+msgid "It allows"
+msgstr "Omogućava slijedeće:"
 
-#~ msgid "reload two favorite braille display with shortcuts"
-#~ msgstr "Ponovno učitavanje dvaju omiljenihbrajičnih redaka sa prečacima"
+#: buildVars.py:22
+msgid "reload two favorite braille display with shortcuts"
+msgstr "Ponovno učitavanje dvaju omiljenihbrajičnih redaka sa prečacima"
 
-#~ msgid ""
-#~ "automatically switch in review mode in apps (default: PuTTY, Powershell, "
-#~ "bash, cmd)"
-#~ msgstr ""
-#~ "Automatsko prebacivanje u način pregleda u aplikacijama (default: PuTTY, "
-#~ "Powershell, bash, cmd)"
+#: buildVars.py:23
+msgid ""
+"automatically switch in review mode in apps (default: PuTTY, Powershell, "
+"bash, cmd)"
+msgstr ""
+"Automatsko prebacivanje u način pregleda u aplikacijama (default: PuTTY, "
+"Powershell, bash, cmd)"
 
-#~ msgid "auto scroll"
-#~ msgstr "Automatsko čitanje"
+#: buildVars.py:24
+msgid "auto scroll"
+msgstr "Automatsko čitanje"
 
-#~ msgid "switch between several input/output braille tables"
-#~ msgstr "prebacuje između nekoliko ulaznih ili izlaznih brajičnih tablica"
+#: buildVars.py:25
+msgid "switch between several input/output braille tables"
+msgstr "prebacuje između nekoliko ulaznih ili izlaznih brajičnih tablica"
 
-#~ msgid ""
-#~ "define custom rules to mark text with special fields option with braille "
-#~ "dots 7 and 8"
-#~ msgstr "Definiranje pravila za označavanje teksta uz pomoć točkica 7 i 8"
+#: buildVars.py:26
+msgid ""
+"define custom rules to mark text with special fields option with braille "
+"dots 7 and 8"
+msgstr "Definiranje pravila za označavanje teksta uz pomoć točkica 7 i 8"
 
-#~ msgid "Besides, for some braille displays, it extends the mapping"
-#~ msgstr "Osim toga, za neke brajične retke, proširuje dodijeljene tipke:"
+#: buildVars.py:27
+msgid "Besides, for some braille displays, it extends the mapping"
+msgstr "Osim toga, za neke brajične retke, proširuje dodijeljene tipke:"
 
-#~ msgid "access to function keys, multimedia keys, quick navigation"
-#~ msgstr "Pristup multimedijskim, funkcijskim, te prečacima brze navigacije"
+#: buildVars.py:28
+msgid "access to function keys, multimedia keys, quick navigation"
+msgstr "Pristup multimedijskim, funkcijskim, te prečacima brze navigacije"
 
-#~ msgid "emulate modifier keys, and thus any keyboard shortcut"
-#~ msgstr "Oponašanje modifikatora, te stoga i drugih prečaca na tipkovnici"
+#: buildVars.py:29
+msgid "emulate modifier keys, and thus any keyboard shortcut"
+msgstr "Oponašanje modifikatora, te stoga i drugih prečaca na tipkovnici"
 
-#~ msgid ""
-#~ "offer several keyboard configurations concerning the possibility to input "
-#~ "dots 7 and 8, enter and backspace"
-#~ msgstr ""
-#~ "Omogućava nekoliko konfiguracija za upis brajičnih znakova uključujući "
-#~ "točkice 7 i 8, enter i backspace"
+#: buildVars.py:30
+msgid ""
+"offer several keyboard configurations concerning the possibility to input "
+"dots 7 and 8, enter and backspace"
+msgstr ""
+"Omogućava nekoliko konfiguracija za upis brajičnih znakova uključujući "
+"točkice 7 i 8, enter i backspace"
 
-#~ msgid "launch an application quickly"
-#~ msgstr "Brzo pokretanje aplikacije"
+#: buildVars.py:31
+msgid "launch an application quickly"
+msgstr "Brzo pokretanje aplikacije"
 
-#~ msgid "rotor (implementation in progress)"
-#~ msgstr "rotor (implementacija u toku"
+#: buildVars.py:32
+msgid "rotor (implementation in progress)"
+msgstr "rotor (implementacija u toku"
 
 #~ msgid "Change log"
 #~ msgstr "Lista izmjena"

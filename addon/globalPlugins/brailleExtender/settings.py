@@ -91,6 +91,7 @@ class Settings(wx.Dialog):
 		except BaseException:
 			configBE.conf['general']['limitCells_' + curBD] = 0
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
+		configBE.conf['general']['speakScroll'] = self.reading.speakScroll.GetValue()
 		configBE.conf['general']['attribra'] = self.attribra.attribraEnabled.GetValue()
 		configBE.conf['general']['reviewModeApps'] = self.general.reviewModeApps.GetValue()
 		if not noUnicodeTable:
@@ -213,6 +214,9 @@ class General(wx.Panel):
 class Reading(wx.Panel):
 	def __init__(self, parent):
 		wx.Panel.__init__(self, parent)
+		self.speakScroll = wx.CheckBox(self, label=_(u'Say the current line during text scrolling'))
+		if configBE.conf['general']['speakScroll']:
+			self.speakScroll.SetValue(True)
 		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for scroll'))
 		self.delayScroll = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['delayScroll_' + curBD]))
 		self.delayScroll.Bind(wx.EVT_CHAR, self.onDelayScroll)

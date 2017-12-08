@@ -45,6 +45,7 @@ from keyboardHandler import KeyboardInputGesture
 from logHandler import log
 import configBE
 import settings
+import patch
 import utils
 import api
 instanceGP = None
@@ -81,8 +82,7 @@ paramsDL = lambda: {
 	"language": languageHandler.getLanguage(),
 	"installed": config.isInstalledCopy(),
 	"brailledisplay": braille.handler.display.name,
-	}
-
+}
 
 def decorator(fn, str):
 	def _getTypeformFromFormatField(self, field):
@@ -120,6 +120,7 @@ def decorator(fn, str):
 		return update
 	if str == "_getTypeformFromFormatField":
 		return _getTypeformFromFormatField
+
 class Autoreload_profile(Thread):
 	end = False
 	def __init__(self):
@@ -164,6 +165,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		global instanceGP
 		instanceGP = self
+		patch.instanceGP = instanceGP
 		log.debug('! New instance of GlobalPlugin: {0}'.format(id(instanceGP)))
 		configBE.initGestures()
 		configBE.loadGestures()

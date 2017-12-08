@@ -1,24 +1,19 @@
 # coding: utf-8
 import os.path as osp
-import re
-
+import re, time
 import api
 import braille
-import brailleInput
-import cursorManager
-import globalCommands
-import globalPlugins
 import inputCore
 import louis
 import config
 import ui
-import addonHandler
 import scriptHandler
 import speech
 import textInfos
 from keyboardHandler import KeyboardInputGesture
-addonHandler.initTranslation()
 from logHandler import log
+import addonHandler
+addonHandler.initTranslation()
 
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!

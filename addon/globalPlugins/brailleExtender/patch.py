@@ -14,7 +14,7 @@ instanceGP = None
 # customize basic functions
 def sayCurrentLine():
 	global instanceGP
-	if configBE.conf['general']['speakScroll'] and not instanceGP.autoScrollRunning:
+	if braille.handler.tether == braille.handler.TETHER_REVIEW and configBE.conf['general']['speakScroll'] and not instanceGP.autoScrollRunning:
 		try:
 			scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 			ui.message(unicode(self.rawText).replace('\0',''))

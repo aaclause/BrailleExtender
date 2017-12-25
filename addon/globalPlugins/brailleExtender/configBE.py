@@ -73,7 +73,7 @@ def loadConf():
 		smartDelayScroll = boolean(default=False)
 		reverseScroll = boolean(default=False)
 		ignoreBlankLineScroll = boolean(default=True)
-		speakScroll = boolean(default=False)
+		speakScroll = boolean(default=True)
 		iTableSht = integer(min=-1, default=-1, max={MAX_TABLES})
 		iTables = string(default="{ITABLE}")
 		oTables = string(default="{OTABLE}")
@@ -132,7 +132,6 @@ def loadGestures():
 			GLng = 'en-us-comp8.ctb'
 		gesturesBMPath = profilesDir + ('_BrowseMode/common.ini').decode('utf-8').encode('mbcs')
 		gesturesLangBMPath = profilesDir + ('_BrowseMode/'+GLng+'.ini').decode('utf-8').encode('mbcs')
-		inputCore.manager.localeGestureMap.clear()
 		inputCore.manager.localeGestureMap.load(gesturesBDPath())
 		for fn in [gesturesBMPath, gesturesLangBMPath]:
 			f = open(fn)

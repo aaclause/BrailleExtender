@@ -214,7 +214,7 @@ class General(wx.Panel):
 class Reading(wx.Panel):
 	def __init__(self, parent):
 		wx.Panel.__init__(self, parent)
-		self.speakScroll = wx.CheckBox(self, label=_(u'Say the current line during text scrolling'))
+		self.speakScroll = wx.CheckBox(self, label=_(u'In review mode, say the current line during text scrolling'))
 		if configBE.conf['general']['speakScroll']:
 			self.speakScroll.SetValue(True)
 		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for scroll'))

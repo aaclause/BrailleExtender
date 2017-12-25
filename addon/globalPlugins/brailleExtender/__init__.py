@@ -292,7 +292,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.instanceST.onClose(None)
 		if instanceUP != None:
 			instanceUP.onClose(None)
-		inputCore.manager.localeGestureMap.clear()
 		self.removeMenu()
 		if configBE.noUnicodeTable:
 			brailleInput.handler.table = self.backupInputTable
@@ -932,7 +931,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return self.getDoc()
 
 	def onReload(self, evt=None, sil=False, sv=False):
-		inputCore.manager.localeGestureMap.clear()
 		if sv:
 			configBE.saveSettings()
 		configBE.checkConfigPath()

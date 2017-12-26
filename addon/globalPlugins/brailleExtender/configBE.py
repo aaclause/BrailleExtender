@@ -79,6 +79,8 @@ def loadConf():
 		oTables = string(default="{OTABLE}")
 		quickLaunch_{CUR_BD} = string(default="notepad; wordpad; calc; cmd")
 		attribra = boolean(default=True)
+		tabSpace = boolean(default=False)
+		tabSize = integer(min=1, default=2, max=42)
 	""".format(
 			CUR_BD=curBD,
 			MAX_BD=42,

@@ -776,7 +776,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		<ul>
 			<li>{newt}: {t1};</li>
 			<li>{newt}: {t2};</li>
-			<li>{bug} scroll with the usual gestures with Brailliant display;</li>
+			<li>{bug} {bug0};</li>
 			<li>{best} {shortcut}. {NVDAREMOTE}.</li>
 		</ul>
 		</div>
@@ -789,6 +789,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			t1=_('Polish'),
 			t2=_('Croatian'),
 			bug=_(u'Fix a bug preventing'),
+			bug0=_('scroll with the usual gestures on Brailliant displays'),
 			bug1=_('the use of locale gestures'),
 			bug2=_('keyboard shortcuts from working as expected when a table is specified'),
 			best=_(u'Improvement concerning'),
@@ -799,7 +800,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			secTable=_(u'possibility to specify a secondary output braille table'),
 			tabSpaces=_(u'Display tab signs as spaces'),
 			sayReviewModeScroll=_(u'In review mode, say the current line during text scrolling'),
-			shortcut=_('shortcuts keyboard on braille display'),
+			shortcut=_('keyboard shortcuts on braille display'),
 			NVDAREMOTE=_(u'NVDARemote support')
 		)
 		if configBE.gesturesFileExists:

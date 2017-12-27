@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2017-12-27 13:46+0100\n"
-"PO-Revision-Date: 2017-12-27 13:52+0100\n"
+"POT-Creation-Date: 2017-12-27 20:07+0100\n"
+"PO-Revision-Date: 2017-12-27 20:07+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -17,125 +17,133 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:68
+#: globalPlugins/brailleExtender/__init__.py:68
 msgid "Default"
 msgstr "domyślnie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:69
+#: globalPlugins/brailleExtender/__init__.py:69
+#: globalPlugins/brailleExtender/__init__.py:798
 msgid "Moving in the text"
 msgstr "Przemieszczanie w tekście"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:70
+#: globalPlugins/brailleExtender/__init__.py:70
+#: globalPlugins/brailleExtender/__init__.py:798
 msgid "Text selection"
 msgstr "zaznaczanie tekstu"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:71
+#: globalPlugins/brailleExtender/__init__.py:71
 msgid "Objects"
 msgstr "Obiekty"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:72
+#: globalPlugins/brailleExtender/__init__.py:72
 msgid "Review mode"
 msgstr "Tryb przeglądu"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:73
+#: globalPlugins/brailleExtender/__init__.py:73
+#: globalPlugins/brailleExtender/__init__.py:798
 msgid "Tables"
 msgstr "Tabele"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:74
-#: addon/globalPlugins/brailleExtender/settings.py:368
+#: globalPlugins/brailleExtender/__init__.py:74
+#: globalPlugins/brailleExtender/settings.py:368
 msgid "Spelling errors"
 msgstr "błędy pisowni"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:242
+#: globalPlugins/brailleExtender/__init__.py:136
+#, python-format
+msgid "Stopping %s"
+msgstr "Zatrzymuję %s"
+
+#: globalPlugins/brailleExtender/__init__.py:242
 msgid "Documentation"
 msgstr "Pomoc"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:243
+#: globalPlugins/brailleExtender/__init__.py:243
 msgid "Opens the addon's documentation."
 msgstr "Otwiera pomoc dodatku"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:248
+#: globalPlugins/brailleExtender/__init__.py:248
 msgid "Settings..."
 msgstr "Ustawienia..."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:249
+#: globalPlugins/brailleExtender/__init__.py:249
 msgid "Opens the addon's settings."
 msgstr "Otwiera ustawienia dodatku."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:255
+#: globalPlugins/brailleExtender/__init__.py:255
 msgid "Reload add-on"
 msgstr "Wczytaj dodatek ponownie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:256
+#: globalPlugins/brailleExtender/__init__.py:256
 msgid "Reload this add-on."
 msgstr "Wczytuje ten dodatek."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:262
+#: globalPlugins/brailleExtender/__init__.py:262
 msgid "&Check for update..."
 msgstr "&Sprawdź, czy jest nowa wersja...."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:263
+#: globalPlugins/brailleExtender/__init__.py:263
 msgid "Checks if update is available"
 msgstr "Sprawdza dostępność nowej wersji"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:272
+#: globalPlugins/brailleExtender/__init__.py:272
 msgid "&Website"
 msgstr "St&rona dodatku..."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:273
+#: globalPlugins/brailleExtender/__init__.py:273
 msgid "Open addon's website."
 msgstr "Otwiera stronę www tego dodatku."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:453
+#: globalPlugins/brailleExtender/__init__.py:453
 msgid "Character"
 msgstr "Znak"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:453
+#: globalPlugins/brailleExtender/__init__.py:453
 msgid "Word"
 msgstr "słowo"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:453
+#: globalPlugins/brailleExtender/__init__.py:453
 msgid "Line"
 msgstr "Wiersz"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:453
+#: globalPlugins/brailleExtender/__init__.py:453
 msgid "Paragraph"
 msgstr "Paragraf"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:453
+#: globalPlugins/brailleExtender/__init__.py:453
 msgid "Page"
 msgstr "strona"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:453
+#: globalPlugins/brailleExtender/__init__.py:453
 msgid "Document"
 msgstr "Dokument"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:488
-#: addon/globalPlugins/brailleExtender/__init__.py:511
+#: globalPlugins/brailleExtender/__init__.py:488
+#: globalPlugins/brailleExtender/__init__.py:511
 msgid "Not supported here or browse mode not enabled"
 msgstr "Nie wspierane tutaj, oraz tryb przeglądania nie jest włączony"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:490
+#: globalPlugins/brailleExtender/__init__.py:490
 msgid "Not implemented yet"
 msgstr "Jeszcze niezaimplementowane"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:491
+#: globalPlugins/brailleExtender/__init__.py:491
 msgid "Select previous rotor setting"
 msgstr "Wybierz poprzednie ustawienie rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:492
+#: globalPlugins/brailleExtender/__init__.py:492
 msgid "Select next rotor setting"
 msgstr "wybierz następne ustawienie rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:541
+#: globalPlugins/brailleExtender/__init__.py:541
 msgid "Move to previous item depending rotor setting"
 msgstr "przechodzi do poprzedniego zależnego ustawienia rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:542
+#: globalPlugins/brailleExtender/__init__.py:542
 msgid "Move to next item depending rotor setting"
 msgstr "Przenosi do następnego zależnego ustawienia rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:549
+#: globalPlugins/brailleExtender/__init__.py:549
 msgid ""
 "Varies depending on rotor setting. Eg: in object mode, it's similar to NVDA"
 "+enter"
@@ -143,137 +151,235 @@ msgstr ""
 "Zależy od ustawienia rotora. NP: W trybie obiektowym, jest to podobne "
 "doskrótu NVDA+enter"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:551
+#: globalPlugins/brailleExtender/__init__.py:551
 msgid "Move to previous item using rotor setting"
 msgstr "Przenosi do poprzedniego elementu używając rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:552
+#: globalPlugins/brailleExtender/__init__.py:552
 msgid "Move to next item using rotor setting"
 msgstr "Przenosi do następnego elementu używając rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:557
+#: globalPlugins/brailleExtender/__init__.py:557
 msgid "Speech on"
 msgstr "mowa włączona"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:560
+#: globalPlugins/brailleExtender/__init__.py:560
 msgid "Speech off"
 msgstr "Mowa wyłączona"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:562
+#: globalPlugins/brailleExtender/__init__.py:562
 msgid "Toggle speech on or off"
 msgstr "Włącza lub wyłącza mowe"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:566
+#: globalPlugins/brailleExtender/__init__.py:566
 msgid "Get the cursor position of text"
 msgstr "Uzyskuje aktualną pozycję kursora lub tekstu"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:592
+#: globalPlugins/brailleExtender/__init__.py:592
 msgid "Hour and date with autorefresh"
 msgstr "Data i godzina z automatycznym odświeżaniem"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:604
+#: globalPlugins/brailleExtender/__init__.py:604
 msgid "Autoscroll stopped"
 msgstr "Czytanie automatyczne zatrzymane"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:614
+#: globalPlugins/brailleExtender/__init__.py:614
 msgid "Enable/disable autoscroll"
 msgstr "włącza lub wyłącza czytanie automatyczne"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:625
+#: globalPlugins/brailleExtender/__init__.py:625
 msgid "Increase the master volume"
 msgstr "Zwiększa głośność główną"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:647
+#: globalPlugins/brailleExtender/__init__.py:647
 msgid "Decrease the master volume"
 msgstr "Zmniejsza głośność główną"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:652
+#: globalPlugins/brailleExtender/__init__.py:652
 msgid "Muted sound"
 msgstr "Dźwięk wyciszony"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:653
+#: globalPlugins/brailleExtender/__init__.py:653
 #, python-format
 msgid "Unmuted sound (%3d%%)"
 msgstr "zdjęte wyciszenie (%3d%%)"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:660
+#: globalPlugins/brailleExtender/__init__.py:660
 msgid "Mute or unmute sound"
 msgstr "Wycisz lub nie wyciszaj dźwięku"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:664
+#: globalPlugins/brailleExtender/__init__.py:664
 #, python-format
 msgid "Show the %s documentation"
 msgstr "Pokaż pomoc dla %s"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:695
+#: globalPlugins/brailleExtender/__init__.py:695
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "emuluje wciśnięcie %s na klawiaturze systemowej"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:703
+#: globalPlugins/brailleExtender/__init__.py:703
 msgid "description currently unavailable for this shortcut"
 msgstr "Opis dla tego skrótu jest tymczasowo niedostępny"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:720
+#: globalPlugins/brailleExtender/__init__.py:720
 msgid "caps lock"
 msgstr "caps lock"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:743
+#: globalPlugins/brailleExtender/__init__.py:743
 #, python-format
 msgid "%s braille display"
 msgstr "Monitor brajlowski %s"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:751
+#: globalPlugins/brailleExtender/__init__.py:751
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr "Prawa autorskie (C) 2017 André-Abush Clause, i inni współtwórcy:"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:752
+#: globalPlugins/brailleExtender/__init__.py:752
 msgid "Persian translation"
 msgstr "Tłumaczenie perskie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:753
+#: globalPlugins/brailleExtender/__init__.py:753
 msgid "Polish and Croatian translations"
 msgstr "Tłumaczenia chorwackie i polskie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:754
+#: globalPlugins/brailleExtender/__init__.py:754
 msgid "Additional third party copyrighted code is included:"
 msgstr ""
 "Dodatkowy kod trzeciej strony, chroniony prawem autorskim jest dodawany:"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:757
+#: globalPlugins/brailleExtender/__init__.py:757
 msgid "Thanks also to"
 msgstr "Także dziękuję"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:758
-#: addon/globalPlugins/brailleExtender/__init__.py:759
+#: globalPlugins/brailleExtender/__init__.py:758
+#: globalPlugins/brailleExtender/__init__.py:759
 msgid "for his tests and suggestions with"
 msgstr "dla jego testy i sugestje"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:760
+#: globalPlugins/brailleExtender/__init__.py:760
 msgid "And Thank you very much for all your feedback and comments via email."
 msgstr "I dziękuję ci dla twoich informacji zwrotnych i e-maile."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:784
+#: globalPlugins/brailleExtender/__init__.py:784
+msgid "Coming soon in the next versions"
+msgstr "Planowane w następnych wersjach"
+
+#: globalPlugins/brailleExtender/__init__.py:785
+msgid ""
+"gesture profiles, finalizing tabs in settings, some shortcuts revisions..."
+msgstr ""
+"profile gestów, dokańczanie kart w ustawieniach, zmiany niektórych skrótów..."
+
+#: globalPlugins/brailleExtender/__init__.py:786
+msgid "Change Log"
+msgstr "Lista zmian"
+
+#: globalPlugins/brailleExtender/__init__.py:787
+msgid "New feature"
+msgstr "Nowa funkcja"
+
+#: globalPlugins/brailleExtender/__init__.py:788
+msgid "New translation"
+msgstr "Nowe tłumaczenie"
+
+#: globalPlugins/brailleExtender/__init__.py:789
+msgid "Polish"
+msgstr "Polski"
+
+#: globalPlugins/brailleExtender/__init__.py:790
+msgid "Croatian"
+msgstr "Chorwacki"
+
+#: globalPlugins/brailleExtender/__init__.py:791
+msgid "Fix a bug preventing"
+msgstr "Naprawiono błąd uniemożliwiający"
+
+#: globalPlugins/brailleExtender/__init__.py:792
+msgid "the use of locale gestures"
+msgstr "używanie gestów bazujących na języku"
+
+#: globalPlugins/brailleExtender/__init__.py:793
+msgid "keyboard shortcuts from working as expected when a table is specified"
+msgstr "działanie skrótow, koedy tablica jest określona"
+
+#: globalPlugins/brailleExtender/__init__.py:794
+msgid "Improvement concerning"
+msgstr "Ulepszenie dotyczące"
+
+#: globalPlugins/brailleExtender/__init__.py:795
+msgid "profiles"
+msgstr "profile"
+
+#: globalPlugins/brailleExtender/__init__.py:796
+msgid ""
+"Profiles are now reloaded automatically if braille display changes during "
+"execution"
+msgstr ""
+"Profile są teraz ponownie uruchamiane, jeżeli monitor brajlowski zostanie "
+"zmieniony kiedy Braille extender jest uruchomiony"
+
+#: globalPlugins/brailleExtender/__init__.py:797
+msgid "the rotor"
+msgstr "Rotor"
+
+#: globalPlugins/brailleExtender/__init__.py:798
+msgid "New modes"
+msgstr "Nowe tryby"
+
+#: globalPlugins/brailleExtender/__init__.py:798
+msgid "review"
+msgstr "Przegląd"
+
+#: globalPlugins/brailleExtender/__init__.py:798
+msgid "and"
+msgstr "i"
+
+#: globalPlugins/brailleExtender/__init__.py:799
+msgid "possibility to specify a secondary output braille table"
+msgstr "Możliwość określenia wtórnej tablicy wyjścia"
+
+#: globalPlugins/brailleExtender/__init__.py:800
+#: globalPlugins/brailleExtender/settings.py:249
+msgid "Display tab signs as spaces"
+msgstr "Wyświetl znaki tabulacji jako spacje"
+
+#: globalPlugins/brailleExtender/__init__.py:801
+#: globalPlugins/brailleExtender/settings.py:255
+msgid "In review mode, say the current line during text scrolling"
+msgstr ""
+"W trzybie przeglądania, powiedz aktualną linie podczas automatycznego "
+"czytania"
+
+#: globalPlugins/brailleExtender/__init__.py:802
+msgid "shortcuts keyboard on braille display"
+msgstr "skróty klawiszowe na klawiaturze brajlowskiej"
+
+#: globalPlugins/brailleExtender/__init__.py:803
+msgid "NVDARemote support"
+msgstr "Wsparcie dla NVDARemote"
+
+#: globalPlugins/brailleExtender/__init__.py:817
 msgid "Simple keys"
 msgstr "Klawisze podstawowe"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:786
+#: globalPlugins/brailleExtender/__init__.py:819
 msgid "Usual shortcuts"
 msgstr "Klawisze zwyczajne"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:788
+#: globalPlugins/brailleExtender/__init__.py:821
 msgid "Standard NVDA commands"
 msgstr "Standardowe skróty NVDA"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:790
+#: globalPlugins/brailleExtender/__init__.py:823
 msgid "Modifier keys"
 msgstr "modyfikatory"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:792
+#: globalPlugins/brailleExtender/__init__.py:825
 msgid "Quick navigation keys"
 msgstr "polecenia szybkiej nawigacji"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:793
+#: globalPlugins/brailleExtender/__init__.py:826
 msgid ""
 "In virtual documents (HTML/PDF/…) you can navigate element type by element "
 "type using keyboard. These navigation keys should work with your braille "
@@ -285,36 +391,36 @@ msgstr ""
 "monitorem brajlowskim.</p><p>W dodatku do tych klawiszy, istnieją niektóre "
 "określone klawisze:"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:795
+#: globalPlugins/brailleExtender/__init__.py:828
 msgid "Rotor feature"
 msgstr "Funkcja rotora"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:797
+#: globalPlugins/brailleExtender/__init__.py:830
 msgid "Gadget commands"
 msgstr "Polecenia gadżetowe"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:799
+#: globalPlugins/brailleExtender/__init__.py:832
 msgid "Shortcuts defined outside add-on"
 msgstr "Skróty zdefiniowane zewnątrz dodatku"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:809
+#: globalPlugins/brailleExtender/__init__.py:842
 msgid "Keyboard configurations provided"
 msgstr "domyślne konfiguracje klawiatury"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:810
+#: globalPlugins/brailleExtender/__init__.py:843
 msgid "Keyboard configurations are"
 msgstr "Konfiguracje klawiatur są"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:815
+#: globalPlugins/brailleExtender/__init__.py:848
 msgid "Warning:"
 msgstr "Uwaga:"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:816
+#: globalPlugins/brailleExtender/__init__.py:849
 msgid "BrailleExtender doesn't seem to support your braille display."
 msgstr ""
 "Wygląda na to, że BrailleExtender nie wspiera państwa monitora brajlowskiego."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:817
+#: globalPlugins/brailleExtender/__init__.py:850
 msgid ""
 "However, you can reassign most of these features in the \"Command Gestures\" "
 "dialog in the \"Preferences\" of NVDA."
@@ -322,56 +428,56 @@ msgstr ""
 "Aczkolwiek, można przydzielić te gesty z \"dialogu zdarzeń wejścia\" w "
 "\"ustawieniach\" NVDA."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:819
+#: globalPlugins/brailleExtender/__init__.py:852
 msgid "Shortcuts on system keyboard specific to the add-on"
 msgstr "skróty na systemowej klawiaturze określone dla dodatku"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:827
+#: globalPlugins/brailleExtender/__init__.py:860
 #, python-format
 msgid "%s's documentation"
 msgstr "Pomoc dla %sa"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:838
+#: globalPlugins/brailleExtender/__init__.py:871
 msgid "No such file or directory"
 msgstr "Niema takiego pliku lub katalogu"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:839
+#: globalPlugins/brailleExtender/__init__.py:872
 msgid "Opens a custom program/file. Go to settings to define them"
 msgstr ""
 "Otwiera dostosowany program/plik. Proszę wejść do ustawień, aby chzdefiniować"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:846
+#: globalPlugins/brailleExtender/__init__.py:879
 #, python-format
 msgid "Check for %s updates, and starts the download if there is one"
 msgstr ""
 "Sprawdza czy kest dostępna nowa wersja %s ,i rozpoczyna pobieranie,jeżeli "
 "istnieje."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:873
+#: globalPlugins/brailleExtender/__init__.py:906
 msgid "Increase autoscroll delay"
 msgstr "Zwiększ czekanie automatycznego czytania"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:874
+#: globalPlugins/brailleExtender/__init__.py:907
 msgid "Decrease autoscroll delay"
 msgstr "zmniejsz czekanie automatycznego czytania"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:882
+#: globalPlugins/brailleExtender/__init__.py:915
 #, python-brace-format
 msgid "Configuration {0} ({1})"
 msgstr "Konfiguracja {0} ({1})"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:886
+#: globalPlugins/brailleExtender/__init__.py:919
 msgid "Switch between different braille keyboard configurations."
 msgstr ""
 "Przełączaj się pomiędzy różnymi konfiguracjami klawiatury brajlowskiej."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:890
-#: addon/globalPlugins/brailleExtender/__init__.py:904
+#: globalPlugins/brailleExtender/__init__.py:923
+#: globalPlugins/brailleExtender/__init__.py:937
 msgid "Please use NVDA 2017.3 minimum for this feature"
 msgstr "Proszę używać NVDA minimalnie 2017.3 dla tej funkcji"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:892
-#: addon/globalPlugins/brailleExtender/__init__.py:906
+#: globalPlugins/brailleExtender/__init__.py:925
+#: globalPlugins/brailleExtender/__init__.py:939
 msgid ""
 "You must choose at least two tables for this feature. Please fill in the "
 "settings"
@@ -379,15 +485,15 @@ msgstr ""
 "Dla tej funkcji, trzeba wybrać chociażby dwie tablice brajlowskie. Proszę "
 "uzupełnić ustawienia!"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:900
+#: globalPlugins/brailleExtender/__init__.py:933
 msgid "Switch between his favorite input braille tables"
 msgstr "Przełącza pomiędzy ulubionymi tablicami wprowadzania"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:915
+#: globalPlugins/brailleExtender/__init__.py:948
 msgid "Switch between his favorite output braille tables"
 msgstr "przełącza pomiędzy ulubionymi tablicami wyświetlania"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:920
+#: globalPlugins/brailleExtender/__init__.py:953
 msgid ""
 "Gives the Unicode value of the character where the cursor is located and the "
 "decimal, binary and octal equivalent."
@@ -395,46 +501,46 @@ msgstr ""
 "Dostarcza wartość unikodową znaku tam, gdzie kursor się znajduje, a także "
 "decymalny, oktalny i binarny odpowiednik."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:926
+#: globalPlugins/brailleExtender/__init__.py:959
 msgid "Turn on"
 msgstr "włącz"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:926
+#: globalPlugins/brailleExtender/__init__.py:959
 msgid "Turn off"
 msgstr "Wyłącz"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:928
+#: globalPlugins/brailleExtender/__init__.py:961
 msgid "Turn on/off the assistance shortcuts."
 msgstr "włącza/wyłącza skróty asystujące."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:945
+#: globalPlugins/brailleExtender/__init__.py:978
 #, python-format
 msgid "%s reloaded"
 msgstr "%s jest ponownie wczytany"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:953
+#: globalPlugins/brailleExtender/__init__.py:986
 msgid "Show the \"about\" window"
 msgstr "Wyświetla ono dialogowe o programie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:960
+#: globalPlugins/brailleExtender/__init__.py:993
 #, python-format
 msgid "Reload %s"
 msgstr "Ponownie wczytaj %s"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:972
+#: globalPlugins/brailleExtender/__init__.py:1005
 msgid "Please use the keyboard for this feature"
 msgstr "Proszę używać klawiatury dla tej funkcji!"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:977
+#: globalPlugins/brailleExtender/__init__.py:1010
 msgid "No braille display specified. No reload to do"
 msgstr ""
 "Nie ma określonego monitora brajlowskiego. Nic nie można ponownie wczytać."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:985
+#: globalPlugins/brailleExtender/__init__.py:1018
 msgid "Profile reloaded"
 msgstr "profil wczytany ponownie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:990
+#: globalPlugins/brailleExtender/__init__.py:1023
 msgid ""
 "Reload the driver of an favorite or last braille display. Practical if the "
 "braille display is not plugged immediately or that the latter is "
@@ -444,466 +550,437 @@ msgstr ""
 "jeśli monitor brajlowski nie jest natychmiastowo połączony lub odłączony, a "
 "potem podłączony później"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1053
+#: globalPlugins/brailleExtender/__init__.py:1086
 #, python-format
 msgid "Unable to send %s"
 msgstr "Nie można wysłać %s"
 
-#. and 'nvda' in sht.lower()
-#: addon/globalPlugins/brailleExtender/__init__.py:1055
+#: globalPlugins/brailleExtender/__init__.py:1088
 #, python-format
 msgid "%s is not part of a NVDA commands"
 msgstr "%s Nie jest częścią komend NVDA"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1174
+#: globalPlugins/brailleExtender/__init__.py:1207
 msgid "WIN"
 msgstr "WIN"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1174
+#: globalPlugins/brailleExtender/__init__.py:1207
 msgid "CTRL"
 msgstr "CTRL"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1174
+#: globalPlugins/brailleExtender/__init__.py:1207
 msgid "SHIFT"
 msgstr "SHIFT"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1174
+#: globalPlugins/brailleExtender/__init__.py:1207
 msgid "ALT"
 msgstr "ALT"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1259
+#: globalPlugins/brailleExtender/__init__.py:1292
 msgid "Keyboard shortcut cancelled"
 msgstr "Anulowano skrót klawiszowi"
 
-#. /* docstrings for modifier keys */
-#: addon/globalPlugins/brailleExtender/__init__.py:1270
+#: globalPlugins/brailleExtender/__init__.py:1303
 msgid "Emulate pressing down "
 msgstr "Emuluje wciśnięcie strzałki w dół "
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1270
+#: globalPlugins/brailleExtender/__init__.py:1303
 msgid " on the system keyboard"
 msgstr " na klawiaturze systemowej"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1337
+#: globalPlugins/brailleExtender/__init__.py:1370
 #, python-brace-format
 msgid "{0} update"
 msgstr "Aktualizacja {0}"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1345
+#: globalPlugins/brailleExtender/__init__.py:1378
 #, python-format
 msgid "New version available, version %s. Do you want download it now?"
 msgstr "Dostępna jest nowa wersja wersja: %s. Czy chcesz ję pobrać?"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1347
+#: globalPlugins/brailleExtender/__init__.py:1380
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
 msgstr "Używasz najnowszą wersję dodatku. %s jest najnowszą wersją."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1349
+#: globalPlugins/brailleExtender/__init__.py:1382
 msgid "Oops! There was a problem checking for updates. Please retry later."
 msgstr ""
 "Kurcze! Istnieje problem przy sprawdzaniu aktualizacji. Please retry later."
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1352
+#: globalPlugins/brailleExtender/__init__.py:1385
 msgid "BrailleExtender's Update"
 msgstr "Aktualizacja BrailleExtendera"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1355
+#: globalPlugins/brailleExtender/__init__.py:1388
 msgid "&Yes"
 msgstr "&Tak"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1356
+#: globalPlugins/brailleExtender/__init__.py:1389
 msgid "&No"
 msgstr "&Nie"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1360
-#: addon/globalPlugins/brailleExtender/settings.py:58
+#: globalPlugins/brailleExtender/__init__.py:1393
+#: globalPlugins/brailleExtender/settings.py:58
 msgid "OK"
 msgstr "OK"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:1397
+#: globalPlugins/brailleExtender/__init__.py:1430
 msgid "Unable to save or download update file. Opening your browser"
 msgstr ""
 "Nie można zachować, lub pobrać pliku aktualizacji. Otwieram przeglądarkę"
 
-#: addon/globalPlugins/brailleExtender/settings.py:18
+#: globalPlugins/brailleExtender/settings.py:18
 msgid "Feature Not Implemented Yet"
 msgstr "Jeszczę niezaimplementowana funkcja"
 
-#: addon/globalPlugins/brailleExtender/settings.py:27
+#: globalPlugins/brailleExtender/settings.py:27
 msgid "Unable to associate this gesture. Please enter another, now"
 msgstr "Nie można skojarzyć zdarzenia wejścia. Proszę wpisać inne, teraz"
 
-#: addon/globalPlugins/brailleExtender/settings.py:30
+#: globalPlugins/brailleExtender/settings.py:30
 #, python-format
 msgid "OK. The gesture captured is %s"
 msgstr "OK. Przechwycone zdarzenie wejścia to %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:41
+#: globalPlugins/brailleExtender/settings.py:41
 msgid "BrailleExtender settings"
 msgstr "Ustawienia BrailleExtendera"
 
-#: addon/globalPlugins/brailleExtender/settings.py:50
+#: globalPlugins/brailleExtender/settings.py:50
 msgid "General"
 msgstr "Ogólne"
 
-#: addon/globalPlugins/brailleExtender/settings.py:51
+#: globalPlugins/brailleExtender/settings.py:51
 msgid "Reading"
 msgstr "Czytanie"
 
-#: addon/globalPlugins/brailleExtender/settings.py:52
+#: globalPlugins/brailleExtender/settings.py:52
 msgid "Attribra"
 msgstr "Attribra"
 
-#: addon/globalPlugins/brailleExtender/settings.py:53
+#: globalPlugins/brailleExtender/settings.py:53
 msgid "Braille keyboard"
 msgstr "Klawiatura brajlowska"
 
-#: addon/globalPlugins/brailleExtender/settings.py:54
+#: globalPlugins/brailleExtender/settings.py:54
 msgid "Quick launches"
 msgstr "Szybkie uruchamiania"
 
-#: addon/globalPlugins/brailleExtender/settings.py:59
+#: globalPlugins/brailleExtender/settings.py:59
 msgid "Appl&y"
 msgstr "&Zastosuj"
 
-#: addon/globalPlugins/brailleExtender/settings.py:60
+#: globalPlugins/brailleExtender/settings.py:60
 msgid "Close"
 msgstr "Zamknij"
 
-#: addon/globalPlugins/brailleExtender/settings.py:130
+#: globalPlugins/brailleExtender/settings.py:130
 msgid "You have made a change that requires you restart NVDA"
 msgstr "Zrobiłeś zmianę, wymagającą ponowne uruchomienie NVDA"
 
-#: addon/globalPlugins/brailleExtender/settings.py:130
+#: globalPlugins/brailleExtender/settings.py:130
 msgid "Restart required"
 msgstr "Wymagane ponowne uruchomienie"
 
-#: addon/globalPlugins/brailleExtender/settings.py:144
+#: globalPlugins/brailleExtender/settings.py:144
 msgid "Check for updates automatically"
 msgstr "Automatycznie sprawdzaj, czy jest nowa wersja"
 
-#: addon/globalPlugins/brailleExtender/settings.py:147
+#: globalPlugins/brailleExtender/settings.py:147
 msgid "Detail the progress of a keyboard shortcut when it is typed"
 msgstr "szczególny postęp wpisywania skrótu klawiszowego"
 
-#: addon/globalPlugins/brailleExtender/settings.py:151
+#: globalPlugins/brailleExtender/settings.py:151
 msgid "Report of the new volume in braille"
 msgstr "Oznajmianie nowej głośności brajlem"
 
-#: addon/globalPlugins/brailleExtender/settings.py:155
+#: globalPlugins/brailleExtender/settings.py:155
 msgid "Report of the new volume in speech"
 msgstr "Oznajmianie nowej głośności mową"
 
-#: addon/globalPlugins/brailleExtender/settings.py:159
+#: globalPlugins/brailleExtender/settings.py:159
 msgid "Display time and date infinitely"
 msgstr "Wyświetlaj datę i czas w nieskończoność"
 
-#: addon/globalPlugins/brailleExtender/settings.py:163
+#: globalPlugins/brailleExtender/settings.py:163
 msgid "Re&view mode in"
 msgstr "Tryb &przeglądu w"
 
-#: addon/globalPlugins/brailleExtender/settings.py:167
+#: globalPlugins/brailleExtender/settings.py:167
 msgid "experimental, works poorly with Baum devices"
 msgstr "Eksperymentalnie, działa słabo z monitorami firmy Baum"
 
-#: addon/globalPlugins/brailleExtender/settings.py:167
+#: globalPlugins/brailleExtender/settings.py:167
 msgid "&Limit number of cells to (0 for no limit)"
 msgstr "&Ogranicz liczbę komórek do (0 bez limitu)"
 
-#: addon/globalPlugins/brailleExtender/settings.py:175
+#: globalPlugins/brailleExtender/settings.py:175
 msgid "Last known"
 msgstr "Ostatni"
 
-#: addon/globalPlugins/brailleExtender/settings.py:180
+#: globalPlugins/brailleExtender/settings.py:180
 msgid "Braille display to load on NVDA+&k"
 msgstr "Monitor brajlowski do wczytania przy wciśnięciu NVDA+&k"
 
-#: addon/globalPlugins/brailleExtender/settings.py:189
+#: globalPlugins/brailleExtender/settings.py:189
 msgid "Braille display to load on NVDA+Shift+k"
 msgstr "Monitor brajlowski do wczytania przy wciśnięciu NVDA+Shift+k"
 
-#: addon/globalPlugins/brailleExtender/settings.py:233
+#: globalPlugins/brailleExtender/settings.py:233
 msgid "None"
 msgstr "Brak"
 
-#: addon/globalPlugins/brailleExtender/settings.py:236
+#: globalPlugins/brailleExtender/settings.py:236
 msgid "Output braille tables present in the switch"
 msgstr "Tablice wyświetlania dostępne w rotorze"
 
-#: addon/globalPlugins/brailleExtender/settings.py:239
-#: addon/globalPlugins/brailleExtender/settings.py:515
+#: globalPlugins/brailleExtender/settings.py:239
+#: globalPlugins/brailleExtender/settings.py:515
 msgid "&Remove"
 msgstr "&Usuń"
 
-#: addon/globalPlugins/brailleExtender/settings.py:241
+#: globalPlugins/brailleExtender/settings.py:241
 msgid "Output tables not present in the switch"
 msgstr "Tablice wyświetlania niedostępne w rotorze"
 
-#: addon/globalPlugins/brailleExtender/settings.py:244
-#: addon/globalPlugins/brailleExtender/settings.py:520
+#: globalPlugins/brailleExtender/settings.py:244
+#: globalPlugins/brailleExtender/settings.py:520
 msgid "&Add"
 msgstr "&Dodaj"
 
-#: addon/globalPlugins/brailleExtender/settings.py:246
+#: globalPlugins/brailleExtender/settings.py:246
 msgid "Secondary output table to use"
 msgstr "Wtórna tablica wyjścia do użycia"
 
-#: addon/globalPlugins/brailleExtender/settings.py:249
-msgid "Display tab signs as spaces"
-msgstr "Wyświetl znaki tabulacji jako spacje"
-
-#: addon/globalPlugins/brailleExtender/settings.py:252
+#: globalPlugins/brailleExtender/settings.py:252
 msgid "Number of space for a tab sign"
 msgstr "Liczba odstępów dla znaku tabulacji"
 
-#: addon/globalPlugins/brailleExtender/settings.py:255
-msgid "In review mode, say the current line during text scrolling"
-msgstr ""
-"W trzybie przeglądania, powiedz aktualną linie podczas automatycznego "
-"czytania"
-
-#: addon/globalPlugins/brailleExtender/settings.py:258
+#: globalPlugins/brailleExtender/settings.py:258
 msgid "&Delay for scroll"
 msgstr "&Czekanie na przewijanie wiersza przy czytaniu automatycznym"
 
-#: addon/globalPlugins/brailleExtender/settings.py:261
+#: globalPlugins/brailleExtender/settings.py:261
 msgid "Hide empty views during autoscroll"
 msgstr "Ukrywaj puste wiersze przy szybkim czytaniu"
 
-#: addon/globalPlugins/brailleExtender/settings.py:266
+#: globalPlugins/brailleExtender/settings.py:266
 msgid "Adjust the delay autoscroll to the content"
 msgstr "Dopasuj czekanie automatycznego czytania do treści"
 
-#: addon/globalPlugins/brailleExtender/settings.py:271
+#: globalPlugins/brailleExtender/settings.py:271
 msgid "Reverse forward scroll and back scroll buttons"
 msgstr "Zamień przyciski czytania"
 
-#: addon/globalPlugins/brailleExtender/settings.py:284
+#: globalPlugins/brailleExtender/settings.py:284
 msgid "You have no output tables present in the switch"
 msgstr "nie ma żadnych tablic wyświetlania w rotorze!"
 
-#: addon/globalPlugins/brailleExtender/settings.py:358
+#: globalPlugins/brailleExtender/settings.py:358
 msgid "Enable Attribra"
 msgstr "włącz attribrę"
 
-#: addon/globalPlugins/brailleExtender/settings.py:361
+#: globalPlugins/brailleExtender/settings.py:361
 msgid "Profile"
 msgstr "Profil"
 
-#: addon/globalPlugins/brailleExtender/settings.py:365
+#: globalPlugins/brailleExtender/settings.py:365
 msgid "Bold"
 msgstr "Pogrubienie"
 
-#: addon/globalPlugins/brailleExtender/settings.py:366
+#: globalPlugins/brailleExtender/settings.py:366
 msgid "Italic"
 msgstr "Kursywa"
 
-#: addon/globalPlugins/brailleExtender/settings.py:367
+#: globalPlugins/brailleExtender/settings.py:367
 msgid "Underline"
 msgstr "podkreślenie"
 
-#: addon/globalPlugins/brailleExtender/settings.py:369
+#: globalPlugins/brailleExtender/settings.py:369
 msgid "Advanced rules"
 msgstr "reguły zaawansowane"
 
-#: addon/globalPlugins/brailleExtender/settings.py:371
+#: globalPlugins/brailleExtender/settings.py:371
 msgid "&Edit this rule"
 msgstr "&Edytuj regułę"
 
-#: addon/globalPlugins/brailleExtender/settings.py:372
+#: globalPlugins/brailleExtender/settings.py:372
 msgid "&Remove this rule"
 msgstr "&Usuń regułę"
 
-#: addon/globalPlugins/brailleExtender/settings.py:373
+#: globalPlugins/brailleExtender/settings.py:373
 msgid "&Add a rule"
 msgstr "&Dodaj regułę"
 
-#: addon/globalPlugins/brailleExtender/settings.py:375
+#: globalPlugins/brailleExtender/settings.py:375
 msgid "Add a profile"
 msgstr "dodaj profil"
 
-#: addon/globalPlugins/brailleExtender/settings.py:376
+#: globalPlugins/brailleExtender/settings.py:376
 msgid "Edit this profile"
 msgstr "edytuj profil"
 
-#: addon/globalPlugins/brailleExtender/settings.py:377
+#: globalPlugins/brailleExtender/settings.py:377
 msgid "Remove this profile"
 msgstr "usuń profil"
 
-#: addon/globalPlugins/brailleExtender/settings.py:506
+#: globalPlugins/brailleExtender/settings.py:506
 msgid "Use the current input table"
 msgstr "Używaj aktualnej tablicy wejścia"
 
-#: addon/globalPlugins/brailleExtender/settings.py:508
+#: globalPlugins/brailleExtender/settings.py:508
 msgid "Input braille table for keyboard shortcut keys"
 msgstr "Tablica wprowadzania dla skrótów klawiszowych"
 
-#: addon/globalPlugins/brailleExtender/settings.py:512
+#: globalPlugins/brailleExtender/settings.py:512
 msgid "Input braille tables present in the switch"
 msgstr "Tablice wprowadzania dostępne w rotorze"
 
-#: addon/globalPlugins/brailleExtender/settings.py:517
+#: globalPlugins/brailleExtender/settings.py:517
 msgid "Input tables not present in the switch"
 msgstr "Tablice brajlowskie niedostępne w rotorze"
 
-#: addon/globalPlugins/brailleExtender/settings.py:524
+#: globalPlugins/brailleExtender/settings.py:524
 msgid "Braille keyboard configuration"
 msgstr "Konfiguracja klawiatury brajlowskiej"
 
-#: addon/globalPlugins/brailleExtender/settings.py:538
+#: globalPlugins/brailleExtender/settings.py:538
 msgid "You have no input tables present in the switch"
 msgstr "Nie ma żadnych tablic wprowadzania w rotorze!"
 
-#: addon/globalPlugins/brailleExtender/settings.py:559
+#: globalPlugins/brailleExtender/settings.py:559
 msgid "Gestures for the quick launches"
 msgstr "Zdarzenia wejścia dla szybkich uruchamiań"
 
-#: addon/globalPlugins/brailleExtender/settings.py:565
+#: globalPlugins/brailleExtender/settings.py:565
 msgid "&Browse..."
 msgstr "&Przeglądaj..."
 
-#: addon/globalPlugins/brailleExtender/settings.py:566
+#: globalPlugins/brailleExtender/settings.py:566
 msgid "&Remove this gesture"
 msgstr "&Usuń to zdarzenie wejścia"
 
-#: addon/globalPlugins/brailleExtender/settings.py:567
+#: globalPlugins/brailleExtender/settings.py:567
 msgid "&Add a quick launch"
 msgstr "&Dodaj zdarzenie wejścia"
 
-#: addon/globalPlugins/brailleExtender/settings.py:582
+#: globalPlugins/brailleExtender/settings.py:582
 msgid "Please enter the desired gesture for this command, now"
 msgstr "Proszę wpisać gestę dla tej komendy, teraz"
 
-#: addon/globalPlugins/brailleExtender/settings.py:598
+#: globalPlugins/brailleExtender/settings.py:598
 #, python-brace-format
 msgid "Choose a file for {0}"
 msgstr "Proszę wybrać plik dla {0}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:188
+#: globalPlugins/brailleExtender/utils.py:188
 #, python-format
 msgid "%s device reloaded"
 msgstr "Urządzenie %s jest ponownie wczytane"
 
-#: addon/globalPlugins/brailleExtender/utils.py:192
-#: addon/globalPlugins/brailleExtender/utils.py:196
+#: globalPlugins/brailleExtender/utils.py:192
+#: globalPlugins/brailleExtender/utils.py:196
 #, python-format
 msgid "No %s display found"
 msgstr "Nie znaleziono monitora brajlowskiego %s"
 
-#: addon/globalPlugins/brailleExtender/utils.py:216
+#: globalPlugins/brailleExtender/utils.py:216
 msgid "Not a character."
 msgstr "Nie jest znakiem."
 
-#: addon/globalPlugins/brailleExtender/utils.py:260
+#: globalPlugins/brailleExtender/utils.py:260
 msgid "space"
 msgstr "spacja"
 
-#: addon/globalPlugins/brailleExtender/utils.py:261
+#: globalPlugins/brailleExtender/utils.py:261
 msgid "left SHIFT"
 msgstr "lewy SHIFT"
 
-#: addon/globalPlugins/brailleExtender/utils.py:262
+#: globalPlugins/brailleExtender/utils.py:262
 msgid "right SHIFT"
 msgstr "PRAWY SHIFT"
 
-#: addon/globalPlugins/brailleExtender/utils.py:263
+#: globalPlugins/brailleExtender/utils.py:263
 msgid "left selector"
 msgstr "Lewe zaznaczanie"
 
-#: addon/globalPlugins/brailleExtender/utils.py:264
+#: globalPlugins/brailleExtender/utils.py:264
 msgid "right selector"
 msgstr "Prawe zaznaczanie"
 
-#: addon/globalPlugins/brailleExtender/utils.py:265
+#: globalPlugins/brailleExtender/utils.py:265
 msgid "Dot"
 msgstr "Punkt"
 
-#: addon/globalPlugins/brailleExtender/utils.py:338
+#: globalPlugins/brailleExtender/utils.py:338
 msgid "No text"
 msgstr "nie ma tekstu"
 
-#: addon/globalPlugins/brailleExtender/utils.py:345
+#: globalPlugins/brailleExtender/utils.py:345
 msgid "Not text"
 msgstr "ie jest tekstem"
 
-#. Add-on summary, usually the user visible name of the addon.
-#. Translators: Summary for this add-on to be shown on installation and add-on information.
-#: buildVars.py:17
-msgid "BrailleExtender"
-msgstr "BrailleExtender"
+#~ msgid "BrailleExtender"
+#~ msgstr "BrailleExtender"
 
-#: buildVars.py:21
-msgid "This NVDA add-on adds some features at braille level"
-msgstr "Ten dodatek dla NVDA dodaje nowe funkcje na poziomie brajla"
+#~ msgid "This NVDA add-on adds some features at braille level"
+#~ msgstr "Ten dodatek dla NVDA dodaje nowe funkcje na poziomie brajla"
 
-#: buildVars.py:21
-msgid "It allows"
-msgstr "Ten dodatek umożliwia"
+#~ msgid "It allows"
+#~ msgstr "Ten dodatek umożliwia"
 
-#: buildVars.py:22
-msgid "reload two favorite braille display with shortcuts"
-msgstr ""
-"Ponowne wczytywanie dwóch ulubionych linijek brajlowskich za pomocą skrótów "
-"klawiszowych"
+#~ msgid "reload two favorite braille display with shortcuts"
+#~ msgstr ""
+#~ "Ponowne wczytywanie dwóch ulubionych linijek brajlowskich za pomocą "
+#~ "skrótów klawiszowych"
 
-#: buildVars.py:23
-msgid ""
-"automatically switch in review mode in apps (default: PuTTY, Powershell, "
-"bash, cmd)"
-msgstr ""
-"Automatyczne przełączanie do trybu przeglądu dla aplikacji (default: PuTTY, "
-"Powershell, bash, cmd)"
+#~ msgid ""
+#~ "automatically switch in review mode in apps (default: PuTTY, Powershell, "
+#~ "bash, cmd)"
+#~ msgstr ""
+#~ "Automatyczne przełączanie do trybu przeglądu dla aplikacji (default: "
+#~ "PuTTY, Powershell, bash, cmd)"
 
-#: buildVars.py:24
-msgid "auto scroll"
-msgstr "Czytanie automatyczne"
+#~ msgid "auto scroll"
+#~ msgstr "Czytanie automatyczne"
 
-#: buildVars.py:25
-msgid "switch between several input/output braille tables"
-msgstr ""
-"przełącza pomiędzy Przełącza pomiędzy kilkoma tablicami brajlowskimi dla "
-"wprowadzania i wyświetlania"
+#~ msgid "switch between several input/output braille tables"
+#~ msgstr ""
+#~ "przełącza pomiędzy Przełącza pomiędzy kilkoma tablicami brajlowskimi dla "
+#~ "wprowadzania i wyświetlania"
 
-#: buildVars.py:26
-msgid ""
-"define custom rules to mark text with special fields option with braille "
-"dots 7 and 8"
-msgstr ""
-"Definiowanie reguł dla oznaczania tekstu specjalnymi polami za pomocą "
-"punktów 7 i 8"
+#~ msgid ""
+#~ "define custom rules to mark text with special fields option with braille "
+#~ "dots 7 and 8"
+#~ msgstr ""
+#~ "Definiowanie reguł dla oznaczania tekstu specjalnymi polami za pomocą "
+#~ "punktów 7 i 8"
 
-#: buildVars.py:27
-msgid "Besides, for some braille displays, it extends the mapping"
-msgstr "Dla niektórych monitorów brajlowskich, rozszerza mapowanie klawiszy:"
+#~ msgid "Besides, for some braille displays, it extends the mapping"
+#~ msgstr ""
+#~ "Dla niektórych monitorów brajlowskich, rozszerza mapowanie klawiszy:"
 
-#: buildVars.py:28
-msgid "access to function keys, multimedia keys, quick navigation"
-msgstr "Dostęp do klawiszy funkcyjnych, multimedialnych, i szybkiej nawigacji"
+#~ msgid "access to function keys, multimedia keys, quick navigation"
+#~ msgstr ""
+#~ "Dostęp do klawiszy funkcyjnych, multimedialnych, i szybkiej nawigacji"
 
-#: buildVars.py:29
-msgid "emulate modifier keys, and thus any keyboard shortcut"
-msgstr ""
-"Emulowanie modyfikatorów, a co za tym idzie, innych skrótów klawiszowych"
+#~ msgid "emulate modifier keys, and thus any keyboard shortcut"
+#~ msgstr ""
+#~ "Emulowanie modyfikatorów, a co za tym idzie, innych skrótów klawiszowych"
 
-#: buildVars.py:30
-msgid ""
-"offer several keyboard configurations concerning the possibility to input "
-"dots 7 and 8, enter and backspace"
-msgstr ""
-"Oferuje kilka konfiguracji klawiatur, umożliwiając wpisywanie punktów 7-8, "
-"enter i backspace"
+#~ msgid ""
+#~ "offer several keyboard configurations concerning the possibility to input "
+#~ "dots 7 and 8, enter and backspace"
+#~ msgstr ""
+#~ "Oferuje kilka konfiguracji klawiatur, umożliwiając wpisywanie punktów "
+#~ "7-8, enter i backspace"
 
-#: buildVars.py:31
-msgid "launch an application quickly"
-msgstr "Szybkie uruchamianie aplikacji"
+#~ msgid "launch an application quickly"
+#~ msgstr "Szybkie uruchamianie aplikacji"
 
-#: buildVars.py:32
-msgid "rotor (implementation in progress)"
-msgstr "rotor (implementacja w toku)"
-
-#~ msgid "Change log"
-#~ msgstr "Lista zmian"
+#~ msgid "rotor (implementation in progress)"
+#~ msgstr "rotor (implementacja w toku)"
 
 #~ msgid "Opens the addon's changelog."
 #~ msgstr "Otwiera listę zmian dodatku."

@@ -795,7 +795,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			profs=_('profiles'),
 			profile1=_('Profiles are now reloaded automatically if braille display changes during execution'),
 			rotor=_('the rotor'),
-			rotor1=_('New modes: ')+_('review')+', '+_('Tables')+', '+_('Moving in the text')+' '+_('and')+' '+_('Text selection'),
+			rotor1=_('New modes')+': '+_('review')+', '+_('Tables')+', '+_('Moving in the text')+' '+_('and')+' '+_('Text selection'),
 			secTable=_(u'possibility to specify a secondary output braille table'),
 			tabSpaces=_(u'Display tab signs as spaces'),
 			sayReviewModeScroll=_(u'In review mode, say the current line during text scrolling'),

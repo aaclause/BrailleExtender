@@ -133,7 +133,7 @@ class Autoreload_profile(Thread):
 		return
 
 	def stop(self):
-		ui.message('stopping...')
+		ui.message(_('Stopping %s' % configBE._addonName)+'...')
 		self.end = True
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -759,16 +759,49 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"<li>Louis "+_("for his tests and suggestions with")+" Focus.</li></ul>",
 		"<p>"+_("And Thank you very much for all your feedback and comments via email.")+" :)</p>"])
 		)
-		doc += """
-		<div lang="en"><h2>Last changes</h2>
-		<p>Coming soon: gesture profiles, other rotor functions, finalizing tabs in settings, some shortcuts revisions...</p>
+		doc += u"""
+		<div id="changelog"><h2>{lastChanges}</h2>
+		<p>{future}: {toCome}</p>
+		<h3>2017.12.28</h3>
 		<ul>
-			<li>Translations in polish and croatian. Thanks to Zvonimir stanecic!</li>
-			<li>Bug fix concerning scroll gestures with Brailliant display;</li>
-			<li>NVDARemote support (partially).</li>
+			<li>{newf}: {secTable};</li>
+			<li>{newf}: {tabSpaces};</li>
+			<li>{newf}: {sayReviewModeScroll}</li>
+			<li>{best} {profs}. {profile1};</li>
+			<li>{best} {rotor}. {rotor1};</li>
+			<li>{bug} {bug1};</li>
+			<li>{bug} {bug2}.</li>
+		</ul>
+		<h3>2017.11.11</h3>
+		<ul>
+			<li>{newt}: {t1};</li>
+			<li>{newt}: {t2};</li>
+			<li>{bug} scroll with the usual gestures with Brailliant display;</li>
+			<li>{best} {shortcut}. {NVDAREMOTE}.</li>
 		</ul>
 		</div>
-		"""
+		""".format(
+		future=_('Coming soon in the next versions'),
+		toCome=_('gesture profiles, finalizing tabs in settings, some shortcuts revisions...'),
+			lastChanges=_('Change Log'),
+			newf=_(u'New feature'),
+			newt=_(u'New translation'),
+			t1=_('Polish'),
+			t2=_('Croatian'),
+			bug=_(u'Fix a bug preventing'),
+			bug1=_('the use of locale gestures'),
+			bug2=_('keyboard shortcuts from working as expected when a table is specified'),
+			best=_(u'Improvement concerning'),
+			profs=_('profiles'),
+			profile1=_('Profiles are now reloaded automatically if braille display changes during execution'),
+			rotor=_('the rotor'),
+			rotor1=_('New modes: ')+_('review')+', '+_('Tables')+', '+_('Moving in the text')+_(' and ')+_('Text selection'),
+			secTable=_(u'possibility to specify a secondary output braille table'),
+			tabSpaces=_(u'Display tab signs as spaces'),
+			sayReviewModeScroll=_(u'In review mode, say the current line during text scrolling'),
+			shortcut=_('shortcuts keyboard on braille display'),
+			NVDAREMOTE=_(u'NVDARemote support')
+		)
 		if configBE.gesturesFileExists:
 			mKB = OrderedDict()
 			mNV = OrderedDict()

@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2017-12-27 19:38+0100\n"
-"PO-Revision-Date: 2017-12-27 19:43+0100\n"
+"PO-Revision-Date: 2017-12-27 19:55+0100\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -138,11 +138,11 @@ msgstr "Sélectionnez le réglage suivant du rotor"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:541
 msgid "Move to previous item depending rotor setting"
-msgstr "Passer à l'élément précédent en fonction du réglage du rotor"
+msgstr "Passer à l’élément précédent en fonction du réglage du rotor"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:542
 msgid "Move to next item depending rotor setting"
-msgstr "Passer à l'élément suivant en fonction du réglage du rotor"
+msgstr "Passer à l’élément suivant en fonction du réglage du rotor"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:549
 msgid ""
@@ -154,11 +154,11 @@ msgstr ""
 
 #: addon\globalPlugins\brailleExtender\__init__.py:551
 msgid "Move to previous item using rotor setting"
-msgstr "Passer à l'élément précédent en utilisant le réglage du rotor"
+msgstr "Passer à l’élément précédent en utilisant le réglage du rotor"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:552
 msgid "Move to next item using rotor setting"
-msgstr "Passer à l'élément suivant en utilisant le réglage du rotor"
+msgstr "Passer à l’élément suivant en utilisant le réglage du rotor"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:557
 msgid "Speech on"
@@ -217,7 +217,7 @@ msgstr "Afficher la documentation de %s"
 #: addon\globalPlugins\brailleExtender\__init__.py:695
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
-msgstr "Émuler l'appui de %s sur le clavier du système"
+msgstr "Émuler l’appui de %s sur le clavier du système"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:703
 msgid "description currently unavailable for this shortcut"
@@ -234,7 +234,7 @@ msgstr "afficheur braille %s"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:751
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
-msgstr "Copyright (C) 2017 André-Abush Clause, et d'autres contributeurs :"
+msgstr "Copyright (C) 2017 André-Abush Clause, et d’autres contributeurs :"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:752
 msgid "Persian translation"
@@ -294,7 +294,7 @@ msgstr "Croate"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:791
 msgid "Fix a bug preventing"
-msgstr "Correction d'un bug empêchant"
+msgstr "Correction d’un bug empêchant"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:792
 msgid "scroll with the usual gestures on Brailliant displays"
@@ -323,8 +323,8 @@ msgid ""
 "Profiles are now reloaded automatically if braille display changes during "
 "execution"
 msgstr ""
-"Les profils sont désormais rechargés automatiquement si l'afficheur braille "
-"change pendant l'exécution"
+"Les profils sont désormais rechargés automatiquement si l’afficheur braille "
+"change pendant l’exécution"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:798
 msgid "the rotor"
@@ -358,7 +358,7 @@ msgstr "En mode revue, énoncer le texte pendant le défilement"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:803
 msgid "keyboard shortcuts on braille display"
-msgstr "les raccourcis clavier sur l'afficheur braille"
+msgstr "les raccourcis clavier sur l’afficheur braille"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:804
 msgid "NVDARemote support"
@@ -392,7 +392,7 @@ msgid ""
 "shortcuts:"
 msgstr ""
 "Dans les documents virtuels (HTML/PDF/…) il vous est possible de naviguer de "
-"type d'élément en type d'élément à l'aide de touche clavier. Ces touches de "
+"type d’élément en type d’élément à l’aide de touche clavier. Ces touches de "
 "navigation devraient fonctionner depuis le terminal braille.</p><p>En plus "
 "de ceux-ci, il existe quelques raccourcis particuliers :"
 
@@ -491,7 +491,7 @@ msgstr ""
 
 #: addon\globalPlugins\brailleExtender\__init__.py:934
 msgid "Switch between his favorite input braille tables"
-msgstr "Boucler entre ses tables braille d'entrer"
+msgstr "Boucler entre ses tables braille d’entrer"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:949
 msgid "Switch between his favorite output braille tables"
@@ -503,7 +503,7 @@ msgid ""
 "decimal, binary and octal equivalent."
 msgstr ""
 "Obtenir la valeur Unicode du caractère sur lequel le curseur se trouve ainsi "
-"que l'équivalent en décimale, binaire et octale."
+"que l’équivalent en décimale, binaire et octale."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:960
 msgid "Turn on"
@@ -515,7 +515,7 @@ msgstr "Désactivé"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:962
 msgid "Turn on/off the assistance shortcuts."
-msgstr "Activer/désactiver l'assistance aux raccourcis."
+msgstr "Activer/désactiver l’assistance aux raccourcis."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:979
 #, python-format
@@ -551,14 +551,14 @@ msgid ""
 "braille display is not plugged immediately or that the latter is "
 "disconnected and then reconnected"
 msgstr ""
-"Recharger le driver d'un afficheur braille en favoris ou le dernier connu. "
-"Pratique si l'afficheur braille n'est pas branché immédiatement ou que ce "
+"Recharger le driver d’un afficheur braille en favoris ou le dernier connu. "
+"Pratique si l’afficheur braille n'est pas branché immédiatement ou que ce "
 "dernier est débranché puis reconnecté"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:1087
 #, python-format
 msgid "Unable to send %s"
-msgstr "Impossible d'effectuer %s"
+msgstr "Impossible d’effectuer %s"
 
 #. and 'nvda' in sht.lower()
 #: addon\globalPlugins\brailleExtender\__init__.py:1089
@@ -590,7 +590,7 @@ msgstr "Raccourci clavier annulé"
 #. /* docstrings for modifier keys */
 #: addon\globalPlugins\brailleExtender\__init__.py:1304
 msgid "Emulate pressing down "
-msgstr "Émuler l'appui maintenu de "
+msgstr "Émuler l’appui maintenu de "
 
 #: addon\globalPlugins\brailleExtender\__init__.py:1304
 msgid " on the system keyboard"
@@ -639,7 +639,7 @@ msgstr ""
 #: addon\globalPlugins\brailleExtender\__init__.py:1431
 msgid "Unable to save or download update file. Opening your browser"
 msgstr ""
-"Impossible d'enregistrer ou de télécharger le fichier de mise à jour. "
+"Impossible d’enregistrer ou de télécharger le fichier de mise à jour. "
 "Ouverture de votre navigateur"
 
 #: addon\globalPlugins\brailleExtender\settings.py:18
@@ -649,7 +649,7 @@ msgstr "Fonctionnalité pas encore implémentée"
 #: addon\globalPlugins\brailleExtender\settings.py:27
 msgid "Unable to associate this gesture. Please enter another, now"
 msgstr ""
-"Impossible d'associer ce geste. Veuillez en entrer un autre, maintenant."
+"Impossible d’associer ce geste. Veuillez en entrer un autre, maintenant."
 
 #: addon\globalPlugins\brailleExtender\settings.py:30
 #, python-format
@@ -703,7 +703,7 @@ msgstr "Vérifier les mise à jour automatiquement"
 
 #: addon\globalPlugins\brailleExtender\settings.py:147
 msgid "Detail the progress of a keyboard shortcut when it is typed"
-msgstr "Détailler l'avancement d'un raccourci clavier lors de sa frappe"
+msgstr "Détailler l’avancement d’un raccourci clavier lors de sa frappe"
 
 #: addon\globalPlugins\brailleExtender\settings.py:151
 msgid "Report of the new volume in braille"
@@ -715,7 +715,7 @@ msgstr "Indiquer le nouveau volume vocalement"
 
 #: addon\globalPlugins\brailleExtender\settings.py:159
 msgid "Display time and date infinitely"
-msgstr "Afficher l'heure et la date infiniment"
+msgstr "Afficher l’heure et la date infiniment"
 
 #: addon\globalPlugins\brailleExtender\settings.py:163
 msgid "Re&view mode in"
@@ -841,11 +841,11 @@ msgstr "Supprimer ce profil"
 
 #: addon\globalPlugins\brailleExtender\settings.py:506
 msgid "Use the current input table"
-msgstr "Utiliser la table braille d'entrée actuelle"
+msgstr "Utiliser la table braille d’entrée actuelle"
 
 #: addon\globalPlugins\brailleExtender\settings.py:508
 msgid "Input braille table for keyboard shortcut keys"
-msgstr "Table braille d'entrée pour les raccourcis clavier"
+msgstr "Table braille d’entrée pour les raccourcis clavier"
 
 #: addon\globalPlugins\brailleExtender\settings.py:512
 msgid "Input braille tables present in the switch"
@@ -971,7 +971,7 @@ msgstr "défilement automatique"
 
 #: buildVars.py:25
 msgid "switch between several input/output braille tables"
-msgstr "Boucler entre ses tables d'entrée/de sortie"
+msgstr "Boucler entre ses tables d’entrée/de sortie"
 
 #: buildVars.py:26
 msgid ""

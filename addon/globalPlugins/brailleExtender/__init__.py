@@ -69,7 +69,7 @@ rotorItems = [
 	_('Moving in the text'),
 	_('Text selection'),
 	_('Objects'),
-	_('Review mode'),
+	_('Review'),
 	_('Tables'),
 	_('Spelling errors')
 ]
@@ -761,26 +761,28 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		)
 		doc += u"""
 		<div id="changelog"><h2>{lastChanges}</h2>
-		<p>{future}: {toCome}</p>
+		<p>{future}{sep}: {toCome}</p>
 		<h3>2017.12.28</h3>
 		<ul>
-			<li>{newf}: {secTable};</li>
-			<li>{newf}: {tabSpaces};</li>
-			<li>{newf}: {sayReviewModeScroll}</li>
-			<li>{best} {profs}. {profile1};</li>
-			<li>{best} {rotor}. {rotor1};</li>
-			<li>{bug} {bug1};</li>
+			<li>{newf}{sep}: {secTable}{sep};</li>
+			<li>{newf}{sep}: {tabSpaces}{sep};</li>
+			<li>{newf}{sep}: {sayReviewModeScroll}{sep};</li>
+			<li>{best} {profs}. {profile1}{sep};</li>
+			<li>{best} {rotor}. {rotor1}{sep};</li>
+			<li>{bug} {bug1}{sep};</li>
 			<li>{bug} {bug2}.</li>
 		</ul>
 		<h3>2017.11.11</h3>
 		<ul>
-			<li>{newt}: {t1};</li>
-			<li>{newt}: {t2};</li>
-			<li>{bug} {bug0};</li>
+			<li>{newt}{sep}: {t1}{sep};</li>
+			<li>{newt}{sep}: {t2}{sep};</li>
+			<li>{bug} {bug0}{sep};</li>
 			<li>{best} {shortcut}. {NVDAREMOTE}.</li>
 		</ul>
+		<hr />
 		</div>
 		""".format(
+		sep=configBE.sep,
 		future=_('Coming soon in the next versions'),
 		toCome=_('gesture profiles, finalizing tabs in settings, some shortcuts revisions...'),
 			lastChanges=_('Change Log'),

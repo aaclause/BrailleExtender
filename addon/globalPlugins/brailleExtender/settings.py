@@ -71,12 +71,16 @@ class Settings(wx.Dialog):
 		self.onClose(None)
 
 	def onSave(self, evt):
+		postTableID = self.reading.postTable.GetSelection()
+		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		if (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
 			configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue() or
+			configBE.conf['general']['postTable'] != postTable or
 			configBE.conf['general']['attribra'] != self.attribra.attribraEnabled.GetValue()):
 			restartNVDA = True
 		else:
 			restartNVDA = False
+		configBE.conf['general']['postTable'] = postTable
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
 		configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
 		configBE.conf['general']['reportVolumeBraille'] = self.general.reportVolumeBraille.GetValue()
@@ -123,7 +127,7 @@ class Settings(wx.Dialog):
 		configBE.saveSettingsAttribra()
 		configBE.saveSettings()
 		if restartNVDA:
-			gui.messageBox(_("You have made a change that requires you restart NVDA."), u'%s – ' % configBE._addonName+_(u"Restart required"), wx.OK | wx.ICON_INFORMATION)
+			gui.messageBox(_("You have made a change that requires you restart NVDA"), u'%s – ' % configBE._addonName+_(u"Restart required"), wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
 			core.restart()
 		return instanceGP.onReload(None,True)
@@ -226,6 +230,8 @@ class General(wx.Panel):
 
 class Reading(wx.Panel):
 	def __init__(self, parent):
+		lt = [_('None')]
+		[lt.append(table[1]) for table in tables if table.output]
 		wx.Panel.__init__(self, parent)
 		wx.StaticText(self, -1, label=_(u'Output braille tables present in the switch'))
 		self.oTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.outputTablesInSwitch())
@@ -237,6 +243,9 @@ class Reading(wx.Panel):
 		self.oTables.SetSelection(0)
 		self.addOutputTableInSwitch = wx.Button(self, label=_('&Add'))
 		self.addOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
+		wx.StaticText(self, -1, label=_(u'Secondary output table to use'))
+		self.postTable = wx.Choice(self, pos=(-1, -1), choices=lt)
+		self.postTable.SetSelection(configBE.tablesFN.index(configBE.conf['general']['postTable']) if configBE.conf['general']['postTable'] in configBE.tablesFN else 0)
 		self.tabSpace = wx.CheckBox(self, label=_(u'Display tab signs as spaces'))
 		if configBE.conf['general']['tabSpace']:
 			self.tabSpace.SetValue(True)

@@ -81,6 +81,7 @@ def loadConf():
 		attribra = boolean(default=True)
 		tabSpace = boolean(default=False)
 		tabSize = integer(min=1, default=2, max=42)
+		postTable = string(default="None")
 	""".format(
 			CUR_BD=curBD,
 			MAX_BD=42,

@@ -23,19 +23,28 @@ def update(self):
 	L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are similarly updated based on L{cursorPos}, L{selectionStart} and L{selectionEnd}, respectively.
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
+	global postTable
 	mode = louis.dotsIO
-	if config.conf["braille"]["outputPass1Only"]:
-		mode |= louis.pass1Only
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
 		mode |= louis.compbrlAtCursor
-	text=unicode(self.rawText).replace('\0','')
-	braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(
-		preTable+[os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-			"braille-patterns.cti"],
-		text,
-		# liblouis mutates typeform if it is a list.
-		typeform=tuple(self.rawTextTypeforms) if isinstance(self.rawTextTypeforms, list) else self.rawTextTypeforms,
-		mode=mode, cursorPos=self.cursorPos or 0)
+	try:
+		text=unicode(self.rawText).replace('\0','')
+		braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(
+				preTable+[
+				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
+				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+			]+postTable,
+			text,
+			# liblouis mutates typeform if it is a list.
+			typeform=tuple(self.rawTextTypeforms) if isinstance(self.rawTextTypeforms, list) else self.rawTextTypeforms,
+			mode=mode, cursorPos=self.cursorPos or 0)
+	except:
+		if len(postTable) ==0:
+			return
+		log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], postTable))
+		postTable = []
+		update( self)
+		return
 	# liblouis gives us back a character string of cells, so convert it to a list of ints.
 	# For some reason, the highest bit is set, so only grab the lower 8 bits.
 	self.brailleCells = [ord(cell) & 255 for cell in braille]
@@ -135,6 +144,16 @@ def createTabFile(f, c):
 
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
+
+postTable = []
+postTableValid = True if configBE.conf['general']['postTable'] in configBE.tablesFN else False
+
+if postTableValid:
+	postTable.append(os.path.join(brailleTables.TABLES_DIR, configBE.conf['general']['postTable']))
+	log.info('Secondary table enabled: %s' % configBE.conf['general']['postTable'])
+else:
+	if configBE.conf['general']['postTable'] != "None":
+		log.error('Invalid secondary table')
 
 preTable = []
 tabFile = os.path.join(os.path.dirname(__file__), "", "").decode("mbcs")+'tab.cti'

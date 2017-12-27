@@ -128,12 +128,13 @@ class Autoreload_profile(Thread):
 		return
 
 	def run(self):
-		while not  self.end:
+		while not self.end and braille.handler != None:
 			instanceGP.autoreload_profile()
+		log.info('Autoreload_profile stopped')
 		return
 
 	def stop(self):
-		ui.message(_('Stopping %s' % configBE._addonName)+'...')
+		ui.message((_(u'Stopping %s')+'...') % configBE._addonName)
 		self.end = True
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
@@ -996,8 +997,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_reloadAddon.__doc__ = _('Reload %s') % configBE._addonName
 
 	def autoreload_profile(self):
-		#ui.message('hello')
-		if configBE.curBD != braille.handler.display.name:
+		if braille.handler != None and configBE.curBD != braille.handler.display.name:
 			configBE.curBD = braille.handler.display.name
 			self.onReload(None, 1)
 		time.sleep(2)

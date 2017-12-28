@@ -40,7 +40,8 @@ _addonAuthor = addonHandler.Addon(_addonDir).manifest['author']
 _addonDesc = addonHandler.Addon(_addonDir).manifest['description']
 profilesDir = osp.join(osp.dirname(__file__), "", "") + \
 	('Profiles/').decode('utf-8').encode('mbcs')
-log.error('Profiles\' path not found') if not osp.exists(profilesDir) else log.debug('Profiles\' path (%s) found' % profilesDir)
+log.error('Profiles\' path not found') if not osp.exists(
+	profilesDir) else log.debug('Profiles\' path (%s) found' % profilesDir)
 begFileAttribra = """# Attribra for BrailleExtender
 # Thanks to Alberto Zanella
 # -> https://github.com/albzan/attribra/
@@ -53,9 +54,11 @@ try:
 except BaseException:
 	noUnicodeTable = True
 
+
 def loadConf():
 	global conf, reviewModeApps, quickLaunch, quickLaunchS, gesturesFileExists, iTables, oTables
-	kld = iniProfile['keyboardLayouts'].keys()[0] if gesturesFileExists else None
+	kld = iniProfile['keyboardLayouts'].keys(
+	)[0] if gesturesFileExists else None
 	confspec = ConfigObj(StringIO("""
 	[general]
 		autoCheckUpdate = boolean(default=True)
@@ -86,16 +89,17 @@ def loadConf():
 		updateBraille = boolean(default=True)
 		scrollBraille = boolean(default=True)
 	""".format(
-			CUR_BD=curBD,
-			MAX_BD=42,
-			ITABLE=config.conf["braille"]["inputTable"]+', unicode-braille.utb',
-			OTABLE=config.conf["braille"]["translationTable"],
-			MAX_CELLS=420,
-			MAX_DELAYSCROLL=999,
-			MAX_TABLES=420,
-			KEYBOARDLAYOUT=kld
-		)), encoding="UTF-8", list_values=False)
-	confspec.initial_comment = ['%s (%s)' % (_addonName, _addonVersion), _addonURL]
+		CUR_BD=curBD,
+		MAX_BD=42,
+		ITABLE=config.conf["braille"]["inputTable"] + ', unicode-braille.utb',
+		OTABLE=config.conf["braille"]["translationTable"],
+		MAX_CELLS=420,
+		MAX_DELAYSCROLL=999,
+		MAX_TABLES=420,
+		KEYBOARDLAYOUT=kld
+	)), encoding="UTF-8", list_values=False)
+	confspec.initial_comment = ['%s (%s)' %
+								(_addonName, _addonVersion), _addonURL]
 	confspec.final_comment = ['End Of File']
 	confspec.newlines = "\n"
 	conf = ConfigObj(cfgFile, configspec=confspec,
@@ -109,22 +113,28 @@ def loadConf():
 						   curBD] <= backupDisplaySize and conf['general']['limitCells_' +
 																		   curBD] > 0:
 			braille.handler.displaySize = conf['general']['limitCells_' + curBD]
-		reviewModeApps = re.sub(',{2,}', ',', conf['general']['reviewModeApps'].strip())
+		reviewModeApps = re.sub(
+			',{2,}', ',', conf['general']['reviewModeApps'].strip())
 		reviewModeApps = re.sub(
 			'(, +| +,)([^ ,])',
 			r',\2',
 			reviewModeApps).split(',')
-	quickLaunchS = ''.join(conf['general']['quickLaunch_'+curBD].strip().lower().split(';')) if type(conf['general']['quickLaunch_'+curBD]) == list else conf['general']['quickLaunch_'+curBD].strip().lower().split(';')
+	quickLaunchS = ''.join(conf['general']['quickLaunch_' +
+										   curBD].strip().lower().split(';')) if isinstance(conf['general']['quickLaunch_' +
+																											curBD], list) else conf['general']['quickLaunch_' +
+																																			   curBD].strip().lower().split(';')
 	quickLaunchS = [k.strip() for k in quickLaunchS]
 	if not noUnicodeTable:
-		lITables = [table[0] for table in brailleTables.listTables() if table.input]
-		lOTables = [table[0] for table in brailleTables.listTables() if table.output]
+		lITables = [table[0]
+					for table in brailleTables.listTables() if table.input]
+		lOTables = [table[0]
+					for table in brailleTables.listTables() if table.output]
 		iTables = conf['general']['iTables']
 		oTables = conf['general']['oTables']
-		if not type(iTables) == list:
-			iTables = iTables.replace(', ',',').split(',')
-		if not type(oTables) == list:
-			oTables = oTables.replace(', ',',').split(',')
+		if not isinstance(iTables, list):
+			iTables = iTables.replace(', ', ',').split(',')
+		if not isinstance(oTables, list):
+			oTables = oTables.replace(', ', ',').split(',')
 		iTables = [t for t in iTables if t in lITables]
 		oTables = [t for t in oTables if t in lOTables]
 	return True
@@ -132,18 +142,33 @@ def loadConf():
 
 def loadGestures():
 	if gesturesFileExists:
-		if osp.exists(profilesDir +('_BrowseMode/' + '/' + config.conf["braille"]["inputTable"] + '.ini').decode('utf-8').encode('mbcs')):
+		if osp.exists(profilesDir +
+					  ('_BrowseMode/' +
+					   '/' +
+					   config.conf["braille"]["inputTable"] +
+						  '.ini').decode('utf-8').encode('mbcs')):
 			GLng = config.conf["braille"]["inputTable"]
 		else:
 			GLng = 'en-us-comp8.ctb'
-		gesturesBMPath = profilesDir + ('_BrowseMode/common.ini').decode('utf-8').encode('mbcs')
-		gesturesLangBMPath = profilesDir + ('_BrowseMode/'+GLng+'.ini').decode('utf-8').encode('mbcs')
+		gesturesBMPath = profilesDir + \
+			('_BrowseMode/common.ini').decode('utf-8').encode('mbcs')
+		gesturesLangBMPath = profilesDir + \
+			('_BrowseMode/' + GLng + '.ini').decode('utf-8').encode('mbcs')
 		inputCore.manager.localeGestureMap.load(gesturesBDPath())
 		for fn in [gesturesBMPath, gesturesLangBMPath]:
 			f = open(fn)
-			tmp = [line.strip().replace(' ','').replace('$',iniProfile['general']['nameBK']).replace('=', '=br(%s):'% curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
+			tmp = [
+				line.strip().replace(
+					' ',
+					'').replace(
+					'$',
+					iniProfile['general']['nameBK']).replace(
+					'=',
+					'=br(%s):' %
+					curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
 			tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
-			inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
+			inputCore.manager.localeGestureMap.update(
+				{'browseMode.BrowseModeTreeInterceptor': tmp})
 	return
 
 
@@ -160,24 +185,30 @@ def saveSettings():
 		log.exception('Cannot save Configuration')
 	return
 
+
 def translateRule(E):
-		r = []
-		for e in E:
-			if type(e) == RGB:
-				r.append('"RGB(%s, %s, %s)"' % (e.red, e.green, e.blue))
-			else:
-				r.append('"%s"'% e)
-		return ', '.join(r)
+	r = []
+	for e in E:
+		if isinstance(e, RGB):
+			r.append('"RGB(%s, %s, %s)"' % (e.red, e.green, e.blue))
+		else:
+			r.append('"%s"' % e)
+	return ', '.join(r)
+
 
 def saveSettingsAttribra():
 	global confAttribra
 	try:
 		f = open(config.getUserDefaultConfigPath() + '\\attribra-BE.ini', "w")
-		c = begFileAttribra+'\n'
+		c = begFileAttribra + '\n'
 		for k in sorted(confAttribra.keys()):
 			c += '[%s]\n' % k
 			for kk, v in confAttribra[k].items():
-				if kk not in ['bold','italic','underline','invalid-spelling']:
+				if kk not in [
+					'bold',
+					'italic',
+					'underline',
+						'invalid-spelling']:
 					vv = translateRule(v)
 				else:
 					vv = v[0]
@@ -185,9 +216,10 @@ def saveSettingsAttribra():
 			c += '\n'
 		f.write(c)
 		f.close()
-	except BaseException, e:
-		ui.message('Error: '+str(e))
+	except BaseException as e:
+		ui.message('Error: ' + str(e))
 	return
+
 
 def checkConfigPath():
 	global profileFileExists, iniProfile, quickLaunch
@@ -202,23 +234,29 @@ def checkConfigPath():
 		confspec = ConfigObj(StringIO("""
 		"""), encoding="UTF-8", list_values=False)
 		iniProfile = ConfigObj(confGen, configspec=confspec,
-							indent_type="\t", encoding="UTF-8")
+							   indent_type="\t", encoding="UTF-8")
 		result = iniProfile.validate(Validator())
 		if result is not True:
 			log.exception('Malformed configuration file')
 			return False
 		else:
-			if type(iniProfile['miscs']['quickLaunch']) ==list:
-				tmp = ', '.join(iniProfile['miscs']['quickLaunch']).strip().lower().split(',')
+			if isinstance(iniProfile['miscs']['quickLaunch'], list):
+				tmp = ', '.join(
+					iniProfile['miscs']['quickLaunch']).strip().lower().split(',')
 			else:
-				tmp = iniProfile['miscs']['quickLaunch'].strip().lower().split(',')
+				tmp = iniProfile['miscs']['quickLaunch'].strip(
+				).lower().split(',')
 			quickLaunch = ['+'.join(sorted(k.strip().split('+'))) for k in tmp]
 			return True
 	else:
 		log.warn('`%s` not found or is inaccessible' % configPath)
 		return False
 
-gesturesBDPath = lambda: profilesDir + (curBD + "/gestures.ini").decode('utf-8').encode('mbcs')
+
+def gesturesBDPath(): return profilesDir + \
+	(curBD + "/gestures.ini").decode('utf-8').encode('mbcs')
+
+
 def initGestures():
 	global gesturesFileExists, iniGestures
 	if profileFileExists and osp.exists(gesturesBDPath()):
@@ -229,7 +267,7 @@ def initGestures():
 		confspec = ConfigObj(StringIO("""
 		"""), encoding="UTF-8", list_values=False)
 		iniGestures = ConfigObj(confGen, configspec=confspec,
-							indent_type="\t", encoding="UTF-8")
+								indent_type="\t", encoding="UTF-8")
 		result = iniGestures.validate(Validator())
 		if result is not True:
 			log.exception('Malformed configuration file')
@@ -242,7 +280,9 @@ def initGestures():
 
 	if gesturesFileExists:
 		for g in iniGestures['globalCommands.GlobalCommands']:
-			if isinstance(iniGestures['globalCommands.GlobalCommands'][g], list):
+			if isinstance(
+					iniGestures['globalCommands.GlobalCommands'][g],
+					list):
 				for h in range(
 						len(iniGestures['globalCommands.GlobalCommands'][g])):
 					iniGestures[inputCore.normalizeGestureIdentifier(
@@ -252,6 +292,7 @@ def initGestures():
 					iniGestures['globalCommands.GlobalCommands'][g])).replace('br(' + curBD + '):', '')] = g
 	return gesturesFileExists, iniGestures
 
+
 def loadConfAttribra():
 	global confAttribra
 	try:
@@ -260,28 +301,31 @@ def loadConfAttribra():
 			mappings = {}
 			for name, value in map.iteritems():
 				if isinstance(value, basestring):
-					if value.startswith("RGB("): #it's an RGB Object
+					if value.startswith("RGB("):  # it's an RGB Object
 						rgbval = value.split("RGB(")[1]
 						rgbval = rgbval.split(")")[0]
 						rgbval = rgbval.split(",")
-						mappings[name] = [RGB(int(rgbval[0]),int(rgbval[1]),int(rgbval[2]))]
+						mappings[name] = [
+							RGB(int(rgbval[0]), int(rgbval[1]), int(rgbval[2]))]
 					else:
 						try:
-							#if possible adds the value and its int
+							# if possible adds the value and its int
 							mappings[name] = [value, int(value)]
 						except ValueError:
 							mappings[name] = [value]
-				else: mappings[name] = value
+				else:
+					mappings[name] = value
 			confAttribra[app] = mappings
 	except IOError:
 		log.debugWarning("No Attribra config file found")
-	
+
+
 checkConfigPath()
 loadConf()
 
 if not osp.exists(cfgFileAttribra):
 	f = open(config.getUserDefaultConfigPath() + '\\attribra-BE.ini', "w")
-	f.write(begFileAttribra+"""
+	f.write(begFileAttribra + """
 
 [global]
 	bold = 1
@@ -297,5 +341,5 @@ if not osp.exists(cfgFileAttribra):
 
 [thunderbird]
 	invalid-spelling = 1
-	""")    
+	""")
 	f.close()

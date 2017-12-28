@@ -1,6 +1,7 @@
 # coding: utf-8
 import os.path as osp
-import re, time
+import re
+import time
 import api
 import braille
 import inputCore
@@ -168,7 +169,7 @@ def getVolume():
 	return int(round(volume.GetMasterVolumeLevelScalar() * 100))
 
 
-def bkToChar(dots, inTable = -1):
+def bkToChar(dots, inTable=-1):
 	if inTable == -1:
 		inTable = config.conf["braille"]["inputTable"]
 	char = unichr(dots | 0x8000)
@@ -178,7 +179,7 @@ def bkToChar(dots, inTable = -1):
 		char, mode=louis.dotsIO)
 	chars = text[0]
 	if len(chars) == 1 and chars.isupper():
-		chars = 'shift+'+chars.lower()
+		chars = 'shift+' + chars.lower()
 	return chars if chars != ' ' else 'space'
 
 
@@ -186,7 +187,7 @@ def reload_brailledisplay(bd_name):
 	try:
 		if braille.handler.setDisplayByName(bd_name):
 			speech.speakMessage(_("%s device reloaded")
-					   % bd_name.capitalize())
+								% bd_name.capitalize())
 			return True
 		else:
 			ui.message(_("No %s display found")
@@ -203,12 +204,13 @@ def currentCharDesc():
 	info.expand(textInfos.UNIT_CHARACTER)
 	try:
 		c = ord(info.text)
-		s = u'{0} -> dec: {1}, hex: {2}, oct: {3}, bin: {4}'.format(info.text, c, hex(c), oct(c), bin(c))
-		
+		s = u'{0} -> dec: {1}, hex: {2}, oct: {3}, bin: {4}'.format(
+			info.text, c, hex(c), oct(c), bin(c))
+
 		if scriptHandler.getLastScriptRepeatCount() == 0:
 			ui.message(s)
 		elif (scriptHandler.getLastScriptRepeatCount() == 1):
-			ui.browseableMessage(s.replace(', ','\n		'))
+			ui.browseableMessage(s.replace(', ', '\n		'))
 		else:
 			api.copyToClip(s)
 			ui.message(u'"{0}" copied to clipboard.'.format(s))
@@ -225,7 +227,7 @@ def getKeysTranslation(n):
 		try:
 			n = KeyboardInputGesture.fromName(n).displayName
 			n = re.sub('([^a-zA-Z]|^)f([0-9])', r'\1F\2', n)
-		except:
+		except BaseException:
 			return o
 		return nk + n
 
@@ -294,7 +296,7 @@ def getTextCarret():
 		p1.setEndPoint(p2, "endToStart")
 		try:
 			return p1.text
-		except:
+		except BaseException:
 			return None
 	except BaseException:
 		pass
@@ -334,15 +336,21 @@ def getPositionPercentage():
 			return float(len(getTextCarret())) / float(total) * 100
 		else:
 			return 100
-	except:
+	except BaseException:
 		ui.message(_('No text'))
 	return 100
+
+
 def getPosition():
 	try:
 		total = len(getText())
 		return (len(getTextCarret()), total)
-	except:
+	except BaseException:
 		ui.message(_('Not text'))
-uncapitalize = lambda s: s[:1].lower() + s[1:] if s else ''
-translatePercent = lambda p, q = braille.handler.displaySize-4: '[%s]' % ''.join(['#' if k <= int(float(p)/100.*float(q-2))-1 else '-' for k in range(q-2)])
 
+
+def uncapitalize(s): return s[:1].lower() + s[1:] if s else ''
+
+
+translatePercent = lambda p, q = braille.handler.displaySize - 4: u'⣦%s⣴' % ''.join(
+	[u'⢼' if k <= int(float(p) / 100. * float(q - 2)) - 1 else u'⠤' for k in range(q - 2)])

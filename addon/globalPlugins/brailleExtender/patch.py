@@ -42,7 +42,7 @@ def update(self):
 				mode=mode, cursorPos=self.cursorPos or 0)
 		except:
 			if len(postTable) ==0:
-				log.error("Error with update braille function patch, disabling")
+				log.error("Error with update braille function patch, disabling: %s")
 				configBE.conf["patch"]["updateBraille"] = False
 				configBE.conf["general"]["tabSpace"] = False
 				configBE.conf["general"]["postTable"] = "None"
@@ -50,6 +50,7 @@ def update(self):
 				return
 			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], postTable))
 			postTable = []
+			configBE.conf["general"]["postTable"] = "None"
 			update( self)
 			return
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.
@@ -86,8 +87,8 @@ def update(self):
 					self.brailleCells[pos] |= SELECTION_SHAPE
 			except IndexError:
 				pass
-	except:
-		log.error("Error with update braille patch, disabling")
+	except BaseException, e:
+		log.error("Error with update braille patch, disabling: %s" % e)
 		configBE.conf["patch"]["updateBraille"] = False
 		configBE.conf["general"]["tabSpace"] = False
 		configBE.conf["general"]["postTable"] = "None"
@@ -195,9 +196,9 @@ if configBE.conf['general']['tabSpace'] and os.path.exists(tabFile):
 	if f.read() != defTab:
 		log.debug('Difference, creating tab file...')
 		if createTabFile(tabFile, defTab):
-			preTable.append(str(tabFile))
+			preTable.append(tabFile)
 	else:
-		preTable.append(str(tabFile))
+		preTable.append(tabFile)
 		log.debug('Tab as spaces enabled')
 	f.close()
 else:

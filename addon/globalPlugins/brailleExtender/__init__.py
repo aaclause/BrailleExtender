@@ -844,7 +844,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			# list keyboard layouts
 			if not noKC and 'keyboardLayouts' in configBE.iniProfile:
 				lb = s.getKeyboardLayouts()
-				doc += '<h2>{}</h2>'.format(_('Keyboard configurations provided'))
+				doc += u'<h2>{}</h2>'.format(_('Keyboard configurations provided'))
 				doc += u'<p>{}{}:</p><ol>'.format(_('Keyboard configurations are'), configBE.sep)
 				for l in lb:
 					doc += u'<li>{}.</li>'.format(l)

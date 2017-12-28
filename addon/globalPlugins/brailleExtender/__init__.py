@@ -128,13 +128,14 @@ class Autoreload_profile(Thread):
 		return
 
 	def run(self):
+		log.debug('Autoreload_profile started')
 		while not self.end and braille.handler != None:
 			instanceGP.autoreload_profile()
-		log.info('Autoreload_profile stopped')
+		log.debug('Autoreload_profile stopped')
 		return
 
 	def stop(self):
-		ui.message((_(u'Stopping %s')+'...') % configBE._addonName)
+		#ui.message((_(u'Stopping %s')+'...') % configBE._addonName)
 		self.end = True
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):

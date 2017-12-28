@@ -82,6 +82,9 @@ def loadConf():
 		tabSpace = boolean(default=False)
 		tabSize = integer(min=1, default=2, max=42)
 		postTable = string(default="None")
+	[patch]
+		updateBraille = boolean(default=True)
+		scrollBraille = boolean(default=True)
 	""".format(
 			CUR_BD=curBD,
 			MAX_BD=42,

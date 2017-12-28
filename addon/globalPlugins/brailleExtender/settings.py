@@ -73,13 +73,20 @@ class Settings(wx.Dialog):
 	def onSave(self, evt):
 		postTableID = self.reading.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
-		if (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
+		restartNVDA = False
+		if ((self.reading.tabSpace.GetValue() or postTable != "None") and not configBE.conf["patch"]["updateBraille"]):
+			log.info("Enabling patch for update braille function")
+			configBE.conf["patch"]["updateBraille"] = True
+			restartNVDA = True
+		if (self.reading.speakScroll.GetValue() and not configBE.conf["patch"]["scrollBraille"]):
+			log.info("Enabling patch for scroll braille functions")
+			configBE.conf["patch"]["scrollBraille"] = True
+			restartNVDA = True
+		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
 			configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue() or
 			configBE.conf['general']['postTable'] != postTable or
-			configBE.conf['general']['attribra'] != self.attribra.attribraEnabled.GetValue()):
+			configBE.conf['general']['attribra'] != self.attribra.attribraEnabled.GetValue())):
 			restartNVDA = True
-		else:
-			restartNVDA = False
 		configBE.conf['general']['postTable'] = postTable
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
 		configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
@@ -127,7 +134,7 @@ class Settings(wx.Dialog):
 		configBE.saveSettingsAttribra()
 		configBE.saveSettings()
 		if restartNVDA:
-			gui.messageBox(_("You have made a change that requires you restart NVDA"), u'%s – ' % configBE._addonName+_(u"Restart required"), wx.OK | wx.ICON_INFORMATION)
+			gui.messageBox(_(u"You have made a change that requires you restart NVDA"), u'%s – ' % configBE._addonName+_(u"Restart required"), wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
 			core.restart()
 		return instanceGP.onReload(None,True)
@@ -243,16 +250,16 @@ class Reading(wx.Panel):
 		self.oTables.SetSelection(0)
 		self.addOutputTableInSwitch = wx.Button(self, label=_('&Add'))
 		self.addOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
-		wx.StaticText(self, -1, label=_(u'Secondary output table to use'))
+		wx.StaticText(self, -1, label=_(u'Secondary output table to use')+(' (%s) ' % _('function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
 		self.postTable = wx.Choice(self, pos=(-1, -1), choices=lt)
 		self.postTable.SetSelection(configBE.tablesFN.index(configBE.conf['general']['postTable']) if configBE.conf['general']['postTable'] in configBE.tablesFN else 0)
-		self.tabSpace = wx.CheckBox(self, label=_(u'Display tab signs as spaces'))
+		self.tabSpace = wx.CheckBox(self, label=_(u'Display tab signs as spaces')+(' (%s) ' % _('function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
 		if configBE.conf['general']['tabSpace']:
 			self.tabSpace.SetValue(True)
 		self.tabSize = wx.StaticText(self, -1, label=_('Number of space for a tab sign'))
 		self.tabSize = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['tabSize']))	
 		self.tabSize.Bind(wx.EVT_CHAR, self.onTabSize)
-		self.speakScroll = wx.CheckBox(self, label=_(u'In review mode, say the current line during text scrolling'))
+		self.speakScroll = wx.CheckBox(self, label=_(u'In review mode, say the current line during text scrolling')+(' (%s) ' % _('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
 		if configBE.conf['general']['speakScroll']:
 			self.speakScroll.SetValue(True)
 		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for scroll'))

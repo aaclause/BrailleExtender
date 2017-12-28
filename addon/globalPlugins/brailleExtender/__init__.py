@@ -825,12 +825,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			doc += s.translateLst(mW)
 			doc += ('<h2>' + _('Standard NVDA commands') +' (%s)</h2>') % str(len(mNV))
 			doc += s.translateLst(mNV)
-			doc += '<h2>{0} ({1})</h2>'.format(_('Modifier keys'), len(configBE.iniProfile["modifierKeys"]))
+			doc += u'<h2>{0} ({1})</h2>'.format(_('Modifier keys'), len(configBE.iniProfile["modifierKeys"]))
 			doc += s.translateLst(configBE.iniProfile["modifierKeys"])
-			doc += '<h2>' + _('Quick navigation keys') + '</h2>'
+			doc += u'<h2>' + _('Quick navigation keys') + '</h2>'
 			doc += "<p>"+_(u'In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:')+"</p>"
 			doc += s.translateLst(configBE.iniGestures['cursorManager.CursorManager'])
-			doc += '<h2>'+_('Rotor feature')+'</h2>'
+			doc += u'<h2>'+_('Rotor feature')+'</h2>'
 			doc += s.translateLst({k: configBE.iniProfile["miscs"][k] for k in configBE.iniProfile["miscs"] if 'rotor' in k.lower()})+s.translateLst(configBE.iniProfile["rotor"])
 			doc += ('<h2>' + _('Gadget commands') +' (%s)</h2>') % str(len(configBE.iniProfile["miscs"])-2)
 			doc += s.translateLst(OrderedDict([(k, configBE.iniProfile["miscs"][k]) for k in configBE.iniProfile["miscs"] if k not in ['nextRotor','priorRotor']]))

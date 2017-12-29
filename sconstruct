@@ -108,6 +108,7 @@ def createAddonBundleFromPath(path, dest):
 def generateManifest(source, dest):
 	with codecs.open(source, "r", "utf-8") as f:
 		manifest_template = f.read()
+	buildVars.addon_info['addon_description'] = ''.join(buildVars.addon_info['addon_description'])
 	manifest = manifest_template.format(**buildVars.addon_info)
 	with codecs.open(dest, "w", "utf-8") as f:
 		f.write(manifest)

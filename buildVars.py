@@ -17,7 +17,7 @@ addon_info = {
 	"addon_summary" : _("BrailleExtender"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
-	"addon_description" : ''.join([
+	"addon_description" : [
 	_("This NVDA add-on adds some features at braille level"), ". ",_("It allows"),":",
 	"\n* ", _("reload two favorite braille display with shortcuts"), ";",
 	"\n* ", _("automatically switch in review mode in apps (default: PuTTY, Powershell, bash, cmd)"), ";",
@@ -30,7 +30,7 @@ addon_info = {
 	"\n* ", _("offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace"), ";",
 	"\n* ", _("launch an application quickly"), ";",
 	"\n* ", _("rotor (implementation in progress)"), "."
-]),
+],
 	# version
 	"addon_version" : "dev",
 	# Author(s)

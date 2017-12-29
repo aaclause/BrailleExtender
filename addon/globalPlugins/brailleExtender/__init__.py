@@ -1323,7 +1323,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		obj = gesture.scriptableObject
 		log.debug(gesture)
 		if obj:
-			ui.message('Gesture specific scriptable object present:')
 			log.debug(obj)
 		"""
 		obj = gesture.scriptableObject

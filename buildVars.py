@@ -18,18 +18,22 @@ addon_info = {
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : [
-	_("This NVDA add-on adds some features at braille level"), ". ",_("It allows"),":",
+	_("BrailleExtender is a NVDA add-on that provides various features at braille level. Currently, the following features are implemented:",
 	"\n* ", _("reload two favorite braille display with shortcuts"), ";",
 	"\n* ", _("automatically switch in review mode in apps (default: PuTTY, Powershell, bash, cmd)"), ";",
 	"\n* ", _("auto scroll"), ";",
 	"\n* ", _("switch between several input/output braille tables"), ";",
-	"\n* ", _("define custom rules to mark text with special fields option with braille dots 7 and 8"), ".",
+	"\n* ", _("define custom rules to mark text with special fields option with braille dots 7 and 8"), ";",
+	"\n* ", _("use two output braille tables simultaneously"), ";",
+	"\n* ", _("display tab signs as spaces"), ";",
+	"\n* ", _("reverse forward scroll and back scroll buttons"), ";",
+	"\n* ", _("say the current line during text scrolling, in review mode"), ".",
 	"\n\n",_("Besides, for some braille displays, it extends the mapping"), ":",
 	"\n* ", _("access to function keys, multimedia keys, quick navigation"), ";",
 	"\n* ", _("emulate modifier keys, and thus any keyboard shortcut"), ";",
 	"\n* ", _("offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace"), ";",
 	"\n* ", _("launch an application quickly"), ";",
-	"\n* ", _("rotor (implementation in progress)"), "."
+	"\n* ", _("actions and quick navigation through a rotor"), "."
 ],
 	# version
 	"addon_version" : "dev",

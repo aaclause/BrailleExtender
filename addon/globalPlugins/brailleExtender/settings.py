@@ -7,6 +7,7 @@ import addonHandler
 import braille
 import brailleInput
 import brailleTables
+import controlTypes
 import core
 import inputCore
 import scriptHandler
@@ -65,7 +66,7 @@ class Settings(wx.Dialog):
 		self.attribra = Attribra(self.nb)
 		self.quickLaunch = QuickLaunch(self.nb)
 		self.nb.AddPage(self.general, _("General"))
-		self.nb.AddPage(self.reading, _("Reading"))
+		self.nb.AddPage(self.reading, _("Reading and display"))
 		self.nb.AddPage(self.attribra, _("Attribra"))
 		self.nb.AddPage(self.keyboard, _("Braille keyboard"))
 		self.nb.AddPage(self.quickLaunch, _("Quick launches"))
@@ -352,6 +353,46 @@ class Reading(wx.Panel):
 			self, label=_('Reverse forward scroll and back scroll buttons'))
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScroll.SetValue(True)
+		self.labelsGroup = wx.StaticText(self, -1, label=_(u'Customize role labels'))
+		self.roleLabelCategory = wx.StaticText(self, -1, label=_(u'Category'))
+		self.roleLabelCategories = wx.Choice(
+			self, pos=(-1, -1), choices=[_('General'), _('Landmark'), _('Positive state'), _('Negative state')])
+		self.roleLabelCategories.Bind(wx.EVT_CHOICE, self.onRoleLabelCategories)
+		self.roleLabelCategories.SetSelection(0)
+		self.labels = wx.Choice(
+			self, pos=(-1, -1), choices=[controlTypes.roleLabels[k] for k in braille.roleLabels.keys()])
+		self.labels.Bind(wx.EVT_CHOICE, self.onRoleLabels)
+		self.layoutLabel = wx.TextCtrl(self, -1, value=str(braille.roleLabels.values()[controlTypes.roleLabels.keys()[0]]))
+		self.labels.SetSelection(0)
+
+	def onRoleLabelCategories(self, event):
+		idCategory = self.roleLabelCategories.GetSelection()
+		if idCategory == 0:
+			self.labels.SetItems([controlTypes.roleLabels[k] for k in braille.roleLabels.keys()])
+		elif idCategory == 1:
+			self.labels.SetItems(braille.landmarkLabels.keys())
+		elif idCategory == 2:
+			self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()])
+		elif idCategory == 3:
+			self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()])
+		else:
+			self.labels.SetItems([])
+		if idCategory > -1 and idCategory < 4:
+			self.labels.SetSelection(0)
+		self.onRoleLabels(None)
+		return
+
+	def onRoleLabels(self, event):
+		idCategory = self.roleLabelCategories.GetSelection()
+		if idCategory == 0:
+			self.layoutLabel.SetValue(braille.roleLabels[braille.roleLabels.keys()[self.labels.GetSelection()]])
+		elif idCategory == 1:
+			self.layoutLabel.SetValue(braille.landmarkLabels.values()[self.labels.GetSelection()])
+		elif idCategory == 2:
+			self.layoutLabel.SetValue(braille.positiveStateLabels[braille.positiveStateLabels.keys()[self.labels.GetSelection()]])
+		elif idCategory == 3:
+			self.layoutLabel.SetValue(braille.negativeStateLabels[braille.negativeStateLabels.keys()[self.labels.GetSelection()]])
+		return
 
 	def onDeleteOutputTableInSwitch(self, event):
 		if self.oTablesPresent.GetStringSelection() != '':
@@ -563,7 +604,6 @@ class Attribra(wx.Panel):
 				'italic',
 				'underline',
 				'invalid-spelling']]
-
 	getListProfiles = lambda self, t = True: ['Default'] + [self.translateApp(
 		k) if t else k for k in configBE.confAttribra.keys() if k != 'global']
 

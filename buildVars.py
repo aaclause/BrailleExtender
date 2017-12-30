@@ -18,7 +18,7 @@ addon_info = {
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : [
-	_("BrailleExtender is a NVDA add-on that provides various features at braille level. Currently, the following features are implemented:",
+	_("BrailleExtender is a NVDA add-on that provides various features at braille level. Currently, the following features are implemented"), ":",
 	"\n* ", _("reload two favorite braille display with shortcuts"), ";",
 	"\n* ", _("automatically switch in review mode in apps (default: PuTTY, Powershell, bash, cmd)"), ";",
 	"\n* ", _("auto scroll"), ";",

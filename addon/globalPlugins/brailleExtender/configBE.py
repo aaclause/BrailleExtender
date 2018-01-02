@@ -5,7 +5,7 @@ import re
 from cStringIO import StringIO
 from configobj import ConfigObj
 from validate import Validator
-
+import globalVars
 from colors import RGB
 
 import addonHandler
@@ -17,8 +17,8 @@ import languageHandler
 from logHandler import log
 
 curBD = braille.handler.display.name
-cfgFile = config.getUserDefaultConfigPath() + '\\BrailleExtender.conf'
-cfgFileAttribra = config.getUserDefaultConfigPath() + '\\attribra-BE.ini'
+cfgFile = globalVars.appArgs.configPath + '\\BrailleExtender.conf'
+cfgFileAttribra = globalVars.appArgs.configPath + '\\attribra-BE.ini'
 reviewModeApps = []
 quickLaunch = []
 quickLaunchS = []
@@ -199,7 +199,7 @@ def translateRule(E):
 def saveSettingsAttribra():
 	global confAttribra
 	try:
-		f = open(config.getUserDefaultConfigPath() + '\\attribra-BE.ini', "w")
+		f = open(globalVars.appArgs.configPath + '\\attribra-BE.ini', "w")
 		c = begFileAttribra + '\n'
 		for k in sorted(confAttribra.keys()):
 			c += '[%s]\n' % k
@@ -324,7 +324,7 @@ checkConfigPath()
 loadConf()
 
 if not osp.exists(cfgFileAttribra):
-	f = open(config.getUserDefaultConfigPath() + '\\attribra-BE.ini', "w")
+	f = open(globalVars.appArgs.configPath + '\\attribra-BE.ini', "w")
 	f.write(begFileAttribra + """
 
 [global]

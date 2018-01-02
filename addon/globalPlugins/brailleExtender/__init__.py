@@ -1701,7 +1701,7 @@ class CheckUpdates(wx.Dialog):
 		self.Destroy()
 		url = configBE._addonURL + "latest?" + urllib.urlencode(paramsDL())
 		fp = os.path.join(
-			config.getUserDefaultConfigPath(),
+			globalVars.appArgs.configPath,
 			"brailleExtender.nvda-addon")
 		try:
 			dl = urllib.URLopener()

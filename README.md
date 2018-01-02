@@ -23,7 +23,12 @@ Besides, for some braille displays, it extends the mapping:
 * launch applications quickly;
 * actions and quick navigation through a rotor.
 
-Once the add-on is installed, I suggest you read the documentation and go through the settings using the BrailleExtender menu (located at the root of NVDA menu).
+Once the add-on is installed, I suggest you read the documentation and go through the settings using the BrailleExtender menu (located at the root of NVDA menu). The documentation is mainly generated automatically because it depends on  the braille display plugged.
+
+Download
+--------
+* [Stable version](https://andreabc.net/projects/NVDA_addons/BrailleExtender/latest);
+* [Development versions](https://github.com/Andre9642/BrailleExtender/releases/).
 
 License
 -------

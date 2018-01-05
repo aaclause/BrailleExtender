@@ -1,1 +1,1 @@
-scons -c && scons pot && scons && pause
+del *.nvda-addon && scons -c && scons pot && scons && pause

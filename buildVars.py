@@ -20,7 +20,7 @@ addon_info = {
 	"addon_description" : [
 	_("BrailleExtender is a NVDA add-on that provides various features at braille level. Currently, the following features are implemented"), ":",
 	"\n* ", _("reload two favorite braille display with shortcuts"), ";",
-	"\n* ", _("automatically switch in review mode in apps (default: PuTTY, Powershell, bash, cmd)"), ";",
+	"\n* ", _("Automatic review cursor tethering for selected apps (default: PuTTY, Powershell, bash, cmd)"), ";",
 	"\n* ", _("auto scroll"), ";",
 	"\n* ", _("switch between several input/output braille tables"), ";",
 	"\n* ", _("define custom rules to mark text with special fields option with braille dots 7 and 8"), ";",
@@ -28,7 +28,7 @@ addon_info = {
 	"\n* ", _("display tab signs as spaces"), ";",
 	"\n* ", _("reverse forward scroll and back scroll buttons"), ";",
 	"\n* ", _("say the current line during text scrolling, in review mode"), ".",
-	"\n\n",_("Besides, for some braille displays, it extends the mapping"), ":",
+	"\n\n",_("For some braille displays, it extends the braille display commands to provide"), ":",
 	"\n* ", _("access to function keys, multimedia keys, quick navigation"), ";",
 	"\n* ", _("emulate modifier keys, and thus any keyboard shortcut"), ";",
 	"\n* ", _("offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace"), ";",

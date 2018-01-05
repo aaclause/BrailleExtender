@@ -1,1 +1,1 @@
-scons pot && scons && pause
+scons -c && scons pot && scons && pause

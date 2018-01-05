@@ -885,7 +885,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.iTables) else 0
 		brailleInput.handler.table = brailleTables.listTables(
 		)[configBE.tablesFN.index(configBE.iTables[nID])]
-		return ui.message(brailleInput.handler.table.displayName)
+		ui.message(_(u'Input: %s') % brailleInput.handler.table.displayName)
+		return
 
 	script_switchInputBrailleTable.__doc__ = _(
 		"Switch between his favorite input braille tables")
@@ -904,11 +905,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.oTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.oTables[nID]
 		self.refreshBD()
-		return ui.message(configBE.tablesTR[configBE.tablesFN.index(
+		ui.message(_(u'Output: %s') % configBE.tablesTR[configBE.tablesFN.index(
 			config.conf["braille"]["translationTable"])])
+		return
 
 	script_switchOutputBrailleTable.__doc__ = _(
 		"Switch between his favorite output braille tables")
+	
+	def script_currentBrailleTable(self, gesture):
+		inTable = brailleInput.handler.table.displayName
+		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		braille.handler.message(_(u'I:{I} ⣿ O: {O}').format(I=inTable, O=ouTable))
+		speech.speakMessage(_(u'Input: {I}; Output: {O}').format(I=inTable, O=ouTable))
+		return
+
+	script_currentBrailleTable.__doc__ = _(
+		"Announce the current input and output braille tables")
 
 	def script_brlDescChar(self, gesture):
 		utils.currentCharDesc()
@@ -1411,6 +1423,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
+	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
 	__gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
 	__gestures["kb:shift+NVDA+y"] = "autoScroll"
 	__gestures["kb:nvda+k"] = "reload_brailledisplay"

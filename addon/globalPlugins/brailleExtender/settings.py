@@ -5,7 +5,6 @@ import gui
 
 import addonHandler
 import braille
-import brailleInput
 import brailleTables
 import controlTypes
 import core
@@ -14,7 +13,6 @@ import scriptHandler
 import ui
 addonHandler.initTranslation()
 from logHandler import log
-from colors import RGB
 import configBE
 inProcessMsg = _(u'Feature Not Implemented Yet')
 lastCaptured = None
@@ -253,9 +251,9 @@ class General(wx.Panel):
 		loadBDs.Add(self.brailleDisplay1)
 		loadBDs.Add(self.brailleDisplay2)
 		settings.Add(loadBDs)
-		return
 
-	def onReviewModeApps(self, event):
+	@staticmethod
+	def onReviewModeApps(event):
 		keycode = event.GetKeyCode()
 		if keycode > 255 or keycode < 32 or re.match(
 				'[a-zA-Z_\-0-9 .,]', chr(keycode)):
@@ -285,8 +283,8 @@ class General(wx.Panel):
 			event.Skip()
 		return
 
-	def getIdBD(
-		self, name): return [
+	@staticmethod
+	def getIdBD(name): return [
 		k[0] for k in braille.getDisplayList()].index(name) if name in [
 			k[0] for k in braille.getDisplayList()] else len(
 				braille.getDisplayList()) - 1
@@ -295,7 +293,8 @@ class General(wx.Panel):
 class Reading(wx.Panel):
 	def __init__(self, parent):
 		lt = [_(u'None')]
-		[lt.append(table[1]) for table in tables if table.output]
+		for table in tables:
+			if table.output: lt.append(table[1])
 		wx.Panel.__init__(self, parent)
 		wx.StaticText(
 			self, -1, label=_(u'Output braille tables present in the switch'))
@@ -417,7 +416,8 @@ class Reading(wx.Panel):
 			self.oTablesPresent.SetSelection(0)
 			self.oTablesPresent.SetFocus()
 
-	def onTabSize(self, evt):
+	@staticmethod
+	def onTabSize(evt):
 		key = evt.GetKeyCode()
 		okChars = "0123456789"
 		if key < 32 or key > 255 or chr(key) in okChars:
@@ -473,10 +473,12 @@ class Reading(wx.Panel):
 			self.ignoreBlankLineScroll.Enable()
 		return
 
-	def outputTablesNotInSwitch(s): return [
+	@staticmethod
+	def outputTablesNotInSwitch(): return [
 		table[1] for table in tables if table.output and table[0] not in oTables]
 
-	def outputTablesInSwitch(s): return [configBE.tablesTR[configBE.tablesFN.index(
+	@staticmethod
+	def outputTablesInSwitch(): return [configBE.tablesTR[configBE.tablesFN.index(
 		table)] for table in oTables if table != ''] if (len(oTables) > 0 and oTables[0] != '') or len(tables) > 2 else []
 
 
@@ -517,7 +519,7 @@ class Attribra(wx.Panel):
 		self.bold.Bind(wx.EVT_CHECKBOX, self.onBold)
 		self.italic.Bind(wx.EVT_CHECKBOX, self.onItalic)
 		self.underline.Bind(wx.EVT_CHECKBOX, self.onUnderline)
-		return self.onProfiles()
+		self.onProfiles()
 
 	def onBold(self, event):
 		if self.bold.GetValue():
@@ -567,27 +569,31 @@ class Attribra(wx.Panel):
 				)]['invalid-spelling']
 		return
 
-	def onAddRuleBtn(self, event):
+	@staticmethod
+	def onAddRuleBtn(event):
 		ui.message(inProcessMsg)
 		return
 
-	def onEditRuleBtn(self, event):
+	@staticmethod
+	def onEditRuleBtn(event):
 		ui.message(inProcessMsg)
 		return
 
-	def onRemoveRuleBtn(self, event):
+	@staticmethod
+	def onRemoveRuleBtn(event):
+		ui.message(inProcessMsg)
+		return
+	@staticmethod
+	def onAddProfileBtn(event):
 		ui.message(inProcessMsg)
 		return
 
-	def onAddProfileBtn(self, event):
+	@staticmethod
+	def onEditProfileBtn(event):
 		ui.message(inProcessMsg)
 		return
-
-	def onEditProfileBtn(self, event):
-		ui.message(inProcessMsg)
-		return
-
-	def onRemoveProfileBtn(self, event):
+	@staticmethod
+	def onRemoveProfileBtn(event):
 		ui.message(inProcessMsg)
 		return
 
@@ -643,7 +649,8 @@ class Attribra(wx.Panel):
 			self.removeRuleBtn.Disable()
 		return
 
-	def translateApp(self, app):
+	@staticmethod
+	def translateApp(app):
 		tApps = {
 			'winword': 'Microsoft Word',
 		}
@@ -656,7 +663,8 @@ class Keyboard(wx.Panel):
 		kbCfg = wx.BoxSizer(wx.VERTICAL)
 		if not noUnicodeTable:
 			lt = [_(u'Use the current input table')]
-			[lt.append(table[1]) for table in tables if table.input]
+			for table in tables:
+				if table.input: lt.append(table[1])
 			kbCfg.Add(
 				wx.StaticText(
 					self, -1, label=_(u'Input braille table for keyboard shortcut keys')))
@@ -683,7 +691,7 @@ class Keyboard(wx.Panel):
 			self.addInputTableInSwitch.Bind(
 				wx.EVT_BUTTON, self.onAddInputTableInSwitch)
 		if gesturesFileExists and not noKC:
-			lb = keyboardLayouts
+			lb = [k for k in keyboardLayouts]
 			kbCfg.Add(
 				wx.StaticText(
 					self, -1, label=_(u'Braille keyboard configuration')))
@@ -717,10 +725,12 @@ class Keyboard(wx.Panel):
 			self.iTablesPresent.SetSelection(0)
 			self.iTablesPresent.SetFocus()
 
-	def inputTablesNotInSwitch(s): return [
+	@staticmethod
+	def inputTablesNotInSwitch(): return [
 		table[1] for table in tables if table.input and table[0] not in iTables]
 
-	def inputTablesInSwitch(s): return [configBE.tablesTR[configBE.tablesFN.index(
+	@staticmethod
+	def inputTablesInSwitch(): return [configBE.tablesTR[configBE.tablesFN.index(
 		table)] for table in iTables if table != ''] if (len(iTables) > 0 and iTables[0] != '') or len(tables) > 2 else []
 
 
@@ -728,7 +738,6 @@ class QuickLaunch(wx.Panel):
 
 	def __init__(self, parent):
 		wx.Panel.__init__(self, parent)
-		shts = wx.BoxSizer(wx.VERTICAL)
 		if gesturesFileExists:
 			self.quickKeysT = wx.StaticText(
 				self, -1, label=_(u'Gestures for the quick launches'))
@@ -747,16 +756,18 @@ class QuickLaunch(wx.Panel):
 			self.removeGestureBtn.Bind(wx.EVT_BUTTON, self.onRemoveGestureBtn)
 			self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
 
-	def getQuickLaunchList(s): return [
+	@staticmethod
+	def getQuickLaunchList(): return [
 		quickLaunch[k] + configBE.sep + ': ' + quickLaunchS[k] for k in range(len(quickLaunch))]
 
-	def onRemoveGestureBtn(self, event):
+	@staticmethod
+	def onRemoveGestureBtn(event):
 		ui.message(inProcessMsg)
 		return
 
+	@staticmethod
 	def onAddGestureBtn(self, event):
 		ui.message(inProcessMsg)
-		return
 		captureNow()
 		ui.message(_(u'Please enter the desired gesture for this command, now'))
 		return
@@ -768,8 +779,10 @@ class QuickLaunch(wx.Panel):
 		return self.quickKeys.SetSelection(oldS)
 
 	def onQuickKeys(self, event):
-		self.target.SetValue(self.quickKeys.GetStringSelection().split(': ')[
-							 1]) if not self.quickKeys.GetStringSelection().strip().startswith(':') else self.target.SetValue('')
+		if not self.quickKeys.GetStringSelection().strip().startswith(':'):
+			self.target.SetValue(self.quickKeys.GetStringSelection().split(': ')[1])
+		else:
+			self.target.SetValue('')
 		return
 
 	def onBrowseBtn(self, event):

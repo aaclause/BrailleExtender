@@ -1,10 +1,8 @@
 # coding: utf-8
 import os.path as osp
 import re
-import time
 import api
 import braille
-import inputCore
 import louis
 import config
 import ui
@@ -12,7 +10,6 @@ import scriptHandler
 import speech
 import textInfos
 from keyboardHandler import KeyboardInputGesture
-from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 
@@ -40,7 +37,6 @@ IID_IAudioEndpointVolume = \
 
 class IMMDeviceCollection(IUnknown):
 	_iid_ = GUID('{0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}')
-	pass
 
 
 class IAudioEndpointVolume(IUnknown):
@@ -123,7 +119,6 @@ class IMMDevice(IUnknown):
 		STDMETHOD(HRESULT, 'GetId', []),
 		STDMETHOD(HRESULT, 'GetState', [])
 	]
-	pass
 
 
 class IMMDeviceEnumerator(comtypes.IUnknown):

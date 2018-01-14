@@ -14,7 +14,7 @@ import urllib
 from collections import OrderedDict
 from configobj import ConfigObj
 import gui
-from subprocess import Popen
+import subprocess
 import wx
 import addonHandler
 addonHandler.initTranslation()
@@ -85,8 +85,8 @@ def paramsDL(): return {
 	"brailledisplay": braille.handler.display.name,
 }
 
-
-def decorator(fn, str):
+# ***** Attribra code *****
+def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field):
 		# convention: to mark we put 4 (bold for liblouis)
 		for attr, value in ATTRS.iteritems():
@@ -116,13 +116,24 @@ def decorator(fn, str):
 			if self.rawTextTypeforms[i] == 4:
 				self.brailleCells[i] |= DOT7 | DOT8
 
-	if str == "addTextWithFields":
+	if s == "addTextWithFields":
 		return addTextWithFields_edit
-	if str == "update":
+	if s == "update":
 		return update
-	if str == "_getTypeformFromFormatField":
+	if s == "_getTypeformFromFormatField":
 		return _getTypeformFromFormatField
-
+def populateAttrs(pid):
+		if (len(configBE.confAttribra) == 0):
+			return
+		global ATTRS  # We are changing the global variable
+		appname = appModuleHandler.getAppNameFromProcessID(pid)
+		if (appname in configBE.confAttribra):
+			ATTRS = configBE.confAttribra[appname]
+		elif ("global" in configBE.confAttribra):
+			ATTRS = configBE.confAttribra["global"]
+		else:
+			ATTRS = {}
+# *************************
 
 class Autoreload_profile(Thread):
 	end = False
@@ -147,6 +158,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
 	hourDatePlayed = False
 	autoScrollRunning = False
+	hourDateTimer = None
+	autoScrollTimer = None
 	modifiers = {
 		'control': False,
 		'alt': False,
@@ -206,7 +219,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		pid = obj.processID
 		if self.currentPid != pid:
-			self.populateAttrs(pid)
+			populateAttrs(pid)
 			self.currentPid = pid
 		if obj.appModule.appName in configBE.reviewModeApps and not self.switchedMode:
 			try:
@@ -237,18 +250,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.switchedMode = False
 		nextHandler()
 		return
-
-	def populateAttrs(self, pid):
-		if (len(configBE.confAttribra) == 0):
-			return
-		global ATTRS  # We are changing the global variable
-		appname = appModuleHandler.getAppNameFromProcessID(pid)
-		if (appname in configBE.confAttribra):
-			ATTRS = configBE.confAttribra[appname]
-		elif ("global" in configBE.confAttribra):
-			ATTRS = configBE.confAttribra["global"]
-		else:
-			ATTRS = {}
 
 	def createMenu(self):
 		try:
@@ -298,34 +299,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			)
 			return True
 		except BaseException:
-			return False
-
-	def terminate(self):
-		super(GlobalPlugin, self).terminate()
-		self.thread1.stop()
-		self.thread1.join()
-		if self.instanceST is not None:
-			self.instanceST.onClose(None)
-		if instanceUP is not None:
-			instanceUP.onClose(None)
-		self.removeMenu()
-		if configBE.noUnicodeTable:
-			brailleInput.handler.table = self.backupInputTable
-		if self.hourDatePlayed:
-			self.hourDateTimer.Stop()
-			if configBE.noMessageTimeout:
-				config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
-		if self.autoScrollRunning:
-			self.autoScrollTimer.Stop()
-			config.conf["braille"]["showCursor"] = self.backupShowCursor
-		return configBE.saveSettings()
-
-	def removeMenu(self):
-		try:
-			if self.menu is not None:
-				gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.menu)
-			return True
-		except wx.PyDeadObjectError:
 			return False
 
 	def gesturesInit(self):
@@ -427,12 +400,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			for k, v in configBE.iniProfile["modifierKeys"].items(
 			) + configBE.iniProfile["miscs"].items():
 				if isinstance(v, list):
-					for i in range(len(v)):
+					for i, gesture in enumerate(v):
 						if k == 'shortcutsOn':
 							pass
 						else:
 							self._pGestures[inputCore.normalizeGestureIdentifier(
-								'br(' + configBE.curBD + '):' + v[i])] = k
+								'br(%s):%s' %(configBE.curBD, gesture)
+								)] = k
 				else:
 					self._pGestures[inputCore.normalizeGestureIdentifier(
 						'br(' + configBE.curBD + '):' + v)] = k
@@ -460,7 +434,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 						'selectElt', 'nextSetRotor', 'priorSetRotor']:
 					self.bindGestures({k: self.rotorGES[k]})
 
-	def showBrailleObj(self):
+	@staticmethod
+	def showBrailleObj():
 		s = []
 		obj = api.getNavigatorObject()
 		s.append(controlTypes.roleLabels[obj.role])
@@ -498,7 +473,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.bindRotorGES()
 		return ui.message(rotorItems[rotorItem])
 
-	def getCurrentSelectionRange(self, pretty=True, back=False):
+	@staticmethod
+	def getCurrentSelectionRange(pretty=True, back=False):
 		if pretty:
 			labels = [
 				_('Character'),
@@ -676,7 +652,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	script_hourDate.__doc__ = _('Hour and date with autorefresh')
 
-	def showHourDate(self):
+	@staticmethod
+	def showHourDate():
 		currentHourDate = time.strftime(
 			u'%X %x (%a, %W/53, %b)', time.localtime())
 		return braille.handler.message(currentHourDate.decode('mbcs'))
@@ -700,21 +677,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	script_autoScroll.__doc__ = _('Enable/disable autoscroll')
 
-	def autoScroll(self):
+	@staticmethod
+	def autoScroll():
 		return braille.handler.scrollForward()
 
 	def script_volumePlus(s, g):
 		KeyboardInputGesture.fromName('volumeup').send()
-		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(
-			utils.getVolume(), braille.handler.displaySize - 4))
-		braille.handler.message(
-			s) if configBE.conf['general']['reportVolumeBraille'] else None
-		speech.speakMessage(str(
-			utils.getVolume())) if configBE.conf['general']['reportVolumeSpeech'] else None
+		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(utils.getVolume(), braille.handler.displaySize - 4))
+		if configBE.conf['general']['reportVolumeBraille']:
+			braille.handler.message(s)
+		if configBE.conf['general']['reportVolumeSpeech']:
+			speech.speakMessage(str(utils.getVolume()))
 		return
 	script_volumePlus.__doc__ = _('Increase the master volume')
 
-	def refreshBD(self):
+	@staticmethod
+	def refreshBD():
 		obj = api.getFocusObject()
 		if obj.treeInterceptor is not None:
 			ti = treeInterceptorHandler.update(obj)
@@ -723,7 +701,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			braille.handler.handleGainFocus(api.getFocusObject())
 
-	def clearMessageFlash(self):
+	@staticmethod
+	def clearMessageFlash():
 		if config.conf["braille"]["messageTimeout"] != 0:
 			braille.handler.message("?")
 			braille.handler.routeTo(1)
@@ -731,12 +710,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_volumeMinus(s, g):
 		KeyboardInputGesture.fromName('volumedown').send()
-		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(
-			utils.getVolume(), braille.handler.displaySize - 4))
-		braille.handler.message(
-			s) if configBE.conf['general']['reportVolumeBraille'] else None
-		speech.speakMessage(str(
-			utils.getVolume())) if configBE.conf['general']['reportVolumeSpeech'] else None
+		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(utils.getVolume(), braille.handler.displaySize - 4))
+		if configBE.conf['general']['reportVolumeBraille']:
+			braille.handler.message(s)
+		if configBE.conf['general']['reportVolumeSpeech']:
+			speech.speakMessage(str(utils.getVolume()))
 		return
 
 	script_volumeMinus.__doc__ = _('Decrease the master volume')
@@ -760,12 +738,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_getHelp.__doc__ = _(
 		'Show the %s documentation') % configBE._addonName
 
-	def noKeyboarLayout(self):
+	@staticmethod
+	def noKeyboarLayout():
 		return noKC
 
-	def getKeyboardLayouts(self):
-		i = 0
-		lb = []
+	@staticmethod
+	def getKeyboardLayouts():
 		if not noKC and 'keyboardLayouts' in configBE.iniProfile:
 			for layout in configBE.iniProfile['keyboardLayouts']:
 				t = []
@@ -799,8 +777,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 						else:
 							t.append(utils.beautifulSht(str(
 								configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
-				lb.append((configBE.sep + '; ').join(t))
-		return lb
+				yield ((configBE.sep + '; ').join(t))
+
 	def getGestures(s):
 		return s.__gestures
 
@@ -810,7 +788,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			configBE.quickLaunchS.append('')
 			return ui.message(gesture.id + ' added')
 		try:
-			return Popen(configBE.quickLaunchS[configBE.quickLaunch.index(
+			return subprocess.Popen(configBE.quickLaunchS[configBE.quickLaunch.index(
 				'+'.join(sorted((gesture.id).lower().split('+'))))].strip())
 		except BaseException:
 			return ui.message(_("No such file or directory"))
@@ -825,10 +803,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_checkUpdate.__doc__ = _(
 		'Check for %s updates, and starts the download if there is one') % configBE._addonName
 
-	def increaseDelayAutoScroll(self):
+	@staticmethod
+	def increaseDelayAutoScroll():
 		configBE.conf['general']['delayScroll_' + configBE.curBD] += 0.25
 
-	def decreaseDelayAutoScroll(self):
+	@staticmethod
+	def decreaseDelayAutoScroll():
 		if configBE.conf['general']['delayScroll_' +
 									configBE.curBD] - 0.25 >= 0.25:
 			configBE.conf['general']['delayScroll_' + configBE.curBD] -= 0.25
@@ -911,12 +891,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	script_switchOutputBrailleTable.__doc__ = _(
 		"Switch between his favorite output braille tables")
-	
+
 	def script_currentBrailleTable(self, gesture):
 		inTable = brailleInput.handler.table.displayName
 		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		braille.handler.message(_(u'I:{I} ⣿ O: {O}').format(I=inTable, O=ouTable))
-		speech.speakMessage(_(u'Input: {I}; Output: {O}').format(I=inTable, O=ouTable))
+		if ouTable == inTable:
+			braille.handler.message(_(u'I⣿O:{I}').format(I=inTable, O=ouTable))
+			speech.speakMessage(_(u'Input and output: {I}.').format(I=inTable, O=ouTable))
+		else:
+			braille.handler.message(_(u'I:{I} ⣿ O: {O}').format(I=inTable, O=ouTable))
+			speech.speakMessage(_(u'Input: {I}; Output: {O}').format(I=inTable, O=ouTable))
 		return
 
 	script_currentBrailleTable.__doc__ = _(
@@ -955,6 +939,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_('%s reloaded') % configBE._addonName)
 		return
 
+	@staticmethod
 	def onUpdate(self, evt):
 		return CheckUpdates()
 
@@ -962,6 +947,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return self.onAbout(None)
 	script_about.__doc__ = _('Show the "about" window')
 
+	@staticmethod
 	def onWebsite(self, evt):
 		return os.startfile(configBE._addonURL)
 
@@ -1017,11 +1003,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.bindGestures(self.__gestures)
 		return self.bindGestures(self._pGestures)
 
-	def sendCombKeys(self, sendKS, send=True):
+	@staticmethod
+	def sendCombKeys(sendKS, send=True):
 		if send:
 			log.debug("Sending " + sendKS)
-			KeyboardInputGesture.fromName(
-				sendKS).send() if not sendKS == "" else None
+			if not sendKS == "":
+				KeyboardInputGesture.fromName(sendKS).send()
 		return
 
 	def script_end_combKeys(self, gesture):
@@ -1059,16 +1046,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			#ch = 'shift+%s'% ch
 			self.sendComb(self.getActualModifiers(False) + ch, gesture)
 		else:
-			self.sendComb(
-				self.getActualModifiers(False) + utils.bkToChar(
-					gesture.dots,
-					brailleTables.listTables()[
-						configBE.conf['general']['iTableSht']][0]),
-				gesture) if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > -1 and configBE.conf['general']['iTableSht'] < len(
-				brailleTables.listTables()) else self.sendComb(
-					self.getActualModifiers(False) + utils.bkToChar(
-						gesture.dots),
-				gesture)
+			if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > -1 and configBE.conf['general']['iTableSht'] < len( brailleTables.listTables()):
+				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0]), gesture)
+			else:
+				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):
@@ -1076,7 +1057,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not NVDASht and 'nvda' not in sht.lower():
 			try:
 				return self.sendCombKeys(sht)
-			except BaseException:
+			except BaseException as e:
+				log.debug(e)
 				return ui.message(_('Unable to send %s') % sht)
 		elif not NVDASht:  # and 'nvda' in sht.lower()
 			return ui.message(_(u'%s is not part of a NVDA commands') % sht)
@@ -1085,7 +1067,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		# to improve + not finished
 		if 'kb:' not in sht:
 			sht = 'kb:' + sht
-		shtO = sht
 		add = '+nvda' if 'nvda+' in sht else ''
 		sht = '+'.join(
 			sorted(
@@ -1097,19 +1078,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					'') +
 					add).split('+')))
 
-		# Gesture specific scriptable object.
-		obj = gesture.scriptableObject
-		log.debug(gesture)
-		if obj:
-			log.debug(obj)
-		"""
-		obj = gesture.scriptableObject
-		if obj:
-			func = _getObjScript(obj, gesture, globalMapScripts)
-			if func:
-				return func
-		"""
-
+		# Gesture specific scriptable object (TODO).
 		# Global plugin level
 		shtPlugins = {
 			p: eval(
@@ -1141,8 +1110,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		focus = api.getFocusObject()
 		app = focus.appModule
 		for k in focus.appModule._gestureMap:
-			ui.message(k)
-			pass
 			if app and cls == 'AppModule' and module == app.__module__:
 				func = getattr(app, "script_%s" % scriptName, None)
 				if func:
@@ -1191,28 +1158,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 						'kb:' + sht)]]
 					eval('a.script_' + script + '(gesture)')
 					return True
-		except BaseException as e:
+		except BaseException:
 			pass
-		"""
-		treeInterceptor = focus.treeInterceptor
-		if treeInterceptor and treeInterceptor.isReady:
-			func = getattr(treeInterceptor , "script_%s" % scriptName, None)
-			# We are no keyboard input
-			return func
-		"""
-
-		# NVDAObject level.
-		log.debug(dir(focus))
-		""" TODO !
-		func = getattr(focus, "script_%s" % scriptName, None)
-		if func:
-			return func
-		for obj in reversed(api.getFocusAncestors()):
-			func = getattr(obj, "script_%s" % scriptName, None)
-			if func and getattr(func, 'canPropagate', False):
-				return func
-			"""
-
+		# NVDAObject level (todo).
 		# Global Commands level.
 		layouts = ['', '(laptop)', '(desktop)']
 		places = ['globalCommands.commands._gestureMap']
@@ -1232,7 +1180,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					pass
 		return False
 
-	def callScript(self, cls, f, gesture):
+	@staticmethod
+	def callScript(cls, f, gesture):
 		for plugin in globalPluginHandler.runningPlugins:
 			if plugin.__module__ == cls:
 				func = getattr(plugin, f)
@@ -1243,8 +1192,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					return false
 
 	def initCombKeys(self):
-		self.bindGestures(
-			self._tGestures) if self.lenModifiers() == 1 else None
+		if self.lenModifiers() == 1:
+			self.bindGestures(self._tGestures)
 
 	def getActualModifiers(self, short=True):
 		if self.lenModifiers() == 0:
@@ -1265,7 +1214,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_ctrl(self, gesture=None, sil=True):
 		self.modifiers["control"] = not self.modifiers["control"]
-		self.getActualModifiers() if sil else None
+		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_nvda(self, gesture=None):
@@ -1275,17 +1224,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_alt(self, gesture=None, sil=True):
 		self.modifiers["alt"] = not self.modifiers["alt"]
-		self.getActualModifiers() if sil else None
+		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_win(self, gesture=None, sil=True):
 		self.modifiers["windows"] = not self.modifiers["windows"]
-		self.getActualModifiers() if sil else None
+		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_shift(self, gesture=None, sil=True):
 		self.modifiers["shift"] = not self.modifiers["shift"]
-		self.getActualModifiers() if sil else None
+		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_ctrlWin(self, gesture):
@@ -1433,6 +1382,35 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:volumeUp"] = "volumePlus"
 	__gestures["kb:volumeDown"] = "volumeMinus"
 
+	def terminate(self):
+		super(GlobalPlugin, self).terminate()
+		self.thread1.stop()
+		self.thread1.join()
+		if self.instanceST is not None:
+			self.instanceST.onClose(None)
+		if instanceUP is not None:
+			instanceUP.onClose(None)
+		self.removeMenu()
+		if configBE.noUnicodeTable:
+			brailleInput.handler.table = self.backupInputTable
+		if self.hourDatePlayed:
+			self.hourDateTimer.Stop()
+			if configBE.noMessageTimeout:
+				config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
+		if self.autoScrollRunning:
+			self.autoScrollTimer.Stop()
+			config.conf["braille"]["showCursor"] = self.backupShowCursor
+		return configBE.saveSettings()
+
+	def removeMenu(self):
+		try:
+			if self.menu is not None:
+				gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.menu)
+			return True
+		except wx.PyDeadObjectError:
+			return False
+
+
 
 class CheckUpdates(wx.Dialog):
 	def __init__(self, sil=False):
@@ -1440,7 +1418,6 @@ class CheckUpdates(wx.Dialog):
 		if instanceUP is not None:
 			return
 		instanceUP = self
-		title = _('{0} update').format(configBE._addonName)
 		newUpdate = False
 		url = '{0}BrailleExtender.latest?{1}'.format(
 			configBE._addonURL, urllib.urlencode(paramsDL()))

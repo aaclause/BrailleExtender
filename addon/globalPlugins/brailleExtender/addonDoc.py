@@ -4,17 +4,17 @@ import addonHandler
 addonHandler.initTranslation()
 import braille
 import configBE
-import globalCommands
 from collections import OrderedDict
 import utils
 import ui
 
+instanceGP = None
+
 class AddonDoc():
-	s = None
-	def __init__(self, instanceGP):
-		global s
-		s = instanceGP
-		gestures = s.getGestures()
+	def __init__(self, instanceGp):
+		global instanceGP
+		instanceGP = instanceGp
+		gestures = instanceGP.getGestures()
 		doc = u"""
 		<h1>{NAME}{DISPLAY}</h1>
 		<p>Version {VERSION}<br />
@@ -143,8 +143,8 @@ class AddonDoc():
 			doc += '</ul>'
 
 			# list keyboard layouts
-			if not s.noKeyboarLayout() and 'keyboardLayouts' in configBE.iniProfile:
-				lb = s.getKeyboardLayouts()
+			if not instanceGP.noKeyboarLayout() and 'keyboardLayouts' in configBE.iniProfile:
+				lb = instanceGP.getKeyboardLayouts()
 				doc += u'<h2>{}</h2>'.format(
 					_('Keyboard configurations provided'))
 				doc += u'<p>{}{}:</p><ol>'.format(
@@ -176,11 +176,12 @@ class AddonDoc():
 					configBE.sep)
 		doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
 		doc += '</ul>'
-		return ui.browseableMessage(
+		ui.browseableMessage(
 			doc, _(u'%s\'s documentation') %
 			configBE._addonName, True)
 
-	def getDocScript(self, n):
+	@staticmethod
+	def getDocScript(n):
 		doc = None
 		if isinstance(n, list):
 			n = str(n[-1][-1])
@@ -188,7 +189,7 @@ class AddonDoc():
 			return _(
 				'Emulates pressing %s on the system keyboard') % utils.getKeysTranslation(n)
 		places = [
-			's.script_',
+			'instanceGP.script_',
 			'globalCommands.commands.script_',
 			'cursorManager.CursorManager.script_']
 		for place in places:

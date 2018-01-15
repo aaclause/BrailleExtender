@@ -38,10 +38,9 @@ _addonVersion = addonHandler.Addon(_addonDir).manifest['version']
 _addonURL = addonHandler.Addon(_addonDir).manifest['url']
 _addonAuthor = addonHandler.Addon(_addonDir).manifest['author']
 _addonDesc = addonHandler.Addon(_addonDir).manifest['description']
-profilesDir = osp.join(osp.dirname(__file__), "", "") + \
-	('Profiles/').decode('utf-8').encode('mbcs')
-log.error('Profiles\' path not found') if not osp.exists(
-	profilesDir) else log.debug('Profiles\' path (%s) found' % profilesDir)
+profilesDir = osp.join(osp.dirname(__file__), "", "") + ('Profiles/').decode('utf-8').encode('mbcs')
+if not osp.exists(profilesDir): log.error('Profiles\' path not found')
+else: log.debug('Profiles\' path (%s) found' % profilesDir)
 begFileAttribra = """# Attribra for BrailleExtender
 # Thanks to Alberto Zanella
 # -> https://github.com/albzan/attribra/
@@ -174,9 +173,6 @@ def loadGestures():
 
 def saveSettings():
 	global conf
-	"""
-	Save the current configuration.
-	"""
 	try:
 		conf.validate(Validator(), copy=True)
 		conf.write()
@@ -297,9 +293,9 @@ def loadConfAttribra():
 	global confAttribra
 	try:
 		cfg = ConfigObj(cfgFileAttribra, encoding="UTF-8")
-		for app, map in cfg.iteritems():
+		for app, mapping in cfg.iteritems():
 			mappings = {}
-			for name, value in map.iteritems():
+			for name, value in mapping.iteritems():
 				if isinstance(value, basestring):
 					if value.startswith("RGB("):  # it's an RGB Object
 						rgbval = value.split("RGB(")[1]

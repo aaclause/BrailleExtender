@@ -8,16 +8,16 @@ import configBE
 import globalCommands
 import louis
 import scriptHandler
-import speech
 import textInfos
 from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 instanceGP = None
+preTable = []
+postTable = []
 SELECTION_SHAPE = braille.SELECTION_SHAPE
+
 # customize basic functions
-
-
 def update(self):
 	"""Update this region.
 	Subclasses should extend this to update L{rawText}, L{cursorPos}, L{selectionStart} and L{selectionEnd} if necessary.
@@ -27,7 +27,7 @@ def update(self):
 	L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are similarly updated based on L{cursorPos}, L{selectionStart} and L{selectionEnd}, respectively.
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
-	global postTable
+	global postTable, preTable
 	try:
 		mode = louis.dotsIO
 		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
@@ -202,7 +202,6 @@ if configBE.conf["patch"]["scrollBraille"]:
 	braille.TextInfoRegion.previousLine = previousLine
 	braille.TextInfoRegion.nextLine = nextLine
 
-postTable = []
 postTableValid = True if configBE.conf['general']['postTable'] in configBE.tablesFN else False
 
 if postTableValid:
@@ -216,7 +215,6 @@ else:
 	if configBE.conf['general']['postTable'] != "None":
 		log.error('Invalid secondary table')
 
-preTable = []
 tabFile = os.path.join(os.path.dirname(__file__), "", "tab.cti").decode("mbcs")
 defTab = 'space \\t ' + \
 	('0-' * configBE.conf['general']['tabSize'])[:-1] + '\n'

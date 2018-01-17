@@ -14,44 +14,17 @@ import ui
 addonHandler.initTranslation()
 from logHandler import log
 import configBE
+import queueHandler
 inProcessMsg = _(u'Feature Not Implemented Yet')
 lastCaptured = None
 tables = brailleTables.listTables()
+restartNVDA_ = False
 
-
-def captureNow():
-	def getCaptured(gesture):
-		if gesture.isModifier:
-			return False
-		if scriptHandler.findScript(gesture) is not None:
-			ui.message(
-				_(u'Unable to associate this gesture. Please enter another, now'))
-			return False
-		if ':escape' not in gesture.normalizedIdentifiers[0]:
-			ui.message(
-				_(u'OK. The gesture captured is %s') %
-				gesture.normalizedIdentifiers[0].split(':')[1])
-		inputCore.manager._captureFunc = None
-	inputCore.manager._captureFunc = getCaptured
-
+instanceGP = None
 
 class Settings(wx.Dialog):
-	def __init__(self, *args):
-		global curBD, reviewModeApps, noUnicodeTable, noKC, gesturesFileExists, iniProfile, quickLaunch, quickLaunchS, keyboardLayouts, instanceGP, backupDisplaySize, iTables, oTables
-		(curBD,
-		 reviewModeApps,
-		 noUnicodeTable,
-		 noKC,
-		 gesturesFileExists,
-		 iniProfile,
-		 quickLaunch,
-		 quickLaunchS,
-		 instanceGP,
-		 keyboardLayouts,
-		 backupDisplaySize,
-		 iTables,
-		 oTables) = args
-		if instanceGP.instanceST is not None:
+	def __init__(self):
+		if instanceGP.instanceST is not None or instanceGP is None:
 			return
 		instanceGP.instanceST = self
 		wx.Dialog.__init__(self, None, title=_(u'BrailleExtender settings'))
@@ -89,7 +62,7 @@ class Settings(wx.Dialog):
 	def onSave(self, evt):
 		postTableID = self.reading.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
-		restartNVDA = False
+		restartNVDA = False if not restartNVDA_ else True
 		if ((self.reading.tabSpace.GetValue() or postTable != "None")
 				and not configBE.conf["patch"]["updateBraille"]):
 			log.info("Enabling patch for update braille function")
@@ -103,6 +76,7 @@ class Settings(wx.Dialog):
 		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
 								 configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue() or
 								 configBE.conf['general']['postTable'] != postTable or
+								 configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()] or
 								 configBE.conf['general']['attribra'] != self.attribra.attribraEnabled.GetValue())):
 			restartNVDA = True
 		configBE.conf['general']['postTable'] = postTable
@@ -120,41 +94,37 @@ class Settings(wx.Dialog):
 			configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue(
 			)
 		configBE.conf['general']['delayScroll_' +
-								 curBD] = self.reading.delayScroll.GetValue()
+								 configBE.curBD] = self.reading.delayScroll.GetValue()
 		try:
 			if int(
 					self.general.limitCells.GetValue()) > backupDisplaySize or int(
 					self.general.limitCells.GetValue()) < 0:
-				configBE.conf['general']['limitCells_' + curBD] = 0
+				configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 			else:
 				if configBE.conf['general']['limitCells_' +
-											curBD] != 0 and int(self.general.limitCells.GetValue()) == 0:
+											configBE.curBD] != 0 and int(self.general.limitCells.GetValue()) == 0:
 					braille.handler.displaySize = backupDisplaySize
 				configBE.conf['general']['limitCells_' +
-										 curBD] = int(self.general.limitCells.GetValue())
+										 configBE.curBD] = int(self.general.limitCells.GetValue())
 		except BaseException:
-			configBE.conf['general']['limitCells_' + curBD] = 0
+			configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
 		configBE.conf['general']['speakScroll'] = self.reading.speakScroll.GetValue()
 		configBE.conf['general']['tabSpace'] = self.reading.tabSpace.GetValue()
 		configBE.conf['general']['tabSize'] = self.reading.tabSize.GetValue()
 		configBE.conf['general']['attribra'] = self.attribra.attribraEnabled.GetValue()
 		configBE.conf['general']['reviewModeApps'] = self.general.reviewModeApps.GetValue()
-		if not noUnicodeTable:
+		if not configBE.noUnicodeTable:
 			configBE.conf['general']['iTableSht'] = self.keyboard.iTableSht.GetSelection(
 			) - 1
 		if not self.reading.smartDelayScroll.GetValue():
 			configBE.conf['general']['ignoreBlankLineScroll'] = self.reading.ignoreBlankLineScroll.GetValue()
-		if gesturesFileExists:
-			configBE.conf['general']['keyboardLayout_' +
-									 curBD] = iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]
-
-			tApps = []
-			for app in quickLaunchS:
-				tApps.append(app.strip())
-			configBE.conf['general']['quickLaunch_' + curBD] = '; '.join(tApps)
-		configBE.conf['general']['iTables'] = ','.join(iTables)
-		configBE.conf['general']['oTables'] = ','.join(oTables)
+		if configBE.gesturesFileExists:
+			configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] = configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]
+		configBE.conf['general']['quickLaunchGestures_%s' % configBE.curBD] = ', '.join(self.quickLaunch.quickLaunchGestures)
+		configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunch.quickLaunchLocations)
+		configBE.conf['general']['iTables'] = ','.join(configBE.iTables)
+		configBE.conf['general']['oTables'] = ','.join(configBE.oTables)
 		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[
 			self.general.brailleDisplay1.GetSelection()][0]
 		configBE.conf['general']['brailleDisplay2'] = braille.getDisplayList()[
@@ -209,7 +179,7 @@ class General(wx.Panel):
 		settings.Add(self.hourDynamic)
 		settings.Add(wx.StaticText(self, -1, label=_(u'Re&view mode in')))
 		self.reviewModeApps = wx.TextCtrl(
-			self, -1, value=str(', '.join(reviewModeApps)))
+			self, -1, value=str(', '.join(configBE.reviewModeApps)))
 		settings.Add(self.reviewModeApps)
 		self.reviewModeApps.Bind(wx.EVT_CHAR, self.onReviewModeApps)
 		settings.Add(wx.StaticText(self, -
@@ -218,7 +188,7 @@ class General(wx.Panel):
 								   ') ' +
 								   _(u'&Limit number of cells to (0 for no limit)')))
 		self.limitCells = wx.TextCtrl(
-			self, -1, value=str(configBE.conf['general']['limitCells_' + curBD]))
+			self, -1, value=str(configBE.conf['general']['limitCells_' + configBE.curBD]))
 		settings.Add(self.limitCells)
 		self.limitCells.Bind(wx.EVT_CHAR, self.onLimitCells)
 		lb = braille.getDisplayList()
@@ -335,7 +305,7 @@ class Reading(wx.Panel):
 		self.delayScrollT = wx.StaticText(
 			self, -1, label=_(u'&Delay for scroll'))
 		self.delayScroll = wx.TextCtrl(
-			self, -1, value=str(configBE.conf['general']['delayScroll_' + curBD]))
+			self, -1, value=str(configBE.conf['general']['delayScroll_' + configBE.curBD]))
 		self.delayScroll.Bind(wx.EVT_CHAR, self.onDelayScroll)
 		self.ignoreBlankLineScroll = wx.CheckBox(
 			self, label=_(u'Hide empty views during autoscroll'))
@@ -423,18 +393,16 @@ class Reading(wx.Panel):
 		if key < 32 or key > 255 or chr(key) in okChars:
 			evt.Skip()
 			return
-		else:
-			return False
+		else: return False
 
 	def onDelayScroll(self, event):
 		keycode = event.GetKeyCode()
 		if keycode in [wx.WXK_UP, wx.WXK_DOWN]:
-			v = self.delayScroll.GetValue()
-			v = v.replace(',', '.')
+			v = self.delayScroll.GetValue().replace(',', '.')
 			try:
 				v = float(v)
 			except BaseException:
-				v = configBE.conf['general']['delayScroll_' + curBD]
+				v = configBE.conf['general']['delayScroll_' + configBE.curBD]
 			if v >= 0 and v < 1000:
 				if keycode == wx.WXK_DOWN:
 					nv = v - 0.25 if v - 0.25 >= 0.25 else 0.25
@@ -450,19 +418,13 @@ class Reading(wx.Panel):
 				or
 				(
 					(
-						(re.match('[0-9]', chr(keycode)))
-						or
-						(re.match('[0-9.,]', chr(keycode))
-						 and
-								 (
-							self.delayScroll.GetValue().count(',') == 0
-							and self.delayScroll.GetValue().count('.') == 0)
-						 and re.match('[0-9][0-9.,]{0,}', self.delayScroll.GetValue())
-						 )
+						(re.match('[0-9]', chr(keycode))) or (re.match('[0-9.,]', chr(keycode))
+						and (self.delayScroll.GetValue().count(',') == 0 and self.delayScroll.GetValue().count('.') == 0)
+						and re.match('[0-9][0-9.,]{0,}', self.delayScroll.GetValue())
 					)
 				)
-		):
-			event.Skip()
+			)
+		): event.Skip()
 		return
 
 	def onSmartDelay(self, e):
@@ -473,14 +435,8 @@ class Reading(wx.Panel):
 			self.ignoreBlankLineScroll.Enable()
 		return
 
-	@staticmethod
-	def outputTablesNotInSwitch(): return [
-		table[1] for table in tables if table.output and table[0] not in oTables]
-
-	@staticmethod
-	def outputTablesInSwitch(): return [configBE.tablesTR[configBE.tablesFN.index(
-		table)] for table in oTables if table != ''] if (len(oTables) > 0 and oTables[0] != '') or len(tables) > 2 else []
-
+	outputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.output and table[0] not in configBE.oTables]
+	outputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.oTables if table != '']
 
 class Attribra(wx.Panel):
 	def __init__(self, parent):
@@ -543,30 +499,22 @@ class Attribra(wx.Panel):
 
 	def onUnderline(self, event):
 		if self.underline.GetValue():
-			if 'underline' not in configBE.confAttribra[self.getCurrentProfile(
-			)]:
-				configBE.confAttribra[self.getCurrentProfile()]['underline'] = [
-					1]
+			if 'underline' not in configBE.confAttribra[self.getCurrentProfile()]:
+				configBE.confAttribra[self.getCurrentProfile()]['underline'] = [1]
 			configBE.confAttribra[self.getCurrentProfile()]['underline'][0] = 1
 		else:
 			if 'underline' in configBE.confAttribra[self.getCurrentProfile()]:
-				del configBE.confAttribra[self.getCurrentProfile(
-				)]['underline']
+				del configBE.confAttribra[self.getCurrentProfile()]['underline']
 		return
 
 	def onSpellingErrors(self, event):
 		if self.spellingErrors.GetValue():
-			if 'invalid-spelling' not in configBE.confAttribra[self.getCurrentProfile(
-			)]:
-				configBE.confAttribra[self.getCurrentProfile(
-				)]['invalid-spelling'] = [1]
-			configBE.confAttribra[self.getCurrentProfile()
-								  ]['invalid-spelling'][0] = 1
+			if 'invalid-spelling' not in configBE.confAttribra[self.getCurrentProfile()]:
+				configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling'] = [1]
+			configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling'][0] = 1
 		else:
-			if 'invalid-spelling' in configBE.confAttribra[self.getCurrentProfile(
-			)]:
-				del configBE.confAttribra[self.getCurrentProfile(
-				)]['invalid-spelling']
+			if 'invalid-spelling' in configBE.confAttribra[self.getCurrentProfile()]:
+				del configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling']
 		return
 
 	@staticmethod
@@ -583,6 +531,7 @@ class Attribra(wx.Panel):
 	def onRemoveRuleBtn(event):
 		ui.message(inProcessMsg)
 		return
+
 	@staticmethod
 	def onAddProfileBtn(event):
 		ui.message(inProcessMsg)
@@ -592,6 +541,7 @@ class Attribra(wx.Panel):
 	def onEditProfileBtn(event):
 		ui.message(inProcessMsg)
 		return
+
 	@staticmethod
 	def onRemoveProfileBtn(event):
 		ui.message(inProcessMsg)
@@ -601,17 +551,10 @@ class Attribra(wx.Panel):
 	) == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
 
 	def getAdvancedRules(self):
-		profileId = 'global' if self.profiles.GetSelection(
-		) == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
-		return [
-			k + ': ' + configBE.translateRule(
-				configBE.confAttribra[profileId][k]) for k in configBE.confAttribra[profileId].keys() if k not in [
-				'bold',
-				'italic',
-				'underline',
-				'invalid-spelling']]
-	getListProfiles = lambda self, t = True: ['Default'] + [self.translateApp(
-		k) if t else k for k in configBE.confAttribra.keys() if k != 'global']
+		profileId = 'global' if self.profiles.GetSelection() == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
+		v = [configBE.translateRule(configBE.confAttribra[profileId][k]) for k in configBE.confAttribra[profileId].keys() if k not in ['bold', 'italic', 'underline', 'invalid-spelling']]
+		return '%s: %s' % (k, v)
+	getListProfiles = lambda self, t = True: ['Default'] + [self.translateApp(k) if t else k for k in configBE.confAttribra.keys() if k != 'global']
 
 	def onProfiles(self, event=None):
 		profileId = self.profiles.GetSelection()
@@ -660,52 +603,38 @@ class Attribra(wx.Panel):
 class Keyboard(wx.Panel):
 	def __init__(self, parent):
 		wx.Panel.__init__(self, parent)
-		kbCfg = wx.BoxSizer(wx.VERTICAL)
-		if not noUnicodeTable:
+		if not configBE.noUnicodeTable:
 			lt = [_(u'Use the current input table')]
 			for table in tables:
 				if table.input: lt.append(table[1])
-			kbCfg.Add(
-				wx.StaticText(
-					self, -1, label=_(u'Input braille table for keyboard shortcut keys')))
+			wx.StaticText(self, -1, label=_(u'Input braille table for keyboard shortcut keys'))
 			self.iTableSht = wx.Choice(self, pos=(-1, -1), choices=lt)
-			self.iTableSht.SetSelection(
-				configBE.conf['general']['iTableSht'] + 1)
-
-			kbCfg.Add(
-				wx.StaticText(
-					self, -1, label=_(u'Input braille tables present in the switch')))
-			self.iTablesPresent = wx.Choice(
-				self, pos=(-1, -1), choices=self.inputTablesInSwitch())
+			self.iTableSht.SetSelection(configBE.conf['general']['iTableSht'] + 1)
+			wx.StaticText(self, -1, label=_(u'Input braille tables present in the switch'))
+			self.iTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesInSwitch())
 			self.iTablesPresent.SetSelection(0)
 			self.deleteInputTableInSwitch = wx.Button(self, label=_(u'&Remove'))
-			self.deleteInputTableInSwitch.Bind(
-				wx.EVT_BUTTON, self.onDeleteInputTableInSwitch)
-			kbCfg.Add(
-				wx.StaticText(
-					self, -1, label=_(u'Input tables not present in the switch')))
-			self.iTables = wx.Choice(
-				self, pos=(-1, -1), choices=self.inputTablesNotInSwitch())
+			self.deleteInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteInputTableInSwitch)
+			wx.StaticText(self, -1, label=_(u'Input tables not present in the switch'))
+			self.iTables = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesNotInSwitch())
 			self.iTables.SetSelection(0)
 			self.addInputTableInSwitch = wx.Button(self, label=_(u'&Add'))
-			self.addInputTableInSwitch.Bind(
-				wx.EVT_BUTTON, self.onAddInputTableInSwitch)
-		if gesturesFileExists and not noKC:
-			lb = [k for k in keyboardLayouts]
-			kbCfg.Add(
-				wx.StaticText(
-					self, -1, label=_(u'Braille keyboard configuration')))
+			self.addInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddInputTableInSwitch)
+		if configBE.gesturesFileExists and not instanceGP.noKeyboarLayout():
+			lb = [k for k in instanceGP.getKeyboardLayouts()]
+			wx.StaticText(self, -1, label=_(u'Braille keyboard configuration'))
 			self.KBMode = wx.Choice(self, pos=(-1, -1), choices=lb)
-			self.KBMode.SetSelection(iniProfile['keyboardLayouts'].keys().index(configBE.conf['general']['keyboardLayout_' +
-																										 curBD]) if configBE.conf['general']['keyboardLayout_' +
-																																			 configBE.curBD] is not None and configBE.conf['general']['keyboardLayout_' +
-																																																	  curBD] in iniProfile['keyboardLayouts'].keys() else 0)
-			kbCfg.Add(self.KBMode)
+			self.KBMode.SetSelection(self.getKeyboardLayout())
+
+	def getKeyboardLayout(self):
+		if (configBE.conf['general']['keyboardLayout_' + configBE.curBD] is not None
+		 and configBE.conf['general']['keyboardLayout_' + configBE.curBD] in configBE.iniProfile['keyboardLayouts'].keys()):
+			return configBE.iniProfile['keyboardLayouts'].keys().index(configBE.conf['general']['keyboardLayout_' + configBE.curBD])
+		else: return 0
 
 	def onDeleteInputTableInSwitch(self, event):
 		if self.iTablesPresent.GetStringSelection() != '':
-			iTables.remove(configBE.tablesFN[configBE.tablesTR.index(
-				self.iTablesPresent.GetStringSelection())])
+			iTables.remove(configBE.tablesFN[configBE.tablesTR.index(self.iTablesPresent.GetStringSelection())])
 			self.iTables.SetItems(self.inputTablesNotInSwitch())
 			self.iTables.SetSelection(0)
 			self.iTablesPresent.SetItems(self.inputTablesInSwitch())
@@ -725,58 +654,82 @@ class Keyboard(wx.Panel):
 			self.iTablesPresent.SetSelection(0)
 			self.iTablesPresent.SetFocus()
 
-	@staticmethod
-	def inputTablesNotInSwitch(): return [
-		table[1] for table in tables if table.input and table[0] not in iTables]
-
-	@staticmethod
-	def inputTablesInSwitch(): return [configBE.tablesTR[configBE.tablesFN.index(
-		table)] for table in iTables if table != ''] if (len(iTables) > 0 and iTables[0] != '') or len(tables) > 2 else []
+	inputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.input and table[0] not in configBE.iTables]
+	inputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.iTables if table.strip() != '']
 
 
 class QuickLaunch(wx.Panel):
 
+	quickLaunchGestures = []
+	quickLaunchLocations = []
+
 	def __init__(self, parent):
+		self.quickLaunchGestures = configBE.quickLaunchs.keys()
+		self.quickLaunchLocations = configBE.quickLaunchs.values()
 		wx.Panel.__init__(self, parent)
-		if gesturesFileExists:
-			self.quickKeysT = wx.StaticText(
-				self, -1, label=_(u'Gestures for the quick launches'))
-			self.quickKeys = wx.Choice(
-				self, pos=(-1, -1), choices=self.getQuickLaunchList())
+		if configBE.gesturesFileExists:
+			self.quickKeysT = wx.StaticText(self, -1, label=_(u'Gestures for the quick launches'))
+			self.quickKeys = wx.Choice(self, pos=(-1, -1), choices=self.getQuickLaunchList())
 			self.quickKeys.SetSelection(0)
 			self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
-			self.target = wx.TextCtrl(self, -1, value=quickLaunchS[0])
+			self.target = wx.TextCtrl(self, -1, value=self.quickLaunchLocations[0])
 			self.target.Bind(wx.wx.EVT_TEXT, self.onTarget)
 			self.browseBtn = wx.Button(self, -1, label=_(u'&Browse...'))
-			self.removeGestureBtn = wx.Button(
-				self, -1, label=_(u'&Remove this gesture'))
-			self.addGestureBtn = wx.Button(
-				self, -1, label=_(u'&Add a quick launch'))
+			self.removeGestureBtn = wx.Button(self, -1, label=_(u'&Remove this gesture'))
+			self.addGestureBtn = wx.Button(self, -1, label=_(u'&Add a quick launch'))
 			self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
 			self.removeGestureBtn.Bind(wx.EVT_BUTTON, self.onRemoveGestureBtn)
 			self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
 
-	@staticmethod
-	def getQuickLaunchList(): return [
-		quickLaunch[k] + configBE.sep + ': ' + quickLaunchS[k] for k in range(len(quickLaunch))]
+	def getQuickLaunchList(s): return [
+'%s%s: %s' % (s.quickLaunchGestures[i], configBE.sep, s.quickLaunchLocations[i]) for i, v in enumerate(s.quickLaunchLocations)]
 
-	@staticmethod
-	def onRemoveGestureBtn(event):
-		ui.message(inProcessMsg)
+	def onRemoveGestureBtn(self, event):
+		global restartNVDA_
+		id = self.quickKeys.GetSelection()
+		g=self.quickLaunchGestures.pop(id)
+		self.quickLaunchLocations.pop(id)
+		self.quickKeys.SetItems(self.getQuickLaunchList())
+		self.quickKeys.SetSelection(id-1 if id > 0 else 0)
+		self.onQuickKeys(None)
+		self.quickKeys.SetFocus()
+		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'%s removed.' % g))
+		restartNVDA_ = True
+		
 		return
+	def captureNow(self):
+		def getCaptured(gesture):
+			if gesture.isModifier:
+				return False
+			if scriptHandler.findScript(gesture) is not None:
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'Unable to associate this gesture. Please enter another, now'))
+				return False
+			if gesture.normalizedIdentifiers[0].startswith('kb') and ':escape' not in gesture.normalizedIdentifiers[0]:
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'Please enter a gesture from your %s braille display. Press Escape to cancel.' % configBE.curBD))
+				return False
+			if ':escape' not in gesture.normalizedIdentifiers[0]:
+				self.quickLaunchGestures.append(gesture.normalizedIdentifiers[0].split(':')[1])
+				self.quickLaunchLocations.append('')
+				self.quickKeys.SetItems(self.getQuickLaunchList())
+				self.quickKeys.SetSelection(len(self.quickLaunchGestures)-1)
+				self.onQuickKeys(None)
+				self.quickKeys.SetFocus()
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'OK. The gesture captured is %s') % gesture.normalizedIdentifiers[0].split(':')[1])
+			inputCore.manager._captureFunc = None
+		inputCore.manager._captureFunc = getCaptured
 
-	@staticmethod
+
 	def onAddGestureBtn(self, event):
-		ui.message(inProcessMsg)
-		captureNow()
-		ui.message(_(u'Please enter the desired gesture for this command, now'))
+		self.captureNow()
+		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'Please enter the desired gesture for this command, now'))
 		return
 
 	def onTarget(self, event):
 		oldS = self.quickKeys.GetSelection()
-		quickLaunchS[self.quickKeys.GetSelection()] = self.target.GetValue()
+		self.quickLaunchLocations[self.quickKeys.GetSelection()] = self.target.GetValue()
 		self.quickKeys.SetItems(self.getQuickLaunchList())
-		return self.quickKeys.SetSelection(oldS)
+		self.quickKeys.SetSelection(oldS)
+		return
 
 	def onQuickKeys(self, event):
 		if not self.quickKeys.GetStringSelection().strip().startswith(':'):
@@ -787,14 +740,12 @@ class QuickLaunch(wx.Panel):
 
 	def onBrowseBtn(self, event):
 		oldS = self.quickKeys.GetSelection()
-		dlg = wx.FileDialog(None, _("Choose a file for {0}".format(
-			quickLaunch[self.quickKeys.GetSelection()])), "%PROGRAMFILES%", "", "*", wx.OPEN)
+		dlg = wx.FileDialog(None, _("Choose a file for {0}".format(self.quickLaunchGestures[self.quickKeys.GetSelection()])), "%PROGRAMFILES%", "", "*", wx.OPEN)
 		if dlg.ShowModal() != wx.ID_OK:
 			dlg.Destroy()
 			return self.quickKeys.SetFocus()
 		self.target.SetValue(dlg.GetDirectory() + '\\' + dlg.GetFilename())
-		quickLaunchS[self.quickKeys.GetSelection()] = dlg.GetDirectory() + \
-			'\\' + dlg.GetFilename()
+		self.quickLaunchLocations[self.quickKeys.GetSelection()] = dlg.GetDirectory() + '\\' + dlg.GetFilename()
 		self.quickKeys.SetItems(self.getQuickLaunchList())
 		self.quickKeys.SetSelection(oldS)
 		dlg.Destroy()

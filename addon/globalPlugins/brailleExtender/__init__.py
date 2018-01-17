@@ -16,8 +16,9 @@ from configobj import ConfigObj
 import gui
 import subprocess
 import wx
+
 import addonHandler
-addonHandler.initTranslation()
+import api
 import appModuleHandler
 import braille
 import brailleInput
@@ -38,7 +39,6 @@ import treeInterceptorHandler
 from threading import Thread
 import time
 import virtualBuffers
-
 import ui
 import versionInfo
 from keyboardHandler import KeyboardInputGesture
@@ -47,10 +47,10 @@ import configBE
 import settings
 import patch
 import utils
-import api
+
+addonHandler.initTranslation()
 instanceGP = None
 instanceUP = None
-noKC = None
 lang = configBE.lang
 ATTRS = {}
 logTextInfo = False
@@ -150,7 +150,6 @@ class Autoreload_profile(Thread):
 		return
 
 	def stop(self):
-		#ui.message((_(u'Stopping %s')+'...') % configBE._addonName)
 		self.end = True
 
 
@@ -170,7 +169,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	_tGestures = OrderedDict()
 	_pGestures = OrderedDict()
 	rotorGES = {}
-
+	noKC = None
 	if not configBE.noUnicodeTable:
 		backupInputTable = brailleInput.handler.table
 	backupMessageTimeout = None
@@ -186,6 +185,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		global instanceGP
 		instanceGP = self
 		patch.instanceGP = instanceGP
+		settings.instanceGP = instanceGP
 		log.debug('! New instance of GlobalPlugin: {0}'.format(id(instanceGP)))
 		configBE.initGestures()
 		configBE.loadGestures()
@@ -254,55 +254,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def createMenu(self):
 		try:
 			self.menu = wx.Menu()
-			self.item = self.menu.Append(
-				wx.ID_ANY,
-				_("Documentation"),
-				_("Opens the addon's documentation.")
-			)
+			self.item = self.menu.Append(wx.ID_ANY,_("Documentation"), _("Opens the addon's documentation."))
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, self.item)
-			self.item = self.menu.Append(
-				wx.ID_ANY,
-				_("Settings..."),
-				_("Opens the addon's settings.")
-			)
-			gui.mainFrame.sysTrayIcon.Bind(
-				wx.EVT_MENU, self.onSettings, self.item)
-			self.item = self.menu.Append(
-				wx.ID_ANY,
-				_("Reload add-on"),
-				_("Reload this add-on.")
-			)
-			gui.mainFrame.sysTrayIcon.Bind(
-				wx.EVT_MENU, self.onReload, self.item)
-			self.item = self.menu.Append(
-				wx.ID_ANY,
-				_("&Check for update..."),
-				_("Checks if update is available")
-			)
-			gui.mainFrame.sysTrayIcon.Bind(
-				wx.EVT_MENU,
-				self.onUpdate,
-				self.item
-			)
-			self.item = self.menu.Append(
-				wx.ID_ANY,
-				_("&Website"),
-				_("Open addon's website.")
-			)
-			gui.mainFrame.sysTrayIcon.Bind(
-				wx.EVT_MENU, self.onWebsite, self.item)
-			self.menu = gui.mainFrame.sysTrayIcon.menu.InsertMenu(
-				2,
-				wx.ID_ANY,
-				'%s (%s)' % (configBE._addonName, configBE._addonVersion),
-				self.menu
-			)
+			self.item = self.menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
+			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, self.item)
+			self.item = self.menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
+			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, self.item)
+			self.item = self.menu.Append(wx.ID_ANY, _("&Check for update..."), _("Checks if update is available"))
+			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, self.item)
+			self.item = self.menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
+			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, self.item)
+			self.menu = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, '%s (%s)' % (configBE._addonName, configBE._addonVersion), self.menu)
 			return True
 		except BaseException:
 			return False
 
 	def gesturesInit(self):
-		global noKC
 		if 'rotor' in configBE.iniProfile.keys():
 			for k in configBE.iniProfile["rotor"]:
 				if isinstance(configBE.iniProfile["rotor"][k], list):
@@ -343,12 +310,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					gK[k] = cK[k]
 			inputCore.manager.localeGestureMap.update(
 				{'globalCommands.GlobalCommands': gK})
-			noKC = False
+			self.noKC = False
 			log.debug('Keyboard conf found, loading layout `%s`' %
 					  configBE.conf['general']['keyboardLayout_' + configBE.curBD])
 		except BaseException:
 			log.debug('No keyboard conf found')
-			noKC = True
+			self.noKC = True
 		# for NVDA remote
 		if 'fr' in lang:
 			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789²)=^$ù*<,;:!"
@@ -397,15 +364,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					self._tGestures[inputCore.normalizeGestureIdentifier(
 						str(configBE.iniGestures['globalCommands.GlobalCommands'][g]))] = "end_combKeys"
 			self._pGestures = {}
-			for k, v in configBE.iniProfile["modifierKeys"].items(
-			) + configBE.iniProfile["miscs"].items():
+			for k, v in configBE.iniProfile["modifierKeys"].items() + [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'quickLaunch'] + [("quickLaunch", k) for k in configBE.quickLaunchs.keys()]:
 				if isinstance(v, list):
 					for i, gesture in enumerate(v):
 						if k == 'shortcutsOn':
 							pass
 						else:
 							self._pGestures[inputCore.normalizeGestureIdentifier(
-								'br(%s):%s' %(configBE.curBD, gesture)
+								'br(%s):%s' % (configBE.curBD, gesture)
 								)] = k
 				else:
 					self._pGestures[inputCore.normalizeGestureIdentifier(
@@ -617,13 +583,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleSpeech.__doc__ = _('Toggle speech on or off')
 
 	def script_position(self, gesture=None):
-		return ui.message(
-			'{0}% ({1}/{2})'.format(
-				round(
-					utils.getPositionPercentage(),
-					2),
-				utils.getPosition()[0],
-				utils.getPosition()[1]))
+		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
 	script_position.__doc__ = _('Get the cursor position of text')
 
 	def script_hourDate(self, gesture=None):
@@ -738,13 +698,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_getHelp.__doc__ = _(
 		'Show the %s documentation') % configBE._addonName
 
-	@staticmethod
-	def noKeyboarLayout():
-		return noKC
+	def noKeyboarLayout(self):
+		return self.noKC
 
-	@staticmethod
-	def getKeyboardLayouts():
-		if not noKC and 'keyboardLayouts' in configBE.iniProfile:
+	def getKeyboardLayouts(self):
+		if not self.noKC and 'keyboardLayouts' in configBE.iniProfile:
 			for layout in configBE.iniProfile['keyboardLayouts']:
 				t = []
 				for lk in configBE.iniProfile['keyboardLayouts'][layout]:
@@ -783,15 +741,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return s.__gestures
 
 	def script_quickLaunch(self, gesture):
-		if gesture.id not in configBE.quickLaunch:
-			configBE.quickLaunch.append(gesture.id)
-			configBE.quickLaunchS.append('')
-			return ui.message(gesture.id + ' added')
+		if gesture.id not in configBE.quickLaunchs.keys():
+			gesture.id = gesture.normalizedIdentifiers[0].split(':')[1]
+			if gesture.id not in configBE.quickLaunchs.keys():
+				log.info(configBE.quickLaunchs)
+				ui.message('Target for %s not defined.' % gesture.id)
+				return
 		try:
-			return subprocess.Popen(configBE.quickLaunchS[configBE.quickLaunch.index(
-				'+'.join(sorted((gesture.id).lower().split('+'))))].strip())
+			return subprocess.Popen(configBE.quickLaunchs[gesture.id])
 		except BaseException:
-			return ui.message(_("No such file or directory"))
+			try:
+				os.startfile(configBE.quickLaunchs[gesture.id])
+			except BaseException:
+				ui.message(_("No such file or directory"))
+			return
 	script_quickLaunch.__doc__ = _(
 		'Opens a custom program/file. Go to settings to define them')
 
@@ -835,22 +798,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	script_increaseDelayAutoScroll.__doc__ = _('Increase autoscroll delay')
 	script_decreaseDelayAutoScroll.__doc__ = _('Decrease autoscroll delay')
-
-	def script_switchKeyboardLayout(self, gesture):
-		self.clearGestureBindings()
-		ls = configBE.iniProfile['keyboardLayouts'].keys()
-		kid = ls.index(configBE.conf['general']['keyboardLayout_' +
-												configBE.curBD]) if configBE.conf['general']['keyboardLayout_' +
-																							 configBE.curBD] in ls else 0
-		nId = ls[kid + 1] if kid + 1 < len(ls) else ls[0]
-		configBE.conf['general']['keyboardLayout_' + configBE.curBD] = nId
-		ui.message(_("Configuration {0} ({1})").format(
-			str(ls.index(nId) + 1), self.getKeyboardLayouts()[ls.index(nId)]))
-		configBE.saveSettings()
-		return self.onReload(None, True)
-
-	script_switchKeyboardLayout.__doc__ = _(
-		"Switch between different braille keyboard configurations.")
 
 	def script_switchInputBrailleTable(self, gesture):
 		if configBE.noUnicodeTable:
@@ -927,6 +874,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def onReload(self, evt=None, sil=False, sv=False):
 		if sv:
 			configBE.saveSettings()
+		self.clearGestureBindings()
 		configBE.checkConfigPath()
 		configBE.initGestures()
 		configBE.loadConf()
@@ -1069,11 +1017,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			sht = 'kb:' + sht
 		add = '+nvda' if 'nvda+' in sht else ''
 		sht = '+'.join(
-			sorted(
-				(inputCore.normalizeGestureIdentifier(
-					sht.replace(
-						'nvda+',
-						'')).replace(
+			sorted((inputCore.normalizeGestureIdentifier(sht.replace('nvda+',
+'')).replace(
 					'kb:',
 					'') +
 					add).split('+')))
@@ -1162,7 +1107,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			pass
 		# NVDAObject level (todo).
 		# Global Commands level.
-		layouts = ['', '(laptop)', '(desktop)']
+		layouts = [
+							'(%s)' % config.conf["keyboard"]["keyboardLayout"],
+							'',
+							'(%s)' % ('desktop' if config.conf["keyboard"]["keyboardLayout"] == 'laptop' else 'desktop')
+							]
 		places = ['globalCommands.commands._gestureMap']
 		for layout in layouts:
 			for place in places:
@@ -1348,20 +1297,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def onSettings(self, event):
-		settings.Settings(
-			configBE.curBD,
-			configBE.reviewModeApps,
-			configBE.noUnicodeTable,
-			noKC,
-			configBE.gesturesFileExists,
-			configBE.iniProfile,
-			configBE.quickLaunch,
-			configBE.quickLaunchS,
-			instanceGP,
-			self.getKeyboardLayouts(),
-			configBE.backupDisplaySize,
-			configBE.iTables,
-			configBE.oTables)
+		settings.Settings()
 
 	def script_logFieldsAtCursor(self, gesture):
 		global logTextInfo
@@ -1427,14 +1363,11 @@ class CheckUpdates(wx.Dialog):
 			if (page.code == 200 and pageContent.replace('_', '-')
 					!= configBE._addonVersion and len(pageContent) < 20):
 				newUpdate = True
-				msg = _(
-					"New version available, version %s. Do you want download it now?") % pageContent.strip()
+				msg = _("New version available, version %s. Do you want download it now?") % pageContent.strip()
 			else:
-				msg = _(
-					"You are up-to-date. %s is the latest version.") % configBE._addonVersion
+				msg = _("You are up-to-date. %s is the latest version.") % configBE._addonVersion
 		except BaseException:
-			msg = _(
-				"Oops! There was a problem checking for updates. Please retry later.")
+			msg = _("Oops! There was a problem checking for updates. Please retry later.")
 		if not newUpdate and sil:
 			return
 		wx.Dialog.__init__(self, None, title=_("BrailleExtender's Update"))
@@ -1456,9 +1389,7 @@ class CheckUpdates(wx.Dialog):
 		global instanceUP
 		self.Destroy()
 		url = configBE._addonURL + "latest?" + urllib.urlencode(paramsDL())
-		fp = os.path.join(
-			globalVars.appArgs.configPath,
-			"brailleExtender.nvda-addon")
+		fp = os.path.join(globalVars.appArgs.configPath, "brailleExtender.nvda-addon")
 		try:
 			dl = urllib.URLopener()
 			dl.retrieve(url, fp)
@@ -1484,8 +1415,7 @@ class CheckUpdates(wx.Dialog):
 				os.startfile(fp)
 		except BaseException as e:
 			log.error(e)
-			ui.message(
-				_('Unable to save or download update file. Opening your browser'))
+			ui.message(_("Unable to save or download update file. Opening your browser"))
 			os.startfile(url)
 		self.Destroy()
 		instanceUP = None

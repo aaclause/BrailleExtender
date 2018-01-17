@@ -121,8 +121,9 @@ class Settings(wx.Dialog):
 			configBE.conf['general']['ignoreBlankLineScroll'] = self.reading.ignoreBlankLineScroll.GetValue()
 		if configBE.gesturesFileExists:
 			configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] = configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]
-		configBE.conf['general']['quickLaunchGestures_%s' % configBE.curBD] = ', '.join(self.quickLaunch.quickLaunchGestures)
-		configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunch.quickLaunchLocations)
+		if configBE.curBD != 'noBraille':
+			configBE.conf['general']['quickLaunchGestures_%s' % configBE.curBD] = ', '.join(self.quickLaunch.quickLaunchGestures)
+			configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunch.quickLaunchLocations)
 		configBE.conf['general']['iTables'] = ','.join(configBE.iTables)
 		configBE.conf['general']['oTables'] = ','.join(configBE.oTables)
 		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[

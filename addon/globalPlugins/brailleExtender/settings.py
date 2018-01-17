@@ -124,8 +124,8 @@ class Settings(wx.Dialog):
 		if configBE.curBD != 'noBraille':
 			configBE.conf['general']['quickLaunchGestures_%s' % configBE.curBD] = ', '.join(self.quickLaunch.quickLaunchGestures)
 			configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunch.quickLaunchLocations)
-		configBE.conf['general']['iTables'] = ','.join(configBE.iTables)
-		configBE.conf['general']['oTables'] = ','.join(configBE.oTables)
+		configBE.conf['general']['iTables'] = ','.join(self.keyboard.iTables)
+		configBE.conf['general']['oTables'] = ','.join(self.reading.oTables)
 		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[
 			self.general.brailleDisplay1.GetSelection()][0]
 		configBE.conf['general']['brailleDisplay2'] = braille.getDisplayList()[
@@ -260,7 +260,9 @@ class General(wx.Panel):
 
 
 class Reading(wx.Panel):
+	oTables = []
 	def __init__(self, parent):
+		self.oTables = configBE.oTables
 		lt = [_(u'None')]
 		for table in tables:
 			if table.output: lt.append(table[1])
@@ -275,9 +277,9 @@ class Reading(wx.Panel):
 			wx.EVT_BUTTON, self.onDeleteOutputTableInSwitch)
 		wx.StaticText(
 			self, -1, label=_(u'Output tables not present in the switch'))
-		self.oTables = wx.Choice(
+		self.oTablesNotPresent = wx.Choice(
 			self, pos=(-1, -1), choices=self.outputTablesNotInSwitch())
-		self.oTables.SetSelection(0)
+		self.oTablesNotPresent.SetSelection(0)
 		self.addOutputTableInSwitch = wx.Button(self, label=_(u'&Add'))
 		self.addOutputTableInSwitch.Bind(
 			wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
@@ -364,10 +366,10 @@ class Reading(wx.Panel):
 
 	def onDeleteOutputTableInSwitch(self, event):
 		if self.oTablesPresent.GetStringSelection() != '':
-			oTables.remove(configBE.tablesFN[configBE.tablesTR.index(
+			self.oTables.remove(configBE.tablesFN[configBE.tablesTR.index(
 				self.oTablesPresent.GetStringSelection())])
-			self.oTables.SetItems(self.outputTablesNotInSwitch())
-			self.oTables.SetSelection(0)
+			self.oTablesNotPresent.SetItems(self.outputTablesNotInSwitch())
+			self.oTablesNotPresent.SetSelection(0)
 			self.oTablesPresent.SetItems(self.outputTablesInSwitch())
 			self.oTablesPresent.SetSelection(0)
 			self.oTablesPresent.SetFocus()
@@ -376,11 +378,11 @@ class Reading(wx.Panel):
 		return
 
 	def onAddOutputTableInSwitch(self, event):
-		if self.oTables.GetStringSelection() != '':
-			oTables.append(configBE.tablesFN[configBE.tablesTR.index(
-				self.oTables.GetStringSelection())])
-			self.oTables.SetItems(self.outputTablesNotInSwitch())
-			self.oTables.SetSelection(0)
+		if self.oTablesNotPresent.GetStringSelection() != '':
+			self.oTables.append(configBE.tablesFN[configBE.tablesTR.index(
+				self.oTablesNotPresent.GetStringSelection())])
+			self.oTablesNotPresent.SetItems(self.outputTablesNotInSwitch())
+			self.oTablesNotPresent.SetSelection(0)
 			self.oTablesPresent.SetItems(self.outputTablesInSwitch())
 			self.oTablesPresent.SetSelection(0)
 			self.oTablesPresent.SetFocus()
@@ -600,8 +602,10 @@ class Attribra(wx.Panel):
 
 
 class Keyboard(wx.Panel):
+	iTables = []
 	def __init__(self, parent):
 		wx.Panel.__init__(self, parent)
+		self.iTables = configBE.iTables
 		if not configBE.noUnicodeTable:
 			lt = [_(u'Use the current input table')]
 			for table in tables:
@@ -615,8 +619,8 @@ class Keyboard(wx.Panel):
 			self.deleteInputTableInSwitch = wx.Button(self, label=_(u'&Remove'))
 			self.deleteInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteInputTableInSwitch)
 			wx.StaticText(self, -1, label=_(u'Input tables not present in the switch'))
-			self.iTables = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesNotInSwitch())
-			self.iTables.SetSelection(0)
+			self.iTablesNotPresent = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesNotInSwitch())
+			self.iTablesNotPresent.SetSelection(0)
 			self.addInputTableInSwitch = wx.Button(self, label=_(u'&Add'))
 			self.addInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddInputTableInSwitch)
 		if configBE.gesturesFileExists and not instanceGP.noKeyboarLayout():
@@ -633,9 +637,9 @@ class Keyboard(wx.Panel):
 
 	def onDeleteInputTableInSwitch(self, event):
 		if self.iTablesPresent.GetStringSelection() != '':
-			iTables.remove(configBE.tablesFN[configBE.tablesTR.index(self.iTablesPresent.GetStringSelection())])
-			self.iTables.SetItems(self.inputTablesNotInSwitch())
-			self.iTables.SetSelection(0)
+			self.iTables.remove(configBE.tablesFN[configBE.tablesTR.index(self.iTablesPresent.GetStringSelection())])
+			self.iTablesNotPresent.SetItems(self.inputTablesNotInSwitch())
+			self.iTablesNotPresent.SetSelection(0)
 			self.iTablesPresent.SetItems(self.inputTablesInSwitch())
 			self.iTablesPresent.SetSelection(0)
 			self.iTablesPresent.SetFocus()
@@ -644,11 +648,11 @@ class Keyboard(wx.Panel):
 		return
 
 	def onAddInputTableInSwitch(self, event):
-		if self.iTables.GetStringSelection() != '':
-			iTables.append(configBE.tablesFN[configBE.tablesTR.index(
-				self.iTables.GetStringSelection())])
-			self.iTables.SetItems(self.inputTablesNotInSwitch())
-			self.iTables.SetSelection(0)
+		if self.iTablesNotPresent.GetStringSelection() != '':
+			self.iTables.append(configBE.tablesFN[configBE.tablesTR.index(
+				self.iTablesNotPresent.GetStringSelection())])
+			self.iTablesNotPresent.SetItems(self.inputTablesNotInSwitch())
+			self.iTablesNotPresent.SetSelection(0)
 			self.iTablesPresent.SetItems(self.inputTablesInSwitch())
 			self.iTablesPresent.SetSelection(0)
 			self.iTablesPresent.SetFocus()

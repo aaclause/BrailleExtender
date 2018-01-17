@@ -35,12 +35,14 @@ class Settings(wx.Dialog):
 		self.reading = Reading(self.nb)
 		self.keyboard = Keyboard(self.nb)
 		self.attribra = Attribra(self.nb)
-		self.quickLaunch = QuickLaunch(self.nb)
+		if configBE.curBD != 'noBraille':
+			self.quickLaunch = QuickLaunch(self.nb)
 		self.nb.AddPage(self.general, _("General"))
 		self.nb.AddPage(self.reading, _("Reading and display"))
 		self.nb.AddPage(self.attribra, _("Attribra"))
 		self.nb.AddPage(self.keyboard, _("Braille keyboard"))
-		self.nb.AddPage(self.quickLaunch, _("Quick launches"))
+		if configBE.curBD != 'noBraille':
+			self.nb.AddPage(self.quickLaunch, _("Quick launches"))
 		self.sizer = wx.BoxSizer()
 		self.sizer.Add(self.nb, 1, wx.EXPAND)
 		self.p.SetSizer(self.sizer)
@@ -663,7 +665,7 @@ class QuickLaunch(wx.Panel):
 		self.quickLaunchGestures = configBE.quickLaunchs.keys()
 		self.quickLaunchLocations = configBE.quickLaunchs.values()
 		wx.Panel.__init__(self, parent)
-		if configBE.curBD:
+		if configBE.curBD != 'noBraille':
 			self.quickKeysT = wx.StaticText(self, -1, label=_(u'Gestures for the quick launches')+' ('+_('display: %s' % configBE.curBD)+')' if configBE.curBD != 'noBraille' else '')
 			self.quickKeys = wx.Choice(self, pos=(-1, -1), choices=self.getQuickLaunchList())
 			self.quickKeys.SetSelection(0)

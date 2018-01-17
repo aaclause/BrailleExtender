@@ -97,7 +97,7 @@ def loadConf():
 		MAX_DELAYSCROLL=999,
 		MAX_TABLES=420,
 		KEYBOARDLAYOUT=kld,
-		QLGESTURES=iniProfile['miscs']['quickLaunch']
+		QLGESTURES=iniProfile['miscs']['quickLaunch'] if 'miscs' in iniProfile.keys() else ''
 	)), encoding="UTF-8", list_values=False)
 	confspec.initial_comment = ['%s (%s)' %
 								(_addonName, _addonVersion), _addonURL]

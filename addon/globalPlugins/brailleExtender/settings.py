@@ -76,7 +76,7 @@ class Settings(wx.Dialog):
 		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
 								 configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue() or
 								 configBE.conf['general']['postTable'] != postTable or
-								 configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()] or
+								 (configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]) or
 								 configBE.conf['general']['attribra'] != self.attribra.attribraEnabled.GetValue())):
 			restartNVDA = True
 		configBE.conf['general']['postTable'] = postTable
@@ -91,10 +91,8 @@ class Settings(wx.Dialog):
 				instanceGP.reverseScrollBtns()
 			else:
 				instanceGP.reverseScrollBtns(None, True)
-			configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue(
-			)
-		configBE.conf['general']['delayScroll_' +
-								 configBE.curBD] = self.reading.delayScroll.GetValue()
+			configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue()
+		configBE.conf['general']['delayScroll_' + configBE.curBD] = self.reading.delayScroll.GetValue()
 		try:
 			if int(
 					self.general.limitCells.GetValue()) > backupDisplaySize or int(
@@ -134,9 +132,7 @@ class Settings(wx.Dialog):
 		configBE.saveSettings()
 		if restartNVDA:
 			gui.messageBox(
-				_(u"You have made a change that requires you restart NVDA"),
-				u'%s – ' %
-				configBE._addonName +
+				_(u"You have made a change that requires you restart NVDA"), u'%s – ' % configBE._addonName +
 				_(u"Restart required"),
 				wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
@@ -667,12 +663,12 @@ class QuickLaunch(wx.Panel):
 		self.quickLaunchGestures = configBE.quickLaunchs.keys()
 		self.quickLaunchLocations = configBE.quickLaunchs.values()
 		wx.Panel.__init__(self, parent)
-		if configBE.gesturesFileExists:
-			self.quickKeysT = wx.StaticText(self, -1, label=_(u'Gestures for the quick launches'))
+		if configBE.curBD:
+			self.quickKeysT = wx.StaticText(self, -1, label=_(u'Gestures for the quick launches')+' ('+_('display: %s' % configBE.curBD)+')' if configBE.curBD != 'noBraille' else '')
 			self.quickKeys = wx.Choice(self, pos=(-1, -1), choices=self.getQuickLaunchList())
 			self.quickKeys.SetSelection(0)
 			self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
-			self.target = wx.TextCtrl(self, -1, value=self.quickLaunchLocations[0])
+			self.target = wx.TextCtrl(self, -1, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
 			self.target.Bind(wx.wx.EVT_TEXT, self.onTarget)
 			self.browseBtn = wx.Button(self, -1, label=_(u'&Browse...'))
 			self.removeGestureBtn = wx.Button(self, -1, label=_(u'&Remove this gesture'))
@@ -694,7 +690,6 @@ class QuickLaunch(wx.Panel):
 		self.onQuickKeys(None)
 		self.quickKeys.SetFocus()
 		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'%s removed.' % g))
-		restartNVDA_ = True
 		
 		return
 	def captureNow(self):

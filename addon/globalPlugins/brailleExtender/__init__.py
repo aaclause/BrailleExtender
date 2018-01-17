@@ -270,6 +270,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return False
 
 	def gesturesInit(self):
+		# rotor gestures
 		if 'rotor' in configBE.iniProfile.keys():
 			for k in configBE.iniProfile["rotor"]:
 				if isinstance(configBE.iniProfile["rotor"][k], list):
@@ -282,6 +283,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			log.debug('No rotor gestures for this profile')
 
+		# keyboard layouts gestures
 		gK = OrderedDict()
 		try:
 			cK = configBE.iniProfile['keyboardLayouts'][configBE.conf['general']['keyboardLayout_' +
@@ -308,34 +310,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 							cK[k] = str(
 								'br(' + configBE.curBD + '):') + str(cK[k])
 					gK[k] = cK[k]
-			inputCore.manager.localeGestureMap.update(
-				{'globalCommands.GlobalCommands': gK})
+			inputCore.manager.localeGestureMap.update({'globalCommands.GlobalCommands': gK})
 			self.noKC = False
-			log.debug('Keyboard conf found, loading layout `%s`' %
-					  configBE.conf['general']['keyboardLayout_' + configBE.curBD])
+			log.debug('Keyboard conf found, loading layout `%s`' %configBE.conf['general']['keyboardLayout_' + configBE.curBD])
 		except BaseException:
 			log.debug('No keyboard conf found')
 			self.noKC = True
-		# for NVDA remote
+		# Hack for NVDARemote
 		if 'fr' in lang:
 			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789²)=^$ù*<,;:!"
 		else:
 			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789`-=[];'\\,./"
-		nvdaremote_gestures2 = [
-			"escape",
-			"home",
-			"end",
-			"pageup",
-			"pagedown",
-			"backspace",
-			"leftarrow",
-			"rightarrow",
-			"uparrow",
-			"downarrow",
-			"enter",
-			"delete",
-			"space",
-			"ACCENT CIRCONFLEXE"]
+		nvdaremote_gestures2 = ["escape","home","end","pageup","pagedown","backspace","leftarrow","rightarrow","uparrow","downarrow","enter","delete","space","ACCENT CIRCONFLEXE"]
 		self._tGestures = {
 			"bk:dots": "end_combKeysChar",
 			"br(" + configBE.curBD + "):routing": "cancelShortcut",
@@ -363,20 +349,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				elif ('kb:' in g and g.lower() not in ['kb:alt', 'kb:control', 'kb:windows', 'kb:control', 'kb:applications']):
 					self._tGestures[inputCore.normalizeGestureIdentifier(
 						str(configBE.iniGestures['globalCommands.GlobalCommands'][g]))] = "end_combKeys"
-			self._pGestures = {}
-			for k, v in configBE.iniProfile["modifierKeys"].items() + [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'quickLaunch'] + [("quickLaunch", k) for k in configBE.quickLaunchs.keys()]:
+			self._pGestures = OrderedDict()
+			for k, v in (configBE.iniProfile["modifierKeys"].items()
+				+ [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'quickLaunch']):
 				if isinstance(v, list):
 					for i, gesture in enumerate(v):
 						if k == 'shortcutsOn':
 							pass
 						else:
-							self._pGestures[inputCore.normalizeGestureIdentifier(
-								'br(%s):%s' % (configBE.curBD, gesture)
-								)] = k
+							self._pGestures[inputCore.normalizeGestureIdentifier('br(%s):%s' % (configBE.curBD, gesture))] = k
 				else:
-					self._pGestures[inputCore.normalizeGestureIdentifier(
-						'br(' + configBE.curBD + '):' + v)] = k
-			self.bindGestures(self._pGestures)
+					self._pGestures[inputCore.normalizeGestureIdentifier('br(' + configBE.curBD + '):' + v)] = k
+		self.bindGestures(self._pGestures)
+		self.bindGestures({'br(%s):%s' % (configBE.curBD, k): "quickLaunch" for k in configBE.quickLaunchs.keys()})
 		return
 
 	def bindRotorGES(self):
@@ -875,6 +860,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if sv:
 			configBE.saveSettings()
 		self.clearGestureBindings()
+		self.bindGestures(self.__gestures)
+		self._pGestures=OrderedDict()
+		configBE.quickLaunchs = OrderedDict()
 		configBE.checkConfigPath()
 		configBE.initGestures()
 		configBE.loadConf()

@@ -7,6 +7,7 @@ from configobj import ConfigObj
 from validate import Validator
 import globalVars
 from colors import RGB
+from collections import OrderedDict
 
 import addonHandler
 addonHandler.initTranslation()
@@ -20,8 +21,7 @@ curBD = braille.handler.display.name
 cfgFile = globalVars.appArgs.configPath + '\\BrailleExtender.conf'
 cfgFileAttribra = globalVars.appArgs.configPath + '\\attribra-BE.ini'
 reviewModeApps = []
-quickLaunch = []
-quickLaunchS = []
+quickLaunchs = OrderedDict()
 backupDisplaySize = braille.handler.displaySize
 conf = {}
 iniGestures = {}
@@ -55,7 +55,7 @@ except BaseException:
 
 
 def loadConf():
-	global conf, reviewModeApps, quickLaunch, quickLaunchS, gesturesFileExists, iTables, oTables
+	global conf, reviewModeApps, quickLaunchs, gesturesFileExists, iTables, oTables
 	kld = iniProfile['keyboardLayouts'].keys(
 	)[0] if gesturesFileExists else None
 	confspec = ConfigObj(StringIO("""
@@ -79,7 +79,8 @@ def loadConf():
 		iTableSht = integer(min=-1, default=-1, max={MAX_TABLES})
 		iTables = string(default="{ITABLE}")
 		oTables = string(default="{OTABLE}")
-		quickLaunch_{CUR_BD} = string(default="notepad; wordpad; calc; cmd")
+		quickLaunchGestures_{CUR_BD} = string(default="{QLGESTURES}")
+		quickLaunchLocations_{CUR_BD} = string(default="notepad; wordpad; calc; cmd")
 		attribra = boolean(default=True)
 		tabSpace = boolean(default=False)
 		tabSize = integer(min=1, default=2, max=42)
@@ -95,7 +96,8 @@ def loadConf():
 		MAX_CELLS=420,
 		MAX_DELAYSCROLL=999,
 		MAX_TABLES=420,
-		KEYBOARDLAYOUT=kld
+		KEYBOARDLAYOUT=kld,
+		QLGESTURES=iniProfile['miscs']['quickLaunch']
 	)), encoding="UTF-8", list_values=False)
 	confspec.initial_comment = ['%s (%s)' %
 								(_addonName, _addonVersion), _addonURL]
@@ -108,26 +110,18 @@ def loadConf():
 		log.error('Malformed configuration file')
 		return False
 	else:
-		if conf['general']['limitCells_' +
-						   curBD] <= backupDisplaySize and conf['general']['limitCells_' +
-																		   curBD] > 0:
+		if (conf['general']['limitCells_' + curBD] <= backupDisplaySize
+		 and conf['general']['limitCells_' + curBD] > 0):
 			braille.handler.displaySize = conf['general']['limitCells_' + curBD]
-		reviewModeApps = re.sub(
-			',{2,}', ',', conf['general']['reviewModeApps'].strip())
-		reviewModeApps = re.sub(
-			'(, +| +,)([^ ,])',
-			r',\2',
-			reviewModeApps).split(',')
-	quickLaunchS = ''.join(conf['general']['quickLaunch_' +
-										   curBD].strip().lower().split(';')) if isinstance(conf['general']['quickLaunch_' +
-																											curBD], list) else conf['general']['quickLaunch_' +
-																																			   curBD].strip().lower().split(';')
-	quickLaunchS = [k.strip() for k in quickLaunchS]
+		reviewModeApps = [k.strip() for k in conf["general"]["reviewModeApps"].split(',') if k.strip() != '']
+		tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(',') if k.strip() != '']
+		tmp2 = [k.strip() for k in conf["general"]["quickLaunchLocations_%s" % curBD].split(';') if k.strip() != '']
+		for i, gesture in enumerate(tmp1):
+			if i >= len(tmp2): break
+			quickLaunchs[gesture] = tmp2[i]
 	if not noUnicodeTable:
-		lITables = [table[0]
-					for table in brailleTables.listTables() if table.input]
-		lOTables = [table[0]
-					for table in brailleTables.listTables() if table.output]
+		lITables = [table[0] for table in brailleTables.listTables() if table.input]
+		lOTables = [table[0] for table in brailleTables.listTables() if table.output]
 		iTables = conf['general']['iTables']
 		oTables = conf['general']['oTables']
 		if not isinstance(iTables, list):
@@ -242,7 +236,6 @@ def checkConfigPath():
 			else:
 				tmp = iniProfile['miscs']['quickLaunch'].strip(
 				).lower().split(',')
-			quickLaunch = ['+'.join(sorted(k.strip().split('+'))) for k in tmp]
 			return True
 	else:
 		log.warn('`%s` not found or is inaccessible' % configPath)

@@ -876,7 +876,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	@staticmethod
-	def onUpdate(self, evt):
+	def onUpdate(evt):
 		return CheckUpdates()
 
 	def script_about(self, gesture):
@@ -884,7 +884,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_about.__doc__ = _('Show the "about" window')
 
 	@staticmethod
-	def onWebsite(self, evt):
+	def onWebsite(evt):
 		return os.startfile(configBE._addonURL)
 
 	def script_reloadAddon(self, gesture):

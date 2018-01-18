@@ -17,11 +17,11 @@ artifacts:
   - path: '*.pot'
     type: application/x-pot
 deploy:
-  release: $(APPVEYOR_PROJECT_NAME)-build-$(APPVEYOR_BUILD_NUMBER)
+  release: $(APPVEYOR_PROJECT_NAME) build no $(APPVEYOR_BUILD_NUMBER)
   description: This is a dev version (automatically generated). Based on $(APPVEYOR_REPO_BRANCH) branch, commit $(APPVEYOR_REPO_COMMIT).
   provider: GitHub
   auth_token:
     secure: MNplXXIOH01US4PzhZi6h4bbmSFcG1yQDYmBoppOYRPoC/otLha7hcMYebTD+2NI
   artifact: addon
-  draft: true
-  prerelease: true
+  draft: false
+  prerelease: false

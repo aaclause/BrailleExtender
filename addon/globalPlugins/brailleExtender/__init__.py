@@ -12,10 +12,10 @@ import os
 import re
 import urllib
 from collections import OrderedDict
-from configobj import ConfigObj
+from threading import Thread
+import wx
 import gui
 import subprocess
-import wx
 
 import addonHandler
 import api
@@ -36,17 +36,17 @@ import languageHandler
 import scriptHandler
 import speech
 import treeInterceptorHandler
-from threading import Thread
 import time
 import virtualBuffers
 import ui
-import versionInfo
-from keyboardHandler import KeyboardInputGesture
-from logHandler import log
 import configBE
 import settings
 import patch
 import utils
+import versionInfo
+from configobj import ConfigObj
+from keyboardHandler import KeyboardInputGesture
+from logHandler import log
 
 addonHandler.initTranslation()
 instanceGP = None
@@ -258,6 +258,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, self.item)
 			self.item = self.menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, self.item)
+			self.item = self.menu.Append(wx.ID_ANY, _(u"Edit the current profile gestures..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
+			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onEditProfileGestures, self.item)
 			self.item = self.menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, self.item)
 			self.item = self.menu.Append(wx.ID_ANY, _("&Check for update..."), _("Checks if update is available"))
@@ -863,12 +865,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.bindGestures(self.__gestures)
 		self._pGestures=OrderedDict()
 		configBE.quickLaunchs = OrderedDict()
-		configBE.checkConfigPath()
-		configBE.initGestures()
+		configBE.loadConfAttribra()
 		configBE.loadConf()
+		configBE.initGestures()
 		configBE.loadGestures()
 		self.gesturesInit()
-		configBE.loadConfAttribra()
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScrollBtns()
 		if not sil:
@@ -878,10 +879,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def onUpdate(evt):
 		return CheckUpdates()
-
-	def script_about(self, gesture):
-		return self.onAbout(None)
-	script_about.__doc__ = _('Show the "about" window')
 
 	@staticmethod
 	def onWebsite(evt):
@@ -937,7 +934,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.modifiers = {k: False for k in self.modifiers}
 		self.clearGestureBindings()
 		self.bindGestures(self.__gestures)
-		return self.bindGestures(self._pGestures)
+		self.bindGestures(self._pGestures)
+		self.gesturesInit()
 
 	@staticmethod
 	def sendCombKeys(sendKS, send=True):
@@ -1283,6 +1281,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.__gestures[k] = "braille_scrollBack"
 		self.bindGestures(self.__gestures)
 		return
+	@staticmethod
+	def inProcess():
+		ui.browseableMessage(u'Feature in process.')
+
+	def onEditProfileGestures(self, evt):
+		self.inProcess()
 
 	def onSettings(self, event):
 		settings.Settings()
@@ -1362,13 +1366,12 @@ class CheckUpdates(wx.Dialog):
 		self.msg = wx.StaticText(self, -1, label=msg)
 		if newUpdate:
 			self.yesBTN = wx.Button(self, wx.ID_YES, label=_("&Yes"))
-			self.noBTN = wx.Button(self, label=_("&No"), id=wx.ID_CLOSE)
+			self.noBTN = wx.Button(self, label=_("&No"))
 			self.yesBTN.Bind(wx.EVT_BUTTON, self.onYes)
 			self.noBTN.Bind(wx.EVT_BUTTON, self.onClose)
 		else:
-			self.okBTN = wx.Button(self, label=_("OK"), id=wx.ID_CLOSE)
+			self.okBTN = wx.Button(self, label=_("OK"))
 			self.okBTN.Bind(wx.EVT_BUTTON, self.onClose)
-		self.EscapeId = wx.ID_CLOSE
 		self.Bind(wx.EVT_CLOSE, self.onClose)
 		self.Show(True)
 		return

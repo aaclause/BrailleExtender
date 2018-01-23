@@ -5,8 +5,11 @@ addonHandler.initTranslation()
 import braille
 import configBE
 from collections import OrderedDict
+import cursorManager
+import globalCommands
 import utils
 import ui
+from logHandler import log
 
 instanceGP = None
 
@@ -196,10 +199,10 @@ class AddonDoc():
 			try:
 				doc = re.sub(r'\.$', '', eval(''.join([place, n, '.__doc__'])))
 				break
-			except BaseException:
+			except BaseException as e:
+				log.debug(e)
 				pass
-		return doc if doc is not None else _(
-			'description currently unavailable for this shortcut')
+		return doc if doc is not None else _('description currently unavailable for this shortcut')
 
 
 	def translateLst(self, lst):

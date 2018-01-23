@@ -38,7 +38,7 @@ _addonVersion = addonHandler.Addon(_addonDir).manifest['version']
 _addonURL = addonHandler.Addon(_addonDir).manifest['url']
 _addonAuthor = addonHandler.Addon(_addonDir).manifest['author']
 _addonDesc = addonHandler.Addon(_addonDir).manifest['description']
-profilesDir = osp.join(osp.dirname(__file__), "", "") + ('Profiles/').decode('utf-8').encode('mbcs')
+profilesDir = osp.join(osp.dirname(__file__), "Profiles").decode('mbcs')
 if not osp.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
 begFileAttribra = """# Attribra for BrailleExtender
@@ -53,15 +53,13 @@ try:
 except BaseException:
 	noUnicodeTable = True
 
-
 def loadConf():
-	global conf, reviewModeApps, quickLaunchs, gesturesFileExists, iTables, oTables
-	kld = iniProfile['keyboardLayouts'].keys(
-	)[0] if gesturesFileExists else None
+	global conf, reviewModeApps, quickLaunchs, gesturesFileExists, iTables, oTables, profileFileExists, iniProfile
 	confspec = ConfigObj(StringIO("""
 	[general]
 		autoCheckUpdate = boolean(default=True)
 		lastCheckUpdate = float(min=0, default=0)
+		profile_{CUR_BD} = string(default="default")
 		keyboardLayout_{CUR_BD} = string(default={KEYBOARDLAYOUT})
 		showConstructST = boolean(default=True)
 		brailleDisplay1 = string(default="noBraille")
@@ -85,6 +83,7 @@ def loadConf():
 		tabSpace = boolean(default=False)
 		tabSize = integer(min=1, default=2, max=42)
 		postTable = string(default="None")
+
 	[patch]
 		updateBraille = boolean(default=True)
 		scrollBraille = boolean(default=True)
@@ -96,29 +95,40 @@ def loadConf():
 		MAX_CELLS=420,
 		MAX_DELAYSCROLL=999,
 		MAX_TABLES=420,
-		KEYBOARDLAYOUT=kld,
+		KEYBOARDLAYOUT=None,
 		QLGESTURES=iniProfile['miscs']['quickLaunch'] if 'miscs' in iniProfile.keys() else ''
 	)), encoding="UTF-8", list_values=False)
-	confspec.initial_comment = ['%s (%s)' %
-								(_addonName, _addonVersion), _addonURL]
+	confspec.initial_comment = ['%s (%s)' % (_addonName, _addonVersion), _addonURL]
 	confspec.final_comment = ['End Of File']
 	confspec.newlines = "\n"
-	conf = ConfigObj(cfgFile, configspec=confspec,
-					 indent_type="\t", encoding="UTF-8")
+	conf = ConfigObj(cfgFile, configspec=confspec, indent_type="\t", encoding="UTF-8")
 	result = conf.validate(Validator())
 	if result is not True:
 		log.error('Malformed configuration file')
 		return False
 	else:
-		if (conf['general']['limitCells_' + curBD] <= backupDisplaySize
-		 and conf['general']['limitCells_' + curBD] > 0):
-			braille.handler.displaySize = conf['general']['limitCells_' + curBD]
-		reviewModeApps = [k.strip() for k in conf["general"]["reviewModeApps"].split(',') if k.strip() != '']
-		tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(',') if k.strip() != '']
-		tmp2 = [k.strip() for k in conf["general"]["quickLaunchLocations_%s" % curBD].split(';') if k.strip() != '']
-		for i, gesture in enumerate(tmp1):
-			if i >= len(tmp2): break
-			quickLaunchs[gesture] = tmp2[i]
+		confspec = ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
+		confGen = (u'%s\%s\%s\profile.ini' % (profilesDir, curBD, conf["general"]["profile_%s" % curBD]))
+		if (curBD != 'noBraille' and osp.exists(confGen)):
+			profileFileExists = True
+			iniProfile = ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
+			result = iniProfile.validate(Validator())
+			if result is not True:
+				log.exception('Malformed configuration file')
+				return False
+		else:
+			if curBD != 'noBraille': log.warn('%s inaccessible' % confGen)
+			else: log.debug('No braille display present')
+			return False
+	if (conf['general']['limitCells_' + curBD] <= backupDisplaySize
+	 and conf['general']['limitCells_' + curBD] > 0):
+		braille.handler.displaySize = conf['general']['limitCells_' + curBD]
+	reviewModeApps = [k.strip() for k in conf["general"]["reviewModeApps"].split(',') if k.strip() != '']
+	tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(',') if k.strip() != '']
+	tmp2 = [k.strip() for k in conf["general"]["quickLaunchLocations_%s" % curBD].split(';') if k.strip() != '']
+	for i, gesture in enumerate(tmp1):
+		if i >= len(tmp2): break
+		quickLaunchs[gesture] = tmp2[i]
 	if not noUnicodeTable:
 		lITables = [table[0] for table in brailleTables.listTables() if table.input]
 		lOTables = [table[0] for table in brailleTables.listTables() if table.output]
@@ -135,33 +145,16 @@ def loadConf():
 
 def loadGestures():
 	if gesturesFileExists:
-		if osp.exists(profilesDir +
-					  ('_BrowseMode/' +
-					   '/' +
-					   config.conf["braille"]["inputTable"] +
-						  '.ini').decode('utf-8').encode('mbcs')):
-			GLng = config.conf["braille"]["inputTable"]
-		else:
-			GLng = 'en-us-comp8.ctb'
-		gesturesBMPath = profilesDir + \
-			('_BrowseMode/common.ini').decode('utf-8').encode('mbcs')
-		gesturesLangBMPath = profilesDir + \
-			('_BrowseMode/' + GLng + '.ini').decode('utf-8').encode('mbcs')
+		if osp.exists(osp.join(profilesDir, "_BrowseMode", config.conf["braille"]["inputTable"] + '.ini')): GLng = config.conf["braille"]["inputTable"]
+		else: GLng = 'en-us-comp8.ctb'
+		gesturesBMPath = osp.join(profilesDir, "_BrowseMode", "common.ini")
+		gesturesLangBMPath = osp.join(profilesDir, "_BrowseMode/", GLng + ".ini")
 		inputCore.manager.localeGestureMap.load(gesturesBDPath())
 		for fn in [gesturesBMPath, gesturesLangBMPath]:
 			f = open(fn)
-			tmp = [
-				line.strip().replace(
-					' ',
-					'').replace(
-					'$',
-					iniProfile['general']['nameBK']).replace(
-					'=',
-					'=br(%s):' %
-					curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
+			tmp = [line.strip().replace(' ', '').replace('$', iniProfile['general']['nameBK']).replace('=', '=br(%s):' % curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
 			tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
-			inputCore.manager.localeGestureMap.update(
-				{'browseMode.BrowseModeTreeInterceptor': tmp})
+			inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
 	return
 
 
@@ -211,52 +204,23 @@ def saveSettingsAttribra():
 	return
 
 
-def checkConfigPath():
-	global profileFileExists, iniProfile, quickLaunch
-	configPath = profilesDir + \
-		(curBD + '/profile.ini').decode('utf-8').encode('mbcs')
-	if osp.exists(configPath):
-		log.debug('Config\'s path for `%s` found' % curBD)
-		profileFileExists = True
-		confGen = osp.join(osp.join(osp.dirname(__file__),
-									"..",
-									"").decode("mbcs"), configPath)
-		confspec = ConfigObj(StringIO("""
-		"""), encoding="UTF-8", list_values=False)
-		iniProfile = ConfigObj(confGen, configspec=confspec,
-							   indent_type="\t", encoding="UTF-8")
-		result = iniProfile.validate(Validator())
-		if result is not True:
-			log.exception('Malformed configuration file')
-			return False
-		else:
-			if isinstance(iniProfile['miscs']['quickLaunch'], list):
-				tmp = ', '.join(
-					iniProfile['miscs']['quickLaunch']).strip().lower().split(',')
-			else:
-				tmp = iniProfile['miscs']['quickLaunch'].strip(
-				).lower().split(',')
-			return True
-	else:
-		log.warn('`%s` not found or is inaccessible' % configPath)
-		return False
+def gesturesBDPath(all = False):
+	l = ['\\'.join([profilesDir, curBD, conf["general"]["profile_%s" % curBD], "gestures.ini"]),
+	'\\'.join([profilesDir, curBD, "default", "gestures.ini"])]
+	if all: return '; '.join(l)
+	for p in l:
+		if osp.exists(p): return p
+	return '?'
 
-
-def gesturesBDPath(): return profilesDir + \
-	(curBD + "/gestures.ini").decode('utf-8').encode('mbcs')
 
 
 def initGestures():
 	global gesturesFileExists, iniGestures
-	if profileFileExists and osp.exists(gesturesBDPath()):
+	if profileFileExists and gesturesBDPath() != '?':
 		log.debug('Main gestures map found')
-		confGen = osp.join(osp.join(osp.dirname(__file__),
-									"",
-									"").decode("mbcs"), gesturesBDPath())
-		confspec = ConfigObj(StringIO("""
-		"""), encoding="UTF-8", list_values=False)
-		iniGestures = ConfigObj(confGen, configspec=confspec,
-								indent_type="\t", encoding="UTF-8")
+		confGen = gesturesBDPath()
+		confspec = ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
+		iniGestures = ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
 		result = iniGestures.validate(Validator())
 		if result is not True:
 			log.exception('Malformed configuration file')
@@ -264,9 +228,8 @@ def initGestures():
 		else:
 			gesturesFileExists = True
 	else:
-		log.warn('No main gestures map (%s) found' % gesturesBDPath())
+		log.warn('No main gestures map (%s) found' % gesturesBDPath(1))
 		gesturesFileExists = False
-
 	if gesturesFileExists:
 		for g in iniGestures['globalCommands.GlobalCommands']:
 			if isinstance(
@@ -308,8 +271,6 @@ def loadConfAttribra():
 	except IOError:
 		log.debugWarning("No Attribra config file found")
 
-
-checkConfigPath()
 loadConf()
 
 if not osp.exists(cfgFileAttribra):

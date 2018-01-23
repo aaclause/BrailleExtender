@@ -97,15 +97,12 @@ class Settings(wx.Dialog):
 		configBE.conf['general']['delayScroll_' + configBE.curBD] = self.reading.delayScroll.GetValue()
 		try:
 			if int(
-					self.general.limitCells.GetValue()) > backupDisplaySize or int(
+					self.general.limitCells.GetValue()) > configBE.backupDisplaySize or int(
 					self.general.limitCells.GetValue()) < 0:
 				configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 			else:
-				if configBE.conf['general']['limitCells_' +
-											configBE.curBD] != 0 and int(self.general.limitCells.GetValue()) == 0:
-					braille.handler.displaySize = backupDisplaySize
-				configBE.conf['general']['limitCells_' +
-										 configBE.curBD] = int(self.general.limitCells.GetValue())
+				if configBE.conf['general']['limitCells_' + configBE.curBD] != 0 and int(self.general.limitCells.GetValue()) == 0: braille.handler.displaySize = configBE.backupDisplaySize
+				configBE.conf['general']['limitCells_' + configBE.curBD] = int(self.general.limitCells.GetValue())
 		except BaseException:
 			configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
@@ -126,10 +123,8 @@ class Settings(wx.Dialog):
 			configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunch.quickLaunchLocations)
 		configBE.conf['general']['iTables'] = ','.join(self.keyboard.iTables)
 		configBE.conf['general']['oTables'] = ','.join(self.reading.oTables)
-		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[
-			self.general.brailleDisplay1.GetSelection()][0]
-		configBE.conf['general']['brailleDisplay2'] = braille.getDisplayList()[
-			self.general.brailleDisplay2.GetSelection()][0]
+		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[self.general.brailleDisplay1.GetSelection()][0]
+		configBE.conf['general']['brailleDisplay2'] = braille.getDisplayList()[self.general.brailleDisplay2.GetSelection()][0]
 		self.buttonC.SetFocus()
 		configBE.saveSettingsAttribra()
 		configBE.saveSettings()
@@ -156,8 +151,7 @@ class General(wx.Panel):
 			self, label=_(u'Check for updates automatically'))
 		if configBE.conf['general']['autoCheckUpdate']:
 			self.autoCheckUpdate.SetValue(True)
-		self.assistS = wx.CheckBox(self, label=_(
-			'Detail the progress of a keyboard shortcut when it is typed'))
+		self.assistS = wx.CheckBox(self, label=_('Detail the progress of a keyboard shortcut when it is typed'))
 		if configBE.conf['general']['showConstructST']:
 			self.assistS.SetValue(True)
 		settings.Add(self.assistS)
@@ -181,13 +175,8 @@ class General(wx.Panel):
 			self, -1, value=str(', '.join(configBE.reviewModeApps)))
 		settings.Add(self.reviewModeApps)
 		self.reviewModeApps.Bind(wx.EVT_CHAR, self.onReviewModeApps)
-		settings.Add(wx.StaticText(self, -
-								   1, label='(' +
-								   _(u'experimental, works poorly with Baum devices') +
-								   ') ' +
-								   _(u'&Limit number of cells to (0 for no limit)')))
-		self.limitCells = wx.TextCtrl(
-			self, -1, value=str(configBE.conf['general']['limitCells_' + configBE.curBD]))
+		settings.Add(wx.StaticText(self, -1, label=_(u'&Limit number of cells to (0 for no limit)')))
+		self.limitCells = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['limitCells_' + configBE.curBD]))
 		settings.Add(self.limitCells)
 		self.limitCells.Bind(wx.EVT_CHAR, self.onLimitCells)
 		lb = braille.getDisplayList()
@@ -210,13 +199,9 @@ class General(wx.Panel):
 		loadBDs.Add(
 			wx.StaticText(
 				self, -1, label=_(u'Braille display to load on NVDA+Shift+k')))
-		self.brailleDisplay2 = wx.Choice(self, pos=(-1, -1),
-										 choices=lbl)
-		if configBE.conf['general']['brailleDisplay2'] == -1:
-			self.brailleDisplay2.SetSelection(len(lbl) - 1)
-		else:
-			self.brailleDisplay2.SetSelection(self.getIdBD(
-				configBE.conf['general']['brailleDisplay2']))
+		self.brailleDisplay2 = wx.Choice(self, pos=(-1, -1), choices=lbl)
+		if configBE.conf['general']['brailleDisplay2'] == -1: self.brailleDisplay2.SetSelection(len(lbl) - 1)
+		else: self.brailleDisplay2.SetSelection(self.getIdBD(configBE.conf['general']['brailleDisplay2']))
 		loadBDs.Add(self.brailleDisplay1)
 		loadBDs.Add(self.brailleDisplay2)
 		settings.Add(loadBDs)
@@ -224,26 +209,22 @@ class General(wx.Panel):
 	@staticmethod
 	def onReviewModeApps(event):
 		keycode = event.GetKeyCode()
-		if keycode > 255 or keycode < 32 or re.match(
-				'[a-zA-Z_\-0-9 .,]', chr(keycode)):
+		if keycode > 255 or keycode < 32 or re.match('[a-zA-Z_\-0-9 .,]', chr(keycode)):
 			return event.Skip()
 
 	def onLimitCells(self, event):
 		keycode = event.GetKeyCode()
 		if keycode in [wx.WXK_UP, wx.WXK_DOWN]:
 			v = self.limitCells.GetValue()
-			try:
-				v = int(v)
-			except BaseException:
-				v = 0
-			if v < 0 or v > backupDisplaySize:
-				v = 0
-			if v >= 0 and v <= backupDisplaySize:
+			try: v = int(v)
+			except BaseException: v = 0
+			if v < 0 or v > configBE.backupDisplaySize: v = 0
+			if v >= 0 and v <= configBE.backupDisplaySize:
 				if keycode == wx.WXK_DOWN:
 					nv = v - 1 if v - 1 >= 0 else 0
 					self.limitCells.SetValue(str(nv))
 				else:
-					v = backupDisplaySize if v == backupDisplaySize else v + 1
+					v = configBE.backupDisplaySize if v == configBE.backupDisplaySize else v + 1
 					self.limitCells.SetValue(str(v))
 			return
 		if keycode in [wx.WXK_CONTROL_V]:

@@ -224,8 +224,8 @@ def getTextInBraille(t = ''):
 	if t == '':
 		t = getTextSelection()
 		t = t.replace('\r','')
-	t = t.split('\n')
-	if t != '':
+	if t.strip() != '':
+		t = t.split('\n')
 		for i, l in enumerate(t):
 			t[i] = louis.translateString([config.conf["braille"]["translationTable"]], l, None, louis.dotsIO)
 		t = '\n'.join(t)
@@ -275,6 +275,15 @@ def getDescriptionBrailleCell(ch):
 			p -= (128 / i)
 		i *= 2
 	return  res[::-1] if len(res) > 0 else '0'
+def getTablePreview():
+	t = ""
+	i = 0x2800
+	while i<0x2800+256:
+		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], unichr(i), mode=louis.ucBrl)
+		t += '%s%.3d  %4s  %8s        %s' % (('\n' if i != 0x2800 else ' No  Char      Dots  Braille\n'), i-0x2800+1, text[0] if len(text[0])<3 else '??', unicodeBrailleToDescription(unichr(i)), unichr(i))
+		i += 1
+		
+	return t
 
 def unicodeBrailleToDescription(t, sep = '-'):
 	nt = ""

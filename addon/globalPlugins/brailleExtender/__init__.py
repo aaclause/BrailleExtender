@@ -568,15 +568,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_('Speech off'))
 		return
 	script_toggleSpeech.__doc__ = _('Toggle speech on or off')
-
+	def script_getTablePreview(self, gesture):
+		t = utils.getTablePreview()
+		ui.browseableMessage(t,_('Table preview (%s)' % brailleInput.handler.table.displayName))
+	script_getTablePreview.__doc__ = _('Display a preview of current input braille table')
 	def script_translateInBRU(self, gesture):
 		t = utils.getTextInBraille()
+		if t.strip() == "": return ui.message(_('No text selection'))
 		ui.browseableMessage(t)
 	script_translateInBRU.__doc__ = _('Convert the text selection in unicode braille and display it in a browseable message')
 
 	def script_translateInCellDescription(self, gesture):
 		t = utils.getTextInBraille()
 		t = utils.unicodeBrailleToDescription(t)
+		if t.strip() == "": return ui.message(_('No text selection'))
 		ui.browseableMessage(t)
 	script_translateInCellDescription.__doc__ = _('Convert text selection in braille cell descriptions and display it in a browseable message')
 
@@ -820,8 +825,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return ui.message(
 				_("Please use NVDA 2017.3 minimum for this feature"))
 		if len(configBE.oTables) < 2:
-			return ui.message(
-				_('You must choose at least two tables for this feature. Please fill in the settings'))
+			return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
 		if not config.conf["braille"]["translationTable"] in configBE.oTables:
 			configBE.oTables.append(config.conf["braille"]["translationTable"])
 		tid = configBE.oTables.index(
@@ -829,12 +833,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.oTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.oTables[nID]
 		self.refreshBD()
-		ui.message(_('Output: %s') % configBE.tablesTR[configBE.tablesFN.index(
-			config.conf["braille"]["translationTable"])])
+		ui.message(_('Output: %s') % configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
 		return
 
-	script_switchOutputBrailleTable.__doc__ = _(
-		"Switch between his favorite output braille tables")
+	script_switchOutputBrailleTable.__doc__ = _("Switch between his favorite output braille tables")
 
 	def script_currentBrailleTable(self, gesture):
 		inTable = brailleInput.handler.table.displayName
@@ -1321,7 +1323,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:volumeDown"] = "volumeMinus"
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
 	__gestures["kb:nvda+alt+i"] = "translateInCellDescription"
-	
+	__gestures["kb:nvda+alt+y"] = "getTablePreview"
 
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()

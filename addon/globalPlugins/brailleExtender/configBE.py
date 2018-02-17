@@ -1,4 +1,5 @@
 # coding: utf-8
+from __future__ import unicode_literals
 from os import path as osp
 import ui
 import re
@@ -30,7 +31,7 @@ confAttribra = {}
 profileFileExists = gesturesFileExists = False
 lang = languageHandler.getLanguage().split('_')[-1].lower()
 noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
-sep = u' ' if 'fr' in lang else ''
+sep = ' ' if 'fr' in lang else ''
 oTables = iTables = None
 _addonDir = osp.join(osp.dirname(__file__), "..", "..").decode("mbcs")
 _addonName = addonHandler.Addon(_addonDir).manifest['name']
@@ -74,6 +75,7 @@ def loadConf():
 		reverseScroll = boolean(default=False)
 		ignoreBlankLineScroll = boolean(default=True)
 		speakScroll = boolean(default=True)
+		speakRoutingTo = boolean(default=True)
 		iTableSht = integer(min=-1, default=-1, max={MAX_TABLES})
 		iTables = string(default="{ITABLE}")
 		oTables = string(default="{OTABLE}")
@@ -154,7 +156,8 @@ def loadGestures():
 			f = open(fn)
 			tmp = [line.strip().replace(' ', '').replace('$', iniProfile['general']['nameBK']).replace('=', '=br(%s):' % curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
 			tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
-			inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
+		inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
+		log.debug(tmp)
 	return
 
 
@@ -204,10 +207,10 @@ def saveSettingsAttribra():
 	return
 
 
-def gesturesBDPath(all = False):
+def gesturesBDPath(a = False):
 	l = ['\\'.join([profilesDir, curBD, conf["general"]["profile_%s" % curBD], "gestures.ini"]),
 	'\\'.join([profilesDir, curBD, "default", "gestures.ini"])]
-	if all: return '; '.join(l)
+	if a: return '; '.join(l)
 	for p in l:
 		if osp.exists(p): return p
 	return '?'

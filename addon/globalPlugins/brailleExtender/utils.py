@@ -1,4 +1,5 @@
 # coding: utf-8
+from __future__ import unicode_literals
 import os.path as osp
 import re
 import api
@@ -12,6 +13,7 @@ import textInfos
 from keyboardHandler import KeyboardInputGesture
 import addonHandler
 addonHandler.initTranslation()
+import treeInterceptorHandler
 
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
@@ -148,25 +150,18 @@ enumerator = comtypes.CoCreateInstance(
 
 def getMute():
 	endpoint = enumerator.GetDefaultAudioEndpoint(0, 1)
-	volume = endpoint.Activate(
-		IID_IAudioEndpointVolume,
-		comtypes.CLSCTX_INPROC_SERVER,
-		None)
+	volume = endpoint.Activate(IID_IAudioEndpointVolume, comtypes.CLSCTX_INPROC_SERVER, None)
 	return volume.GetMute()
 
 
 def getVolume():
 	endpoint = enumerator.GetDefaultAudioEndpoint(0, 1)
-	volume = endpoint.Activate(
-		IID_IAudioEndpointVolume,
-		comtypes.CLSCTX_INPROC_SERVER,
-		None)
+	volume = endpoint.Activate(IID_IAudioEndpointVolume, comtypes.CLSCTX_INPROC_SERVER, None)
 	return int(round(volume.GetMasterVolumeLevelScalar() * 100))
 
 
 def bkToChar(dots, inTable=-1):
-	if inTable == -1:
-		inTable = config.conf["braille"]["inputTable"]
+	if inTable == -1: inTable = config.conf["braille"]["inputTable"]
 	char = unichr(dots | 0x8000)
 	text = louis.backTranslate(
 		[osp.join(r"louis\tables", inTable),
@@ -181,37 +176,66 @@ def bkToChar(dots, inTable=-1):
 def reload_brailledisplay(bd_name):
 	try:
 		if braille.handler.setDisplayByName(bd_name):
-			speech.speakMessage(_("%s device reloaded")
-								% bd_name.capitalize())
+			speech.speakMessage(_("%s device reloaded") % bd_name.capitalize())
 			return True
-		else:
-			ui.message(_("No %s display found")
-					   % bd_name.capitalize())
-			return False
-	except BaseException:
-		ui.message(_("No %s display found")
-				   % bd_name.capitalize())
-		return False
+		else: ui.message(_("No %s display found") % bd_name.capitalize())
+	except BaseException: ui.message(_("No %s display found") % bd_name.capitalize())
+	return False
 
+def getCurrentChar():
+	obj = api.getFocusObject()
+	treeInterceptor = obj.treeInterceptor
+	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
+		obj = treeInterceptor
+	try:
+		info = obj.makeTextInfo(textInfos.POSITION_CARET)
+		info.expand(textInfos.UNIT_CHARACTER)
+		s = info.text
+		return s
+	except BaseException:
+		pass
+	return ''
 
 def currentCharDesc():
-	info = api.getReviewPosition().copy()
-	info.expand(textInfos.UNIT_CHARACTER)
-	try:
-		c = ord(info.text)
-		s = u'{0} -> dec: {1}, hex: {2}, oct: {3}, bin: {4}'.format(
-			info.text, c, hex(c), oct(c), bin(c))
-
-		if scriptHandler.getLastScriptRepeatCount() == 0:
-			ui.message(s)
+	ch = getCurrentChar()
+	c = ord(ch)
+	if c != '':
+		s = '%c: %s; %s; %s; %s'% (ch, hex(c), c, oct(c), bin(c))
+		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif (scriptHandler.getLastScriptRepeatCount() == 1):
-			ui.browseableMessage(s.replace(', ', '\n		'))
+			brch = getTextInBraille(ch)
+			ui.browseableMessage('%s\n%s (%s)' % (s, brch, unicodeBrailleToDescription(brch)), r'\x%d - Char info' % c)
 		else:
 			api.copyToClip(s)
-			ui.message(u'"{0}" copied to clipboard.'.format(s))
-	except BaseException:
-		ui.message(_('Not a character.'))
+			ui.message('"{0}" copied to clipboard.'.format(s))
+	else: ui.message(_('Not a character.'))
 
+def getTextSelection():
+	obj = api.getFocusObject()
+	treeInterceptor=obj.treeInterceptor
+	if isinstance(treeInterceptor,treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough:
+		obj=treeInterceptor
+	try: info=obj.makeTextInfo(textInfos.POSITION_SELECTION)
+	except (RuntimeError, NotImplementedError): info=None
+	if not info or info.isCollapsed: return ''
+	else: return info.text
+
+def getTextInBraille(t = ''):
+	if t == '':
+		t = getTextSelection()
+		t = t.replace('\r','')
+	t = t.split('\n')
+	if t != '':
+		for i, l in enumerate(t):
+			t[i] = louis.translateString([config.conf["braille"]["translationTable"]], l, None, louis.dotsIO)
+		t = '\n'.join(t)
+		nt = ""
+		for i, ch in enumerate(t):
+			if ch == '\r': continue
+			if ch != '\n': nt += unichr(ord(ch)-0x8000+0x2800)
+			else: nt += '\n'
+		return nt
+	else: return ''
 
 def getKeysTranslation(n):
 	o = n
@@ -226,6 +250,41 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 
+def getDescriptionBrailleCell(ch):
+	"""
+	Get description of an unicode braille char
+	:param ch: the unicode braille char to convert
+		must be between 0x2800 and 0x2999 included
+	:type ch: str
+	:return ch: the list of dots describing the braille cell
+	:rtype: list
+	"""
+	res = ""
+	if len(ch) != 1:
+		raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
+	p = ord(ch)
+	if p >= 0x2800 and p <= 0x2999:
+		p -= 0x2800
+	if p > 255:
+		raise ValueError(r"It is not an unicode braille (%d)" % p)
+	dots ={1:1, 2:2, 4:3, 8:4,16:5,32:6,64:7, 128:8}
+	i = 1
+	while p != 0:
+		if p - (128 / i) >= 0:
+			res += str(dots[(128/i)])
+			p -= (128 / i)
+		i *= 2
+	return  res[::-1] if len(res) > 0 else '0'
+
+def unicodeBrailleToDescription(t, sep = '-'):
+	nt = ""
+	for i, ch in enumerate(t):
+		if ch == '\n':
+			nt += '\n'
+			continue
+		nt += '%s%s' %(sep if i != 0 else '', getDescriptionBrailleCell(ch))
+	nt = nt.replace('\n'+sep, '\n')
+	return nt
 
 def beautifulSht(t, r=0, curBD=config.conf["braille"]["display"]):
 	t = re.sub('^[^:,/ ]+:', '', t)
@@ -255,11 +314,11 @@ def beautifulSht(t, r=0, curBD=config.conf["braille"]["display"]):
 		t = t.replace('+)', ')+')
 		t = t.replace('braillespacebar', 'space')
 		t = re.sub('([^A-Za-z]|^)space', r'\1' + _('space'), t)
-		t = t.replace('leftshiftkey', _(u'left SHIFT'))
-		t = t.replace('rightshiftkey', _(u'right SHIFT'))
-		t = t.replace('leftgdfbutton', _(u'left selector'))
-		t = t.replace('rightgdfbutton', _(u'right selector'))
-		t = t.replace('Dot', _(u'Dot'))
+		t = t.replace('leftshiftkey', _('left SHIFT'))
+		t = t.replace('rightshiftkey', _('right SHIFT'))
+		t = t.replace('leftgdfbutton', _('left selector'))
+		t = t.replace('rightgdfbutton', _('right selector'))
+		t = t.replace('Dot', _('Dot'))
 	return t
 
 

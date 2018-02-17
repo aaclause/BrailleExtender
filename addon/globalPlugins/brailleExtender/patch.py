@@ -1,5 +1,7 @@
 # coding: utf-8
+from __future__ import unicode_literals
 import os
+import api
 import braille
 import brailleTables
 import core
@@ -8,14 +10,22 @@ import configBE
 import globalCommands
 import louis
 import scriptHandler
+import speech
 import textInfos
 from logHandler import log
 import addonHandler
+
 addonHandler.initTranslation()
+from utils import getCurrentChar
 instanceGP = None
 preTable = []
 postTable = []
 SELECTION_SHAPE = braille.SELECTION_SHAPE
+def script_braille_routeTo(self, gesture):
+	braille.handler.routeTo(gesture.routingIndex)
+	if configBE.conf['general']['speakRoutingTo']:
+		ch = getCurrentChar()
+		if ch != "": speech.speakSpelling(ch)
 
 # customize basic functions
 def update(self):
@@ -186,7 +196,6 @@ def previousLine(self, start=False):
 		configBE.conf["general"]["speakScroll"] = False
 		core.restart()
 
-
 def createTabFile(f, c):
 	try:
 		f = open(f, "w")
@@ -240,3 +249,6 @@ if configBE.conf["patch"]["updateBraille"]:
 	braille.Region.update = update
 else:
 	log.info('Update braille function patch disabled')
+
+script_braille_routeTo.__doc__ = _("Routes the cursor to or activates the object under this braille cell")
+globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo

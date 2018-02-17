@@ -1,11 +1,15 @@
 # coding: utf-8
+from __future__ import unicode_literals
 import re
 import wx
 import gui
 
 import addonHandler
 import braille
-import brailleTables
+try:
+	import brailleTables
+	tables = brailleTables.listTables()
+except: pass
 import controlTypes
 import core
 import inputCore
@@ -15,9 +19,9 @@ addonHandler.initTranslation()
 from logHandler import log
 import configBE
 import queueHandler
-inProcessMsg = _(u'Feature Not Implemented Yet')
+inProcessMsg = _('Feature Not Implemented Yet')
 lastCaptured = None
-tables = brailleTables.listTables()
+
 restartNVDA_ = False
 
 instanceGP = None
@@ -27,7 +31,7 @@ class Settings(wx.Dialog):
 		if instanceGP.instanceST is not None or instanceGP is None:
 			return
 		instanceGP.instanceST = self
-		wx.Dialog.__init__(self, None, title=_(u'BrailleExtender settings'))
+		wx.Dialog.__init__(self, None, title=_('BrailleExtender settings'))
 		configBE.loadConfAttribra()
 		self.p = wx.Panel(self)
 		self.nb = wx.Notebook(self.p)
@@ -46,9 +50,9 @@ class Settings(wx.Dialog):
 		self.sizer = wx.BoxSizer()
 		self.sizer.Add(self.nb, 1, wx.EXPAND)
 		self.p.SetSizer(self.sizer)
-		self.buttonOK = wx.Button(self, label=_(u'OK'))
-		self.buttonS = wx.Button(self, label=_(u'Appl&y'))
-		self.buttonC = wx.Button(self, label=_(u'Close'), id=wx.ID_CLOSE)
+		self.buttonOK = wx.Button(self, label=_('OK'))
+		self.buttonS = wx.Button(self, label=_('Appl&y'))
+		self.buttonC = wx.Button(self, label=_('Close'), id=wx.ID_CLOSE)
 		self.buttonOK.Bind(wx.EVT_BUTTON, self.onOK)
 		self.buttonS.Bind(wx.EVT_BUTTON, self.onSave)
 		self.buttonC.Bind(wx.EVT_BUTTON, self.onClose)
@@ -70,8 +74,7 @@ class Settings(wx.Dialog):
 			log.info("Enabling patch for update braille function")
 			configBE.conf["patch"]["updateBraille"] = True
 			restartNVDA = True
-		if (self.reading.speakScroll.GetValue()
-				and not configBE.conf["patch"]["scrollBraille"]):
+		if (self.reading.speakScroll.GetValue() and not configBE.conf["patch"]["scrollBraille"]):
 			log.info("Enabling patch for scroll braille functions")
 			configBE.conf["patch"]["scrollBraille"] = True
 			restartNVDA = True
@@ -107,6 +110,7 @@ class Settings(wx.Dialog):
 			configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
 		configBE.conf['general']['speakScroll'] = self.reading.speakScroll.GetValue()
+		configBE.conf['general']['speakRoutingTo'] = self.reading.speakRoutingTo.GetValue()
 		configBE.conf['general']['tabSpace'] = self.reading.tabSpace.GetValue()
 		configBE.conf['general']['tabSize'] = self.reading.tabSize.GetValue()
 		configBE.conf['general']['attribra'] = self.attribra.attribraEnabled.GetValue()
@@ -130,7 +134,7 @@ class Settings(wx.Dialog):
 		configBE.saveSettings()
 		if restartNVDA:
 			gui.messageBox(
-				_(u"You have made a change that requires you restart NVDA"), u'%s – ' % configBE._addonName +
+				_(u"You have made a change that requires you restart NVDA"), '%s – ' % configBE._addonName +
 				_(u"Restart required"),
 				wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
@@ -148,7 +152,7 @@ class General(wx.Panel):
 		settings = wx.BoxSizer(wx.VERTICAL)
 		loadBDs = wx.BoxSizer(wx.VERTICAL)
 		self.autoCheckUpdate = wx.CheckBox(
-			self, label=_(u'Check for updates automatically'))
+			self, label=_('Check for updates automatically'))
 		if configBE.conf['general']['autoCheckUpdate']:
 			self.autoCheckUpdate.SetValue(True)
 		self.assistS = wx.CheckBox(self, label=_('Detail the progress of a keyboard shortcut when it is typed'))
@@ -156,26 +160,26 @@ class General(wx.Panel):
 			self.assistS.SetValue(True)
 		settings.Add(self.assistS)
 		self.reportVolumeBraille = wx.CheckBox(
-			self, label=_(u'Report of the new volume in braille'))
+			self, label=_('Report of the new volume in braille'))
 		if configBE.conf['general']['reportVolumeBraille']:
 			self.reportVolumeBraille.SetValue(True)
 		settings.Add(self.reportVolumeBraille)
 		self.reportVolumeSpeech = wx.CheckBox(
-			self, label=_(u'Report of the new volume in speech'))
+			self, label=_('Report of the new volume in speech'))
 		if configBE.conf['general']['reportVolumeSpeech']:
 			self.reportVolumeSpeech.SetValue(True)
 		settings.Add(self.reportVolumeSpeech)
 		self.hourDynamic = wx.CheckBox(
-			self, label=_(u'Display time and date infinitely'))
+			self, label=_('Display time and date infinitely'))
 		if configBE.conf['general']['hourDynamic']:
 			self.hourDynamic.SetValue(True)
 		settings.Add(self.hourDynamic)
-		settings.Add(wx.StaticText(self, -1, label=_(u'Re&view mode in')))
+		settings.Add(wx.StaticText(self, -1, label=_('Re&view mode in')))
 		self.reviewModeApps = wx.TextCtrl(
 			self, -1, value=str(', '.join(configBE.reviewModeApps)))
 		settings.Add(self.reviewModeApps)
 		self.reviewModeApps.Bind(wx.EVT_CHAR, self.onReviewModeApps)
-		settings.Add(wx.StaticText(self, -1, label=_(u'&Limit number of cells to (0 for no limit)')))
+		settings.Add(wx.StaticText(self, -1, label=_('&Limit number of cells to (0 for no limit)')))
 		self.limitCells = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['limitCells_' + configBE.curBD]))
 		settings.Add(self.limitCells)
 		self.limitCells.Bind(wx.EVT_CHAR, self.onLimitCells)
@@ -183,12 +187,12 @@ class General(wx.Panel):
 		lbl = []
 		for l in lb:
 			if l[0] == 'noBraille':
-				lbl.append(_(u'Last known'))
+				lbl.append(_('Last known'))
 			else:
 				lbl.append(l[1])
 		loadBDs.Add(
 			wx.StaticText(
-				self, -1, label=_(u'Braille display to load on NVDA+&k')))
+				self, -1, label=_('Braille display to load on NVDA+&k')))
 		self.brailleDisplay1 = wx.Choice(self, pos=(-1, -1),
 										 choices=lbl)
 		if configBE.conf['general']['brailleDisplay1'] == -1:
@@ -198,7 +202,7 @@ class General(wx.Panel):
 				configBE.conf['general']['brailleDisplay1']))
 		loadBDs.Add(
 			wx.StaticText(
-				self, -1, label=_(u'Braille display to load on NVDA+Shift+k')))
+				self, -1, label=_('Braille display to load on NVDA+Shift+k')))
 		self.brailleDisplay2 = wx.Choice(self, pos=(-1, -1), choices=lbl)
 		if configBE.conf['general']['brailleDisplay2'] == -1: self.brailleDisplay2.SetSelection(len(lbl) - 1)
 		else: self.brailleDisplay2.SetSelection(self.getIdBD(configBE.conf['general']['brailleDisplay2']))
@@ -244,70 +248,72 @@ class Reading(wx.Panel):
 	oTables = []
 	def __init__(self, parent):
 		self.oTables = configBE.oTables
-		lt = [_(u'None')]
+		lt = [_('None')]
 		for table in tables:
 			if table.output: lt.append(table[1])
 		wx.Panel.__init__(self, parent)
 		wx.StaticText(
-			self, -1, label=_(u'Output braille tables present in the switch'))
+			self, -1, label=_('Output braille tables present in the switch'))
 		self.oTablesPresent = wx.Choice(
 			self, pos=(-1, -1), choices=self.outputTablesInSwitch())
 		self.oTablesPresent.SetSelection(0)
-		self.deleteOutputTableInSwitch = wx.Button(self, label=_(u'&Remove'))
+		self.deleteOutputTableInSwitch = wx.Button(self, label=_('&Remove'))
 		self.deleteOutputTableInSwitch.Bind(
 			wx.EVT_BUTTON, self.onDeleteOutputTableInSwitch)
 		wx.StaticText(
-			self, -1, label=_(u'Output tables not present in the switch'))
+			self, -1, label=_('Output tables not present in the switch'))
 		self.oTablesNotPresent = wx.Choice(
 			self, pos=(-1, -1), choices=self.outputTablesNotInSwitch())
 		self.oTablesNotPresent.SetSelection(0)
-		self.addOutputTableInSwitch = wx.Button(self, label=_(u'&Add'))
+		self.addOutputTableInSwitch = wx.Button(self, label=_('&Add'))
 		self.addOutputTableInSwitch.Bind(
 			wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
-		wx.StaticText(self, -1, label=_(u'Secondary output table to use') + (' (%s) ' %
-																			 _(u'function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
+		wx.StaticText(self, -1, label=_('Secondary output table to use') + (' (%s) ' %
+																			 _('function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
 		self.postTable = wx.Choice(self, pos=(-1, -1), choices=lt)
 		self.postTable.SetSelection(configBE.tablesFN.index(
 			configBE.conf['general']['postTable']) if configBE.conf['general']['postTable'] in configBE.tablesFN else 0)
-		self.tabSpace = wx.CheckBox(self, label=_(u'Display tab signs as spaces') + (' (%s) ' % _(
+		self.tabSpace = wx.CheckBox(self, label=_('Display tab signs as spaces') + (' (%s) ' % _(
 			'function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
 		if configBE.conf['general']['tabSpace']:
 			self.tabSpace.SetValue(True)
 		self.tabSize = wx.StaticText(
-			self, -1, label=_(u'Number of space for a tab sign'))
+			self, -1, label=_('Number of space for a tab sign'))
 		self.tabSize = wx.TextCtrl(
 			self, -1, value=str(configBE.conf['general']['tabSize']))
 		self.tabSize.Bind(wx.EVT_CHAR, self.onTabSize)
-		self.speakScroll = wx.CheckBox(
-			self, label=_(u'In review mode, say the current line during text scrolling') + (
+		self.speakRoutingTo = wx.CheckBox(self, label=_('Announce the character when moving with routing buttons'))
+		if configBE.conf['general']['speakRoutingTo']:
+			self.speakRoutingTo.SetValue(True)
+		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling') + (
 				' (%s) ' %
-				_(u'function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
+				_('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
 		if configBE.conf['general']['speakScroll']:
 			self.speakScroll.SetValue(True)
 		self.delayScrollT = wx.StaticText(
-			self, -1, label=_(u'&Delay for scroll'))
+			self, -1, label=_('&Delay for scroll'))
 		self.delayScroll = wx.TextCtrl(
 			self, -1, value=str(configBE.conf['general']['delayScroll_' + configBE.curBD]))
 		self.delayScroll.Bind(wx.EVT_CHAR, self.onDelayScroll)
 		self.ignoreBlankLineScroll = wx.CheckBox(
-			self, label=_(u'Hide empty views during autoscroll'))
+			self, label=_('Hide empty views during autoscroll'))
 		if configBE.conf['general']['ignoreBlankLineScroll']:
 			self.ignoreBlankLineScroll.SetValue(True)
 		self.ignoreBlankLineScroll.Disable()
 		self.smartDelayScroll = wx.CheckBox(
-			self, label=_(u'Adjust the delay autoscroll to the content'))
+			self, label=_('Adjust the delay autoscroll to the content'))
 		if configBE.conf['general']['smartDelayScroll']:
 			self.smartDelayScroll.SetValue(True)
 		self.smartDelayScroll.Bind(wx.wx.EVT_CHECKBOX, self.onSmartDelay)
 		self.smartDelayScroll.Disable()
 		self.reverseScroll = wx.CheckBox(
-			self, label=_(u'Reverse forward scroll and back scroll buttons'))
+			self, label=_('Reverse forward scroll and back scroll buttons'))
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScroll.SetValue(True)
-		self.labelsGroup = wx.StaticText(self, -1, label=_(u'Customize role labels'))
-		self.roleLabelCategory = wx.StaticText(self, -1, label=_(u'Category'))
+		self.labelsGroup = wx.StaticText(self, -1, label=_('Customize role labels'))
+		self.roleLabelCategory = wx.StaticText(self, -1, label=_('Category'))
 		self.roleLabelCategories = wx.Choice(
-			self, pos=(-1, -1), choices=[_(u'General'), _(u'Landmark'), _(u'Positive state'), _(u'Negative state')])
+			self, pos=(-1, -1), choices=[_('General'), _('Landmark'), _('Positive state'), _('Negative state')])
 		self.roleLabelCategories.Bind(wx.EVT_CHOICE, self.onRoleLabelCategories)
 		self.roleLabelCategories.SetSelection(0)
 		self.labels = wx.Choice(
@@ -423,28 +429,28 @@ class Reading(wx.Panel):
 class Attribra(wx.Panel):
 	def __init__(self, parent):
 		wx.Panel.__init__(self, parent)
-		self.attribraEnabled = wx.CheckBox(self, label=_(u'Enable Attribra'))
+		self.attribraEnabled = wx.CheckBox(self, label=_('Enable Attribra'))
 		if configBE.conf['general']['attribra']:
 			self.attribraEnabled.SetValue(True)
-		self.profilesLabel = wx.StaticText(self, -1, label=_(u'Profile'))
+		self.profilesLabel = wx.StaticText(self, -1, label=_('Profile'))
 		self.profiles = wx.Choice(
 			self, pos=(-1, -1), choices=self.getListProfiles())
 		self.profiles.SetSelection(0)
 		self.profiles.Bind(wx.EVT_CHOICE, self.onProfiles)
-		self.bold = wx.CheckBox(self, label=_(u'Bold'))
-		self.italic = wx.CheckBox(self, label=_(u'Italic'))
-		self.underline = wx.CheckBox(self, label=_(u'Underline'))
-		self.spellingErrors = wx.CheckBox(self, label=_(u'Spelling errors'))
+		self.bold = wx.CheckBox(self, label=_('Bold'))
+		self.italic = wx.CheckBox(self, label=_('Italic'))
+		self.underline = wx.CheckBox(self, label=_('Underline'))
+		self.spellingErrors = wx.CheckBox(self, label=_('Spelling errors'))
 		self.advancedRulesLabel = wx.StaticText(
-			self, -1, label=_(u'Advanced rules'))
+			self, -1, label=_('Advanced rules'))
 		self.advancedRules = wx.Choice(self, pos=(-1, -1), choices=[])
-		self.editRuleBtn = wx.Button(self, label=_(u'&Edit this rule'))
-		self.removeRuleBtn = wx.Button(self, label=_(u'&Remove this rule'))
-		self.addRuleBtn = wx.Button(self, label=_(u'&Add a rule'))
+		self.editRuleBtn = wx.Button(self, label=_('&Edit this rule'))
+		self.removeRuleBtn = wx.Button(self, label=_('&Remove this rule'))
+		self.addRuleBtn = wx.Button(self, label=_('&Add a rule'))
 
-		self.addProfileBtn = wx.Button(self, label=_(u'Add a profile'))
-		self.editProfileBtn = wx.Button(self, label=_(u'Edit this profile'))
-		self.removeProfileBtn = wx.Button(self, label=_(u'Remove this profile'))
+		self.addProfileBtn = wx.Button(self, label=_('Add a profile'))
+		self.editProfileBtn = wx.Button(self, label=_('Edit this profile'))
+		self.removeProfileBtn = wx.Button(self, label=_('Remove this profile'))
 
 		self.addRuleBtn.Bind(wx.EVT_BUTTON, self.onAddRuleBtn)
 		self.editRuleBtn.Bind(wx.EVT_BUTTON, self.onEditRuleBtn)
@@ -588,25 +594,25 @@ class Keyboard(wx.Panel):
 		wx.Panel.__init__(self, parent)
 		self.iTables = configBE.iTables
 		if not configBE.noUnicodeTable:
-			lt = [_(u'Use the current input table')]
+			lt = [_('Use the current input table')]
 			for table in tables:
 				if table.input: lt.append(table[1])
-			wx.StaticText(self, -1, label=_(u'Input braille table for keyboard shortcut keys'))
+			wx.StaticText(self, -1, label=_('Input braille table for keyboard shortcut keys'))
 			self.iTableSht = wx.Choice(self, pos=(-1, -1), choices=lt)
 			self.iTableSht.SetSelection(configBE.conf['general']['iTableSht'] + 1)
-			wx.StaticText(self, -1, label=_(u'Input braille tables present in the switch'))
+			wx.StaticText(self, -1, label=_('Input braille tables present in the switch'))
 			self.iTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesInSwitch())
 			self.iTablesPresent.SetSelection(0)
-			self.deleteInputTableInSwitch = wx.Button(self, label=_(u'&Remove'))
+			self.deleteInputTableInSwitch = wx.Button(self, label=_('&Remove'))
 			self.deleteInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteInputTableInSwitch)
-			wx.StaticText(self, -1, label=_(u'Input tables not present in the switch'))
+			wx.StaticText(self, -1, label=_('Input tables not present in the switch'))
 			self.iTablesNotPresent = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesNotInSwitch())
 			self.iTablesNotPresent.SetSelection(0)
-			self.addInputTableInSwitch = wx.Button(self, label=_(u'&Add'))
+			self.addInputTableInSwitch = wx.Button(self, label=_('&Add'))
 			self.addInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddInputTableInSwitch)
 		if configBE.gesturesFileExists and not instanceGP.noKeyboarLayout():
 			lb = [k for k in instanceGP.getKeyboardLayouts()]
-			wx.StaticText(self, -1, label=_(u'Braille keyboard configuration'))
+			wx.StaticText(self, -1, label=_('Braille keyboard configuration'))
 			self.KBMode = wx.Choice(self, pos=(-1, -1), choices=lb)
 			self.KBMode.SetSelection(self.getKeyboardLayout())
 
@@ -652,15 +658,15 @@ class QuickLaunch(wx.Panel):
 		self.quickLaunchLocations = configBE.quickLaunchs.values()
 		wx.Panel.__init__(self, parent)
 		if configBE.curBD != 'noBraille':
-			self.quickKeysT = wx.StaticText(self, -1, label=_(u'Gestures for the quick launches')+' ('+_('display: %s' % configBE.curBD)+')' if configBE.curBD != 'noBraille' else '')
+			self.quickKeysT = wx.StaticText(self, -1, label=_('Gestures for the quick launches')+' ('+_('display: %s' % configBE.curBD)+')' if configBE.curBD != 'noBraille' else '')
 			self.quickKeys = wx.Choice(self, pos=(-1, -1), choices=self.getQuickLaunchList())
 			self.quickKeys.SetSelection(0)
 			self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
 			self.target = wx.TextCtrl(self, -1, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
 			self.target.Bind(wx.wx.EVT_TEXT, self.onTarget)
-			self.browseBtn = wx.Button(self, -1, label=_(u'&Browse...'))
-			self.removeGestureBtn = wx.Button(self, -1, label=_(u'&Remove this gesture'))
-			self.addGestureBtn = wx.Button(self, -1, label=_(u'&Add a quick launch'))
+			self.browseBtn = wx.Button(self, -1, label=_('&Browse...'))
+			self.removeGestureBtn = wx.Button(self, -1, label=_('&Remove this gesture'))
+			self.addGestureBtn = wx.Button(self, -1, label=_('&Add a quick launch'))
 			self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
 			self.removeGestureBtn.Bind(wx.EVT_BUTTON, self.onRemoveGestureBtn)
 			self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
@@ -677,7 +683,7 @@ class QuickLaunch(wx.Panel):
 		self.quickKeys.SetSelection(id-1 if id > 0 else 0)
 		self.onQuickKeys(None)
 		self.quickKeys.SetFocus()
-		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'%s removed.' % g))
+		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('%s removed.' % g))
 		
 		return
 	def captureNow(self):
@@ -685,10 +691,10 @@ class QuickLaunch(wx.Panel):
 			if gesture.isModifier:
 				return False
 			if scriptHandler.findScript(gesture) is not None:
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'Unable to associate this gesture. Please enter another, now'))
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Unable to associate this gesture. Please enter another, now'))
 				return False
 			if gesture.normalizedIdentifiers[0].startswith('kb') and ':escape' not in gesture.normalizedIdentifiers[0]:
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'Please enter a gesture from your %s braille display. Press Escape to cancel.' % configBE.curBD))
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Please enter a gesture from your %s braille display. Press Escape to cancel.' % configBE.curBD))
 				return False
 			if ':escape' not in gesture.normalizedIdentifiers[0]:
 				self.quickLaunchGestures.append(gesture.normalizedIdentifiers[0].split(':')[1])
@@ -697,14 +703,14 @@ class QuickLaunch(wx.Panel):
 				self.quickKeys.SetSelection(len(self.quickLaunchGestures)-1)
 				self.onQuickKeys(None)
 				self.quickKeys.SetFocus()
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'OK. The gesture captured is %s') % gesture.normalizedIdentifiers[0].split(':')[1])
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('OK. The gesture captured is %s') % gesture.normalizedIdentifiers[0].split(':')[1])
 			inputCore.manager._captureFunc = None
 		inputCore.manager._captureFunc = getCaptured
 
 
 	def onAddGestureBtn(self, event):
 		self.captureNow()
-		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(u'Please enter the desired gesture for this command, now'))
+		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Please enter the desired gesture for this command, now'))
 		return
 
 	def onTarget(self, event):

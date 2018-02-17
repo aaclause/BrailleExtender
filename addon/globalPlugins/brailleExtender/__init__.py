@@ -7,7 +7,7 @@
 # Additional third party copyrighted code is included:
 #	- *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
 #	-> https://github.com/albzan/attribra/
-
+from __future__ import unicode_literals
 import os
 import re
 import urllib
@@ -191,7 +191,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		configBE.loadGestures()
 		self.gesturesInit()
 		if not self.createMenu():
-			log.error(u'Impossible to create menu')
+			log.error('Impossible to create menu')
 		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time(
 		) - configBE.conf['general']['lastCheckUpdate'] > 172800:
 			CheckUpdates(True)
@@ -569,6 +569,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 	script_toggleSpeech.__doc__ = _('Toggle speech on or off')
 
+	def script_translateInBRU(self, gesture):
+		t = utils.getTextInBraille()
+		ui.browseableMessage(t)
+	script_translateInBRU.__doc__ = _('Convert the text selection in unicode braille and display it in a browseable message')
+
+	def script_translateInCellDescription(self, gesture):
+		t = utils.getTextInBraille()
+		t = utils.unicodeBrailleToDescription(t)
+		ui.browseableMessage(t)
+	script_translateInCellDescription.__doc__ = _('Convert text selection in braille cell descriptions and display it in a browseable message')
+
 	def script_position(self, gesture=None):
 		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
 	script_position.__doc__ = _('Get the cursor position of text')
@@ -601,8 +612,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def showHourDate():
-		currentHourDate = time.strftime(
-			u'%X %x (%a, %W/53, %b)', time.localtime())
+		currentHourDate = time.strftime('%X %x (%a, %W/53, %b)', time.localtime())
 		return braille.handler.message(currentHourDate.decode('mbcs'))
 
 	def script_autoScroll(self, gesture, sil=False):
@@ -611,7 +621,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.autoScrollRunning:
 			self.autoScrollTimer.Stop()
 			if not sil:
-				ui.message(_(u'Autoscroll stopped'))
+				ui.message(_('Autoscroll stopped'))
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		else:
 			self.backupShowCursor = config.conf["braille"]["showCursor"]
@@ -799,7 +809,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.iTables) else 0
 		brailleInput.handler.table = brailleTables.listTables(
 		)[configBE.tablesFN.index(configBE.iTables[nID])]
-		ui.message(_(u'Input: %s') % brailleInput.handler.table.displayName)
+		ui.message(_('Input: %s') % brailleInput.handler.table.displayName)
 		return
 
 	script_switchInputBrailleTable.__doc__ = _(
@@ -819,7 +829,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.oTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.oTables[nID]
 		self.refreshBD()
-		ui.message(_(u'Output: %s') % configBE.tablesTR[configBE.tablesFN.index(
+		ui.message(_('Output: %s') % configBE.tablesTR[configBE.tablesFN.index(
 			config.conf["braille"]["translationTable"])])
 		return
 
@@ -830,11 +840,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		inTable = brailleInput.handler.table.displayName
 		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
 		if ouTable == inTable:
-			braille.handler.message(_(u'I⣿O:{I}').format(I=inTable, O=ouTable))
-			speech.speakMessage(_(u'Input and output: {I}.').format(I=inTable, O=ouTable))
+			braille.handler.message(_('I⣿O:{I}').format(I=inTable, O=ouTable))
+			speech.speakMessage(_('Input and output: {I}.').format(I=inTable, O=ouTable))
 		else:
-			braille.handler.message(_(u'I:{I} ⣿ O: {O}').format(I=inTable, O=ouTable))
-			speech.speakMessage(_(u'Input: {I}; Output: {O}').format(I=inTable, O=ouTable))
+			braille.handler.message(_('I:{I} ⣿ O: {O}').format(I=inTable, O=ouTable))
+			speech.speakMessage(_('Input: {I}; Output: {O}').format(I=inTable, O=ouTable))
 		return
 
 	script_currentBrailleTable.__doc__ = _(
@@ -897,7 +907,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_reload_brailledisplay(self, gesture):
 		if hasattr(gesture, 'id'):
-			ui.message(_(u'Please use the keyboard for this feature'))
+			ui.message(_('Please use the keyboard for this feature'))
 			return
 		i = 2 if 'shift' in gesture.normalizedIdentifiers[0] else 1
 		if configBE.conf['general']['brailleDisplay' + str(i)] == 'noBraille':
@@ -995,7 +1005,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				log.debug(e)
 				return ui.message(_('Unable to send %s') % sht)
 		elif not NVDASht:  # and 'nvda' in sht.lower()
-			return ui.message(_(u'%s is not part of a NVDA commands') % sht)
+			return ui.message(_('%s is not part of a NVDA commands') % sht)
 
 	def sendCombKeysNVDA(self, sht, gesture):
 		# to improve + not finished
@@ -1145,7 +1155,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not short:
 			return s
 		if configBE.conf['general']['showConstructST']:
-			return braille.handler.message(u'%s...' % s)
+			return braille.handler.message('%s...' % s)
 
 	def script_ctrl(self, gesture=None, sil=True):
 		self.modifiers["control"] = not self.modifiers["control"]
@@ -1253,7 +1263,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_ctrlWinShift.__doc__ = docModKeys('control+Windows+SHIFT')
 	script_ctrlAltWin.__doc__ = docModKeys('control+ALT+Windows')
 	script_ctrlAltWinShift.__doc__ = docModKeys('control+ALT+Windows+SHIFT')
-
+	
 	def script_braille_scrollBack(self, gesture):
 		braille.handler.scrollBack()
 	script_braille_scrollBack.bypassInputHelp = True
@@ -1283,7 +1293,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 	@staticmethod
 	def inProcess():
-		ui.browseableMessage(u'Feature in process.')
+		ui.browseableMessage('Feature in process.')
 
 	def onEditProfileGestures(self, evt):
 		self.inProcess()
@@ -1309,6 +1319,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"
 	__gestures["kb:volumeDown"] = "volumeMinus"
+	__gestures["kb:nvda+alt+u"] = "translateInBRU"
+	__gestures["kb:nvda+alt+i"] = "translateInCellDescription"
+	
 
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()
@@ -1366,12 +1379,13 @@ class CheckUpdates(wx.Dialog):
 		self.msg = wx.StaticText(self, -1, label=msg)
 		if newUpdate:
 			self.yesBTN = wx.Button(self, wx.ID_YES, label=_("&Yes"))
-			self.noBTN = wx.Button(self, label=_("&No"))
+			self.noBTN = wx.Button(self, label=_("&No"), id=wx.ID_CLOSE)
 			self.yesBTN.Bind(wx.EVT_BUTTON, self.onYes)
 			self.noBTN.Bind(wx.EVT_BUTTON, self.onClose)
 		else:
-			self.okBTN = wx.Button(self, label=_("OK"))
+			self.okBTN = wx.Button(self, label=_("OK"), id=wx.ID_CLOSE)
 			self.okBTN.Bind(wx.EVT_BUTTON, self.onClose)
+		self.EscapeId = wx.ID_CLOSE
 		self.Bind(wx.EVT_CLOSE, self.onClose)
 		self.Show(True)
 		return

@@ -1,4 +1,8 @@
 # coding: utf-8
+# utils.py
+# Part of BrailleExtender addon for NVDA
+# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+
 from __future__ import unicode_literals
 import os.path as osp
 import re
@@ -220,7 +224,20 @@ def getTextSelection():
 	if not info or info.isCollapsed: return ''
 	else: return info.text
 
+def getKeysTranslation(n):
+	o = n
+	n = n.lower()
+	nk = 'NVDA+' if 'nvda+' in n else ''
+	if not 'br(' in n:
+		n = n.replace('kb:', '').replace('nvda+', '')
+		try:
+			n = KeyboardInputGesture.fromName(n).displayName
+			n = re.sub('([^a-zA-Z]|^)f([0-9])', r'\1F\2', n)
+		except BaseException:
+			return o
+		return nk + n
 def getTextInBraille(t = ''):
+	
 	if t == '':
 		t = getTextSelection()
 		t = t.replace('\r','')
@@ -237,36 +254,22 @@ def getTextInBraille(t = ''):
 		return nt
 	else: return ''
 
-def getKeysTranslation(n):
-	o = n
-	n = n.lower()
-	nk = 'NVDA+' if 'nvda+' in n else ''
-	if not 'br(' in n:
-		n = n.replace('kb:', '').replace('nvda+', '')
-		try:
-			n = KeyboardInputGesture.fromName(n).displayName
-			n = re.sub('([^a-zA-Z]|^)f([0-9])', r'\1F\2', n)
-		except BaseException:
-			return o
-		return nk + n
-
 def getDescriptionBrailleCell(ch):
 	"""
-	Get description of an unicode braille char
-	:param ch: the unicode braille char to convert
+	Return a description of an unicode braille char
+	:param ch: the unicode braille character to describe
 		must be between 0x2800 and 0x2999 included
 	:type ch: str
 	:return ch: the list of dots describing the braille cell
-	:rtype: list
+	:rtype: str
+	
+	:Example: "abcd" -> "1-12-14-145"
 	"""
 	res = ""
-	if len(ch) != 1:
-		raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
+	if len(ch) != 1: raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
 	p = ord(ch)
-	if p >= 0x2800 and p <= 0x2999:
-		p -= 0x2800
-	if p > 255:
-		raise ValueError(r"It is not an unicode braille (%d)" % p)
+	if p >= 0x2800 and p <= 0x2999: p -= 0x2800
+	if p > 255: raise ValueError(r"It is not an unicode braille (%d)" % p)
 	dots ={1:1, 2:2, 4:3, 8:4,16:5,32:6,64:7, 128:8}
 	i = 1
 	while p != 0:
@@ -274,15 +277,25 @@ def getDescriptionBrailleCell(ch):
 			res += str(dots[(128/i)])
 			p -= (128 / i)
 		i *= 2
-	return  res[::-1] if len(res) > 0 else '0'
-def getTablePreview():
+	return res[::-1] if len(res) > 0 else '0'
+
+def getTableOverview(tbl = ''):
+	"""
+	Return an overview of a input braille table.
+	:param tbl: the braille table to use (default: the current input braille table).
+	:type tbl: str
+	:return: an overview of braille table in the form of a textual table
+	:rtype: str
+	"""
 	t = ""
 	i = 0x2800
+	j = 1
 	while i<0x2800+256:
 		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], unichr(i), mode=louis.ucBrl)
-		t += '%s%.3d  %4s  %8s        %s' % (('\n' if i != 0x2800 else ' No  Char      Dots  Braille\n'), i-0x2800+1, text[0] if len(text[0])<3 else '??', unicodeBrailleToDescription(unichr(i)), unichr(i))
+		if not re.match(r'^\\.+/$', text[0]):
+			t += '%s%.3d  %4s  %8s        %s' % (('\n' if i != 0x2800 else ' No  Char      Dots  Braille\n'), j, text[0], unicodeBrailleToDescription(unichr(i)), unichr(i))
+			j += 1
 		i += 1
-		
 	return t
 
 def unicodeBrailleToDescription(t, sep = '-'):

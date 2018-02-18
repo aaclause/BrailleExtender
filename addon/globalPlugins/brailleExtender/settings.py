@@ -1,4 +1,8 @@
 # coding: utf-8
+# settings.py
+# Part of BrailleExtender addon for NVDA
+# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+
 from __future__ import unicode_literals
 import re
 import wx

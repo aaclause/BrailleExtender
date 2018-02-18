@@ -1,4 +1,8 @@
 # coding: utf-8
+# configBE.py
+# Part of BrailleExtender addon for NVDA
+# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+
 from __future__ import unicode_literals
 from os import path as osp
 import ui

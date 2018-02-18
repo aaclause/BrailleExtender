@@ -1,7 +1,7 @@
 # coding: utf-8
 # BrailleExtender Addon for NVDA
 # This file is covered by the GNU General Public License.
-# See the file COPYING for more details.
+# See the file LICENSE for more details.
 # Copyright (C) 2017 André-Abush CLAUSE <dev@andreabc.net>
 #
 # Additional third party copyrighted code is included:
@@ -41,7 +41,7 @@ import virtualBuffers
 import ui
 import configBE
 import settings
-import patch
+import patchs
 import utils
 import versionInfo
 from configobj import ConfigObj
@@ -184,7 +184,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		global instanceGP
 		instanceGP = self
-		patch.instanceGP = instanceGP
+		patchs.instanceGP = instanceGP
 		settings.instanceGP = instanceGP
 		log.debug('! New instance of GlobalPlugin: {0}'.format(id(instanceGP)))
 		configBE.initGestures()
@@ -258,6 +258,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, self.item)
 			self.item = self.menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, self.item)
+			self.item = self.menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Opens the addon's settings."))
+			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, self.item)
 			self.item = self.menu.Append(wx.ID_ANY, _(u"Edit the current profile gestures..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
 			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onEditProfileGestures, self.item)
 			self.item = self.menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
@@ -568,15 +570,24 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_('Speech off'))
 		return
 	script_toggleSpeech.__doc__ = _('Toggle speech on or off')
-
+	def script_getTableOverview(self, gesture):
+		inTable = brailleInput.handler.table.displayName
+		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		grade = [_('uncontracted'), _('contracted')]
+		t = (_(' Input table')+': %s\n'+_('Output table')+': %s\n\n') % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
+		t += utils.getTableOverview()
+		ui.browseableMessage(t,_('Table overview (%s)' % brailleInput.handler.table.displayName))
+	script_getTableOverview.__doc__ = _('Display an overview of current input braille table')
 	def script_translateInBRU(self, gesture):
 		t = utils.getTextInBraille()
+		if t.strip() == "": return ui.message(_('No text selection'))
 		ui.browseableMessage(t)
 	script_translateInBRU.__doc__ = _('Convert the text selection in unicode braille and display it in a browseable message')
 
 	def script_translateInCellDescription(self, gesture):
 		t = utils.getTextInBraille()
 		t = utils.unicodeBrailleToDescription(t)
+		if t.strip() == "": return ui.message(_('No text selection'))
 		ui.browseableMessage(t)
 	script_translateInCellDescription.__doc__ = _('Convert text selection in braille cell descriptions and display it in a browseable message')
 
@@ -820,8 +831,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return ui.message(
 				_("Please use NVDA 2017.3 minimum for this feature"))
 		if len(configBE.oTables) < 2:
-			return ui.message(
-				_('You must choose at least two tables for this feature. Please fill in the settings'))
+			return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
 		if not config.conf["braille"]["translationTable"] in configBE.oTables:
 			configBE.oTables.append(config.conf["braille"]["translationTable"])
 		tid = configBE.oTables.index(
@@ -829,12 +839,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.oTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.oTables[nID]
 		self.refreshBD()
-		ui.message(_('Output: %s') % configBE.tablesTR[configBE.tablesFN.index(
-			config.conf["braille"]["translationTable"])])
+		ui.message(_('Output: %s') % configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
 		return
 
-	script_switchOutputBrailleTable.__doc__ = _(
-		"Switch between his favorite output braille tables")
+	script_switchOutputBrailleTable.__doc__ = _("Switch between his favorite output braille tables")
 
 	def script_currentBrailleTable(self, gesture):
 		inTable = brailleInput.handler.table.displayName
@@ -889,6 +897,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def onUpdate(evt):
 		return CheckUpdates()
+
+	def onGetTableOverview(self, evt):
+		self.script_getTableOverview(None)
 
 	@staticmethod
 	def onWebsite(evt):
@@ -1321,7 +1332,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:volumeDown"] = "volumeMinus"
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
 	__gestures["kb:nvda+alt+i"] = "translateInCellDescription"
-	
+	__gestures["kb:nvda+alt+y"] = "getTableOverview"
 
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()

@@ -1,4 +1,8 @@
 # coding: utf-8
+# utils.py
+# Part of BrailleExtender addon for NVDA
+# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+
 from __future__ import unicode_literals
 import os.path as osp
 import re
@@ -220,23 +224,6 @@ def getTextSelection():
 	if not info or info.isCollapsed: return ''
 	else: return info.text
 
-def getTextInBraille(t = ''):
-	if t == '':
-		t = getTextSelection()
-		t = t.replace('\r','')
-	t = t.split('\n')
-	if t != '':
-		for i, l in enumerate(t):
-			t[i] = louis.translateString([config.conf["braille"]["translationTable"]], l, None, louis.dotsIO)
-		t = '\n'.join(t)
-		nt = ""
-		for i, ch in enumerate(t):
-			if ch == '\r': continue
-			if ch != '\n': nt += unichr(ord(ch)-0x8000+0x2800)
-			else: nt += '\n'
-		return nt
-	else: return ''
-
 def getKeysTranslation(n):
 	o = n
 	n = n.lower()
@@ -249,24 +236,40 @@ def getKeysTranslation(n):
 		except BaseException:
 			return o
 		return nk + n
+def getTextInBraille(t = ''):
+	
+	if t == '':
+		t = getTextSelection()
+		t = t.replace('\r','')
+	if t.strip() != '':
+		t = t.split('\n')
+		for i, l in enumerate(t):
+			t[i] = louis.translateString([config.conf["braille"]["translationTable"]], l, None, louis.dotsIO)
+		t = '\n'.join(t)
+		nt = ""
+		for i, ch in enumerate(t):
+			if ch == '\r': continue
+			if ch != '\n': nt += unichr(ord(ch)-0x8000+0x2800)
+			else: nt += '\n'
+		return nt
+	else: return ''
 
 def getDescriptionBrailleCell(ch):
 	"""
-	Get description of an unicode braille char
-	:param ch: the unicode braille char to convert
+	Return a description of an unicode braille char
+	:param ch: the unicode braille character to describe
 		must be between 0x2800 and 0x2999 included
 	:type ch: str
-	:return ch: the list of dots describing the braille cell
-	:rtype: list
+	:return: the list of dots describing the braille cell
+	:rtype: str
+	
+	:Example: "d" -> "145"
 	"""
 	res = ""
-	if len(ch) != 1:
-		raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
+	if len(ch) != 1: raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
 	p = ord(ch)
-	if p >= 0x2800 and p <= 0x2999:
-		p -= 0x2800
-	if p > 255:
-		raise ValueError(r"It is not an unicode braille (%d)" % p)
+	if p >= 0x2800 and p <= 0x2999: p -= 0x2800
+	if p > 255: raise ValueError(r"It is not an unicode braille (%d)" % p)
 	dots ={1:1, 2:2, 4:3, 8:4,16:5,32:6,64:7, 128:8}
 	i = 1
 	while p != 0:
@@ -274,7 +277,34 @@ def getDescriptionBrailleCell(ch):
 			res += str(dots[(128/i)])
 			p -= (128 / i)
 		i *= 2
-	return  res[::-1] if len(res) > 0 else '0'
+	return res[::-1] if len(res) > 0 else '0'
+
+def getTableOverview(tbl = ''):
+	"""
+	Return an overview of a input braille table.
+	:param tbl: the braille table to use (default: the current input braille table).
+	:type tbl: str
+	:return: an overview of braille table in the form of a textual table
+	:rtype: str
+	"""
+	t = ""
+	available = ""
+	i = 0x2800
+	j = 1
+	while i<0x2800+256:
+		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], unichr(i), mode=louis.ucBrl)
+		if not re.match(r'^\\.+/$', text[0]):
+			t += '%s%.3d  %4s  %8s        %s' % (('\n' if i != 0x2800 else ' No  Char      Dots  Braille\n'), j, text[0], unicodeBrailleToDescription(unichr(i)), unichr(i))
+			j += 1
+		else:
+			available += unichr(i)
+		i += 1
+	nbAvailable = len(available)
+	if nbAvailable>1:
+		t += '\n'+_("Available combinations")+" (%d): %s" % (nbAvailable, available)
+	elif nbAvailable == 1:
+		t += '\n'+_("One combination available")+": %s" % available
+	return t
 
 def unicodeBrailleToDescription(t, sep = '-'):
 	nt = ""

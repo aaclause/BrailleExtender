@@ -8,6 +8,7 @@ import os.path as osp
 import re
 import api
 import braille
+import brailleTables
 import louis
 import config
 import ui
@@ -244,7 +245,7 @@ def getTextInBraille(t = ''):
 	if t.strip() != '':
 		t = t.split('\n')
 		for i, l in enumerate(t):
-			t[i] = louis.translateString([config.conf["braille"]["translationTable"]], l, None, louis.dotsIO)
+			t[i] = louis.translateString([os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])], l, None, louis.dotsIO)
 		t = '\n'.join(t)
 		nt = ""
 		for i, ch in enumerate(t):

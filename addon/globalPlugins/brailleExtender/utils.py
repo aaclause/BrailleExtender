@@ -260,10 +260,10 @@ def getDescriptionBrailleCell(ch):
 	:param ch: the unicode braille character to describe
 		must be between 0x2800 and 0x2999 included
 	:type ch: str
-	:return ch: the list of dots describing the braille cell
+	:return: the list of dots describing the braille cell
 	:rtype: str
 	
-	:Example: "abcd" -> "1-12-14-145"
+	:Example: "d" -> "145"
 	"""
 	res = ""
 	if len(ch) != 1: raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
@@ -288,6 +288,7 @@ def getTableOverview(tbl = ''):
 	:rtype: str
 	"""
 	t = ""
+	available = ""
 	i = 0x2800
 	j = 1
 	while i<0x2800+256:
@@ -295,7 +296,14 @@ def getTableOverview(tbl = ''):
 		if not re.match(r'^\\.+/$', text[0]):
 			t += '%s%.3d  %4s  %8s        %s' % (('\n' if i != 0x2800 else ' No  Char      Dots  Braille\n'), j, text[0], unicodeBrailleToDescription(unichr(i)), unichr(i))
 			j += 1
+		else:
+			available += unichr(i)
 		i += 1
+	nbAvailable = len(available)
+	if nbAvailable>1:
+		t += '\n'+_("Available combinations")+" (%d): %s" % (nbAvailable, available)
+	elif nbAvailable == 1:
+		t += '\n'+_("One combination available")+": %s" % available
 	return t
 
 def unicodeBrailleToDescription(t, sep = '-'):

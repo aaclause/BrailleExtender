@@ -50,9 +50,7 @@ def update(self):
 			text = unicode(self.rawText).replace('\0', '')
 			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(
 				preTable + [
-					os.path.join(
-						brailleTables.TABLES_DIR,
-						config.conf["braille"]["translationTable"]),
+					os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
 					os.path.join(
 						brailleTables.TABLES_DIR,
 						"braille-patterns.cti")

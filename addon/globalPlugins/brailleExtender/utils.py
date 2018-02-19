@@ -238,7 +238,6 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 def getTextInBraille(t = ''):
-	
 	if t == '':
 		t = getTextSelection()
 		t = t.replace('\r','')
@@ -280,6 +279,14 @@ def getDescriptionBrailleCell(ch):
 		i *= 2
 	return res[::-1] if len(res) > 0 else '0'
 
+def combinationDesign(dots):
+	out = ""
+	i = 1
+	while i < 9:
+		out += str(i) if str(i) in dots else ' '
+		i += 1
+	return out
+
 def getTableOverview(tbl = ''):
 	"""
 	Return an overview of a input braille table.
@@ -289,17 +296,22 @@ def getTableOverview(tbl = ''):
 	:rtype: str
 	"""
 	t = ""
+	tmp = {}
 	available = ""
 	i = 0x2800
-	j = 1
 	while i<0x2800+256:
 		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], unichr(i), mode=louis.ucBrl)
+		if i != 0x2800:
+			t = 'Input              Output\n'
 		if not re.match(r'^\\.+/$', text[0]):
-			t += '%s%.3d  %4s  %8s        %s' % (('\n' if i != 0x2800 else ' No  Char      Dots  Braille\n'), j, text[0], unicodeBrailleToDescription(unichr(i)), unichr(i))
-			j += 1
+			tmp['%s' % text[0] if text[0] != '' else '?'] = '%s       %-7s' % (
+			'%s (%s)' % (unichr(i), combinationDesign(unicodeBrailleToDescription(unichr(i)))),
+			'%s%-8s' % (text[0], '%s' % (' ('+str(hex(ord(text[0]))+')') if len(text[0]) == 1 else '' if text[0] != '' else '?'))
+			)
 		else:
 			available += unichr(i)
 		i += 1
+	t += '\n'.join(tmp[k] for k in sorted(tmp))
 	nbAvailable = len(available)
 	if nbAvailable>1:
 		t += '\n'+_("Available combinations")+" (%d): %s" % (nbAvailable, available)

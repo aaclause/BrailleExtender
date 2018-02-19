@@ -121,8 +121,7 @@ def decorator(fn, s):
 	if s == "_getTypeformFromFormatField": return _getTypeformFromFormatField
 
 def populateAttrs(pid):
-		if (len(configBE.confAttribra) == 0):
-			return
+		if (len(configBE.confAttribra) == 0): return
 		global ATTRS  # We are changing the global variable
 		appname = appModuleHandler.getAppNameFromProcessID(pid)
 		if (appname in configBE.confAttribra):
@@ -549,7 +548,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		grade = [_('uncontracted'), _('contracted')]
 		t = (_(' Input table')+': %s\n'+_('Output table')+': %s\n\n') % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
 		t += utils.getTableOverview()
-		ui.browseableMessage(t,_('Table overview (%s)' % brailleInput.handler.table.displayName))
+		ui.browseableMessage('<pre>%s</pre>' % t, _('Table overview (%s)' % brailleInput.handler.table.displayName), True)
 	script_getTableOverview.__doc__ = _('Display an overview of current input braille table')
 	def script_translateInBRU(self, gesture):
 		t = utils.getTextInBraille()

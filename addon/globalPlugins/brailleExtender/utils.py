@@ -371,48 +371,54 @@ def getText():
 def getTextCarret():
 	obj = api.getFocusObject()
 	treeInterceptor = obj.treeInterceptor
-	if hasattr(
-			treeInterceptor,
-			'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
+	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough: obj = treeInterceptor
 	try:
 		p1 = obj.makeTextInfo(textInfos.POSITION_ALL)
 		p2 = obj.makeTextInfo(textInfos.POSITION_CARET)
 		p1.setEndPoint(p2, "endToStart")
-		try:
-			return p1.text
-		except BaseException:
-			return None
-	except BaseException:
-		pass
+		try: return p1.text
+		except BaseException: return None
+	except BaseException: pass
 	return None
 
 
 def getLine():
 	obj = api.getFocusObject()
 	treeInterceptor = obj.treeInterceptor
-	if hasattr(
-			treeInterceptor,
-			'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
+	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough: obj = treeInterceptor
 	try:
 		info = obj.makeTextInfo(textInfos.POSITION_CARET)
 		info.expand(textInfos.UNIT_LINE)
 		s = info.text
 		return s
-	except BaseException:
-		pass
+	except BaseException: pass
 	return None
 
+def isLastLine():
+	obj = api.getFocusObject()
+	treeInterceptor = obj.treeInterceptor
+	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
+		obj = treeInterceptor
+	try:
+		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
+		p1.expand(textInfos.UNIT_LINE)
+		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
+		if p1.compareEndPoints(p2, "endToEnd") == 1: return True
+	except BaseException: return True
+	return False
 
+	
 def isEnd():
-	(p1, p2) = getPosition()
-	p1 += 1
-	if p1 >= p2:
-		return True
-	else:
-		return False
-
+	obj = api.getFocusObject()
+	treeInterceptor = obj.treeInterceptor
+	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
+		obj = treeInterceptor
+	try:
+		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
+		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
+		if p1.compareEndPoints(p2, "startToEnd") == 0: return True
+	except BaseException: pass
+	return False
 
 def getPositionPercentage():
 	try:

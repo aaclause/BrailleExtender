@@ -226,19 +226,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.backupTether = braille.handler.tether
 				braille.handler.tether = braille.handler.TETHER_REVIEW
 			self.switchedMode = True
-		elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps:
-			try:
-				if self.backupTether == braille.handler.TETHER_AUTO:
-					config.conf["braille"]["autoTether"] = True
-					config.conf["braille"]["tetherTo"] = braille.handler.TETHER_FOCUS
-				else:
-					config.conf["braille"]["autoTether"] = False
-					braille.handler.setTether(self.backupTether, auto=False)
-					braille.handler.handleGainFocus(api.getFocusObject(), shouldAutoTether=False)
-			except BaseException:
-				braille.handler.tether = self.backupTether
-			self.switchedMode = False
+		elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps: self.restorReviewCursorTethering()
 		nextHandler()
+		return
+
+	def restorReviewCursorTethering(self):
+		if not self.switchedMode: return
+		try:
+			if self.backupTether == braille.handler.TETHER_AUTO:
+				config.conf["braille"]["autoTether"] = True
+				config.conf["braille"]["tetherTo"] = braille.handler.TETHER_FOCUS
+			else:
+				config.conf["braille"]["autoTether"] = False
+				braille.handler.setTether(self.backupTether, auto=False)
+				braille.handler.handleGainFocus(api.getFocusObject(), shouldAutoTether=False)
+		except BaseException:
+			braille.handler.tether = self.backupTether
+		self.switchedMode = False
 		return
 
 	def createMenu(self):
@@ -550,10 +554,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		t += utils.getTableOverview()
 		ui.browseableMessage('<pre>%s</pre>' % t, _('Table overview (%s)' % brailleInput.handler.table.displayName), True)
 	script_getTableOverview.__doc__ = _('Display an overview of current input braille table')
+
 	def script_translateInBRU(self, gesture):
 		t = utils.getTextInBraille()
 		if t.strip() == "": return ui.message(_('No text selection'))
-		ui.browseableMessage(t)
+		ui.browseableMessage('<pre>%s</pre>' % t, _('BFU conversion'), True)
 	script_translateInBRU.__doc__ = _('Convert the text selection in unicode braille and display it in a browseable message')
 
 	def script_translateInCellDescription(self, gesture):
@@ -1256,6 +1261,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()
+		self.restorReviewCursorTethering()
 		self.thread1.stop()
 		self.thread1.join()
 		if self.instanceST is not None:
@@ -1279,8 +1285,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if self.menu is not None:
 				gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.menu)
 			return True
-		except wx.PyDeadObjectError:
-			return False
+		except wx.PyDeadObjectError: return False
 
 
 

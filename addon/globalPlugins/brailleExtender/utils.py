@@ -237,6 +237,7 @@ def getKeysTranslation(n):
 		except BaseException:
 			return o
 		return nk + n
+
 def getTextInBraille(t = ''):
 	if t == '':
 		t = getTextSelection()
@@ -279,11 +280,11 @@ def getDescriptionBrailleCell(ch):
 		i *= 2
 	return res[::-1] if len(res) > 0 else '0'
 
-def combinationDesign(dots):
+def combinationDesign(dots, noDot = '⠤'):
 	out = ""
 	i = 1
 	while i < 9:
-		out += str(i) if str(i) in dots else ' '
+		out += str(i) if str(i) in dots else noDot
 		i += 1
 	return out
 
@@ -306,7 +307,7 @@ def getTableOverview(tbl = ''):
 		if not re.match(r'^\\.+/$', text[0]):
 			tmp['%s' % text[0] if text[0] != '' else '?'] = '%s       %-7s' % (
 			'%s (%s)' % (unichr(i), combinationDesign(unicodeBrailleToDescription(unichr(i)))),
-			'%s%-8s' % (text[0], '%s' % (' ('+str(hex(ord(text[0]))+')') if len(text[0]) == 1 else '' if text[0] != '' else '?'))
+			'%s%-8s' % (text[0], '%s' % (' (%-10s)' % str(hex(ord(text[0]))) if len(text[0]) == 1 else '' if text[0] != '' else '#ERROR'))
 			)
 		else:
 			available += unichr(i)

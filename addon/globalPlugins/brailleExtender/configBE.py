@@ -125,9 +125,7 @@ def loadConf():
 		else:
 			if curBD != 'noBraille': log.warn('%s inaccessible' % confGen)
 			else: log.debug('No braille display present')
-			return False
-	if (conf['general']['limitCells_' + curBD] <= backupDisplaySize
-	 and conf['general']['limitCells_' + curBD] > 0):
+	if (conf['general']['limitCells_' + curBD] <= backupDisplaySize and conf['general']['limitCells_' + curBD] > 0):
 		braille.handler.displaySize = conf['general']['limitCells_' + curBD]
 	reviewModeApps = [k.strip() for k in conf["general"]["reviewModeApps"].split(',') if k.strip() != '']
 	tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(',') if k.strip() != '']
@@ -161,8 +159,6 @@ def loadGestures():
 			tmp = [line.strip().replace(' ', '').replace('$', iniProfile['general']['nameBK']).replace('=', '=br(%s):' % curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
 			tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
 		inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
-		log.debug(tmp)
-	return
 
 
 def saveSettings():

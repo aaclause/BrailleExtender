@@ -10,10 +10,7 @@ import gui
 
 import addonHandler
 import braille
-try:
-	import brailleTables
-	tables = brailleTables.listTables()
-except: pass
+import brailleTables
 import controlTypes
 import core
 import inputCore
@@ -25,7 +22,7 @@ import configBE
 import queueHandler
 inProcessMsg = _('Feature Not Implemented Yet')
 lastCaptured = None
-
+tables = brailleTables.listTables()
 restartNVDA_ = False
 
 instanceGP = None
@@ -103,9 +100,7 @@ class Settings(wx.Dialog):
 			configBE.conf['general']['reverseScroll'] = self.reading.reverseScroll.GetValue()
 		configBE.conf['general']['delayScroll_' + configBE.curBD] = self.reading.delayScroll.GetValue()
 		try:
-			if int(
-					self.general.limitCells.GetValue()) > configBE.backupDisplaySize or int(
-					self.general.limitCells.GetValue()) < 0:
+			if int(self.general.limitCells.GetValue()) > configBE.backupDisplaySize or int(self.general.limitCells.GetValue()) < 0:
 				configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 			else:
 				if configBE.conf['general']['limitCells_' + configBE.curBD] != 0 and int(self.general.limitCells.GetValue()) == 0: braille.handler.displaySize = configBE.backupDisplaySize
@@ -137,9 +132,7 @@ class Settings(wx.Dialog):
 		configBE.saveSettingsAttribra()
 		configBE.saveSettings()
 		if restartNVDA:
-			gui.messageBox(
-				_(u"You have made a change that requires you restart NVDA"), '%s – ' % configBE._addonName +
-				_(u"Restart required"),
+			gui.messageBox(_(u"You have made a change that requires you restart NVDA"), '%s – %s' % (configBE._addonName, _(u"Restart required")),
 				wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
 			core.restart()
@@ -155,32 +148,22 @@ class General(wx.Panel):
 		wx.Panel.__init__(self, parent)
 		settings = wx.BoxSizer(wx.VERTICAL)
 		loadBDs = wx.BoxSizer(wx.VERTICAL)
-		self.autoCheckUpdate = wx.CheckBox(
-			self, label=_('Check for updates automatically'))
-		if configBE.conf['general']['autoCheckUpdate']:
-			self.autoCheckUpdate.SetValue(True)
+		self.autoCheckUpdate = wx.CheckBox(self, label=_('Check for updates automatically'))
+		if configBE.conf['general']['autoCheckUpdate']: self.autoCheckUpdate.SetValue(True)
 		self.assistS = wx.CheckBox(self, label=_('Detail the progress of a keyboard shortcut when it is typed'))
-		if configBE.conf['general']['showConstructST']:
-			self.assistS.SetValue(True)
+		if configBE.conf['general']['showConstructST']: self.assistS.SetValue(True)
 		settings.Add(self.assistS)
-		self.reportVolumeBraille = wx.CheckBox(
-			self, label=_('Report of the new volume in braille'))
-		if configBE.conf['general']['reportVolumeBraille']:
-			self.reportVolumeBraille.SetValue(True)
+		self.reportVolumeBraille = wx.CheckBox(self, label=_('Report of the new volume in braille'))
+		if configBE.conf['general']['reportVolumeBraille']: self.reportVolumeBraille.SetValue(True)
 		settings.Add(self.reportVolumeBraille)
-		self.reportVolumeSpeech = wx.CheckBox(
-			self, label=_('Report of the new volume in speech'))
-		if configBE.conf['general']['reportVolumeSpeech']:
-			self.reportVolumeSpeech.SetValue(True)
+		self.reportVolumeSpeech = wx.CheckBox(self, label=_('Report of the new volume in speech'))
+		if configBE.conf['general']['reportVolumeSpeech']: self.reportVolumeSpeech.SetValue(True)
 		settings.Add(self.reportVolumeSpeech)
-		self.hourDynamic = wx.CheckBox(
-			self, label=_('Display time and date infinitely'))
-		if configBE.conf['general']['hourDynamic']:
-			self.hourDynamic.SetValue(True)
+		self.hourDynamic = wx.CheckBox(self, label=_('Display time and date infinitely'))
+		if configBE.conf['general']['hourDynamic']: self.hourDynamic.SetValue(True)
 		settings.Add(self.hourDynamic)
 		settings.Add(wx.StaticText(self, -1, label=_('Re&view mode in')))
-		self.reviewModeApps = wx.TextCtrl(
-			self, -1, value=str(', '.join(configBE.reviewModeApps)))
+		self.reviewModeApps = wx.TextCtrl(self, -1, value=str(', '.join(configBE.reviewModeApps)))
 		settings.Add(self.reviewModeApps)
 		self.reviewModeApps.Bind(wx.EVT_CHAR, self.onReviewModeApps)
 		settings.Add(wx.StaticText(self, -1, label=_('&Limit number of cells to (0 for no limit)')))
@@ -190,23 +173,13 @@ class General(wx.Panel):
 		lb = braille.getDisplayList()
 		lbl = []
 		for l in lb:
-			if l[0] == 'noBraille':
-				lbl.append(_('Last known'))
-			else:
-				lbl.append(l[1])
-		loadBDs.Add(
-			wx.StaticText(
-				self, -1, label=_('Braille display to load on NVDA+&k')))
-		self.brailleDisplay1 = wx.Choice(self, pos=(-1, -1),
-										 choices=lbl)
-		if configBE.conf['general']['brailleDisplay1'] == -1:
-			self.brailleDisplay1.SetSelection(len(lbl) - 1)
-		else:
-			self.brailleDisplay1.SetSelection(self.getIdBD(
-				configBE.conf['general']['brailleDisplay1']))
-		loadBDs.Add(
-			wx.StaticText(
-				self, -1, label=_('Braille display to load on NVDA+Shift+k')))
+			if l[0] == 'noBraille': lbl.append(_('Last known'))
+			else: lbl.append(l[1])
+		loadBDs.Add(wx.StaticText(self, -1, label=_('Braille display to load on NVDA+&k')))
+		self.brailleDisplay1 = wx.Choice(self, pos=(-1, -1),choices=lbl)
+		if configBE.conf['general']['brailleDisplay1'] == -1: self.brailleDisplay1.SetSelection(len(lbl) - 1)
+		else: self.brailleDisplay1.SetSelection(self.getIdBD(configBE.conf['general']['brailleDisplay1']))
+		loadBDs.Add(wx.StaticText(self, -1, label=_('Braille display to load on NVDA+Shift+k')))
 		self.brailleDisplay2 = wx.Choice(self, pos=(-1, -1), choices=lbl)
 		if configBE.conf['general']['brailleDisplay2'] == -1: self.brailleDisplay2.SetSelection(len(lbl) - 1)
 		else: self.brailleDisplay2.SetSelection(self.getIdBD(configBE.conf['general']['brailleDisplay2']))
@@ -217,8 +190,7 @@ class General(wx.Panel):
 	@staticmethod
 	def onReviewModeApps(event):
 		keycode = event.GetKeyCode()
-		if keycode > 255 or keycode < 32 or re.match('[a-zA-Z_\-0-9 .,]', chr(keycode)):
-			return event.Skip()
+		if keycode > 255 or keycode < 32 or re.match('[a-zA-Z_\-0-9 .,]', chr(keycode)): return event.Skip()
 
 	def onLimitCells(self, event):
 		keycode = event.GetKeyCode()
@@ -235,17 +207,11 @@ class General(wx.Panel):
 					v = configBE.backupDisplaySize if v == configBE.backupDisplaySize else v + 1
 					self.limitCells.SetValue(str(v))
 			return
-		if keycode in [wx.WXK_CONTROL_V]:
-			return
-		if keycode > 255 or keycode < 32 or re.match('[0-9]', chr(keycode)):
-			event.Skip()
-		return
+		if keycode in [wx.WXK_CONTROL_V]: return
+		if keycode > 255 or keycode < 32 or re.match('[0-9]', chr(keycode)): event.Skip()
 
 	@staticmethod
-	def getIdBD(name): return [
-		k[0] for k in braille.getDisplayList()].index(name) if name in [
-			k[0] for k in braille.getDisplayList()] else len(
-				braille.getDisplayList()) - 1
+	def getIdBD(name): return [k[0] for k in braille.getDisplayList()].index(name) if name in [k[0] for k in braille.getDisplayList()] else len(braille.getDisplayList()) - 1
 
 
 class Reading(wx.Panel):
@@ -427,8 +393,8 @@ class Reading(wx.Panel):
 			self.ignoreBlankLineScroll.Enable()
 		return
 
-	outputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.output and table[0] not in configBE.oTables]
-	outputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.oTables if table != '']
+	outputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.output and table[0] not in configBE.oTables] if configBE.oTables != None else []
+	outputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.oTables if table != ''] if configBE.oTables != None else []
 
 class Attribra(wx.Panel):
 	def __init__(self, parent):
@@ -648,8 +614,8 @@ class Keyboard(wx.Panel):
 			self.iTablesPresent.SetSelection(0)
 			self.iTablesPresent.SetFocus()
 
-	inputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.input and table[0] not in configBE.iTables]
-	inputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.iTables if table.strip() != '']
+	inputTablesNotInSwitch = lambda s: [table[1] for table in tables if table.input and table[0] not in configBE.iTables] if configBE.iTables != None else []
+	inputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.iTables if table.strip() != ''] if configBE.iTables != None else []
 
 
 class QuickLaunch(wx.Panel):

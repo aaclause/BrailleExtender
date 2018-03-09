@@ -239,20 +239,17 @@ def getKeysTranslation(n):
 		return nk + n
 
 def getTextInBraille(t = ''):
-	if t == '':
-		t = getTextSelection()
-		t = t.replace('\r','')
+	nt = ""
+	if t == '': t = getTextSelection()
 	if t.strip() != '':
-		t = t.split('\n')
 		for i, l in enumerate(t):
-			t[i] = louis.translateString([os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])], l, None, louis.dotsIO)
-		t = '\n'.join(t)
-		nt = ""
-		for i, ch in enumerate(t):
-			if ch == '\r': continue
-			if ch != '\n': nt += unichr(ord(ch)-0x8000+0x2800)
-			else: nt += '\n'
-		return nt
+			if l not in ['\r','\n']:
+				nt += louis.translateString([os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])], l, None, louis.dotsIO)
+			else: nt += l
+		t = ""
+		for i, ch in enumerate(nt):
+			t += unichr(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch
+		return t
 	else: return ''
 
 def getDescriptionBrailleCell(ch):
@@ -323,8 +320,8 @@ def getTableOverview(tbl = ''):
 def unicodeBrailleToDescription(t, sep = '-'):
 	nt = ""
 	for i, ch in enumerate(t):
-		if ch == '\n':
-			nt += '\n'
+		if ch in ['\r', '\n']:
+			nt += ch
 			continue
 		nt += '%s%s' %(sep if i != 0 else '', getDescriptionBrailleCell(ch))
 	nt = nt.replace('\n'+sep, '\n')

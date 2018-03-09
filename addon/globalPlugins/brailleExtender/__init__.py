@@ -101,15 +101,16 @@ def decorator(fn, s):
 
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
 		conf = formatConfig.copy()
-		conf["reportFontAttributes"] = True
-		conf["reportColor"] = True
-		conf["reportSpellingErrors"] = True
-		if logTextInfo:
-			log.info(info.getTextWithFields(conf))
+		if configBE.conf['general']['attribra']:
+			conf["reportFontAttributes"] = True
+			conf["reportColor"] = True
+			conf["reportSpellingErrors"] = True
+			if logTextInfo: log.info(info.getTextWithFields(conf))
 		fn(self, info, conf, isSelection)
 
 	def update(self):
 		fn(self)
+		if not configBE.conf['general']['attribra']: return
 		if not config.conf["braille"]["translationTable"].endswith('.utb'): return
 		DOT7 = 64
 		DOT8 = 128
@@ -192,12 +193,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time() - configBE.conf['general']['lastCheckUpdate'] > 172800:
 			CheckUpdates(True)
 			configBE.conf['general']['lastCheckUpdate'] = time.time()
-		if configBE.conf['general']['attribra']:
-			configBE.loadConfAttribra()  # parse configuration
-			if len(configBE.confAttribra) > 0:  # If no cfg then do not replace functions
-				braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
-				braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
-				braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
+		configBE.loadConfAttribra()  # parse configuration
+		if len(configBE.confAttribra) > 0:  # If no cfg then do not replace functions
+			braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
+			braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
+			braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScrollBtns()
 		self.thread1.start()
@@ -537,6 +537,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		'Move to previous item using rotor setting')
 	script_nextSetRotor.__doc__ = _('Move to next item using rotor setting')
 
+	def script_toggleAttribra(self, gesture):
+		configBE.conf['general']['attribra'] = not configBE.conf['general']['attribra']
+		self.refreshBD()
+		speech.speakMessage('Attribra %s' % ('enabled' if configBE.conf['general']['attribra'] else 'disabled'))
+	script_toggleAttribra.__doc__ = _('Enable/disable Attribra')
+
 	def script_toggleSpeech(self, gesture):
 		if speech.speechMode == 0:
 			speech.speechMode = 2
@@ -546,6 +552,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_('Speech off'))
 		return
 	script_toggleSpeech.__doc__ = _('Toggle speech on or off')
+
 	def script_getTableOverview(self, gesture):
 		inTable = brailleInput.handler.table.displayName
 		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
@@ -619,7 +626,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				configBE.conf['general']['delayScroll_' + configBE.curBD] * 1000)
 		self.autoScrollRunning = not self.autoScrollRunning
 		return
-
 	script_autoScroll.__doc__ = _('Enable/disable autoscroll')
 
 	def autoScroll(self):
@@ -662,7 +668,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if configBE.conf['general']['reportVolumeSpeech']:
 			speech.speakMessage(str(utils.getVolume()))
 		return
-
 	script_volumeMinus.__doc__ = _('Decrease the master volume')
 
 	def script_toggleVolume(s, g):
@@ -675,7 +680,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if configBE.conf['general']['reportVolumeBraille']:
 			braille.handler.message(s)
 		return
-
 	script_toggleVolume.__doc__ = _('Mute or unmute sound')
 
 	def script_getHelp(s, g):
@@ -786,11 +790,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_switchInputBrailleTable(self, gesture):
 		if configBE.noUnicodeTable:
-			return ui.message(
-				_("Please use NVDA 2017.3 minimum for this feature"))
+			return ui.message(_("Please use NVDA 2017.3 minimum for this feature"))
 		if len(configBE.iTables) < 2:
-			return ui.message(
-				_('You must choose at least two tables for this feature. Please fill in the settings'))
+			return ui.message(_('You must choose at least two tables for this feature. Please fill in the settings'))
 		if not config.conf["braille"]["inputTable"] in configBE.iTables:
 			configBE.iTables.append(config.conf["braille"]["inputTable"])
 		tid = configBE.iTables.index(config.conf["braille"]["inputTable"])

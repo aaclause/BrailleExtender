@@ -20,7 +20,6 @@ addonHandler.initTranslation()
 from logHandler import log
 import configBE
 import queueHandler
-inProcessMsg = _('Feature Not Implemented Yet')
 lastCaptured = None
 tables = brailleTables.listTables()
 restartNVDA_ = False
@@ -82,8 +81,7 @@ class Settings(wx.Dialog):
 		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
 								 configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue() or
 								 configBE.conf['general']['postTable'] != postTable or
-								 (configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]) or
-								 configBE.conf['general']['attribra'] != self.attribra.attribraEnabled.GetValue())):
+								 (configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]))):
 			restartNVDA = True
 		configBE.conf['general']['postTable'] = postTable
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
@@ -411,24 +409,6 @@ class Attribra(wx.Panel):
 		self.italic = wx.CheckBox(self, label=_('Italic'))
 		self.underline = wx.CheckBox(self, label=_('Underline'))
 		self.spellingErrors = wx.CheckBox(self, label=_('Spelling errors'))
-		self.advancedRulesLabel = wx.StaticText(
-			self, -1, label=_('Advanced rules'))
-		self.advancedRules = wx.Choice(self, pos=(-1, -1), choices=[])
-		self.editRuleBtn = wx.Button(self, label=_('&Edit this rule'))
-		self.removeRuleBtn = wx.Button(self, label=_('&Remove this rule'))
-		self.addRuleBtn = wx.Button(self, label=_('&Add a rule'))
-
-		self.addProfileBtn = wx.Button(self, label=_('Add a profile'))
-		self.editProfileBtn = wx.Button(self, label=_('Edit this profile'))
-		self.removeProfileBtn = wx.Button(self, label=_('Remove this profile'))
-
-		self.addRuleBtn.Bind(wx.EVT_BUTTON, self.onAddRuleBtn)
-		self.editRuleBtn.Bind(wx.EVT_BUTTON, self.onEditRuleBtn)
-		self.removeRuleBtn.Bind(wx.EVT_BUTTON, self.onRemoveRuleBtn)
-		self.addProfileBtn.Bind(wx.EVT_BUTTON, self.onAddProfileBtn)
-		self.editProfileBtn.Bind(wx.EVT_BUTTON, self.onEditProfileBtn)
-		self.removeProfileBtn.Bind(wx.EVT_BUTTON, self.onRemoveProfileBtn)
-
 		self.spellingErrors.Bind(wx.EVT_CHECKBOX, self.onSpellingErrors)
 		self.bold.Bind(wx.EVT_CHECKBOX, self.onBold)
 		self.italic.Bind(wx.EVT_CHECKBOX, self.onItalic)
@@ -475,43 +455,9 @@ class Attribra(wx.Panel):
 				del configBE.confAttribra[self.getCurrentProfile()]['invalid-spelling']
 		return
 
-	@staticmethod
-	def onAddRuleBtn(event):
-		ui.message(inProcessMsg)
-		return
-
-	@staticmethod
-	def onEditRuleBtn(event):
-		ui.message(inProcessMsg)
-		return
-
-	@staticmethod
-	def onRemoveRuleBtn(event):
-		ui.message(inProcessMsg)
-		return
-
-	@staticmethod
-	def onAddProfileBtn(event):
-		ui.message(inProcessMsg)
-		return
-
-	@staticmethod
-	def onEditProfileBtn(event):
-		ui.message(inProcessMsg)
-		return
-
-	@staticmethod
-	def onRemoveProfileBtn(event):
-		ui.message(inProcessMsg)
-		return
-
 	def getCurrentProfile(self): return 'global' if self.profiles.GetSelection(
 	) == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
 
-	def getAdvancedRules(self):
-		profileId = 'global' if self.profiles.GetSelection() == 0 else self.getListProfiles(False)[self.profiles.GetSelection()]
-		v = [configBE.translateRule(configBE.confAttribra[profileId][k]) for k in configBE.confAttribra[profileId].keys() if k not in ['bold', 'italic', 'underline', 'invalid-spelling']]
-		return '%s: %s' % (k, v)
 	getListProfiles = lambda self, t = True: ['Default'] + [self.translateApp(k) if t else k for k in configBE.confAttribra.keys() if k != 'global']
 
 	def onProfiles(self, event=None):
@@ -538,17 +484,6 @@ class Attribra(wx.Panel):
 			self.spellingErrors.SetValue(not self.spellingErrors.GetValue())
 		if 'invalid-spelling' not in configBE.confAttribra[app].keys():
 			self.spellingErrors.SetValue(False)
-		self.advancedRules.SetItems(self.getAdvancedRules())
-		if len(self.getAdvancedRules()) > 0:
-			self.advancedRules.SetSelection(0)
-			self.advancedRules.Enable()
-			self.editRuleBtn.Enable()
-			self.removeRuleBtn.Enable()
-		else:
-			self.advancedRules.Disable()
-			self.editRuleBtn.Disable()
-			self.removeRuleBtn.Disable()
-		return
 
 	@staticmethod
 	def translateApp(app):

@@ -7,7 +7,8 @@ from __future__ import unicode_literals
 import re
 import wx
 import gui
-
+from gui.settingsDialogs import SettingsDialog
+import keyLabels
 import addonHandler
 import braille
 import brailleTables
@@ -644,3 +645,84 @@ class QuickLaunch(wx.Panel):
 		self.quickKeys.SetSelection(oldS)
 		dlg.Destroy()
 		return self.quickKeys.SetFocus()
+
+class EditProfileGestures(SettingsDialog):
+	title = _("Editing gesture profiles")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+
+		labelText = _('Profile to edit')
+		profilesList = self.getListProfiles()
+		self.profiles = sHelper.addLabeledControl(labelText, wx.Choice, choices=profilesList)
+		self.profiles.SetSelection(0)
+
+		labelText = _('Gestures category')
+		categoriesList = [_('Single keys'), _('Modifier keys'), _('Practical shortcuts'), _('NVDA commands')]
+		self.categories = sHelper.addLabeledControl(labelText, wx.Choice, choices=categoriesList)
+		self.categories.SetSelection(0)
+		self.categories.Bind(wx.EVT_CHOICE, self.refreshGestures)
+
+		labelText = _('Gestures list')
+		self.gestures = sHelper.addLabeledControl(labelText, wx.Choice, choices=[])
+
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+
+		addGestureButtonID = wx.NewId()
+		self.addGestureButton = bHelper.addButton(self, addGestureButtonID, _("Add gesture"), wx.DefaultPosition)
+
+		removeGestureButtonID = wx.NewId()
+		self.removeGestureButton = bHelper.addButton(self, addGestureButtonID, _("Remove this gesture"), wx.DefaultPosition)
+
+		assignGestureButtonID = wx.NewId()
+		self.assignGestureButton = bHelper.addButton(self, assignGestureButtonID, _("Assign a braille gesture"), wx.DefaultPosition)
+
+		sHelper.addItem(bHelper)
+		self.refreshGestures()
+
+	def postInit(self):
+		self.profiles.SetFocus()
+
+	def refreshGestures(self, evt = None):
+		category = self.categories.GetSelection()
+		items = []
+		ALT = keyLabels.localizedKeyLabels['alt'].capitalize()
+		CTRL = keyLabels.localizedKeyLabels['control'].capitalize()
+		SHIFT = keyLabels.localizedKeyLabels['shift'].capitalize()
+		WIN = keyLabels.localizedKeyLabels['windows'].capitalize()
+		if category == 0:
+			items = sorted([v.capitalize() for v in keyLabels.localizedKeyLabels.values()]+['F%i' % i for i in range(1,13)])
+		elif category == 1:
+			items = [ALT, CTRL, SHIFT, WIN,
+			'%s+%s' % (ALT, CTRL),
+			'%s+%s' % (ALT, SHIFT),
+			'%s+%s' % (ALT, WIN),
+			'%s+%s+%s' % (ALT, CTRL, SHIFT), 
+			'%s+%s+%s+%s' % (ALT, CTRL, SHIFT, WIN),
+			'%s+%s+%s' % (ALT, CTRL, WIN),
+			'%s+%s' % (CTRL, SHIFT),
+			'%s+%s' % (CTRL, WIN),
+				'%s+%s+%s' % (CTRL, SHIFT, WIN),
+			'%s+%s' % (SHIFT, WIN)
+			]
+		elif category == 2:
+			items = sorted([
+				'%s+F4' % ALT,
+				'%s+Tab' % ALT,
+				'%s+Tab' % SHIFT,
+			])
+		self.gestures.SetItems(items)
+		self.gestures.SetSelection(0)
+		self.gestures.SetSelection(0)
+		if category<2:
+			self.addGestureButton.Disable()
+			self.removeGestureButton.Disable()
+		else:
+			self.addGestureButton.Enable()
+			self.removeGestureButton.Enable()
+
+	def getListProfiles(self):
+		return ['Fake profile 1', 'Fake profile 2', 'Fake profile 3']
+
+	def switchProfile(self, evt = None):
+		self.refreshGestures()

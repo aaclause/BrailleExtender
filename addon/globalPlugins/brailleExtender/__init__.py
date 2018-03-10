@@ -149,10 +149,13 @@ def checkUpdates(sil = False):
 			msg = re.findall(r'msg: ?(.+)$', pageContent)
 			msg = msg[0].strip() if len(msg) == 1 else ''
 			if version != configBE._addonVersion: newUpdate = True
+		if not newUpdate and sil:
+			log.debug('No update')
+			return
 		if newUpdate: wx.CallAfter(availableUpdateDialog, version, msg)
 		else: wx.CallAfter(unavailableUpdateDialog, msg)
 	except BaseException, e:
-		log.info(e)
+		log.debug(e)
 		if not newUpdate and sil: return
 		wx.CallAfter(errorUpdateDialog)
 

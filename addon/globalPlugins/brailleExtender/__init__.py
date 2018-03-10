@@ -77,13 +77,84 @@ rotorItem = 0
 
 
 def paramsDL(): return {
-	"versionProtocole": "1.2",
+	"versionProtocole": "1.4",
 	"versionAddon": configBE._addonVersion,
 	"versionNVDA": versionInfo.version,
 	"language": languageHandler.getLanguage(),
 	"installed": config.isInstalledCopy(),
 	"brailledisplay": braille.handler.display.name,
 }
+
+def checkUpdates(sil = False):
+
+	def availableUpdateDialog(version = '', msg = ''):
+		res = gui.messageBox(
+			(_("New version available, version %s. Do you want download it now?") % version.strip()+('\n%s' % msg)).strip(),
+			title,
+			wx.YES|wx.NO|wx.ICON_INFORMATION)
+		if res == wx.YES: processUpdate()
+
+	def unavailableUpdateDialog(msg = ''):
+		gui.messageBox(
+			(_("You are up-to-date. %s is the latest version.") % configBE._addonVersion+'\n%s' % msg).strip(),
+			title,
+			wx.OK|wx.ICON_INFORMATION)
+
+	def errorUpdateDialog():
+		gui.messageBox(
+			_("Oops! There was a problem checking for updates. Please retry later or go to manually at")+'\n%s' % configBE._addonURL,
+			title,
+			wx.OK|wx.ICON_ERROR)
+
+	def processUpdate():
+		url = configBE._addonURL + "latest?" + urllib.urlencode(paramsDL())
+		fp = os.path.join(globalVars.appArgs.configPath, "brailleExtender.nvda-addon")
+		try:
+			dl = urllib.URLopener()
+			dl.retrieve(url, fp)
+			try:
+				curAddons = []
+				for addon in addonHandler.getAvailableAddons():
+					curAddons.append(addon)
+				bundle = addonHandler.AddonBundle(fp)
+				prevAddon = None
+				bundleName = bundle.manifest['name']
+				for addon in curAddons:
+					if not addon.isPendingRemove and bundleName == addon.manifest['name']:
+						prevAddon = addon
+						break
+				if prevAddon:
+					prevAddon.requestRemove()
+				addonHandler.installAddonBundle(bundle)
+				core.restart()
+			except BaseException as e:
+				log.error(e)
+				os.startfile(fp)
+		except BaseException as e:
+			log.error(e)
+			ui.message(_("Unable to save or download update file. Opening your browser"))
+			os.startfile(url)
+		return
+
+	title = _("BrailleExtender's Update")
+	newUpdate = False
+	url = '{0}BrailleExtender.latest?{1}'.format(configBE._addonURL, urllib.urlencode(paramsDL()))
+	msg = ""
+	version = ""
+	try:
+		page = urllib.urlopen(url)
+		pageContent = page.read().strip()
+		if (page.code == 200 and len(pageContent) < 700):
+			version = re.sub('\n(.+)$', '\1', pageContent).strip().replace('\r','').replace('','')
+			msg = re.findall(r'msg: ?(.+)$', pageContent)
+			msg = msg[0].strip() if len(msg) == 1 else ''
+			if version != configBE._addonVersion: newUpdate = True
+		if newUpdate: wx.CallAfter(availableUpdateDialog, version, msg)
+		else: wx.CallAfter(unavailableUpdateDialog, msg)
+	except BaseException, e:
+		log.info(e)
+		if not newUpdate and sil: return
+		wx.CallAfter(errorUpdateDialog)
 
 # ***** Attribra code *****
 def decorator(fn, s):
@@ -191,7 +262,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not self.createMenu():
 			log.error('Impossible to create menu')
 		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time() - configBE.conf['general']['lastCheckUpdate'] > 172800:
-			CheckUpdates(True)
+			checkUpdates(True)
 			configBE.conf['general']['lastCheckUpdate'] = time.time()
 		configBE.loadConfAttribra()  # parse configuration
 		if len(configBE.confAttribra) > 0:  # If no cfg then do not replace functions
@@ -750,7 +821,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_checkUpdate(self, gesture):
 		if not globalVars.appArgs.secure:
-			CheckUpdates()
+			checkUpdates()
 		return
 
 	script_checkUpdate.__doc__ = _(
@@ -875,7 +946,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def onUpdate(evt):
-		return CheckUpdates()
+		return checkUpdates()
 
 	def onGetTableOverview(self, evt):
 		self.script_getTableOverview(None)
@@ -1288,86 +1359,3 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.menu)
 			return True
 		except wx.PyDeadObjectError: return False
-
-
-
-class CheckUpdates(wx.Dialog):
-	def __init__(self, sil=False):
-		global instanceUP
-		if instanceUP is not None:
-			return
-		instanceUP = self
-		newUpdate = False
-		url = '{0}BrailleExtender.latest?{1}'.format(
-			configBE._addonURL, urllib.urlencode(paramsDL()))
-		try:
-			page = urllib.urlopen(url)
-			pageContent = page.read().strip()
-			if (page.code == 200 and pageContent.replace('_', '-')
-					!= configBE._addonVersion and len(pageContent) < 20):
-				newUpdate = True
-				msg = _("New version available, version %s. Do you want download it now?") % pageContent.strip()
-			else:
-				msg = _("You are up-to-date. %s is the latest version.") % configBE._addonVersion
-		except BaseException:
-			msg = _("Oops! There was a problem checking for updates. Please retry later.")
-		if not newUpdate and sil:
-			return
-		wx.Dialog.__init__(self, None, title=_("BrailleExtender's Update"))
-		self.msg = wx.StaticText(self, -1, label=msg)
-		if newUpdate:
-			self.yesBTN = wx.Button(self, wx.ID_YES, label=_("&Yes"))
-			self.noBTN = wx.Button(self, label=_("&No"), id=wx.ID_CLOSE)
-			self.yesBTN.Bind(wx.EVT_BUTTON, self.onYes)
-			self.noBTN.Bind(wx.EVT_BUTTON, self.onClose)
-		else:
-			self.okBTN = wx.Button(self, label=_("OK"), id=wx.ID_CLOSE)
-			self.okBTN.Bind(wx.EVT_BUTTON, self.onClose)
-		self.EscapeId = wx.ID_CLOSE
-		self.Bind(wx.EVT_CLOSE, self.onClose)
-		self.Show(True)
-		return
-
-	def onYes(self, event):
-		global instanceUP
-		self.Destroy()
-		url = configBE._addonURL + "latest?" + urllib.urlencode(paramsDL())
-		fp = os.path.join(globalVars.appArgs.configPath, "brailleExtender.nvda-addon")
-		try:
-			dl = urllib.URLopener()
-			dl.retrieve(url, fp)
-			try:
-				curAddons = []
-				for addon in addonHandler.getAvailableAddons():
-					curAddons.append(addon)
-				bundle = addonHandler.AddonBundle(fp)
-				prevAddon = None
-				bundleName = bundle.manifest['name']
-				for addon in curAddons:
-					if not addon.isPendingRemove and bundleName == addon.manifest['name']:
-						prevAddon = addon
-						break
-				if prevAddon:
-					prevAddon.requestRemove()
-				addonHandler.installAddonBundle(bundle)
-				self.Destroy()
-				instanceUP = None
-				core.restart()
-			except BaseException as e:
-				log.error(e)
-				os.startfile(fp)
-		except BaseException as e:
-			log.error(e)
-			ui.message(_("Unable to save or download update file. Opening your browser"))
-			os.startfile(url)
-		self.Destroy()
-		instanceUP = None
-		return
-
-	def onClose(self, event):
-		global instanceUP
-		try:
-			self.Destroy()
-		except BaseException: pass
-		instanceUP = None
-		return

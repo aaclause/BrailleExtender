@@ -1050,17 +1050,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.clearMessageFlash()
 		if not hasattr(gesture, 'id'):
 			ch = gesture.normalizedIdentifiers[0].split(':')[1]
-			# if ch.isupper:
-			#ch = 'shift+%s'% ch
 			self.sendComb(self.getActualModifiers(False) + ch, gesture)
 		else:
-			if not configBE.noUnicodeTable and configBE.conf['general']['iTableSht'] > -1 and configBE.conf['general']['iTableSht'] < len( brailleTables.listTables()):
-				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, brailleTables.listTables()[configBE.conf['general']['iTableSht']][0]), gesture)
+			if configBE.conf['general']['iTableShortcuts'] != '?':
+				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, configBE.conf['general']['iTableShortcuts']), gesture)
 			else:
 				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):
+		if len(sht.split('+')[-1]) > 1:
+			ui.message(_('You should specify a braille table for shortcuts when you work with a contracted input. Please go in the settings'))
+			return
 		NVDASht = self.sendCombKeysNVDA(sht, gesture)
 		if not NVDASht and 'nvda' not in sht.lower():
 			try:
@@ -1334,6 +1335,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
 	__gestures["kb:nvda+alt+i"] = "translateInCellDescription"
 	__gestures["kb:nvda+alt+y"] = "getTableOverview"
+	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()

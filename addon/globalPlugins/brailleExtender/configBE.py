@@ -53,6 +53,7 @@ begFileAttribra = """# Attribra for BrailleExtender
 try:
 	import brailleTables
 	tablesFN = [t[0] for t in brailleTables.listTables()]
+	tablesUFN = [t[0] for t in brailleTables.listTables() if not t.contracted and t.output]
 	tablesTR = [t[1] for t in brailleTables.listTables()]
 	noUnicodeTable = False
 except BaseException:
@@ -80,7 +81,7 @@ def loadConf():
 		ignoreBlankLineScroll = boolean(default=True)
 		speakScroll = boolean(default=True)
 		speakRoutingTo = boolean(default=True)
-		iTableSht = integer(min=-1, default=-1, max={MAX_TABLES})
+		iTableShortcuts = string(default="?")
 		iTables = string(default="{ITABLE}")
 		oTables = string(default="{OTABLE}")
 		quickLaunchGestures_{CUR_BD} = string(default="{QLGESTURES}")
@@ -114,7 +115,7 @@ def loadConf():
 		return False
 	else:
 		confspec = ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
-		confGen = (u'%s\%s\%s\profile.ini' % (profilesDir, curBD, conf["general"]["profile_%s" % curBD]))
+		confGen = ('%s\%s\%s\profile.ini' % (profilesDir, curBD, conf["general"]["profile_%s" % curBD]))
 		if (curBD != 'noBraille' and osp.exists(confGen)):
 			profileFileExists = True
 			iniProfile = ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
@@ -150,7 +151,7 @@ def loadConf():
 def loadGestures():
 	if gesturesFileExists:
 		if osp.exists(osp.join(profilesDir, "_BrowseMode", config.conf["braille"]["inputTable"] + '.ini')): GLng = config.conf["braille"]["inputTable"]
-		else: GLng = 'en-us-comp8.ctb'
+		else: GLng = 'en-us-comp8.utb'
 		gesturesBMPath = osp.join(profilesDir, "_BrowseMode", "common.ini")
 		gesturesLangBMPath = osp.join(profilesDir, "_BrowseMode/", GLng + ".ini")
 		inputCore.manager.localeGestureMap.load(gesturesBDPath())
@@ -296,3 +297,6 @@ if not osp.exists(cfgFileAttribra):
 	invalid-spelling = 1
 	""")
 	f.close()
+
+if conf['general']['iTableShortcuts'] not in tablesUFN:
+	conf['general']['iTableShortcuts'] = '?'

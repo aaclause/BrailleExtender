@@ -114,8 +114,7 @@ class Settings(wx.Dialog):
 		configBE.conf['general']['attribra'] = self.attribra.attribraEnabled.GetValue()
 		configBE.conf['general']['reviewModeApps'] = self.general.reviewModeApps.GetValue()
 		if not configBE.noUnicodeTable:
-			configBE.conf['general']['iTableSht'] = self.keyboard.iTableSht.GetSelection(
-			) - 1
+			configBE.conf['general']['iTableShortcuts'] = configBE.tablesUFN[self.keyboard.iTableShortcuts.GetSelection()-1] if self.keyboard.iTableShortcuts.GetSelection()>0 else '?'
 		if not self.reading.smartDelayScroll.GetValue():
 			configBE.conf['general']['ignoreBlankLineScroll'] = self.reading.ignoreBlankLineScroll.GetValue()
 		if configBE.gesturesFileExists:
@@ -134,7 +133,7 @@ class Settings(wx.Dialog):
 			gui.messageBox(_(u"You have made a change that requires you restart NVDA"), '%s – %s' % (configBE._addonName, _(u"Restart required")),
 				wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
-			core.restart()
+			queueHandler.queueFunction(queueHandler.eventQueue, core.restart)
 		return instanceGP.onReload(None, True)
 
 	def onClose(self, evt):
@@ -502,10 +501,15 @@ class Keyboard(wx.Panel):
 		if not configBE.noUnicodeTable:
 			lt = [_('Use the current input table')]
 			for table in tables:
-				if table.input: lt.append(table[1])
+				if table.output and not table.contracted: lt.append(table[1])
+			if configBE.conf['general']['iTableShortcuts'] in configBE.tablesUFN:
+				iSht = configBE.tablesUFN.index(configBE.conf['general']['iTableShortcuts']) + 1
+			else: iSht = 0
+
 			wx.StaticText(self, -1, label=_('Input braille table for keyboard shortcut keys'))
-			self.iTableSht = wx.Choice(self, pos=(-1, -1), choices=lt)
-			self.iTableSht.SetSelection(configBE.conf['general']['iTableSht'] + 1)
+			self.iTableShortcuts = wx.Choice(self, pos=(-1, -1), choices=lt)
+			self.iTableShortcuts.SetSelection(iSht)
+
 			wx.StaticText(self, -1, label=_('Input braille tables present in the switch'))
 			self.iTablesPresent = wx.Choice(self, pos=(-1, -1), choices=self.inputTablesInSwitch())
 			self.iTablesPresent.SetSelection(0)
@@ -657,14 +661,15 @@ class EditProfileGestures(SettingsDialog):
 		self.profiles = sHelper.addLabeledControl(labelText, wx.Choice, choices=profilesList)
 		self.profiles.SetSelection(0)
 
+		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
 		labelText = _('Gestures category')
 		categoriesList = [_('Single keys'), _('Modifier keys'), _('Practical shortcuts'), _('NVDA commands')]
-		self.categories = sHelper.addLabeledControl(labelText, wx.Choice, choices=categoriesList)
+		self.categories = sHelper2.addLabeledControl(labelText, wx.Choice, choices=categoriesList)
 		self.categories.SetSelection(0)
 		self.categories.Bind(wx.EVT_CHOICE, self.refreshGestures)
-
 		labelText = _('Gestures list')
-		self.gestures = sHelper.addLabeledControl(labelText, wx.Choice, choices=[])
+		self.gestures = sHelper2.addLabeledControl(labelText, wx.Choice, choices=[])
+		sHelper.addItem(sHelper2)
 
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 
@@ -678,6 +683,16 @@ class EditProfileGestures(SettingsDialog):
 		self.assignGestureButton = bHelper.addButton(self, assignGestureButtonID, _("Assign a braille gesture"), wx.DefaultPosition)
 
 		sHelper.addItem(bHelper)
+
+		bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		removeProfileButtonID = wx.NewId()
+		self.removeProfileButton = bHelper2.addButton(self, removeProfileButtonID, _("Remove this profile"), wx.DefaultPosition)
+
+		addProfileButtonID = wx.NewId()
+		self.addProfileButton = bHelper2.addButton(self, addProfileButtonID, _("Add a profile"), wx.DefaultPosition)
+
+		sHelper.addItem(bHelper2)
+
 		self.refreshGestures()
 
 	def postInit(self):

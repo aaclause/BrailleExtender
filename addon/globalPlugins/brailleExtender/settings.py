@@ -75,14 +75,14 @@ class Settings(wx.Dialog):
 			log.info("Enabling patch for update braille function")
 			configBE.conf["patch"]["updateBraille"] = True
 			restartNVDA = True
-		if (self.reading.speakScroll.GetValue() and not configBE.conf["patch"]["scrollBraille"]):
+		if ((self.reading.speakScroll.GetValue() or self.reading.alwaysSpeakScroll.GetValue()) and not configBE.conf["patch"]["scrollBraille"]):
 			log.info("Enabling patch for scroll braille functions")
 			configBE.conf["patch"]["scrollBraille"] = True
 			restartNVDA = True
-		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue()) or
-								 configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue() or
-								 configBE.conf['general']['postTable'] != postTable or
-								 (configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]))):
+		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue())
+			or configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue()
+			or configBE.conf['general']['postTable'] != postTable 
+			or (configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]))):
 			restartNVDA = True
 		configBE.conf['general']['postTable'] = postTable
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
@@ -108,6 +108,7 @@ class Settings(wx.Dialog):
 			configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
 		configBE.conf['general']['speakScroll'] = self.reading.speakScroll.GetValue()
+		configBE.conf['general']['alwaysSpeakScroll'] = self.reading.alwaysSpeakScroll.GetValue()
 		configBE.conf['general']['speakRoutingTo'] = self.reading.speakRoutingTo.GetValue()
 		configBE.conf['general']['tabSpace'] = self.reading.tabSpace.GetValue()
 		configBE.conf['general']['tabSize'] = self.reading.tabSize.GetValue()
@@ -253,18 +254,19 @@ class Reading(wx.Panel):
 		self.speakRoutingTo = wx.CheckBox(self, label=_('Announce the character when moving with routing buttons'))
 		if configBE.conf['general']['speakRoutingTo']:
 			self.speakRoutingTo.SetValue(True)
-		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling') + (
-				' (%s) ' %
+		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling') + (' (%s) ' %
 				_('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
 		if configBE.conf['general']['speakScroll']:
 			self.speakScroll.SetValue(True)
-		self.delayScrollT = wx.StaticText(
-			self, -1, label=_('&Delay for scroll'))
-		self.delayScroll = wx.TextCtrl(
-			self, -1, value=str(configBE.conf['general']['delayScroll_' + configBE.curBD]))
+		
+		self.alwaysSpeakScroll = wx.CheckBox(self, label=_('Always say the current line during text scrolling') + (' (%s) ' % _('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
+		if configBE.conf['general']['speakScroll']:
+			self.alwaysSpeakScroll.SetValue(True)
+
+		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for autoscroll'))
+		self.delayScroll = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['delayScroll_' + configBE.curBD]))
 		self.delayScroll.Bind(wx.EVT_CHAR, self.onDelayScroll)
-		self.ignoreBlankLineScroll = wx.CheckBox(
-			self, label=_('Hide empty views during autoscroll'))
+		self.ignoreBlankLineScroll = wx.CheckBox(self, label=_('Hide empty views during autoscroll'))
 		if configBE.conf['general']['ignoreBlankLineScroll']:
 			self.ignoreBlankLineScroll.SetValue(True)
 		self.ignoreBlankLineScroll.Disable()

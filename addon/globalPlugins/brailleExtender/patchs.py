@@ -20,7 +20,7 @@ from logHandler import log
 import addonHandler
 
 addonHandler.initTranslation()
-from utils import getCurrentChar
+from utils import getCurrentChar, getLine
 instanceGP = None
 preTable = []
 postTable = []
@@ -32,6 +32,8 @@ def script_braille_routeTo(self, gesture):
 		if ch != "": speech.speakSpelling(ch)
 
 # customize basic functions
+
+# braille.Region.update
 def update(self):
 	"""Update this region.
 	Subclasses should extend this to update L{rawText}, L{cursorPos}, L{selectionStart} and L{selectionEnd} if necessary.
@@ -64,16 +66,13 @@ def update(self):
 				mode=mode, cursorPos=self.cursorPos or 0)
 		except BaseException:
 			if len(postTable) == 0:
-				log.error(
-					"Error with update braille function patch, disabling: %s")
+				log.error("Error with update braille function patch, disabling: %s")
 				configBE.conf["patch"]["updateBraille"] = False
 				configBE.conf["general"]["tabSpace"] = False
 				configBE.conf["general"]["postTable"] = "None"
 				core.restart()
 				return
-			log.warning(
-				'Unable to translate with secondary table: %s and %s.' %
-				(config.conf["braille"]["translationTable"], postTable))
+			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], postTable))
 			postTable = []
 			configBE.conf["general"]["postTable"] = "None"
 			update(self)
@@ -127,18 +126,17 @@ def update(self):
 
 def sayCurrentLine():
 	global instanceGP
-	if braille.handler.tether == braille.handler.TETHER_REVIEW and configBE.conf[
-			'general']['speakScroll'] and not instanceGP.autoScrollRunning:
+	if (configBE.conf['general']['speakScroll'] or configBE.conf['general']['alwaysSpeakScroll']) and not instanceGP.autoScrollRunning:
 		try:
-			scriptHandler.executeScript(
-				globalCommands.commands.script_review_currentLine, None)
-			ui.message(unicode(self.rawText).replace('\0', ''))
-		except BaseException:
-			pass
+			if braille.handler.tether == braille.handler.TETHER_REVIEW:
+				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+				ui.message(unicode(self.rawText).replace('\0', ''))
+			elif configBE.conf['general']['alwaysSpeakScroll']:
+				speech.speakMessage(getLine())
+		except BaseException: pass
+		
 
 # braille.TextInfoRegion.nextLine()
-
-
 def nextLine(self):
 	try:
 		dest = self._readingInfo.copy()
@@ -164,8 +162,6 @@ def nextLine(self):
 		core.restart()
 
 # braille.TextInfoRegion.previousLine()
-
-
 def previousLine(self, start=False):
 	try:
 		dest = self._readingInfo.copy()

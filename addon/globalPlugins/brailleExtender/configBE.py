@@ -26,7 +26,7 @@ curBD = braille.handler.display.name
 cfgFile = globalVars.appArgs.configPath + '\\BrailleExtender.conf'
 cfgFileAttribra = globalVars.appArgs.configPath + '\\attribra-BE.ini'
 reviewModeApps = []
-quickLaunchs = OrderedDict()
+quickLaunches = OrderedDict()
 backupDisplaySize = braille.handler.displaySize
 conf = {}
 iniGestures = {}
@@ -60,10 +60,11 @@ except BaseException:
 	noUnicodeTable = True
 
 def loadConf():
-	global conf, reviewModeApps, quickLaunchs, gesturesFileExists, iTables, oTables, profileFileExists, iniProfile
+	global conf, reviewModeApps, quickLaunches, gesturesFileExists, iTables, oTables, profileFileExists, iniProfile
 	confspec = ConfigObj(StringIO("""
 	[general]
 		autoCheckUpdate = boolean(default=True)
+		channelUpdate = option("stable", "dev", default="stable")
 		lastCheckUpdate = float(min=0, default=0)
 		profile_{CUR_BD} = string(default="default")
 		keyboardLayout_{CUR_BD} = string(default={KEYBOARDLAYOUT})
@@ -103,8 +104,8 @@ def loadConf():
 		MAX_CELLS=420,
 		MAX_DELAYSCROLL=999,
 		MAX_TABLES=420,
-		KEYBOARDLAYOUT=None,
-		QLGESTURES=iniProfile['miscs']['quickLaunch'] if 'miscs' in iniProfile.keys() else ''
+		KEYBOARDLAYOUT=iniProfile['keyboardLayouts'].keys()[0] if 'keyboardLayouts' in iniProfile.keys() else None,
+		QLGESTURES=iniProfile['miscs']['defaultQuickLaunches'] if 'miscs' in iniProfile.keys() else ''
 	)), encoding="UTF-8", list_values=False)
 	confspec.initial_comment = ['%s (%s)' % (_addonName, _addonVersion), _addonURL]
 	confspec.final_comment = ['End Of File']
@@ -130,11 +131,11 @@ def loadConf():
 	if (conf['general']['limitCells_' + curBD] <= backupDisplaySize and conf['general']['limitCells_' + curBD] > 0):
 		braille.handler.displaySize = conf['general']['limitCells_' + curBD]
 	reviewModeApps = [k.strip() for k in conf["general"]["reviewModeApps"].split(',') if k.strip() != '']
-	tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(',') if k.strip() != '']
+	tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(';') if k.strip() != '']
 	tmp2 = [k.strip() for k in conf["general"]["quickLaunchLocations_%s" % curBD].split(';') if k.strip() != '']
 	for i, gesture in enumerate(tmp1):
 		if i >= len(tmp2): break
-		quickLaunchs[gesture] = tmp2[i]
+		quickLaunches[gesture] = tmp2[i]
 	if not noUnicodeTable:
 		lITables = [table[0] for table in brailleTables.listTables() if table.input]
 		lOTables = [table[0] for table in brailleTables.listTables() if table.output]

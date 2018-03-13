@@ -1059,7 +1059,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):
-		if len(sht.split('+')[-1]) > 1:
+		if configBE.conf['general']['iTableShortcuts'] != '?' and brailleInput.handler.table[0].endswith('.ctb'):
 			ui.message(_('You should specify a braille table for shortcuts when you work with a contracted input. Please go in the settings'))
 			return
 		NVDASht = self.sendCombKeysNVDA(sht, gesture)

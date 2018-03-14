@@ -21,6 +21,9 @@ addonHandler.initTranslation()
 from logHandler import log
 import configBE
 import queueHandler
+import glob
+import os
+
 lastCaptured = None
 tables = brailleTables.listTables()
 restartNVDA_ = False
@@ -41,13 +44,13 @@ class Settings(wx.Dialog):
 		self.keyboard = Keyboard(self.nb)
 		self.attribra = Attribra(self.nb)
 		if configBE.curBD != 'noBraille':
-			self.quickLaunch = QuickLaunch(self.nb)
+			self.quickLaunches = QuickLaunches(self.nb)
 		self.nb.AddPage(self.general, _("General"))
 		self.nb.AddPage(self.reading, _("Reading and display"))
 		self.nb.AddPage(self.attribra, _("Attribra"))
 		self.nb.AddPage(self.keyboard, _("Braille keyboard"))
 		if configBE.curBD != 'noBraille':
-			self.nb.AddPage(self.quickLaunch, _("Quick launches"))
+			self.nb.AddPage(self.quickLaunches, _("Quick launches"))
 		self.sizer = wx.BoxSizer()
 		self.sizer.Add(self.nb, 1, wx.EXPAND)
 		self.p.SetSizer(self.sizer)
@@ -72,20 +75,27 @@ class Settings(wx.Dialog):
 		restartNVDA = False if not restartNVDA_ else True
 		if ((self.reading.tabSpace.GetValue() or postTable != "None")
 				and not configBE.conf["patch"]["updateBraille"]):
-			log.info("Enabling patch for update braille function")
+			log.debug("Enabling patch for update braille function")
 			configBE.conf["patch"]["updateBraille"] = True
 			restartNVDA = True
 		if ((self.reading.speakScroll.GetValue() or self.reading.alwaysSpeakScroll.GetValue()) and not configBE.conf["patch"]["scrollBraille"]):
-			log.info("Enabling patch for scroll braille functions")
+			log.debug("Enabling patch for scroll braille functions")
 			configBE.conf["patch"]["scrollBraille"] = True
 			restartNVDA = True
-		if (not restartNVDA and (configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue())
-			or configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue()
-			or configBE.conf['general']['postTable'] != postTable 
-			or (configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]))):
+		if (not restartNVDA and
+			(
+				configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue())
+				or configBE.conf['general']['tabSpace'] != self.reading.tabSpace.GetValue()
+				or configBE.conf['general']['postTable'] != postTable 
+				or
+				(
+					configBE.gesturesFileExists and configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] != configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]
+				)
+			)):
 			restartNVDA = True
 		configBE.conf['general']['postTable'] = postTable
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
+		configBE.conf['general']['channelUpdate'] = 'dev' if self.general.channelUpdate.GetValue() else 'stable'
 		configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
 		configBE.conf['general']['reportVolumeBraille'] = self.general.reportVolumeBraille.GetValue()
 		configBE.conf['general']['reportVolumeSpeech'] = self.general.reportVolumeSpeech.GetValue()
@@ -121,8 +131,8 @@ class Settings(wx.Dialog):
 		if configBE.gesturesFileExists:
 			configBE.conf['general']['keyboardLayout_%s' % configBE.curBD] = configBE.iniProfile['keyboardLayouts'].keys()[self.keyboard.KBMode.GetSelection()]
 		if configBE.curBD != 'noBraille':
-			configBE.conf['general']['quickLaunchGestures_%s' % configBE.curBD] = ', '.join(self.quickLaunch.quickLaunchGestures)
-			configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunch.quickLaunchLocations)
+			configBE.conf['general']['quickLaunchGestures_%s' % configBE.curBD] = ';'.join(self.quickLaunches.quickLaunchGestures)
+			configBE.conf['general']['quickLaunchLocations_%s' % configBE.curBD] = '; '.join(self.quickLaunches.quickLaunchLocations)
 		configBE.conf['general']['iTables'] = ','.join(self.keyboard.iTables)
 		configBE.conf['general']['oTables'] = ','.join(self.reading.oTables)
 		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[self.general.brailleDisplay1.GetSelection()][0]
@@ -149,6 +159,8 @@ class General(wx.Panel):
 		loadBDs = wx.BoxSizer(wx.VERTICAL)
 		self.autoCheckUpdate = wx.CheckBox(self, label=_('Check for updates automatically'))
 		if configBE.conf['general']['autoCheckUpdate']: self.autoCheckUpdate.SetValue(True)
+		self.channelUpdate = wx.CheckBox(self, label=_('Download development versions'))
+		if configBE.conf['general']['channelUpdate'] == 'dev': self.channelUpdate.SetValue(True)
 		self.assistS = wx.CheckBox(self, label=_('Detail the progress of a keyboard shortcut when it is typed'))
 		if configBE.conf['general']['showConstructST']: self.assistS.SetValue(True)
 		settings.Add(self.assistS)
@@ -274,7 +286,7 @@ class Reading(wx.Panel):
 			self, label=_('Adjust the delay autoscroll to the content'))
 		if configBE.conf['general']['smartDelayScroll']:
 			self.smartDelayScroll.SetValue(True)
-		self.smartDelayScroll.Bind(wx.wx.EVT_CHECKBOX, self.onSmartDelay)
+		self.smartDelayScroll.Bind(wx.EVT_CHECKBOX, self.onSmartDelay)
 		self.smartDelayScroll.Disable()
 		self.reverseScroll = wx.CheckBox(
 			self, label=_('Reverse forward scroll and back scroll buttons'))
@@ -560,14 +572,14 @@ class Keyboard(wx.Panel):
 	inputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.iTables if table.strip() != ''] if configBE.iTables != None else []
 
 
-class QuickLaunch(wx.Panel):
+class QuickLaunches(wx.Panel):
 
 	quickLaunchGestures = []
 	quickLaunchLocations = []
 
 	def __init__(self, parent):
-		self.quickLaunchGestures = configBE.quickLaunchs.keys()
-		self.quickLaunchLocations = configBE.quickLaunchs.values()
+		self.quickLaunchGestures = configBE.quickLaunches.keys()
+		self.quickLaunchLocations = configBE.quickLaunches.values()
 		wx.Panel.__init__(self, parent)
 		if configBE.curBD != 'noBraille':
 			self.quickKeysT = wx.StaticText(self, -1, label=_('Gestures for the quick launches')+' ('+_('display: %s' % configBE.curBD)+')' if configBE.curBD != 'noBraille' else '')
@@ -575,7 +587,7 @@ class QuickLaunch(wx.Panel):
 			self.quickKeys.SetSelection(0)
 			self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
 			self.target = wx.TextCtrl(self, -1, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
-			self.target.Bind(wx.wx.EVT_TEXT, self.onTarget)
+			self.target.Bind(wx.EVT_TEXT, self.onTarget)
 			self.browseBtn = wx.Button(self, -1, label=_('&Browse...'))
 			self.removeGestureBtn = wx.Button(self, -1, label=_('&Remove this gesture'))
 			self.addGestureBtn = wx.Button(self, -1, label=_('&Add a quick launch'))
@@ -587,17 +599,20 @@ class QuickLaunch(wx.Panel):
 '%s%s: %s' % (s.quickLaunchGestures[i], configBE.sep, s.quickLaunchLocations[i]) for i, v in enumerate(s.quickLaunchLocations)]
 
 	def onRemoveGestureBtn(self, event):
-		global restartNVDA_
-		id = self.quickKeys.GetSelection()
-		g=self.quickLaunchGestures.pop(id)
-		self.quickLaunchLocations.pop(id)
-		self.quickKeys.SetItems(self.getQuickLaunchList())
-		self.quickKeys.SetSelection(id-1 if id > 0 else 0)
-		self.onQuickKeys(None)
+		def askConfirmation():
+			choice = gui.messageBox(_("Are you sure to want to delete this shorcut?"), '%s – %s' % (configBE._addonName, _("Confirmation")), wx.YES_NO|wx.ICON_QUESTION)
+			if choice == wx.YES: confirmed()
+		def confirmed():
+			id = self.quickKeys.GetSelection()
+			g = self.quickLaunchGestures.pop(id)
+			self.quickLaunchLocations.pop(id)
+			self.quickKeys.SetItems(self.getQuickLaunchList())
+			self.quickKeys.SetSelection(id-1 if id > 0 else 0)
+			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('{BRAILLEGESTURE} removed'.format(BRAILLEGESTURE=g)))
+			self.onQuickKeys(None)
+		wx.CallAfter(askConfirmation)
 		self.quickKeys.SetFocus()
-		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('%s removed.' % g))
-		
-		return
+
 	def captureNow(self):
 		def getCaptured(gesture):
 			if gesture.isModifier:
@@ -606,7 +621,7 @@ class QuickLaunch(wx.Panel):
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Unable to associate this gesture. Please enter another, now'))
 				return False
 			if gesture.normalizedIdentifiers[0].startswith('kb') and ':escape' not in gesture.normalizedIdentifiers[0]:
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Please enter a gesture from your %s braille display. Press Escape to cancel.' % configBE.curBD))
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Please enter a gesture from your {NAME_BRAILLE_DISPLAY} braille display. Press Escape to cancel.'.format(NAME_BRAILLE_DISPLAY=configBE.curBD)))
 				return False
 			if ':escape' not in gesture.normalizedIdentifiers[0]:
 				self.quickLaunchGestures.append(gesture.normalizedIdentifiers[0].split(':')[1])
@@ -641,7 +656,7 @@ class QuickLaunch(wx.Panel):
 
 	def onBrowseBtn(self, event):
 		oldS = self.quickKeys.GetSelection()
-		dlg = wx.FileDialog(None, _("Choose a file for {0}".format(self.quickLaunchGestures[self.quickKeys.GetSelection()])), "%PROGRAMFILES%", "", "*", wx.OPEN)
+		dlg = wx.FileDialog(None, _("Choose a file for {0}".format(self.quickLaunchGestures[self.quickKeys.GetSelection()])), "%PROGRAMFILES%", "", "*", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 		if dlg.ShowModal() != wx.ID_OK:
 			dlg.Destroy()
 			return self.quickKeys.SetFocus()
@@ -656,6 +671,14 @@ class EditProfileGestures(SettingsDialog):
 	title = _("Editing gesture profiles")
 
 	def makeSettings(self, settingsSizer):
+		if configBE.curBD == 'noBraille':
+			self.Destroy()
+			wx.CallAfter(gui.messageBox, _('You must have a braille display to editing a profile'), self.title, wx.OK|wx.ICON_ERROR)
+
+		if not os.path.exists(configBE.profilesDir):
+			self.Destroy()
+			wx.CallAfter(gui.messageBox, _('Dir profiles is not present or accessible. Unable to edit profiles'), self.title, wx.OK|wx.ICON_ERROR)
+
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 
 		labelText = _('Profile to edit')
@@ -710,7 +733,7 @@ class EditProfileGestures(SettingsDialog):
 		if category == 0:
 			items = sorted([v.capitalize() for v in keyLabels.localizedKeyLabels.values()]+['F%i' % i for i in range(1,13)])
 		elif category == 1:
-			items = [ALT, CTRL, SHIFT, WIN,
+			items = [ALT, CTRL, SHIFT, WIN, 'NVDA'
 			'%s+%s' % (ALT, CTRL),
 			'%s+%s' % (ALT, SHIFT),
 			'%s+%s' % (ALT, WIN),
@@ -739,7 +762,13 @@ class EditProfileGestures(SettingsDialog):
 			self.removeGestureButton.Enable()
 
 	def getListProfiles(self):
-		return ['Fake profile 1', 'Fake profile 2', 'Fake profile 3']
+		profilesDir = '%s\%s' %(configBE.profilesDir, configBE.curBD)
+		res = []
+		ls = glob.glob(profilesDir+'\\*')  
+		for e in ls:
+			if os.path.isdir(e) and os.path.exists('%s\%s' %(e, 'profile.ini')): res.append(e.split('\\')[-1].capitalize())
+		if len(res) == 0: res.append('Default')
+		return res
 
 	def switchProfile(self, evt = None):
 		self.refreshGestures()

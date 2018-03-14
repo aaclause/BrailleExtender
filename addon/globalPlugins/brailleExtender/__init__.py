@@ -83,6 +83,7 @@ def paramsDL(): return {
 	"language": languageHandler.getLanguage(),
 	"installed": config.isInstalledCopy(),
 	"brailledisplay": braille.handler.display.name,
+	"channel": configBE.conf['general']['channelUpdate']
 }
 
 def checkUpdates(sil = False):
@@ -409,7 +410,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				elif ('kb:' in g and g.lower() not in ['kb:alt', 'kb:control', 'kb:windows', 'kb:control', 'kb:applications']):
 					self._tGestures[inputCore.normalizeGestureIdentifier(configBE.iniGestures['globalCommands.GlobalCommands'][g])] = "end_combKeys"
 			self._pGestures = OrderedDict()
-			for k, v in (configBE.iniProfile["modifierKeys"].items() + [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'quickLaunch']):
+			for k, v in (configBE.iniProfile["modifierKeys"].items() + [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'defaultQuickLaunches']):
 				if isinstance(v, list):
 					for i, gesture in enumerate(v):
 						if k != 'shortcutsOn':
@@ -417,7 +418,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				else:
 					self._pGestures[inputCore.normalizeGestureIdentifier('br(%s):%s' % (configBE.curBD, v))] = k
 		self.bindGestures(self._pGestures)
-		self.bindGestures({'br(%s):%s' % (configBE.curBD, k): "quickLaunch" for k in configBE.quickLaunchs.keys()})
+		self.bindGestures({'br(%s):%s' % (configBE.curBD, k): "quickLaunch" for k in configBE.quickLaunches.keys()})
 		return
 
 	def bindRotorGES(self):
@@ -805,17 +806,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return s.__gestures
 
 	def script_quickLaunch(self, gesture):
-		if gesture.id not in configBE.quickLaunchs.keys():
+		if gesture.id not in configBE.quickLaunches.keys():
 			gesture.id = gesture.normalizedIdentifiers[0].split(':')[1]
-			if gesture.id not in configBE.quickLaunchs.keys():
-				log.info(configBE.quickLaunchs)
+			if gesture.id not in configBE.quickLaunches.keys():
+				log.info(configBE.quickLaunches)
 				ui.message('Target for %s not defined.' % gesture.id)
 				return
 		try:
-			return subprocess.Popen(configBE.quickLaunchs[gesture.id])
+			return subprocess.Popen(configBE.quickLaunches[gesture.id])
 		except BaseException:
 			try:
-				os.startfile(configBE.quickLaunchs[gesture.id])
+				os.startfile(configBE.quickLaunches[gesture.id])
 			except BaseException:
 				ui.message(_("No such file or directory"))
 			return
@@ -935,7 +936,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.clearGestureBindings()
 		self.bindGestures(self.__gestures)
 		self._pGestures=OrderedDict()
-		configBE.quickLaunchs = OrderedDict()
+		configBE.quickLaunches = OrderedDict()
 		configBE.loadConfAttribra()
 		configBE.loadConf()
 		configBE.initGestures()

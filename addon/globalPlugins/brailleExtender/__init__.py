@@ -12,7 +12,6 @@ import os
 import re
 import urllib
 from collections import OrderedDict
-from threading import Thread
 import wx
 import gui
 import subprocess
@@ -208,23 +207,6 @@ def populateAttrs(pid):
 			ATTRS = {}
 # *************************
 
-class Autoreload_profile(Thread):
-	end = False
-
-	def __init__(self):
-		Thread.__init__(self)
-		return
-
-	def run(self):
-		log.debug('Autoreload_profile started')
-		while not self.end and braille.handler is not None:
-			instanceGP.autoreload_profile()
-		log.debug('Autoreload_profile stopped')
-		return
-
-	def stop(self):
-		self.end = True
-
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
@@ -251,7 +233,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	switchedMode = False
 	instanceST = None
 	currentPid = ""
-	thread1 = Autoreload_profile()
 
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
@@ -263,8 +244,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		configBE.initGestures()
 		configBE.loadGestures()
 		self.gesturesInit()
-		if not self.createMenu():
-			log.error('Impossible to create menu')
+		self.createMenu()
 		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time() - configBE.conf['general']['lastCheckUpdate'] > 172800:
 			checkUpdates(True)
 			configBE.conf['general']['lastCheckUpdate'] = time.time()
@@ -275,7 +255,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if configBE.conf['general']['reverseScroll']:
 			self.reverseScrollBtns()
-		self.thread1.start()
 		return
 
 	def event_gainFocus(self, obj, nextHandler):
@@ -302,6 +281,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				braille.handler.tether = braille.handler.TETHER_REVIEW
 			self.switchedMode = True
 		elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps: self.restorReviewCursorTethering()
+		if braille.handler is not None and configBE.curBD != braille.handler.display.name:
+			configBE.curBD = braille.handler.display.name
+			self.onReload(None, 1)
 		nextHandler()
 		return
 
@@ -321,26 +303,24 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def createMenu(self):
-		try:
-			self.menu = wx.Menu()
-			self.item = self.menu.Append(wx.ID_ANY,_("Documentation"), _("Opens the addon's documentation."))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, self.item)
-			self.item = self.menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, self.item)
-			self.item = self.menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, self.item)
-			self.item = self.menu.Append(wx.ID_ANY, _(u"Edit the current profile gestures..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onEditProfileGestures, self.item)
-			self.item = self.menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, self.item)
-			self.item = self.menu.Append(wx.ID_ANY, _("&Check for update..."), _("Checks if update is available"))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, self.item)
-			self.item = self.menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
-			gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, self.item)
-			self.menu = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, '%s (%s)' % (configBE._addonName, configBE._addonVersion), self.menu)
-			return True
-		except BaseException:
-			return False
+		self.NVDAMenu = gui.mainFrame.sysTrayIcon.menu
+		menu = wx.Menu()
+		self.brailleExtenderMenu = self.NVDAMenu.AppendSubMenu(menu, '%s (%s)' % (configBE._addonName, configBE._addonVersion), _('%s menu' % configBE._addonName))
+
+		item = menu.Append(wx.ID_ANY, _("Documentation"), _("Opens the addon's documentation."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
+		item = menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, item)
+		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, item)
+		item = menu.Append(wx.ID_ANY, _(u"Edit the current profile gestures..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onEditProfileGestures, item)
+		item = menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, item)
+		item = menu.Append(wx.ID_ANY, _("&Check for update..."), _("Checks if update is available"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
+		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
 
 	def gesturesInit(self):
 		# rotor gestures
@@ -963,13 +943,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return self.onReload()
 	script_reloadAddon.__doc__ = _('Reload %s') % configBE._addonName
 
-	def autoreload_profile(self):
-		if braille.handler is not None and configBE.curBD != braille.handler.display.name:
-			configBE.curBD = braille.handler.display.name
-			self.onReload(None, 1)
-		time.sleep(2)
-		return
-
 	def script_reload_brailledisplay(self, gesture):
 		if hasattr(gesture, 'id'):
 			ui.message(_('Please use the keyboard for this feature'))
@@ -1341,8 +1314,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def terminate(self):
 		super(GlobalPlugin, self).terminate()
 		self.restorReviewCursorTethering()
-		self.thread1.stop()
-		self.thread1.join()
 		if self.instanceST is not None:
 			self.instanceST.onClose(None)
 		if instanceUP is not None:
@@ -1360,8 +1331,4 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return configBE.saveSettings()
 
 	def removeMenu(self):
-		try:
-			if self.menu is not None:
-				gui.mainFrame.sysTrayIcon.menu.RemoveItem(self.menu)
-			return True
-		except wx.PyDeadObjectError: return False
+		if hasattr(self, "brailleExtenderMenu"): self.NVDAMenu.RemoveItem(self.brailleExtenderMenu)

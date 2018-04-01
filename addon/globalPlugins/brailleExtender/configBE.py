@@ -97,7 +97,6 @@ def loadConf():
 
 	[patch]
 		updateBraille = boolean(default=True)
-		scrollBraille = boolean(default=True)
 	""".format(
 		CUR_BD=curBD,
 		MAX_BD=42,

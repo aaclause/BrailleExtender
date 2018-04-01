@@ -72,10 +72,6 @@ class Settings(wx.Dialog):
 			log.debug("Enabling patch for update braille function")
 			configBE.conf["patch"]["updateBraille"] = True
 			restartNVDA = True
-		if ((self.reading.speakScroll.GetValue() or self.reading.alwaysSpeakScroll.GetValue()) and not configBE.conf["patch"]["scrollBraille"]):
-			log.debug("Enabling patch for scroll braille functions")
-			configBE.conf["patch"]["scrollBraille"] = True
-			restartNVDA = True
 		if (not restartNVDA and
 			(
 				configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue())
@@ -262,11 +258,10 @@ class Reading(wx.Panel):
 		self.speakRoutingTo = wx.CheckBox(self, label=_('Announce the character when moving with routing buttons'))
 		if configBE.conf['general']['speakRoutingTo']:
 			self.speakRoutingTo.SetValue(True)
-		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling') + (' (%s) ' %
-				_('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
+		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling'))
 		if configBE.conf['general']['speakScroll']: self.speakScroll.SetValue(True)
 
-		self.alwaysSpeakScroll = wx.CheckBox(self, label=_('Always say the current line during text scrolling') + (' (%s) ' % _('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
+		self.alwaysSpeakScroll = wx.CheckBox(self, label=_('Always say the current line during text scrolling'))
 		if configBE.conf['general']['speakScroll']: self.alwaysSpeakScroll.SetValue(True)
 
 		self.stopSpeechScroll = wx.CheckBox(self, label=_('Speech interrupt during scroll'))

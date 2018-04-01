@@ -138,7 +138,7 @@ def sayCurrentLine():
 				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 				ui.message(unicode(self.rawText).replace('\0', ''))
 			elif configBE.conf['general']['alwaysSpeakScroll']:
-				speech.speakMessage(getLine())
+				scriptHandler.executeScript(globalCommands.commands.script_reportCurrentLine, None)
 		except BaseException: pass
 		
 
@@ -162,11 +162,7 @@ def nextLine(self):
 		self._setCursor(dest)
 		speech.cancelSpeech()
 		sayCurrentLine()
-	except BaseException as e:
-		log.error("Error with scroll function patch, disabling: %s" % e)
-		configBE.conf["patch"]["scrollBraille"] = False
-		configBE.conf["general"]["speakScroll"] = False
-		core.restart()
+	except BaseException as e: pass
 
 # braille.TextInfoRegion.previousLine()
 def previousLine(self, start=False):
@@ -196,11 +192,7 @@ def previousLine(self, start=False):
 		self._setCursor(dest)
 		speech.cancelSpeech()
 		sayCurrentLine()
-	except BaseException as e:
-		log.error("Error with scroll function patch, disabling: %s" % e)
-		configBE.conf["patch"]["scrollBraille"] = False
-		configBE.conf["general"]["speakScroll"] = False
-		core.restart()
+	except BaseException as e: pass
 
 def createTabFile(f, c):
 	try:
@@ -213,9 +205,8 @@ def createTabFile(f, c):
 		return False
 
 
-if configBE.conf["patch"]["scrollBraille"]:
-	braille.TextInfoRegion.previousLine = previousLine
-	braille.TextInfoRegion.nextLine = nextLine
+braille.TextInfoRegion.previousLine = previousLine
+braille.TextInfoRegion.nextLine = nextLine
 
 postTableValid = True if configBE.conf['general']['postTable'] in configBE.tablesFN else False
 

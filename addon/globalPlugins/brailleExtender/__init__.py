@@ -185,7 +185,7 @@ def decorator(fn, s):
 	def update(self):
 		fn(self)
 		if not configBE.conf['general']['attribra']: return
-		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"]: return
+		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and 'ru-compbrl.ctb' not in config.conf["braille"]["translationTable"]: return
 		DOT7 = 64
 		DOT8 = 128
 		for i, j in enumerate(self.rawTextTypeforms):
@@ -248,7 +248,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time() - configBE.conf['general']['lastCheckUpdate'] > 172800:
 			checkUpdates(True)
 			configBE.conf['general']['lastCheckUpdate'] = time.time()
+
 		configBE.loadConfAttribra()  # parse configuration
+		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields
+		self.backup__update = braille.TextInfoRegion.update
+		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
 		if len(configBE.confAttribra) > 0:  # If no cfg then do not replace functions
 			braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 			braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
@@ -1313,7 +1317,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 
 	def terminate(self):
-		super(GlobalPlugin, self).terminate()
+		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
+		braille.TextInfoRegion.update = self.backup__update
+		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
 		self.restorReviewCursorTethering()
 		if self.instanceST is not None:
 			self.instanceST.onClose(None)
@@ -1329,7 +1335,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.autoScrollRunning:
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
-		return configBE.saveSettings()
+		configBE.saveSettings()
+		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):
 		if hasattr(self, "brailleExtenderMenu"): self.NVDAMenu.RemoveItem(self.brailleExtenderMenu)

@@ -185,7 +185,7 @@ def decorator(fn, s):
 	def update(self):
 		fn(self)
 		if not configBE.conf['general']['attribra']: return
-		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"]: return
+		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and 'ru-compbrl.ctb' not in config.conf["braille"]["translationTable"]: return
 		DOT7 = 64
 		DOT8 = 128
 		for i, j in enumerate(self.rawTextTypeforms):

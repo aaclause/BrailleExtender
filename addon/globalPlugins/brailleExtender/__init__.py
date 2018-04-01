@@ -1283,7 +1283,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.browseableMessage('Feature in process.')
 
 	def onEditProfileGestures(self, evt):
-		gui.mainFrame._popupSettingsDialog(settings.EditProfileGestures)
+		import editProfileGestures
+		gui.mainFrame._popupSettingsDialog(editProfileGestures.EditProfileGestures)
 
 	def onSettings(self, event):
 		settings.Settings()

@@ -7,8 +7,6 @@ from __future__ import unicode_literals
 import re
 import wx
 import gui
-from gui.settingsDialogs import SettingsDialog
-import keyLabels
 import addonHandler
 import braille
 import brailleTables
@@ -21,10 +19,6 @@ addonHandler.initTranslation()
 from logHandler import log
 import configBE
 import queueHandler
-import glob
-import os
-
-lastCaptured = None
 tables = brailleTables.listTables()
 restartNVDA_ = False
 
@@ -119,6 +113,8 @@ class Settings(wx.Dialog):
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
 		configBE.conf['general']['speakScroll'] = self.reading.speakScroll.GetValue()
 		configBE.conf['general']['alwaysSpeakScroll'] = self.reading.alwaysSpeakScroll.GetValue()
+		configBE.conf['general']['stopSpeechScroll'] = self.reading.stopSpeechScroll.GetValue()
+		configBE.conf['general']['stopSpeechUnknown'] = self.reading.stopSpeechUnknown.GetValue()
 		configBE.conf['general']['speakRoutingTo'] = self.reading.speakRoutingTo.GetValue()
 		configBE.conf['general']['tabSpace'] = self.reading.tabSpace.GetValue()
 		configBE.conf['general']['tabSize'] = self.reading.tabSize.GetValue()
@@ -268,12 +264,16 @@ class Reading(wx.Panel):
 			self.speakRoutingTo.SetValue(True)
 		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling') + (' (%s) ' %
 				_('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
-		if configBE.conf['general']['speakScroll']:
-			self.speakScroll.SetValue(True)
-		
+		if configBE.conf['general']['speakScroll']: self.speakScroll.SetValue(True)
+
 		self.alwaysSpeakScroll = wx.CheckBox(self, label=_('Always say the current line during text scrolling') + (' (%s) ' % _('function disabled automatically due to a crash') if not configBE.conf["patch"]["scrollBraille"] else ''))
-		if configBE.conf['general']['speakScroll']:
-			self.alwaysSpeakScroll.SetValue(True)
+		if configBE.conf['general']['speakScroll']: self.alwaysSpeakScroll.SetValue(True)
+
+		self.stopSpeechScroll = wx.CheckBox(self, label=_('Speech interrupt during scroll'))
+		if configBE.conf['general']['stopSpeechScroll']: self.stopSpeechScroll.SetValue(True)
+
+		self.stopSpeechUnknown = wx.CheckBox(self, label=_('Speech interrupt during unknown gestures'))
+		if configBE.conf['general']['stopSpeechUnknown']: self.stopSpeechScroll.SetValue(True)
 
 		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for autoscroll'))
 		self.delayScroll = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['delayScroll_' + configBE.curBD]))
@@ -282,8 +282,7 @@ class Reading(wx.Panel):
 		if configBE.conf['general']['ignoreBlankLineScroll']:
 			self.ignoreBlankLineScroll.SetValue(True)
 		self.ignoreBlankLineScroll.Disable()
-		self.smartDelayScroll = wx.CheckBox(
-			self, label=_('Adjust the delay autoscroll to the content'))
+		self.smartDelayScroll = wx.CheckBox(self, label=_('Adjust the delay autoscroll to the content'))
 		if configBE.conf['general']['smartDelayScroll']:
 			self.smartDelayScroll.SetValue(True)
 		self.smartDelayScroll.Bind(wx.EVT_CHECKBOX, self.onSmartDelay)
@@ -667,108 +666,3 @@ class QuickLaunches(wx.Panel):
 		dlg.Destroy()
 		return self.quickKeys.SetFocus()
 
-class EditProfileGestures(SettingsDialog):
-	title = _("Editing gesture profiles")
-
-	def makeSettings(self, settingsSizer):
-		if configBE.curBD == 'noBraille':
-			self.Destroy()
-			wx.CallAfter(gui.messageBox, _('You must have a braille display to editing a profile'), self.title, wx.OK|wx.ICON_ERROR)
-
-		if not os.path.exists(configBE.profilesDir):
-			self.Destroy()
-			wx.CallAfter(gui.messageBox, _('Dir profiles is not present or accessible. Unable to edit profiles'), self.title, wx.OK|wx.ICON_ERROR)
-
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-
-		labelText = _('Profile to edit')
-		profilesList = self.getListProfiles()
-		self.profiles = sHelper.addLabeledControl(labelText, wx.Choice, choices=profilesList)
-		self.profiles.SetSelection(0)
-
-		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
-		labelText = _('Gestures category')
-		categoriesList = [_('Single keys'), _('Modifier keys'), _('Practical shortcuts'), _('NVDA commands')]
-		self.categories = sHelper2.addLabeledControl(labelText, wx.Choice, choices=categoriesList)
-		self.categories.SetSelection(0)
-		self.categories.Bind(wx.EVT_CHOICE, self.refreshGestures)
-		labelText = _('Gestures list')
-		self.gestures = sHelper2.addLabeledControl(labelText, wx.Choice, choices=[])
-		sHelper.addItem(sHelper2)
-
-		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-
-		addGestureButtonID = wx.NewId()
-		self.addGestureButton = bHelper.addButton(self, addGestureButtonID, _("Add gesture"), wx.DefaultPosition)
-
-		removeGestureButtonID = wx.NewId()
-		self.removeGestureButton = bHelper.addButton(self, addGestureButtonID, _("Remove this gesture"), wx.DefaultPosition)
-
-		assignGestureButtonID = wx.NewId()
-		self.assignGestureButton = bHelper.addButton(self, assignGestureButtonID, _("Assign a braille gesture"), wx.DefaultPosition)
-
-		sHelper.addItem(bHelper)
-
-		bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		removeProfileButtonID = wx.NewId()
-		self.removeProfileButton = bHelper2.addButton(self, removeProfileButtonID, _("Remove this profile"), wx.DefaultPosition)
-
-		addProfileButtonID = wx.NewId()
-		self.addProfileButton = bHelper2.addButton(self, addProfileButtonID, _("Add a profile"), wx.DefaultPosition)
-
-		sHelper.addItem(bHelper2)
-
-		self.refreshGestures()
-
-	def postInit(self):
-		self.profiles.SetFocus()
-
-	def refreshGestures(self, evt = None):
-		category = self.categories.GetSelection()
-		items = []
-		ALT = keyLabels.localizedKeyLabels['alt'].capitalize()
-		CTRL = keyLabels.localizedKeyLabels['control'].capitalize()
-		SHIFT = keyLabels.localizedKeyLabels['shift'].capitalize()
-		WIN = keyLabels.localizedKeyLabels['windows'].capitalize()
-		if category == 0:
-			items = sorted([v.capitalize() for v in keyLabels.localizedKeyLabels.values()]+['F%i' % i for i in range(1,13)])
-		elif category == 1:
-			items = [ALT, CTRL, SHIFT, WIN, 'NVDA'
-			'%s+%s' % (ALT, CTRL),
-			'%s+%s' % (ALT, SHIFT),
-			'%s+%s' % (ALT, WIN),
-			'%s+%s+%s' % (ALT, CTRL, SHIFT), 
-			'%s+%s+%s+%s' % (ALT, CTRL, SHIFT, WIN),
-			'%s+%s+%s' % (ALT, CTRL, WIN),
-			'%s+%s' % (CTRL, SHIFT),
-			'%s+%s' % (CTRL, WIN),
-				'%s+%s+%s' % (CTRL, SHIFT, WIN),
-			'%s+%s' % (SHIFT, WIN)
-			]
-		elif category == 2:
-			items = sorted([
-				'%s+F4' % ALT,
-				'%s+Tab' % ALT,
-				'%s+Tab' % SHIFT,
-			])
-		self.gestures.SetItems(items)
-		self.gestures.SetSelection(0)
-		self.gestures.SetSelection(0)
-		if category<2:
-			self.addGestureButton.Disable()
-			self.removeGestureButton.Disable()
-		else:
-			self.addGestureButton.Enable()
-			self.removeGestureButton.Enable()
-
-	def getListProfiles(self):
-		profilesDir = '%s\%s' %(configBE.profilesDir, configBE.curBD)
-		res = []
-		ls = glob.glob(profilesDir+'\\*')  
-		for e in ls:
-			if os.path.isdir(e) and os.path.exists('%s\%s' %(e, 'profile.ini')): res.append(e.split('\\')[-1].capitalize())
-		if len(res) == 0: res.append('Default')
-		return res
-
-	def switchProfile(self, evt = None):
-		self.refreshGestures()

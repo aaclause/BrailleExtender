@@ -8,10 +8,16 @@ import os
 import api
 import braille
 import brailleTables
+import brailleDisplayDrivers
 import core
 import config
 import configBE
 import globalCommands
+import inputCore
+import sayAllHandler
+import queueHandler
+import scriptHandler
+import watchdog
 import louis
 import scriptHandler
 import speech
@@ -154,6 +160,7 @@ def nextLine(self):
 				return
 		dest.collapse()
 		self._setCursor(dest)
+		speech.cancelSpeech()
 		sayCurrentLine()
 	except BaseException as e:
 		log.error("Error with scroll function patch, disabling: %s" % e)
@@ -187,6 +194,7 @@ def previousLine(self, start=False):
 				return
 		dest.collapse()
 		self._setCursor(dest)
+		speech.cancelSpeech()
 		sayCurrentLine()
 	except BaseException as e:
 		log.error("Error with scroll function patch, disabling: %s" % e)
@@ -250,3 +258,87 @@ else:
 
 script_braille_routeTo.__doc__ = _("Routes the cursor to or activates the object under this braille cell")
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
+
+def executeGesture(self, gesture):
+		"""Perform the action associated with a gesture.
+		@param gesture: The gesture to execute.
+		@type gesture: L{InputGesture}
+		@raise NoInputGestureAction: If there is no action to perform.
+		"""
+		if watchdog.isAttemptingRecovery:
+			# The core is dead, so don't try to perform an action.
+			# This lets gestures pass through unhindered where possible,
+			# as well as stopping a flood of actions when the core revives.
+			raise NoInputGestureAction
+
+		script = gesture.script
+		if 'brailleDisplayDrivers' in str(type(gesture)):
+			if not configBE.conf['general']['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
+			elif hasattr(script, "__func__") and (script.__func__.func_name in [
+			'script_braille_dots','script_braille_enter',
+			'script_volumePlus','script_volumeMinus','script_toggleVolume',
+			'script_ctrl','script_alt','script_nvda','script_win',
+			'script_ctrlAlt','script_ctrlAltWin','script_ctrlAltWinShift','script_ctrlAltShift','script_ctrlWin','script_ctrlWinShift','script_ctrlShift','script_altWin','script_altWinShift','script_altShift','script_winShift']
+			or (
+				not configBE.conf['general']['stopSpeechScroll'] and 
+			script.__func__.func_name in ['script_braille_scrollBack','script_braille_scrollForward'])):
+				stopSpeech = False
+			else: stopSpeech = True
+		else: stopSpeech = True
+
+		focus = api.getFocusObject()
+		if focus.sleepMode is focus.SLEEP_FULL or (focus.sleepMode and not getattr(script, 'allowInSleepMode', False)):
+			raise NoInputGestureAction
+
+		wasInSayAll=False
+		if gesture.isModifier:
+			if not self.lastModifierWasInSayAll:
+				wasInSayAll=self.lastModifierWasInSayAll=sayAllHandler.isRunning()
+		elif self.lastModifierWasInSayAll:
+			wasInSayAll=True
+			self.lastModifierWasInSayAll=False
+		else:
+			wasInSayAll=sayAllHandler.isRunning()
+		if wasInSayAll:
+			gesture.wasInSayAll=True
+
+		speechEffect = gesture.speechEffectWhenExecuted
+		if not stopSpeech: pass
+		elif speechEffect == gesture.SPEECHEFFECT_CANCEL:
+			queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
+		elif speechEffect in (gesture.SPEECHEFFECT_PAUSE, gesture.SPEECHEFFECT_RESUME):
+			queueHandler.queueFunction(queueHandler.eventQueue, speech.pauseSpeech, speechEffect == gesture.SPEECHEFFECT_PAUSE)
+
+		if log.isEnabledFor(log.IO) and not gesture.isModifier:
+			log.io("Input: %s" % gesture.identifiers[0])
+
+		if self._captureFunc:
+			try:
+				if self._captureFunc(gesture) is False:
+					return
+			except:
+				log.error("Error in capture function, disabling", exc_info=True)
+				self._captureFunc = None
+
+		if gesture.isModifier:
+			raise NoInputGestureAction
+
+		if config.conf["keyboard"]["speakCommandKeys"] and gesture.shouldReportAsCommand:
+			queueHandler.queueFunction(queueHandler.eventQueue, speech.speakMessage, gesture.displayName)
+
+		gesture.reportExtra()
+
+		# #2953: if an intercepted command Script (script that sends a gesture) is queued
+		# then queue all following gestures (that don't have a script) with a fake script so that they remain in order.
+		if not script and scriptHandler._numIncompleteInterceptedCommandScripts:
+			script=lambda gesture: gesture.send()
+
+
+		if script:
+			scriptHandler.queueScript(script, gesture)
+			return
+
+		raise NoInputGestureAction
+
+inputCore.InputManager.executeGesture = executeGesture
+NoInputGestureAction = inputCore.NoInputGestureAction

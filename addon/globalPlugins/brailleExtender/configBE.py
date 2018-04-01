@@ -82,6 +82,8 @@ def loadConf():
 		ignoreBlankLineScroll = boolean(default=True)
 		speakScroll = boolean(default=True)
 		alwaysSpeakScroll = boolean(default=True)
+		stopSpeechScroll = boolean(default=False)
+		stopSpeechUnknown = boolean(default=False)
 		speakRoutingTo = boolean(default=True)
 		iTableShortcuts = string(default="?")
 		iTables = string(default="{ITABLE}")

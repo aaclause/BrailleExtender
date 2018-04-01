@@ -1,5 +1,5 @@
 # coding: utf-8
-# editProfileGestures.py
+# profilesEditor.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
 
@@ -18,8 +18,8 @@ import utils
 
 keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
 
-class EditProfileGestures(SettingsDialog):
-	title = _("Editing gesture profiles")
+class ProfilesEditor(SettingsDialog):
+	title = _("Profiles editor") + " (%s)" % configBE.curBD
 	profilesList = []
 	addonGesturesPrfofile = None
 	generalGesturesProfile = None
@@ -92,7 +92,8 @@ class EditProfileGestures(SettingsDialog):
 	def postInit(self):
 		self.hideNewProfileSection()
 		self.refreshGestures()
-		self.profiles.SetSelection(self.profilesList.index(configBE.conf["general"]["profile_%s" % configBE.curBD]))
+		if len(self.profilesList)>0:
+			self.profiles.SetSelection(self.profilesList.index(configBE.conf["general"]["profile_%s" % configBE.curBD]))
 		self.onProfiles()
 		self.profiles.SetFocus()
 
@@ -103,7 +104,7 @@ class EditProfileGestures(SettingsDialog):
 		CTRL = keyLabels.localizedKeyLabels['control'].capitalize()
 		SHIFT = keyLabels.localizedKeyLabels['shift'].capitalize()
 		WIN = keyLabels.localizedKeyLabels['windows'].capitalize()
-		if category == 0: items = [k[0] for k in keyLabelsList]
+		if category == 0: items = [k[0].capitalize() for k in keyLabelsList]
 		elif category == 1:
 			items = [ALT, CTRL, SHIFT, WIN, "NVDA",
 			'%s+%s' % (ALT, CTRL),
@@ -134,6 +135,7 @@ class EditProfileGestures(SettingsDialog):
 			self.removeGestureButton.Enable()
 
 	def onProfiles(self, evt = None):
+		if len(self.profilesList) == 0: return
 		curProfile = self.profilesList[self.profiles.GetSelection()]
 		self.addonGesturesPrfofile = ConfigObj('%s/baum/%s/profile.ini' % (configBE.profilesDir, curProfile), encoding="UTF-8")
 		self.generalGesturesProfile = ConfigObj('%s/baum/%s/gestures.ini' % (configBE.profilesDir, curProfile), encoding="UTF-8")

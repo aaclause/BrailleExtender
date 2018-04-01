@@ -311,10 +311,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
 		item = menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, item)
+		item = menu.Append(wx.ID_ANY, _(u"Profiles &editor..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
 		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, item)
-		item = menu.Append(wx.ID_ANY, _(u"Edit the current profile gestures..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onEditProfileGestures, item)
 		item = menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, item)
 		item = menu.Append(wx.ID_ANY, _("&Check for update..."), _("Checks if update is available"))
@@ -1282,9 +1282,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def inProcess():
 		ui.browseableMessage('Feature in process.')
 
-	def onEditProfileGestures(self, evt):
-		import editProfileGestures
-		gui.mainFrame._popupSettingsDialog(editProfileGestures.EditProfileGestures)
+	def onProfilesEditor(self, evt):
+		import profilesEditor
+		gui.mainFrame._popupSettingsDialog(profilesEditor.ProfilesEditor)
 
 	def onSettings(self, event):
 		settings.Settings()

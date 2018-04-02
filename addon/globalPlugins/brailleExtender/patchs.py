@@ -138,7 +138,7 @@ def sayCurrentLine():
 				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 				ui.message(unicode(self.rawText).replace('\0', ''))
 			elif configBE.conf['general']['alwaysSpeakScroll']:
-				scriptHandler.executeScript(globalCommands.commands.script_reportCurrentLine, None)
+				speech.speakMessage(getLine())
 		except BaseException: pass
 		
 

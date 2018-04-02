@@ -245,7 +245,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		configBE.loadGestures()
 		self.gesturesInit()
 		self.createMenu()
-		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time() - configBE.conf['general']['lastCheckUpdate'] > 172800:
+		if not globalVars.appArgs.secure and configBE.conf['general']['autoCheckUpdate'] and time.time() - configBE.conf['general']['lastCheckUpdate'] > 86400:
 			checkUpdates(True)
 			configBE.conf['general']['lastCheckUpdate'] = time.time()
 
@@ -271,20 +271,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.currentPid != pid:
 			populateAttrs(pid)
 			self.currentPid = pid
-		if obj.appModule.appName in configBE.reviewModeApps and not self.switchedMode:
-			try:
-				if config.conf["braille"]["autoTether"]:
-					self.backupTether = braille.handler.TETHER_AUTO
-					config.conf["braille"]["autoTether"] = False
-				else:
+			if obj.appModule.appName in configBE.reviewModeApps and not self.switchedMode:
+				if not hasattr(braille.handler, "TETHER_AUTO"):
 					self.backupTether = braille.handler.tether
-				braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
-				braille.handler.handleReviewMove(shouldAutoTether=False)
-			except BaseException:
-				self.backupTether = braille.handler.tether
-				braille.handler.tether = braille.handler.TETHER_REVIEW
-			self.switchedMode = True
-		elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps: self.restorReviewCursorTethering()
+					braille.handler.tether = braille.handler.TETHER_REVIEW
+				else:
+					if config.conf["braille"]["autoTether"]:
+						self.backupTether = braille.handler.TETHER_AUTO
+						config.conf["braille"]["autoTether"] = False
+					else:
+						self.backupTether = braille.handler.tether
+					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
+					braille.handler.handleReviewMove(shouldAutoTether=False)
+				self.switchedMode = True
+			elif self.switchedMode and obj.appModule.appName not in configBE.reviewModeApps: self.restorReviewCursorTethering()
+
 		if braille.handler is not None and configBE.curBD != braille.handler.display.name:
 			configBE.curBD = braille.handler.display.name
 			self.onReload(None, 1)
@@ -293,18 +294,24 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def restorReviewCursorTethering(self):
 		if not self.switchedMode: return
-		try:
+		if not hasattr(braille.handler, "TETHER_AUTO"):
+			braille.handler.tether = self.backupTether
+		else:
 			if self.backupTether == braille.handler.TETHER_AUTO:
 				config.conf["braille"]["autoTether"] = True
 				config.conf["braille"]["tetherTo"] = braille.handler.TETHER_FOCUS
 			else:
 				config.conf["braille"]["autoTether"] = False
 				braille.handler.setTether(self.backupTether, auto=False)
-				braille.handler.handleGainFocus(api.getFocusObject(), shouldAutoTether=False)
-		except BaseException:
-			braille.handler.tether = self.backupTether
+				if self.backupTether == braille.handler.TETHER_REVIEW:
+					braille.handler.handleReviewMove(shouldAutoTether=False)
+				else:
+					focus = api.getFocusObject()
+					if focus.treeInterceptor and not focus.treeInterceptor.passThrough:
+						braille.handler.handleGainFocus(focus.treeInterceptor,shouldAutoTether=False)
+					else:
+						braille.handler.handleGainFocus(focus,shouldAutoTether=False)
 		self.switchedMode = False
-		return
 
 	def createMenu(self):
 		self.NVDAMenu = gui.mainFrame.sysTrayIcon.menu

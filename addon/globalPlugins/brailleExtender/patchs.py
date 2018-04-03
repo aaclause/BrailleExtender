@@ -8,7 +8,7 @@ import os
 import api
 import braille
 import brailleTables
-import brailleDisplayDrivers
+import controlTypes
 import core
 import config
 import configBE
@@ -17,6 +17,7 @@ import inputCore
 import sayAllHandler
 import queueHandler
 import scriptHandler
+import treeInterceptorHandler
 import watchdog
 import louis
 import scriptHandler
@@ -133,14 +134,19 @@ def update(self):
 def sayCurrentLine():
 	global instanceGP
 	if (configBE.conf['general']['speakScroll'] or configBE.conf['general']['alwaysSpeakScroll']) and not instanceGP.autoScrollRunning:
-		try:
-			if braille.handler.tether == braille.handler.TETHER_REVIEW:
-				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
-				ui.message(unicode(self.rawText).replace('\0', ''))
-			elif configBE.conf['general']['alwaysSpeakScroll']:
-				speech.speakMessage(getLine())
-		except BaseException: pass
-		
+		if braille.handler.tether == braille.handler.TETHER_REVIEW:
+			scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+		elif configBE.conf['general']['alwaysSpeakScroll']:
+			obj = api.getFocusObject()
+			treeInterceptor = obj.treeInterceptor
+			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough:
+				obj = treeInterceptor
+			try:
+				info = obj.makeTextInfo(textInfos.POSITION_CARET)
+			except (NotImplementedError, RuntimeError):
+				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
+			info.expand(textInfos.UNIT_LINE)
+			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
 
 # braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -160,8 +166,8 @@ def nextLine(self):
 				return
 		dest.collapse()
 		self._setCursor(dest)
-		speech.cancelSpeech()
-		sayCurrentLine()
+		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
+		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 	except BaseException as e: pass
 
 # braille.TextInfoRegion.previousLine()
@@ -190,8 +196,8 @@ def previousLine(self, start=False):
 				return
 		dest.collapse()
 		self._setCursor(dest)
-		speech.cancelSpeech()
-		sayCurrentLine()
+		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
+		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 	except BaseException as e: pass
 
 def createTabFile(f, c):

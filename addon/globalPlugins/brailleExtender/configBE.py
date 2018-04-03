@@ -303,3 +303,9 @@ if not osp.exists(cfgFileAttribra):
 
 if conf['general']['iTableShortcuts'] not in tablesUFN:
 	conf['general']['iTableShortcuts'] = '?'
+
+def isContractedTable(table):
+	if not table in tablesFN: return False
+	tablePos = tablesFN.index(table)
+	if brailleTables.listTables()[tablePos].contracted: return True
+	return False

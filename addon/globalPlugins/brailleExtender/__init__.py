@@ -1044,7 +1044,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):
-		if configBE.conf['general']['iTableShortcuts'] != '?' and brailleInput.handler.table[0].endswith('.ctb'):
+		if configBE.conf['general']['iTableShortcuts'] != '?' and configBE.isContractedTable(configBE.conf['general']['iTableShortcuts']):
 			ui.message(_('You should specify a braille table for shortcuts when you work with a contracted input. Please go in the settings'))
 			return
 		NVDASht = self.sendCombKeysNVDA(sht, gesture)
@@ -1289,6 +1289,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.__gestures[k] = "braille_scrollBack"
 		self.bindGestures(self.__gestures)
 		return
+
 	@staticmethod
 	def inProcess():
 		ui.browseableMessage('Feature in process.')

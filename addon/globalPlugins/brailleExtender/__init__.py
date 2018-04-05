@@ -212,6 +212,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
 	hourDatePlayed = False
 	autoScrollRunning = False
+	brailleKeyboardLocked = False
 	hourDateTimer = None
 	autoScrollTimer = None
 	modifiers = {
@@ -602,15 +603,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_priorSetRotor.__doc__ = _(
 		'Move to previous item using rotor setting')
 	script_nextSetRotor.__doc__ = _('Move to next item using rotor setting')
+
+	def script_toggleLockBrailleKeyboard(self, gesture):
+		self.brailleKeyboardLocked = not self.brailleKeyboardLocked
+		ui.message(_('Braille keyboard %s') % (_('locked') if self.brailleKeyboardLocked else _('unlocked')))
+	script_toggleLockBrailleKeyboard.__doc__ = _('Lock/unlock braille keyboard')
+
 	def script_toggleAttribra(self, gesture):
 		configBE.conf['general']['attribra'] = not configBE.conf['general']['attribra']
 		self.refreshBD()
-		speech.speakMessage('Attribra %s' % ('enabled' if configBE.conf['general']['attribra'] else 'disabled'))
+		speech.speakMessage('Attribra %s' % (_('enabled') if configBE.conf['general']['attribra'] else _('disabled')))
 	script_toggleAttribra.__doc__ = _('Enable/disable Attribra')
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
 		configBE.conf['general']['speakScrollFocusMode'] = not configBE.conf['general']['speakScrollFocusMode']
-		ui.message('Speech %s while scrolling' % ('enabled' if configBE.conf['general']['speakScrollFocusMode'] else 'disabled'))
+		ui.message(_('Speech %s while scrolling') % (_('enabled') if configBE.conf['general']['speakScrollFocusMode'] else _('disabled')))
 	script_toggleSpeechScrollFocusMode.__doc__ = _('Enable/disable speech while scrolling in focus mode')
 
 	def script_toggleSpeech(self, gesture):

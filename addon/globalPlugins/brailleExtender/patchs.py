@@ -133,10 +133,11 @@ def update(self):
 
 def sayCurrentLine():
 	global instanceGP
-	if (configBE.conf['general']['speakScrollReviewMode'] or configBE.conf['general']['speakScrollFocusMode']) and not instanceGP.autoScrollRunning:
+	if not instanceGP.autoScrollRunning:
 		if braille.handler.tether == braille.handler.TETHER_REVIEW:
-			scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
-		elif configBE.conf['general']['speakScrollFocusMode']:
+			if configBE.conf['general']['speakScrollReviewMode']: scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+			return
+		elif configBE.conf['general']['speakScrollFocusMode'] and configBE.conf['general']['speakScrollFocusMode']:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
@@ -255,6 +256,7 @@ def executeGesture(self, gesture):
 
 		script = gesture.script
 		if 'brailleDisplayDrivers' in str(type(gesture)):
+			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.func_name != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
 			if not configBE.conf['general']['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
 			elif hasattr(script, "__func__") and (script.__func__.func_name in [
 			'script_braille_dots','script_braille_enter',

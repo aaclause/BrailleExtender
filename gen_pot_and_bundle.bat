@@ -1,1 +1,1 @@
-del *.nvda-addon && scons -c && scons pot && scons && pause
+del /S *.pyc *.pyo && del *.nvda-addon && scons -c && scons pot && scons && pause

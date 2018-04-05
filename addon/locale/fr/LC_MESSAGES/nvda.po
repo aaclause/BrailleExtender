@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-04-05 12:39+0200\n"
-"PO-Revision-Date: 2018-04-05 12:41+0200\n"
+"POT-Creation-Date: 2018-04-05 13:11+0200\n"
+"PO-Revision-Date: 2018-04-05 13:17+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -61,14 +61,12 @@ msgid "You are up-to-date. %s is the latest version."
 msgstr "Vous êtes à jour, %s est la dernière version."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:105
-#, fuzzy
-#| msgid "Oops! There was a problem checking for updates. Please retry later."
 msgid ""
 "Oops! There was a problem checking for updates. Please retry later or go to "
 "manually at"
 msgstr ""
 "Oops! Un problème est survenu lors de la vérification des mises à jour. "
-"Veuillez réessayer ultérieurement."
+"Veuillez réessayer plus tard ou aller manuellement à"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:135
 msgid "Unable to save or download update file. Opening your browser"
@@ -103,7 +101,7 @@ msgstr "Ouvre les paramètres du module"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:325
 msgid "Profiles &editor..."
-msgstr "&Éditeur de profils"
+msgstr "&Éditeur de profils..."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:325
 msgid ""
@@ -242,10 +240,8 @@ msgid " Input table"
 msgstr " table d’entrée"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:630
-#, fuzzy
-#| msgid "Output: %s"
 msgid "Output table"
-msgstr "Affichage : %s"
+msgstr "Table de sortie"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:632
 #, python-format
@@ -389,10 +385,9 @@ msgid "I⣿O:{I}"
 msgstr "A: {O} ⣿ S:{I}"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:901
-#, fuzzy, python-brace-format
-#| msgid "Input: {I}; Output: {O}"
+#, python-brace-format
 msgid "Input and output: {I}."
-msgstr "Affichage : {O} ; Saisie: {I}"
+msgstr "Saisie et affichage: {I}."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:903
 #, python-brace-format
@@ -519,14 +514,12 @@ msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr "Copyright (C) 2017 André-Abush Clause, et d’autres contributeurs :"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:46
-#, fuzzy
-#| msgid "Persian translation"
 msgid "German translation"
-msgstr "traduction Persane"
+msgstr "Traduction en allemand"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:47
 msgid "Persian translation"
-msgstr "traduction Persane"
+msgstr "traduction en Persan"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:48
 msgid "Polish and Croatian translations"
@@ -973,16 +966,14 @@ msgid "Say current line while scrolling in focus mode"
 msgstr "Énoncer la ligne actuelle lors du défilement en mode focus"
 
 #: addon\globalPlugins\brailleExtender\settings.py:267
-msgid "Speech interrupt while scrolling on one line"
+msgid "Interrupt speech while scrolling on same line"
 msgstr "Interruption de la parole lors du défilement sur une ligne"
 
 #: addon\globalPlugins\brailleExtender\settings.py:270
-msgid "Speech interrupt during unknown gestures"
-msgstr "Interruption de la parole lors de gestes inconnus"
+msgid "Do not interrupt speech with unknown gestures"
+msgstr "Ne pas interrompre la parole lors de gestes inconnus"
 
 #: addon\globalPlugins\brailleExtender\settings.py:273
-#, fuzzy
-#| msgid "&Delay for scroll"
 msgid "&Delay for autoscroll"
 msgstr "&Délai pour le défilement automatique"
 
@@ -1098,7 +1089,7 @@ msgstr ""
 #: addon\globalPlugins\brailleExtender\settings.py:605
 #, python-brace-format
 msgid "{BRAILLEGESTURE} removed"
-msgstr ""
+msgstr "{BRAILLEGESTURE} supprimé"
 
 #: addon\globalPlugins\brailleExtender\settings.py:615
 msgid "Unable to associate this gesture. Please enter another, now"

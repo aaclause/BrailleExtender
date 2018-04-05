@@ -133,10 +133,11 @@ def update(self):
 
 def sayCurrentLine():
 	global instanceGP
-	if (configBE.conf['general']['speakScrollReviewMode'] or configBE.conf['general']['speakScrollFocusMode']) and not instanceGP.autoScrollRunning:
+	if not instanceGP.autoScrollRunning:
 		if braille.handler.tether == braille.handler.TETHER_REVIEW:
-			scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
-		elif configBE.conf['general']['speakScrollFocusMode']:
+			if configBE.conf['general']['speakScrollReviewMode']: scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+			return
+		elif configBE.conf['general']['speakScrollFocusMode'] and configBE.conf['general']['speakScrollFocusMode']:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor

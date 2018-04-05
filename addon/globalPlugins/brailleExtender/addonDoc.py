@@ -43,7 +43,7 @@ class AddonDoc():
 		doc += '<h2 lang="en">Copyrights and acknowledgements</h2>' + ('\n'.join([
 			"<p>",
 			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
-			"<ul><li>Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation"), "</li>",
+			"<ul><li>Adriani Botez &lt;adriani.botez@gmail.com&gt; and Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation"), ";</li>",
 				"<li>Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;: " + _("Persian translation") + ";</li>",
 			"<li>Zvonimir stanecic &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li></ul>",
 			"<p>" + _("Additional third party copyrighted code is included:") + "</p>",

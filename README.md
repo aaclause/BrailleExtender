@@ -17,7 +17,7 @@ BrailleExtender is an [NVDA](http://nvda-project.org/) add-on that provides vari
 * Display tab signs as spaces.
 * Reverse forward scroll and back scroll buttons.
 * Say the current line during text scrolling.
-* Etc.
+* Etc..
 
 For some braille displays, it extends the braille display commands to provide:
 

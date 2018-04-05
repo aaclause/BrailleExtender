@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-03-23 06:54+0100\n"
-"PO-Revision-Date: 2018-04-05 01:26+0100\n"
+"PO-Revision-Date: 2018-04-05 11:02+0200\n"
 "Last-Translator: Adriani Botez <adriani.botez@gmail.com>\n"
 "Language-Team: b-a-c.at/YetiAnt\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -124,7 +124,7 @@ msgstr "Erweiterung neu laden"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:318
 msgid "Reload this add-on."
-msgstr "Erweiterung neu laden."
+msgstr "diese Erweiterung neu laden."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:320
 msgid "&Check for update..."
@@ -140,7 +140,7 @@ msgstr "&Webseite"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:322
 msgid "Open addon's website."
-msgstr "öffne die Webseite des AddOns."
+msgstr "Webseite des AddOns öffnen"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:466
 msgid "Character"
@@ -185,11 +185,11 @@ msgstr "nächste Rotoreinstellung auswählen"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:579
 msgid "Move to previous item depending rotor setting"
-msgstr "Zum vorherigen Eintrag scrollen basierend auf Rotoreinstellung"
+msgstr "Gehe zum vorigen Objekt gemäß der Rotor-Einstellung"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:581
 msgid "Move to next item depending rotor setting"
-msgstr "Zum nächsten Eintrag scrollen basierend auf Rotoreinstellung"
+msgstr "Gehe zum nächsten Objekt gemäß der Rotor-Einstellung"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:589
 msgid ""
@@ -201,11 +201,11 @@ msgstr ""
 
 #: addon\globalPlugins\brailleExtender\__init__.py:592
 msgid "Move to previous item using rotor setting"
-msgstr "Mit der Rotoreinstellung zum vorherigen Eintrag scrollen"
+msgstr "gemäß der Rotoreinstellung zum vorherigen Eintrag scrollen"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:593
 msgid "Move to next item using rotor setting"
-msgstr "Mit der Rotoreinstellung zum nächsten Eintrag scrollen"
+msgstr "gemäß der Rotoreinstellung zum nächsten Eintrag scrollen"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:599
 msgid "Enable/disable Attribra"
@@ -248,7 +248,7 @@ msgstr "Tabellenvorschau (%s)"
 #: addon\globalPlugins\brailleExtender\__init__.py:618
 #| msgid "Announce the current input and output braille tables"
 msgid "Display an overview of current input braille table"
-msgstr "Zeigt einen Vorschau der aktuellen Braille-Eingabetabelle an "
+msgstr "Zeigt eine Vorschau der aktuellen Braille-Eingabetabelle an "
 
 #: addon\globalPlugins\brailleExtender\__init__.py:622
 #: addon\globalPlugins\brailleExtender\__init__.py:629
@@ -295,11 +295,11 @@ msgstr "Automatisch Scrollen ein/aus"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:699
 msgid "Increase the master volume"
-msgstr "Hauptlautstärke erhöhen"
+msgstr "Systemlautstärke erhöhen"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:726
 msgid "Decrease the master volume"
-msgstr "Hauptlautstärke verringern"
+msgstr "Systemlautstärke verringern"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:731
 msgid "Muted sound"
@@ -356,7 +356,7 @@ msgid ""
 "settings"
 msgstr ""
 "Für diese Funktion sind mindestens zwei Braille-Tabellen erforderlich. Dies "
-"kann in den Einstellungen der Erweiterung geändert werden."
+"kann in den Einstellungen der Erweiterung festgelegt werden."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:857
 #, python-format
@@ -392,7 +392,7 @@ msgstr "I:{I} ⣿ O: {O}"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:889
 msgid "Input: {I}; Output: {O}"
-msgstr "Input: {I}; Output: {O}"
+msgstr "Eingabe: {I}; Ausgabe: {O}"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:893
 msgid "Announce the current input and output braille tables"
@@ -430,7 +430,7 @@ msgstr "%s neu laden"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:948
 msgid "Please use the keyboard for this feature"
-msgstr "für diese Funktion bitte die Systemtastatur verwenden"
+msgstr "für diese Funktion bitte die PC-Tastatur verwenden"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:954
 msgid "No braille display specified. No reload to do"
@@ -497,7 +497,7 @@ msgstr "Simuliere die Taste Pfeil abwärts"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:1236
 msgid " on the system keyboard"
-msgstr "auf der Systemtastatur"
+msgstr "auf der System-Tastatur"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:34
 #, python-format
@@ -518,7 +518,7 @@ msgstr "Polnische und kroatische Übersetzungen"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:48
 msgid "Additional third party copyrighted code is included:"
-msgstr "Zusätzliches Programm-Code mit Copyright von Dritten ist enthalten:"
+msgstr "Zusätzlicher Programm-Code mit Copyright von Dritten ist enthalten:"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:51
 msgid "Thanks also to"
@@ -550,7 +550,7 @@ msgstr "Änderungsnotizen:"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:82
 msgid "New feature"
-msgstr "Neue Funktion"
+msgstr "Neue Funktionalität"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:83
 msgid "New translation"
@@ -601,7 +601,7 @@ msgstr ""
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:93
 msgid "the rotor"
-msgstr "der Rotor (xxx2)"
+msgstr "der Rotor"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:94
 msgid "New modes"
@@ -635,7 +635,7 @@ msgstr "Tastenkürzel auf der Braillezeile"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:113
 msgid "Simple keys"
-msgstr "Einzelne Tasten (xxx3)"
+msgstr "Einfache Tasten"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:115
 msgid "Usual shortcuts"
@@ -643,7 +643,7 @@ msgstr "übliche Tastenkürzel"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:118
 msgid "Standard NVDA commands"
-msgstr "Standardbefehle von NVDA"
+msgstr "Standard-NVDA-Befehle"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:121
 #: addon\globalPlugins\brailleExtender\settings.py:691
@@ -692,7 +692,8 @@ msgstr "Warnung:"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:164
 msgid "BrailleExtender doesn't seem to support your braille display."
-msgstr "Diese Brailezeile wird von BrailleExtender nicht unterstützt."
+msgstr ""
+"Diese Braille-Zeile wird von BrailleExtender anscheinend nicht unterstützt."
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:165
 msgid ""
@@ -704,7 +705,7 @@ msgstr ""
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:167
 msgid "Shortcuts on system keyboard specific to the add-on"
-msgstr "Erweiterungsspezifische Tastenbefehle für die Systemtastatur"
+msgstr "Erweiterungsspezifische Tastenbefehle für die PC-Tastatur"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:186
 #, python-format
@@ -790,11 +791,11 @@ msgstr "detailierte Darstellung eines Tastenkürzels während der Eingabe"
 
 #: addon\globalPlugins\brailleExtender\settings.py:167
 msgid "Report of the new volume in braille"
-msgstr "neue Lautstärke via Braille anzeigen"
+msgstr "neue Lautstärke in Braille anzeigen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:170
 msgid "Report of the new volume in speech"
-msgstr "neue Lautstärke via Sprache ansagen"
+msgstr "neue Lautstärke ansagen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:173
 msgid "Display time and date infinitely"
@@ -884,7 +885,7 @@ msgstr ""
 
 #: addon\globalPlugins\brailleExtender\settings.py:292
 msgid "Reverse forward scroll and back scroll buttons"
-msgstr "Scrolltasten für das Scrollen nach links und rechts vertauschen"
+msgstr "Scrolltasten für links und rechts vertauschen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:295
 msgid "Customize role labels"
@@ -965,15 +966,15 @@ msgstr "Braillezeile: %s"
 
 #: addon\globalPlugins\brailleExtender\settings.py:591
 msgid "&Browse..."
-msgstr "&Anzeigen"
+msgstr "Anzeigen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:592
 msgid "&Remove this gesture"
-msgstr "&Diesen Befehl entfernen"
+msgstr "Diese Tastenkombination entfe&rnen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:593
 msgid "&Add a quick launch"
-msgstr "Schnell&start hinzufügen"
+msgstr "Schnellst&art hinzufügen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:603
 msgid "Are you sure to want to delete this shorcut?"
@@ -991,8 +992,8 @@ msgstr "{BRAILLEGESTURE} entfernt"
 #: addon\globalPlugins\brailleExtender\settings.py:621
 msgid "Unable to associate this gesture. Please enter another, now"
 msgstr ""
-"Dieser Tastenbefehl kann nicht zugewiesen werden, versuche es mit einem "
-"anderen Befehl"
+"Diese Tastenkombination kann nicht zugewiesen werden; Andere "
+"Tastenkombination"
 
 #: addon\globalPlugins\brailleExtender\settings.py:624
 msgid ""
@@ -1034,7 +1035,7 @@ msgstr ""
 #: addon\globalPlugins\brailleExtender\settings.py:684
 #| msgid "Profile reloaded"
 msgid "Profile to edit"
-msgstr "Profil"
+msgstr "Profil zum Bearbeiten"
 
 #: addon\globalPlugins\brailleExtender\settings.py:690
 msgid "Gestures category"
@@ -1057,7 +1058,7 @@ msgstr "NVDA-Befehle"
 
 #: addon\globalPlugins\brailleExtender\settings.py:695
 msgid "Gestures list"
-msgstr "Liste der Tastenbefehle"
+msgstr "Liste der Tastenkombinationen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:702
 msgid "Add gesture"
@@ -1191,7 +1192,7 @@ msgstr "Tabulatorzeichen mit Leerzeichen darstellen"
 
 #: buildVars.py:29
 msgid "reverse forward scroll and back scroll buttons"
-msgstr "Scrolltasten für das Scrollen nach links und rechts vertauschen"
+msgstr "Scrolltasten für links und rechts vertauschen"
 
 #: buildVars.py:30
 msgid "say the current line during text scrolling, in review mode"
@@ -1209,7 +1210,7 @@ msgstr "Zugriff auf Funktionstasten, Multimedia-Tasten, Schnellnavigation"
 #: buildVars.py:33
 msgid "emulate modifier keys, and thus any keyboard shortcut"
 msgstr ""
-"Möglichkeit, Befehls-Tasten zu simulieren. Somit kann jede Tastenkombination "
+"Möglichkeit, Umschalttasten zu simulieren. Somit kann jede Tastenkombination "
 "ausgeführt werden"
 
 #: buildVars.py:34

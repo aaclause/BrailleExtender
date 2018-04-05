@@ -264,10 +264,10 @@ class Reading(wx.Panel):
 		self.speakScrollFocusMode = wx.CheckBox(self, label=_('Say current line while scrolling in focus mode'))
 		if configBE.conf['general']['speakScrollFocusMode']: self.speakScrollFocusMode.SetValue(True)
 
-		self.stopSpeechScroll = wx.CheckBox(self, label=_('Speech interrupt while scrolling on one line'))
+		self.stopSpeechScroll = wx.CheckBox(self, label=_('Interrupt speech while scrolling on same line'))
 		if configBE.conf['general']['stopSpeechScroll']: self.stopSpeechScroll.SetValue(True)
 
-		self.stopSpeechUnknown = wx.CheckBox(self, label=_('Speech interrupt during unknown gestures'))
+		self.stopSpeechUnknown = wx.CheckBox(self, label=_('Do not interrupt speech with unknown gestures'))
 		if configBE.conf['general']['stopSpeechUnknown']: self.stopSpeechScroll.SetValue(True)
 
 		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for autoscroll'))

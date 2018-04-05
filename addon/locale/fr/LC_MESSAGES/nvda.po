@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-04-05 13:11+0200\n"
-"PO-Revision-Date: 2018-04-05 13:24+0200\n"
+"POT-Creation-Date: 2018-04-05 20:25+0200\n"
+"PO-Revision-Date: 2018-04-05 20:34+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -111,10 +111,8 @@ msgstr ""
 "modification, etc.)."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:327
-#, fuzzy
-#| msgid "Use the current input table"
 msgid "Overview of the current input braille table"
-msgstr "Utiliser la table braille d’entrée actuelle"
+msgstr "Aperçu de la table braille d'entrée actuelle"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:329
 msgid "Reload add-on"
@@ -170,10 +168,8 @@ msgid "Not supported here or browse mode not enabled"
 msgstr "Non supporté ici ou mode navigation non activé"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:533
-#, fuzzy
-#| msgid "Feature Not Implemented Yet"
 msgid "Not implemented yet"
-msgstr "Fonctionnalité pas encore implémentée"
+msgstr "Pas encore implémentée"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:534
 msgid "Select previous rotor setting"
@@ -731,7 +727,7 @@ msgstr "description actuellement indisponible pour ce raccourci"
 msgid "caps lock"
 msgstr "verrouillage majuscules"
 
-#: addon\globalPlugins\brailleExtender\patchs.py:241
+#: addon\globalPlugins\brailleExtender\patchs.py:242
 msgid "Routes the cursor to or activates the object under this braille cell"
 msgstr ""
 
@@ -751,18 +747,14 @@ msgstr ""
 "modifier les profils"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:40
-#, fuzzy
-#| msgid "Profile reloaded"
 msgid "Profile to edit"
-msgstr "Profil rechargé"
+msgstr "Profil à éditer"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:46
 msgid "Gestures category"
 msgstr "Catégorie de gestes"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:47
-#, fuzzy
-#| msgid "Simple keys"
 msgid "Single keys"
 msgstr "Touches simples"
 
@@ -791,14 +783,12 @@ msgid "Add gesture"
 msgstr "Ajouter un geste"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:63
-#, fuzzy
-#| msgid "&Remove this gesture"
 msgid "Remove this gesture"
-msgstr "&Supprimer ce geste"
+msgstr "Supprimer ce geste"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:66
 msgid "Assign a braille gesture"
-msgstr "Attribuer un geste braille"
+msgstr "Assigner un geste braille"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:73
 msgid "Remove this profile"
@@ -806,13 +796,11 @@ msgstr "Supprimer ce profil"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:76
 msgid "Add a profile"
-msgstr "&Ajouter un profil"
+msgstr "Ajouter un profil"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:82
-#, fuzzy
-#| msgid "Remove this profile"
 msgid "Name for the new profile"
-msgstr "Supprimer ce profil"
+msgstr "Nom pour le nouveau profil"
 
 #: addon\globalPlugins\brailleExtender\profilesEditor.py:88
 msgid "Create"

@@ -15,6 +15,8 @@ from logHandler import log
 import ui
 import configBE
 import utils
+import addonHandler
+addonHandler.initTranslation()
 
 keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
 

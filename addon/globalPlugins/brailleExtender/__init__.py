@@ -602,12 +602,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_priorSetRotor.__doc__ = _(
 		'Move to previous item using rotor setting')
 	script_nextSetRotor.__doc__ = _('Move to next item using rotor setting')
-
 	def script_toggleAttribra(self, gesture):
 		configBE.conf['general']['attribra'] = not configBE.conf['general']['attribra']
 		self.refreshBD()
 		speech.speakMessage('Attribra %s' % ('enabled' if configBE.conf['general']['attribra'] else 'disabled'))
 	script_toggleAttribra.__doc__ = _('Enable/disable Attribra')
+
+	def script_toggleSpeechScrollFocusMode(self, gesture):
+		configBE.conf['general']['speakScrollFocusMode'] = not configBE.conf['general']['speakScrollFocusMode']
+		ui.message('Speech %s while scrolling' % ('enabled' if configBE.conf['general']['speakScrollFocusMode'] else 'disabled'))
+	script_toggleSpeechScrollFocusMode.__doc__ = _('Enable/disable speech while scrolling in focus mode')
 
 	def script_toggleSpeech(self, gesture):
 		if speech.speechMode == 0:
@@ -1044,7 +1048,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):
-		if configBE.conf['general']['iTableShortcuts'] != '?' and configBE.isContractedTable(configBE.conf['general']['iTableShortcuts']):
+		if ((configBE.conf['general']['iTableShortcuts'] != '?' and configBE.isContractedTable(configBE.conf['general']['iTableShortcuts']))
+			or (configBE.conf['general']['iTableShortcuts'] == '?' and configBE.isContractedTable(brailleInput.handler.table.fileName))
+		):
 			ui.message(_('You should specify a braille table for shortcuts when you work with a contracted input. Please go in the settings'))
 			return
 		NVDASht = self.sendCombKeysNVDA(sht, gesture)
@@ -1052,7 +1058,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			try:
 				return self.sendCombKeys(sht)
 			except BaseException as e:
-				log.debug(e)
+				log.error(e)
 				return ui.message(_('Unable to send %s') % sht)
 		elif not NVDASht:  # and 'nvda' in sht.lower()
 			return ui.message(_('%s is not part of a NVDA commands') % sht)

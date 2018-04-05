@@ -60,10 +60,10 @@ class Settings(wx.Dialog):
 		return
 
 	def onOK(self, evt):
-		self.onSave(None)
+		self.onSave(None, True)
 		self.onClose(None)
 
-	def onSave(self, evt):
+	def onSave(self, evt = None, sil = False):
 		postTableID = self.reading.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		restartNVDA = False if not restartNVDA_ else True
@@ -107,8 +107,8 @@ class Settings(wx.Dialog):
 		except BaseException:
 			configBE.conf['general']['limitCells_' + configBE.curBD] = 0
 		configBE.conf['general']['smartDelayScroll'] = self.reading.smartDelayScroll.GetValue()
-		configBE.conf['general']['speakScroll'] = self.reading.speakScroll.GetValue()
-		configBE.conf['general']['alwaysSpeakScroll'] = self.reading.alwaysSpeakScroll.GetValue()
+		configBE.conf['general']['speakScrollReviewMode'] = self.reading.speakScrollReviewMode.GetValue()
+		configBE.conf['general']['speakScrollFocusMode'] = self.reading.speakScrollFocusMode.GetValue()
 		configBE.conf['general']['stopSpeechScroll'] = self.reading.stopSpeechScroll.GetValue()
 		configBE.conf['general']['stopSpeechUnknown'] = self.reading.stopSpeechUnknown.GetValue()
 		configBE.conf['general']['speakRoutingTo'] = self.reading.speakRoutingTo.GetValue()
@@ -129,7 +129,6 @@ class Settings(wx.Dialog):
 		configBE.conf['general']['oTables'] = ','.join(self.reading.oTables)
 		configBE.conf['general']['brailleDisplay1'] = braille.getDisplayList()[self.general.brailleDisplay1.GetSelection()][0]
 		configBE.conf['general']['brailleDisplay2'] = braille.getDisplayList()[self.general.brailleDisplay2.GetSelection()][0]
-		self.buttonC.SetFocus()
 		configBE.saveSettingsAttribra()
 		configBE.saveSettings()
 		if restartNVDA:
@@ -137,6 +136,7 @@ class Settings(wx.Dialog):
 				wx.OK | wx.ICON_INFORMATION)
 			self.onClose(None)
 			queueHandler.queueFunction(queueHandler.eventQueue, core.restart)
+		if not sil: queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Applied'))
 		return instanceGP.onReload(None, True)
 
 	def onClose(self, evt):
@@ -258,16 +258,16 @@ class Reading(wx.Panel):
 		self.speakRoutingTo = wx.CheckBox(self, label=_('Announce the character when moving with routing buttons'))
 		if configBE.conf['general']['speakRoutingTo']:
 			self.speakRoutingTo.SetValue(True)
-		self.speakScroll = wx.CheckBox(self, label=_('In review mode, say the current line during text scrolling'))
-		if configBE.conf['general']['speakScroll']: self.speakScroll.SetValue(True)
+		self.speakScrollReviewMode = wx.CheckBox(self, label=_('Say current line while scrolling in review mode'))
+		if configBE.conf['general']['speakScrollReviewMode']: self.speakScrollReviewMode.SetValue(True)
 
-		self.alwaysSpeakScroll = wx.CheckBox(self, label=_('Always say the current line during text scrolling'))
-		if configBE.conf['general']['speakScroll']: self.alwaysSpeakScroll.SetValue(True)
+		self.speakScrollFocusMode = wx.CheckBox(self, label=_('Say current line while scrolling in focus mode'))
+		if configBE.conf['general']['speakScrollFocusMode']: self.speakScrollFocusMode.SetValue(True)
 
-		self.stopSpeechScroll = wx.CheckBox(self, label=_('Speech interrupt during scroll'))
+		self.stopSpeechScroll = wx.CheckBox(self, label=_('Interrupt speech while scrolling on same line'))
 		if configBE.conf['general']['stopSpeechScroll']: self.stopSpeechScroll.SetValue(True)
 
-		self.stopSpeechUnknown = wx.CheckBox(self, label=_('Speech interrupt during unknown gestures'))
+		self.stopSpeechUnknown = wx.CheckBox(self, label=_('Do not interrupt speech with unknown gestures'))
 		if configBE.conf['general']['stopSpeechUnknown']: self.stopSpeechScroll.SetValue(True)
 
 		self.delayScrollT = wx.StaticText(self, -1, label=_('&Delay for autoscroll'))

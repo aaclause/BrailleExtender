@@ -133,16 +133,14 @@ def update(self):
 
 def sayCurrentLine():
 	global instanceGP
-	if (configBE.conf['general']['speakScroll'] or configBE.conf['general']['alwaysSpeakScroll']) and not instanceGP.autoScrollRunning:
+	if (configBE.conf['general']['speakScrollReviewMode'] or configBE.conf['general']['speakScrollFocusMode']) and not instanceGP.autoScrollRunning:
 		if braille.handler.tether == braille.handler.TETHER_REVIEW:
 			scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
-		elif configBE.conf['general']['alwaysSpeakScroll']:
+		elif configBE.conf['general']['speakScrollFocusMode']:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
-			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough:
-				obj = treeInterceptor
-			try:
-				info = obj.makeTextInfo(textInfos.POSITION_CARET)
+			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
+			try: info = obj.makeTextInfo(textInfos.POSITION_CARET)
 			except (NotImplementedError, RuntimeError):
 				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
 			info.expand(textInfos.UNIT_LINE)
@@ -154,16 +152,11 @@ def nextLine(self):
 		dest = self._readingInfo.copy()
 		moved = dest.move(self._getReadingUnit(), 1)
 		if not moved:
-			if self.allowPageTurns and isinstance(
-					dest.obj, textInfos.DocumentWithPageTurns):
-				try:
-					dest.obj.turnPage()
-				except RuntimeError:
-					pass
-				else:
-					dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
-			else:  # no page turn support
-				return
+			if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
+				try: dest.obj.turnPage()
+				except RuntimeError: pass
+				else: dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
+			else: return
 		dest.collapse()
 		self._setCursor(dest)
 		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
@@ -175,25 +168,17 @@ def previousLine(self, start=False):
 	try:
 		dest = self._readingInfo.copy()
 		dest.collapse()
-		if start:
-			unit = self._getReadingUnit()
-		else:
-			# If the end of the reading unit is desired, move to the last
-			# character.
-			unit = textInfos.UNIT_CHARACTER
+		if start: unit = self._getReadingUnit()
+		else: unit = textInfos.UNIT_CHARACTER
 		moved = dest.move(unit, -1)
 		if not moved:
-			if self.allowPageTurns and isinstance(
-					dest.obj, textInfos.DocumentWithPageTurns):
-				try:
-					dest.obj.turnPage(previous=True)
-				except RuntimeError:
-					pass
+			if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
+				try: dest.obj.turnPage(previous=True)
+				except RuntimeError: pass
 				else:
 					dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
 					dest.expand(unit)
-			else:  # no page turn support
-				return
+			else: return
 		dest.collapse()
 		self._setCursor(dest)
 		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)

@@ -256,6 +256,7 @@ def executeGesture(self, gesture):
 
 		script = gesture.script
 		if 'brailleDisplayDrivers' in str(type(gesture)):
+			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.func_name != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
 			if not configBE.conf['general']['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
 			elif hasattr(script, "__func__") and (script.__func__.func_name in [
 			'script_braille_dots','script_braille_enter',

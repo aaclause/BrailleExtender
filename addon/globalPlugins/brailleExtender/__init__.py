@@ -30,6 +30,8 @@ import globalCommands
 import globalPluginHandler
 import globalVars
 import inputCore
+import keyboardHandler
+import keyLabels
 import languageHandler
 import scriptHandler
 import speech
@@ -43,7 +45,6 @@ import patchs
 import utils
 import versionInfo
 from configobj import ConfigObj
-from keyboardHandler import KeyboardInputGesture
 from logHandler import log
 
 addonHandler.initTranslation()
@@ -212,15 +213,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	hourDatePlayed = False
 	autoScrollRunning = False
 	brailleKeyboardLocked = False
+	modifiersLocked = False
 	hourDateTimer = None
 	autoScrollTimer = None
-	modifiers = {
-		'control': False,
-		'alt': False,
-		'windows': False,
-		'shift': False,
-		'nvda': False,
-	}
+	modifiers = set()
 	_tGestures = OrderedDict()
 	_pGestures = OrderedDict()
 	rotorGES = {}
@@ -233,6 +229,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	switchedMode = False
 	instanceST = None
 	currentPid = ""
+	nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else False
 
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
@@ -608,6 +605,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.message(_('Braille keyboard %s') % (_('locked') if self.brailleKeyboardLocked else _('unlocked')))
 	script_toggleLockBrailleKeyboard.__doc__ = _('Lock/unlock braille keyboard')
 
+	def script_toggleLockModifiers(self, gesture):
+		self.modifiersLocked = not self.modifiersLocked
+		ui.message(_('Modifier keys %s') % (_('locked') if self.modifiersLocked else _('unlocked')))
+	script_toggleLockModifiers.__doc__ = _('Lock/unlock modifiers keys')
+
 	def script_toggleAttribra(self, gesture):
 		configBE.conf['general']['attribra'] = not configBE.conf['general']['attribra']
 		self.refreshBD()
@@ -710,7 +712,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.script_autoScroll(None)
 
 	def script_volumePlus(s, g):
-		KeyboardInputGesture.fromName('volumeup').send()
+		keyboardHandler.KeyboardInputGesture.fromName('volumeup').send()
 		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(utils.getVolume(), braille.handler.displaySize - 4))
 		if configBE.conf['general']['reportVolumeBraille']:
 			braille.handler.message(s)
@@ -732,12 +734,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def clearMessageFlash():
 		if config.conf["braille"]["messageTimeout"] != 0:
-			braille.handler.message("?")
-			braille.handler.routeTo(1)
-			return
+			if braille.handler.buffer is braille.handler.messageBuffer:
+				braille.handler._dismissMessage()
+				return
 
 	def script_volumeMinus(s, g):
-		KeyboardInputGesture.fromName('volumedown').send()
+		keyboardHandler.KeyboardInputGesture.fromName('volumedown').send()
 		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(utils.getVolume(), braille.handler.displaySize - 4))
 		if configBE.conf['general']['reportVolumeBraille']:
 			braille.handler.message(s)
@@ -747,7 +749,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_volumeMinus.__doc__ = _('Decrease the master volume')
 
 	def script_toggleVolume(s, g):
-		KeyboardInputGesture.fromName('volumemute').send()
+		keyboardHandler.KeyboardInputGesture.fromName('volumemute').send()
 		if utils.getMute() and configBE.conf['general']['reportVolumeBraille']:
 			return braille.handler.message(_('Muted sound'))
 		s = _('Unmuted sound (%3d%%)') % utils.getVolume()
@@ -909,14 +911,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"character where the cursor is located "
 		"and the decimal, binary and octal equivalent.")
 
-	def script_showConstructST(self, gesture):
-		configBE.conf['general']['showConstructST'] = not configBE.conf['general']['showConstructST']
-		return ui.message(
-			"%s" %
-			(_('Turn on') if configBE.conf['general']['showConstructST'] else _('Turn off')))
-
-	script_showConstructST.__doc__ = _('Turn on/off the assistance shortcuts.')
-
 	def onDoc(self, evt):
 		return self.script_getHelp(None)
 
@@ -979,17 +973,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_reload_brailledisplay.__doc__ = _(
 		'Reload the driver of an favorite or last braille display. Practical if the braille display is not plugged immediately or that the latter is disconnected and then reconnected')
 
-	def shortcutInProgress(self):
-		for k in self.modifiers:
-			if self.modifiers[k]:
-				return True
-		return False
-
-	def lenModifiers(self):
-		return len([k for k in self.modifiers if self.modifiers[k]])
-
-	def clearModifiers(self):
-		self.modifiers = {k: False for k in self.modifiers}
+	def clearModifiers(self, forced = False):
+		if self.modifiersLocked and not forced: return
+		self.modifiers.clear()
 		self.clearGestureBindings()
 		self.bindGestures(self.__gestures)
 		self.bindGestures(self._pGestures)
@@ -1000,7 +986,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if send:
 			log.debug("Sending " + sendKS)
 			if not sendKS == "":
-				KeyboardInputGesture.fromName(sendKS).send()
+				inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sendKS))
 		return
 
 	def script_end_combKeys(self, gesture):
@@ -1051,7 +1037,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		NVDASht = self.sendCombKeysNVDA(sht, gesture)
 		if not NVDASht and 'nvda' not in sht.lower():
 			try:
-				return self.sendCombKeys(sht)
+				return self.sendCombKeys(sht, gesture)
 			except BaseException as e:
 				log.error(e)
 				return ui.message(_('Unable to send %s') % sht)
@@ -1062,8 +1048,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		focus = api.getFocusObject()
 		obj = api.getNavigatorObject()
 		sht = '+'.join(sorted(sht.split('+')))
+		try:
+			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
+			return True
+		except BaseException: pass
 		shts = ['kb:%s' % sht, 'kb(%s):%s' % (config.conf["keyboard"]["keyboardLayout"], sht)]
-
 		# Global gplugin level
 		for p in globalPluginHandler.runningPlugins:
 			for g in p._gestureMap:
@@ -1136,11 +1125,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					return false
 
 	def initCombKeys(self):
-		if self.lenModifiers() == 1:
-			self.bindGestures(self._tGestures)
-
+		if len(self.modifiers) == 1: self.bindGestures(self._tGestures)
 	def getActualModifiers(self, short=True):
-		if self.lenModifiers() == 0:
+		if len(self.modifiers) == 0:
 			return self.script_cancelShortcut(None)
 		s = ""
 		t = {
@@ -1149,35 +1136,44 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			'shift': _('SHIFT'),
 			'alt': _('ALT'),
 			'nvda': 'NVDA'}
-		for k in [k for k in self.modifiers if self.modifiers[k]]:
+		for k in self.modifiers:
 			s += t[k] + '+' if short else k + '+'
 		if not short:
 			return s
-		if configBE.conf['general']['showConstructST']:
-			return braille.handler.message('%s...' % s)
+		if configBE.conf['general']['feedbackModifiersKeysInBraille']:
+			braille.handler.message('%s...' % s)
+		if configBE.conf['general']['feedbackModifiersKeysInSpeech']:
+			speech.speakMessage(keyLabels.getKeyCombinationLabel('+'.join([m for m in self.modifiers])))
+
+	def toggleModifier(self, modifier):
+		if modifier.lower() not in ["alt","control","nvda","shift","windows"]:
+			return
+		if modifier not in self.modifiers: self.modifiers.add(modifier)
+		else: self.modifiers.discard(modifier)
+		if len(self.modifiers) == 0: self.clearModifiers(True)
 
 	def script_ctrl(self, gesture=None, sil=True):
-		self.modifiers["control"] = not self.modifiers["control"]
+		self.toggleModifier("control")
 		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_nvda(self, gesture=None):
-		self.modifiers["nvda"] = not self.modifiers["nvda"]
+		self.toggleModifier("nvda")
 		self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_alt(self, gesture=None, sil=True):
-		self.modifiers["alt"] = not self.modifiers["alt"]
+		self.toggleModifier("alt")
 		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_win(self, gesture=None, sil=True):
-		self.modifiers["windows"] = not self.modifiers["windows"]
+		self.toggleModifier("windows")
 		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 
 	def script_shift(self, gesture=None, sil=True):
-		self.modifiers["shift"] = not self.modifiers["shift"]
+		self.toggleModifier("shift")
 		if sil: self.getActualModifiers()
 		return self.initCombKeys()
 

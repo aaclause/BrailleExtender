@@ -87,7 +87,8 @@ class Settings(SettingsDialog):
 		configBE.conf['general']['postTable'] = postTable
 		configBE.conf['general']['autoCheckUpdate'] = self.general.autoCheckUpdate.GetValue()
 		configBE.conf['general']['channelUpdate'] = 'dev' if self.general.channelUpdate.GetValue() else 'stable'
-		configBE.conf['general']['showConstructST'] = self.general.assistS.GetValue()
+		configBE.conf['general']['feedbackModifiersKeysInBraille'] = self.general.feedbackModifiersKeysInBraille.GetValue()
+		configBE.conf['general']['feedbackModifiersKeysInSpeech'] = self.general.feedbackModifiersKeysInSpeech.GetValue()
 		configBE.conf['general']['reportVolumeBraille'] = self.general.reportVolumeBraille.GetValue()
 		configBE.conf['general']['reportVolumeSpeech'] = self.general.reportVolumeSpeech.GetValue()
 		configBE.conf['general']['hourDynamic'] = self.general.hourDynamic.GetValue()
@@ -154,9 +155,10 @@ class General(wx.Panel):
 		if configBE.conf['general']['autoCheckUpdate']: self.autoCheckUpdate.SetValue(True)
 		self.channelUpdate = wx.CheckBox(self, label=_('Download development versions'))
 		if configBE.conf['general']['channelUpdate'] == 'dev': self.channelUpdate.SetValue(True)
-		self.assistS = wx.CheckBox(self, label=_('Detail the progress of a keyboard shortcut when it is typed'))
-		if configBE.conf['general']['showConstructST']: self.assistS.SetValue(True)
-		settings.Add(self.assistS)
+		self.feedbackModifiersKeysInBraille = wx.CheckBox(self, label=_('Feedback for modifier keys in braille'))
+		if configBE.conf['general']['feedbackModifiersKeysInBraille']: self.feedbackModifiersKeysInBraille.SetValue(True)
+		self.feedbackModifiersKeysInSpeech = wx.CheckBox(self, label=_('Feedback for modifier keys in speech'))
+		if configBE.conf['general']['feedbackModifiersKeysInSpeech']: self.feedbackModifiersKeysInSpeech.SetValue(True)
 		self.reportVolumeBraille = wx.CheckBox(self, label=_('Report of the new volume in braille'))
 		if configBE.conf['general']['reportVolumeBraille']: self.reportVolumeBraille.SetValue(True)
 		settings.Add(self.reportVolumeBraille)

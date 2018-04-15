@@ -203,16 +203,12 @@ class AddonDoc():
 		if n.startswith('kb:'):
 			return _(
 				'Emulates pressing %s on the system keyboard') % utils.getKeysTranslation(n)
-		places = [
-			'instanceGP.script_',
-			'globalCommands.commands.script_',
-			'cursorManager.CursorManager.script_']
+		places = [instanceGP, globalCommands.commands, cursorManager.CursorManager]
 		for place in places:
-			try:
-				doc = re.sub(r'\.$', '', eval(''.join([place, n, '.__doc__'])))
+			func = getattr(place, ('script_%s' % n), None)
+			if func:
+				doc = func.__doc__
 				break
-			except BaseException as e:
-				log.debug(e)
 		return doc if doc is not None else _('description currently unavailable for this shortcut')
 
 

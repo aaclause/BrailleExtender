@@ -20,6 +20,12 @@ import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
 
+DIRECTION_AUTO = 0
+DIRECTION_BRU = 1
+DIRECTION_noBRU = 2
+DIRECTION_CELLDESC = 1
+DIRECTION_noCELLDESC = 2
+
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -187,20 +193,6 @@ def reload_brailledisplay(bd_name):
 	except BaseException: ui.message(_("No %s display found") % bd_name.capitalize())
 	return False
 
-def getCurrentChar():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		info = obj.makeTextInfo(textInfos.POSITION_CARET)
-		info.expand(textInfos.UNIT_CHARACTER)
-		s = info.text
-		return s
-	except BaseException:
-		pass
-	return ''
-
 def currentCharDesc():
 	ch = getCurrentChar()
 	c = ord(ch)
@@ -214,6 +206,20 @@ def currentCharDesc():
 			api.copyToClip(s)
 			ui.message('"{0}" copied to clipboard.'.format(s))
 	else: ui.message(_('Not a character.'))
+
+def getCurrentChar():
+	obj = api.getFocusObject()
+	treeInterceptor = obj.treeInterceptor
+	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
+		obj = treeInterceptor
+	try:
+		info = obj.makeTextInfo(textInfos.POSITION_CARET)
+		info.expand(textInfos.UNIT_CHARACTER)
+		s = info.text
+		return s
+	except BaseException:
+		pass
+	return ''
 
 def getTextSelection():
 	obj = api.getFocusObject()

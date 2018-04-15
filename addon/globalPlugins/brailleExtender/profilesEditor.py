@@ -8,7 +8,6 @@ from configobj import ConfigObj
 import glob
 import os
 import gui
-from gui.settingsDialogs import SettingsDialog
 import wx
 import keyLabels
 from logHandler import log
@@ -20,7 +19,7 @@ addonHandler.initTranslation()
 
 keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
 
-class ProfilesEditor(SettingsDialog):
+class ProfilesEditor(wx.Dialog):
 	title = _("Profiles editor") + " (%s)" % configBE.curBD
 	profilesList = []
 	addonGesturesPrfofile = None

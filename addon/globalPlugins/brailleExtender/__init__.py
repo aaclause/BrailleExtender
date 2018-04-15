@@ -27,7 +27,6 @@ import controlTypes
 import core
 import cursorManager
 import globalCommands
-import globalPlugins
 import globalPluginHandler
 import globalVars
 import inputCore
@@ -773,24 +772,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			for layout in configBE.iniProfile['keyboardLayouts']:
 				t = []
 				for lk in configBE.iniProfile['keyboardLayouts'][layout]:
-					if lk in [
-						'braille_dots',
-						'braille_enter',
-							'braille_translate']:
-						if isinstance(
-								configBE.iniProfile['keyboardLayouts'][layout][lk], list):
-							t.append(
-								utils.beautifulSht(
-									' / '.join(
-										configBE.iniProfile['keyboardLayouts'][layout][lk]),
-									1) + configBE.sep + ': ' + eval(
-									'globalCommands.GlobalCommands.script_' + lk + '.__doc__'))
+					if lk in ['braille_dots', 'braille_enter', 'braille_translate']:
+						scriptName = 'script_%s' % lk
+						func = getattr(globalCommands.GlobalCommands, scriptName)
+						if isinstance(configBE.iniProfile['keyboardLayouts'][layout][lk], list):
+							t.append(utils.beautifulSht(' / '.join(configBE.iniProfile['keyboardLayouts'][layout][lk]), 1) + configBE.sep + ': ' + func.__doc__)
 						else:
-							t.append(
-								utils.beautifulSht(
-									str(
-										configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + eval(
-									'globalCommands.GlobalCommands.script_' + lk + '.__doc__'))
+							t.append(utils.beautifulSht(str(configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + func.__doc__)
 					else:
 						if isinstance(
 								configBE.iniProfile['keyboardLayouts'][layout][lk], list):
@@ -1071,69 +1059,69 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return ui.message(_('%s is not part of a NVDA commands') % sht)
 
 	def sendCombKeysNVDA(self, sht, gesture):
-		# to improve + not finished
-		if 'kb:' not in sht: sht = 'kb:%s' % sht
-		add = '+nvda' if 'nvda+' in sht else ''
-		sht = '+'.join(sorted((inputCore.normalizeGestureIdentifier(sht.replace('nvda+',
-'')).replace('kb:','') + add).split('+')))
+		focus = api.getFocusObject()
+		obj = api.getNavigatorObject()
+		sht = '+'.join(sorted(sht.split('+')))
+		shts = ['kb:%s' % sht, 'kb(%s):%s' % (config.conf["keyboard"]["keyboardLayout"], sht)]
 
-		# Gesture specific scriptable object (TODO).
-		# Global plugin level
-		shtPlugins = {p: eval('globalPlugins.%s.GlobalPlugin._GlobalPlugin__gestures' % p) for p in globalPlugins.__dict__.keys() if not p.startswith('_') and hasattr(eval('globalPlugins.%s.GlobalPlugin' % p), '_GlobalPlugin__gestures')}
-		for k in shtPlugins:
-			shtPlugins[k] = {re.sub(':(.+)$', lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g.lower().replace(' ', '')): shtPlugins[k][g] for g in shtPlugins[k] if g.lower().startswith('kb:')}
-		for p in shtPlugins.keys():
-			if 'kb:' + sht in shtPlugins[p]:
-				if self.callScript('globalPlugins.%s' % p, 'script_%s' % shtPlugins[p]['kb:' + sht], gesture):
-					return True
+		# Global gplugin level
+		for p in globalPluginHandler.runningPlugins:
+			for g in p._gestureMap:
+				if inputCore.normalizeGestureIdentifier(g).lower() in shts:
+					scriptName = p._gestureMap[g].__func__.func_name
+					func = getattr(p, scriptName)
+					if func:
+						func(gesture)
+						return True
 
 		# App module level.
-		focus = api.getFocusObject()
-		app = focus.appModule
-		for k in focus.appModule._gestureMap:
-			if app and cls == 'AppModule' and module == app.__module__:
-				func = getattr(app, "script_%s" % scriptName, None)
+		for g in focus.appModule._gestureMap:
+			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
+				scriptName = p._gestureMap[g].__func__.func_name
+				func = getattr(p, scriptName)
 				if func:
 					func(gesture)
 					return True
 
 		# Tree interceptor level.
-		try:
-			obj = api.getFocusObject()
-			if obj.treeInterceptor is not None:
-				obj = obj.treeInterceptor
-				gesS = obj._CursorManager__gestures.values() + obj._BrowseModeDocumentTreeInterceptor__gestures.values() + obj._BrowseModeTreeInterceptor__gestures.values()
-				gesO = [re.sub(':(.+)$', lambda m: m.group(0), g) for g in obj._CursorManager__gestures.keys() +
-					obj._BrowseModeDocumentTreeInterceptor__gestures.keys() +
-					obj._BrowseModeTreeInterceptor__gestures.keys()]
-				gesN = [re.sub(':(.+)$', lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in gesO]
-				script = gesS[gesN.index('kb:' + sht)]
-				eval('obj.script_' + script + '(gesture)')
-				return True
-			else:
-				gesO = [re.sub(':(.+)$', lambda m: m.group(0), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-				gesN = [re.sub(':(.+)$', lambda m: inputCore.normalizeGestureIdentifier(m.group(0)), g) for g in cursorManager.CursorManager._CursorManager__gestures]
-				if 'kb:' + sht in gesN:
-					a = cursorManager.CursorManager()
-					a.makeTextInfo = obj.makeTextInfo
-					script = a._CursorManager__gestures[gesO[gesN.index(
-						'kb:' + sht)]]
-					eval('a.script_' + script + '(gesture)')
-					return True
-		except BaseException: pass
-		# NVDAObject level (todo).
-		# Global Commands level.
-		layouts = ['(%s)' % config.conf["keyboard"]["keyboardLayout"], '', '(%s)' % ('desktop' if config.conf["keyboard"]["keyboardLayout"] == 'laptop' else 'desktop')]
-		places = ['globalCommands.commands._gestureMap']
-		for layout in layouts:
-			for place in places:
-				try:
-					tSht = eval('scriptHandler.getScriptName(%s[\'kb%s:%s\'])' % (place, layout, sht))
-					func = getattr(globalCommands.commands, "script_%s" % tSht, None)
+		if focus.treeInterceptor is not None and focus.treeInterceptor.isReady and not focus.treeInterceptor.passThrough:
+			treeInterceptor = focus.treeInterceptor
+			for k in treeInterceptor._gestureMap:
+				if k.lower() in shts:
+					scriptName = treeInterceptor._gestureMap[k].__func__.func_name
+					func = getattr(treeInterceptor, scriptName, None)
 					if func:
 						func(gesture)
 						return True
-				except BaseException: pass
+
+		# NVDAObject level
+		for g in obj._gestureMap:
+			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
+				scriptName = obj._gestureMap[g].__func__.func_name
+				func = getattr(obj, scriptName)
+				if func:
+					try:
+						func(gesture)
+						return True
+					except:
+						CursorManager = cursorManager.CursorManager()
+						CursorManager.makeTextInfo = obj.makeTextInfo
+						for g in CursorManager._CursorManager__gestures:
+							if inputCore.normalizeGestureIdentifier(g).lower() in shts:
+								scriptName = 'script_%s' % CursorManager._CursorManager__gestures[g]
+								func = getattr(CursorManager, scriptName, None)
+								if func:
+									func(gesture)
+									return True
+
+		# Global Commands level.
+		for g in globalCommands.commands._gestureMap:
+			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
+				scriptName = globalCommands.commands._gestureMap[g].__func__.func_name
+				func = getattr(globalCommands.commands, scriptName, None)
+				if func:
+					func(gesture)
+					return True
 		return False
 
 	@staticmethod
@@ -1274,7 +1262,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_ctrlWinShift.__doc__ = docModKeys('control+Windows+SHIFT')
 	script_ctrlAltWin.__doc__ = docModKeys('control+ALT+Windows')
 	script_ctrlAltWinShift.__doc__ = docModKeys('control+ALT+Windows+SHIFT')
-	
+
 	def script_braille_scrollBack(self, gesture):
 		braille.handler.scrollBack()
 	script_braille_scrollBack.bypassInputHelp = True

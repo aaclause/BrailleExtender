@@ -19,12 +19,13 @@ addonHandler.initTranslation()
 from logHandler import log
 import configBE
 import queueHandler
+from gui.settingsDialogs import SettingsDialog
 tables = brailleTables.listTables()
 restartNVDA_ = False
 
 instanceGP = None
 
-class Settings(wx.Dialog):
+class Settings(SettingsDialog):
 	def __init__(self):
 		if instanceGP.instanceST is not None or instanceGP is None:
 			return

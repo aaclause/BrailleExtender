@@ -776,7 +776,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				for lk in configBE.iniProfile['keyboardLayouts'][layout]:
 					if lk in ['braille_dots', 'braille_enter', 'braille_translate']:
 						scriptName = 'script_%s' % lk
-						func = getattr(globalCommands.GlobalCommands, scriptName)
+						func = getattr(globalCommands.GlobalCommands, scriptName, None)
 						if isinstance(configBE.iniProfile['keyboardLayouts'][layout][lk], list):
 							t.append(utils.beautifulSht(' / '.join(configBE.iniProfile['keyboardLayouts'][layout][lk]), 1) + configBE.sep + ': ' + func.__doc__)
 						else:
@@ -1039,8 +1039,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			try:
 				return self.sendCombKeys(sht, gesture)
 			except BaseException as e:
-				log.error(e)
-				return ui.message(_('Unable to send %s') % sht)
+					log.error(e)
+					return ui.message(_('Unable to send %s') % sht)
 		elif not NVDASht:  # and 'nvda' in sht.lower()
 			return ui.message(_('%s is not part of a NVDA commands') % sht)
 
@@ -1058,7 +1058,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			for g in p._gestureMap:
 				if inputCore.normalizeGestureIdentifier(g).lower() in shts:
 					scriptName = p._gestureMap[g].__func__.func_name
-					func = getattr(p, scriptName)
+					func = getattr(p, scriptName, None)
 					if func:
 						func(gesture)
 						return True
@@ -1067,7 +1067,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		for g in focus.appModule._gestureMap:
 			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
 				scriptName = p._gestureMap[g].__func__.func_name
-				func = getattr(p, scriptName)
+				func = getattr(p, scriptName, None)
 				if func:
 					func(gesture)
 					return True
@@ -1087,7 +1087,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		for g in obj._gestureMap:
 			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
 				scriptName = obj._gestureMap[g].__func__.func_name
-				func = getattr(obj, scriptName)
+				func = getattr(obj, scriptName, None)
 				if func:
 					try:
 						func(gesture)
@@ -1117,7 +1117,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def callScript(cls, f, gesture):
 		for plugin in globalPluginHandler.runningPlugins:
 			if plugin.__module__ == cls:
-				func = getattr(plugin, f)
+				func = getattr(plugin, f, None)
 				if func:
 					func(gesture)
 					return True

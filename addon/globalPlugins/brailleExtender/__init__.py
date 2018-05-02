@@ -1045,13 +1045,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return ui.message(_('%s is not part of a NVDA commands') % sht)
 
 	def sendCombKeysNVDA(self, sht, gesture):
+		if self.nativeModifiers:
+			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
+			return True
 		focus = api.getFocusObject()
 		obj = api.getNavigatorObject()
 		sht = '+'.join(sorted(sht.split('+')))
-		try:
-			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
-			return True
-		except BaseException: pass
 		shts = ['kb:%s' % sht, 'kb(%s):%s' % (config.conf["keyboard"]["keyboardLayout"], sht)]
 		# Global gplugin level
 		for p in globalPluginHandler.runningPlugins:

@@ -261,6 +261,7 @@ def executeGesture(self, gesture):
 			elif hasattr(script, "__func__") and (script.__func__.func_name in [
 			'script_braille_dots','script_braille_enter',
 			'script_volumePlus','script_volumeMinus','script_toggleVolume',
+			'script_hourDate',
 			'script_ctrl','script_alt','script_nvda','script_win',
 			'script_ctrlAlt','script_ctrlAltWin','script_ctrlAltWinShift','script_ctrlAltShift','script_ctrlWin','script_ctrlWinShift','script_ctrlShift','script_altWin','script_altWinShift','script_altShift','script_winShift']
 			or (

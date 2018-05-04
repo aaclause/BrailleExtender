@@ -184,6 +184,9 @@ def decorator(fn, s):
 
 	def update(self):
 		fn(self)
+		if instanceGP.hideDots78:
+			for i, j in enumerate(self.brailleCells): self.brailleCells[i] &= 63
+		if not configBE.conf['general']['attribra']: return
 		if not configBE.conf['general']['attribra']: return
 		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and 'ru-compbrl.ctb' not in config.conf["braille"]["translationTable"]: return
 		DOT7 = 64
@@ -213,6 +216,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	hourDatePlayed = False
 	autoScrollRunning = False
 	brailleKeyboardLocked = False
+	hideDots78 = False
 	modifiersLocked = False
 	hourDateTimer = None
 	autoScrollTimer = None
@@ -604,6 +608,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.brailleKeyboardLocked = not self.brailleKeyboardLocked
 		ui.message(_('Braille keyboard %s') % (_('locked') if self.brailleKeyboardLocked else _('unlocked')))
 	script_toggleLockBrailleKeyboard.__doc__ = _('Lock/unlock braille keyboard')
+
+	def script_toggleDots78(self, gesture):
+		self.hideDots78 = not self.hideDots78
+		speech.speakMessage(_('Dots 7 and 8: %s') % (_('disabled') if self.hideDots78 else _('enabled')))
+		self.refreshBD()
+	script_toggleDots78.__doc__ = _('Hide/show dots 7 and 8')
 
 	def script_toggleLockModifiers(self, gesture):
 		self.modifiersLocked = not self.modifiersLocked

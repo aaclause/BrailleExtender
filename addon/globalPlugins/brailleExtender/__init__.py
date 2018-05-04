@@ -1312,6 +1312,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		msg = ["stop", "start"]
 		ui.message("debug textInfo " + msg[logTextInfo])
 
+	def script_saveCurrentBrailleView(self, gesture):
+		if scriptHandler.getLastScriptRepeatCount() == 0:
+			configBE.conf['general']['viewSaved'] = braille.handler.mainBuffer.rawText
+			ui.message(_('Current braille view saved'))
+		else:
+			configBE.conf['general']['viewSaved'] = None
+			ui.message(_('Saved view cleaned'))
+	script_saveCurrentBrailleView.__doc__ = _('Save the current braille view. Press twice quickly to clean the buffer')
+
+	def script_showBrailleViewSaved(self, gesture):
+		if configBE.conf['general']['viewSaved']:
+			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % configBE.conf['general']['viewSaved'])
+			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(configBE.conf['general']['viewSaved']), configBE.conf['general']['viewSaved']), _('View saved'), True)
+		else: ui.message(_('No saved view'))
+	script_showBrailleViewSaved.__doc__ = _('Show the saved braille view through a flash message. Press twice quickly to show it in a browseable message')
+ 
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"

@@ -95,6 +95,7 @@ def loadConf():
 		tabSpace = boolean(default=False)
 		tabSize = integer(min=1, default=2, max=42)
 		postTable = string(default="None")
+		viewSaved = string(default="None")
 
 	[patch]
 		updateBraille = boolean(default=True)

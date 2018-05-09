@@ -121,8 +121,10 @@ def update(self):
 						self.brailleSelectionStart,
 						self.brailleSelectionEnd):
 					self.brailleCells[pos] |= SELECTION_SHAPE
-			except IndexError:
-				pass
+			except IndexError: pass
+		else:
+			if instanceGP.hideDots78:
+				for i, j in enumerate(self.brailleCells): self.brailleCells[i] &= 63
 	except BaseException as e:
 		log.error("Error with update braille patch, disabling: %s" % e)
 		configBE.conf["patch"]["updateBraille"] = False

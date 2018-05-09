@@ -184,8 +184,6 @@ def decorator(fn, s):
 
 	def update(self):
 		fn(self)
-		if instanceGP.hideDots78:
-			for i, j in enumerate(self.brailleCells): self.brailleCells[i] &= 63
 		if not configBE.conf['general']['attribra']: return
 		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and 'ru-compbrl.ctb' not in config.conf["braille"]["translationTable"]: return
 		DOT7 = 64

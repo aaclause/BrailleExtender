@@ -19,6 +19,7 @@ from keyboardHandler import KeyboardInputGesture
 import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
+from logHandler import log 
 
 DIRECTION_AUTO = 0
 DIRECTION_BRU = 1
@@ -333,41 +334,34 @@ def unicodeBrailleToDescription(t, sep = '-'):
 	nt = nt.replace('\n'+sep, '\n')
 	return nt
 
-def beautifulSht(t, r=0, curBD=config.conf["braille"]["display"]):
-	t = re.sub('^[^:,/ ]+:', '', t)
-	if r:
-		t = re.sub(r'([^ ;,;|/]+)', lambda m: beautifulSht(m.group(1)), t)
-	t = t.replace('br(' + curBD + '):', '').replace('b10', 'b0')
-	if not r:
-		t = '+'.join(sorted(t.split('+')))
-	l = ['B', 'C', 'D', 'Dot']
-	for r in l:
-		t = re.sub(
-			'([^a-zA-Z]|^)' +
-			r.lower() +
-			'([^a-zA-Z]|$)',
-			lambda m: m.group(1) +
-			r +
-			m.group(2),
-			t)
-		t = re.sub(
-			'(' + r + '[0-9](?:\+|$)){2,}',
-			lambda m: '{0}_({1})'.format(
-				r,
-				m.group(0).replace(
-					r,
-					'')),
-			t)
-		t = t.replace('+)', ')+')
-		t = t.replace('braillespacebar', 'space')
-		t = re.sub('([^A-Za-z]|^)space', r'\1' + _('space'), t)
-		t = t.replace('leftshiftkey', _('left SHIFT'))
-		t = t.replace('rightshiftkey', _('right SHIFT'))
-		t = t.replace('leftgdfbutton', _('left selector'))
-		t = t.replace('rightgdfbutton', _('right selector'))
-		t = t.replace('Dot', _('Dot'))
-	return t
-
+def beautifulSht(t, curBD='baum', model = True, sep = ' / '):
+	if isinstance(t, list): t = ' '.join(t)
+	t = t.replace(',', ' ')
+	t = t.replace(';',' ')
+	t = t.replace('  ',' ')
+	reps = {
+		'b10': 'b0',
+		'braillespacebar': _('braillespacebar'),
+		'space': _('space'),
+		'leftshiftkey': _('left SHIFT'),
+		'rightshiftkey': _('right SHIFT'),
+		'leftgdfbutton': _('left selector'),
+		'rightgdfbutton': _('right selector'),
+		'Dot': _('Dot')
+	}
+	mdl = ''
+	patern = r'^.+\.([^)]+)\).+$'
+	t = t.replace(';', ',')
+	out = []
+	for gesture in t.split(' '):
+		if gesture.strip() == '': continue
+		mdl = ''
+		if re.match(patern, gesture): mdl = re.sub(patern, r'\1', gesture)
+		gesture = re.sub(r'.+:', '', gesture)
+		gesture = '+'.join(sorted(gesture.split('+')))
+		for rep in reps: gesture = gesture.replace(rep, reps[rep])
+		out.append(_('{gesture} on {brailleDisplay}').format(gesture=gesture, brailleDisplay=mdl) if mdl != '' else gesture)
+	return out if sep == '' else sep.join(out)
 
 def getText():
 	obj = api.getFocusObject()

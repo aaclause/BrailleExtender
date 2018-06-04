@@ -68,11 +68,6 @@ class Settings(SettingsDialog):
 		postTableID = self.reading.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		restartNVDA = False if not restartNVDA_ else True
-		if ((self.reading.tabSpace.GetValue() or postTable != "None")
-				and not configBE.conf["patch"]["updateBraille"]):
-			log.debug("Enabling patch for update braille function")
-			configBE.conf["patch"]["updateBraille"] = True
-			restartNVDA = True
 		if (not restartNVDA and
 			(
 				configBE.conf['general']['tabSize'] != int(self.reading.tabSize.GetValue())
@@ -244,19 +239,14 @@ class Reading(wx.Panel):
 		self.addOutputTableInSwitch = wx.Button(self, label=_('&Add'))
 		self.addOutputTableInSwitch.Bind(
 			wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
-		wx.StaticText(self, -1, label=_('Secondary output table to use') + (' (%s) ' %
-																			 _('function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
+		wx.StaticText(self, -1, label=_('Secondary output table to use'))
 		self.postTable = wx.Choice(self, pos=(-1, -1), choices=lt)
 		self.postTable.SetSelection(configBE.tablesFN.index(
 			configBE.conf['general']['postTable']) if configBE.conf['general']['postTable'] in configBE.tablesFN else 0)
-		self.tabSpace = wx.CheckBox(self, label=_('Display tab signs as spaces') + (' (%s) ' % _(
-			'function disabled automatically due to a crash') if not configBE.conf["patch"]["updateBraille"] else ''))
-		if configBE.conf['general']['tabSpace']:
-			self.tabSpace.SetValue(True)
-		self.tabSize = wx.StaticText(
-			self, -1, label=_('Number of space for a tab sign'))
-		self.tabSize = wx.TextCtrl(
-			self, -1, value=str(configBE.conf['general']['tabSize']))
+		self.tabSpace = wx.CheckBox(self, label=_('Display tab signs as spaces'))
+		if configBE.conf['general']['tabSpace']: self.tabSpace.SetValue(True)
+		self.tabSize = wx.StaticText(self, -1, label=_('Number of space for a tab sign'))
+		self.tabSize = wx.TextCtrl(self, -1, value=str(configBE.conf['general']['tabSize']))
 		self.tabSize.Bind(wx.EVT_CHAR, self.onTabSize)
 		self.speakRoutingTo = wx.CheckBox(self, label=_('Announce the character when moving with routing buttons'))
 		if configBE.conf['general']['speakRoutingTo']:

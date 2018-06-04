@@ -45,13 +45,14 @@ class AddonDoc():
 			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
 			"<ul><li>Adriani Botez &lt;adriani.botez@gmail.com&gt; and Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation"), ";</li>",
 				"<li>Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;: " + _("Persian translation") + ";</li>",
-			"<li>Zvonimir stanecic &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li></ul>",
+			"<li>Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li></ul>",
 			"<p>" + _("Additional third party copyrighted code is included:") + "</p>",
 			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
 		""".format(SEP=configBE.sep), "</ul>",
 			"<p>" + _("Thanks also to") + ":</p>",
 			"<ul><li>Corentin " + _("for his tests and suggestions with") + " Brailliant;</li>",
-			"<li>Louis " + _("for his tests and suggestions with") + " Focus.</li></ul>",
+			"<li>Louis " + _("for his tests and suggestions with") + " Focus.</li>",
+			"<li>Zvonimir Stanečić " + _("for his tests and suggestions with") + " Braille Wave.</li></ul>",
 			"<p>" + _("And Thank you very much for all your feedback and comments via email.") + " :)</p>"])
 		)
 		doc += """
@@ -138,7 +139,7 @@ class AddonDoc():
 			doc += '<ul>'
 			for g in braille.handler.display.gestureMap._map:
 				doc += ('<li>{0}{1}: {2}{3};</li>').format(
-					utils.beautifulSht(g).capitalize(),
+					utils.beautifulSht(g),
 					configBE.sep,
 					utils.uncapitalize(
 						re.sub(
@@ -197,13 +198,14 @@ class AddonDoc():
 
 	@staticmethod
 	def getDocScript(n):
+		if n == "defaultQuickLaunches": n = "quickLaunch"
 		doc = None
 		if isinstance(n, list):
 			n = str(n[-1][-1])
 		if n.startswith('kb:'):
 			return _(
 				'Emulates pressing %s on the system keyboard') % utils.getKeysTranslation(n)
-		places = [instanceGP, globalCommands.commands, cursorManager.CursorManager]
+		places = [globalCommands.commands, instanceGP, cursorManager.CursorManager]
 		for place in places:
 			func = getattr(place, ('script_%s' % n), None)
 			if func:
@@ -219,29 +221,21 @@ class AddonDoc():
 				if isinstance(lst[g], list):
 					doc += '<li>{0}{2}: {1}{2};</li>'.format(
 						utils.getKeysTranslation(g),
-						utils.beautifulSht(' / '.join(lst[g]).replace('br(%s):' % configBE.curBD, ''), 1),
+						utils.beautifulSht(lst[g]),
 						configBE.sep)
 				else:
 					doc += '<li>{0}{2}: {1}{2};</li>'.format(
 						utils.getKeysTranslation(g),
-						utils.beautifulSht(str(lst[g])),
+						utils.beautifulSht(lst[g]),
 						configBE.sep)
 			elif 'kb:' in g:
 				gt = _('caps lock') if 'capsLock' in g else g
 				doc += '<li>{0}{2}: {1}{2};</li>'.format(
 					gt.replace(
-						'kb:', ''), utils.beautifulSht(
-						lst[g]).replace(
-						'br(%s):' % configBE.curBD, ''), configBE.sep)
+						'kb:', ''), utils.beautifulSht(lst[g]), configBE.sep)
 			else:
 				if isinstance(lst[g], list):
-					doc += '<li>{0}{1}: {2}{3};</li>'.format(
-						utils.beautifulSht(
-							' / '.join(
-								lst[g]).replace(
-								'br(%s):' % configBE.curBD,
-								''),
-							1),
+					doc += '<li>{0}{1}: {2}{3};</li>'.format(utils.beautifulSht(lst[g]),
 						configBE.sep,
 						re.sub(
 							'^([A-Z])',
@@ -252,10 +246,7 @@ class AddonDoc():
 				else:
 					doc += '<li>{0}{1}: {2}{3};</li>'.format(
 						utils.beautifulSht(
-							lst[g]).replace(
-							'br(%s):' % configBE.curBD,
-							''),
-						configBE.sep,
+							lst[g]), configBE.sep,
 						re.sub(
 							'^([A-Z])',
 							lambda m: m.group(1).lower(),

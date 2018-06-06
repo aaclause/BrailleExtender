@@ -228,8 +228,7 @@ if configBE.conf['general']['tabSpace'] and os.path.exists(tabFile):
 		preTable.append(tabFile)
 		log.debug('Tab as spaces enabled')
 	f.close()
-else:
-	log.debug('Tab as spaces disabled')
+else: log.debug('Tab as spaces disabled')
 backupUpdate = braille.Region.update
 braille.Region.update = update
 

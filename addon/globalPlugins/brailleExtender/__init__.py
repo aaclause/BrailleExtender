@@ -44,6 +44,7 @@ import settings
 import patchs
 import utils
 import versionInfo
+
 from configobj import ConfigObj
 from logHandler import log
 
@@ -84,6 +85,7 @@ def paramsDL(): return {
 	"brailledisplay": braille.handler.display.name,
 	"channel": configBE.conf['general']['channelUpdate']
 }
+
 
 def checkUpdates(sil = False):
 
@@ -183,7 +185,7 @@ def decorator(fn, s):
 	def update(self):
 		fn(self)
 		if not configBE.conf['general']['attribra']: return
-		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and 'ru-compbrl.ctb' not in config.conf["braille"]["translationTable"]: return
+		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and config.conf["braille"]["translationTable"] not in ["ru-compbrl.ctb", "he.ctb"]: return
 		DOT7 = 64
 		DOT8 = 128
 		for i, j in enumerate(self.rawTextTypeforms):
@@ -208,12 +210,12 @@ def populateAttrs(pid):
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
-	hourDatePlayed = False
-	autoScrollRunning = False
 	brailleKeyboardLocked = False
 	hideDots78 = False
 	modifiersLocked = False
+	hourDatePlayed = False
 	hourDateTimer = None
+	autoScrollRunning = False
 	autoScrollTimer = None
 	modifiers = set()
 	_tGestures = OrderedDict()
@@ -260,6 +262,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def event_gainFocus(self, obj, nextHandler):
 		if self.hourDatePlayed: self.script_hourDate(None)
 		if self.autoScrollRunning: self.script_autoScroll(None)
+		if self.autoTestPlayed: self.script_autoTest(None)
 
 		pid = obj.processID
 		if self.currentPid != pid:
@@ -1310,7 +1313,111 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(configBE.conf['general']['viewSaved']), configBE.conf['general']['viewSaved']), _('View saved'), True)
 		else: ui.message(_('No saved view'))
 	script_showBrailleViewSaved.__doc__ = _('Show the saved braille view through a flash message. Press twice quickly to show it in a browseable message')
- 
+
+	# section autoTest
+	autoTestPlayed = False
+	autoTestTimer = None
+	autoTestInterval = 1000
+	autoTest_tests = ['⠁⠂⠄⡀⠈⠐⠠⢀', '⠉⠒⠤⣀⣿ ', '⡇⢸', '⣿']
+	autoTest_gestures = {
+		"kb:escape": "autoTest",
+		"kb:q": "autoTest",
+		"kb:space": "autoTestPause",
+		"kb:p": "autoTestPause",
+		"kb:r": "autoTestPause",
+		"kb:s": "autoTestPause",
+		"kb:j": "autoTestPrior",
+		"kb:leftarrow": "autoTestPrior",
+		"kb:rightarrow": "autoTestNext",
+		"kb:k": "autoTestNext",
+		"kb:uparrow": "autoTestIncrease",
+		"kb:i": "autoTestIncrease",
+		"kb:downarrow": "autoTestDecrease",
+		"kb:o": "autoTestDecrease",
+	}
+
+	autoTest_type = 0
+	autoTest_cellPtr = 0
+	autoTest_charPtr = 0
+	autoTest_pause = False
+	autoTest_RTL = False
+
+	def script_autoTestPause(self, gesture):
+		if self.autoTest_charPtr > 0: self.autoTest_charPtr -= 1
+		else: self.autoTest_charPtr = len(self.autoTest_tests[self.autoTest_type])-1
+		self.autoTest_pause = not self.autoTest_pause
+		msg = _("Pause") if self.autoTest_pause else _("Resume",)
+		speech.speakMessage(msg)
+
+	def showAutoTest(self):
+		if self.autoTest_type == 1:
+			braille.handler.message('%s' % (self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]*braille.handler.displaySize))
+		else:
+			braille.handler.message('%s%s' % (' '*self.autoTest_cellPtr, self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]))
+		if self.autoTest_pause: return
+		if self.autoTest_RTL:
+			if self.autoTest_charPtr-1 < 0:
+				if self.autoTest_cellPtr == 0: self.autoTest_RTL = False
+				else:
+					self.autoTest_cellPtr -= 1
+					self.autoTest_charPtr = len(self.autoTest_tests[self.autoTest_type])-1
+			else: self.autoTest_charPtr -= 1
+		else:
+			if self.autoTest_charPtr+1 < len(self.autoTest_tests[self.autoTest_type]): self.autoTest_charPtr += 1
+			else:
+				if self.autoTest_cellPtr+1 < braille.handler.displaySize and self.autoTest_type != 1: self.autoTest_cellPtr += 1
+				else: self.autoTest_RTL = True
+
+
+	def script_autoTestDecrease(self, gesture):
+		self.autoTestInterval += 125
+		self.autoTestTimer.Stop()
+		self.autoTestTimer.Start(self.autoTestInterval)
+		speech.speakMessage('%d ms' % self.autoTestInterval)
+
+	def script_autoTestIncrease(self, gesture):
+		if self.autoTestInterval-125 < 125: return
+		self.autoTestInterval -= 125
+		self.autoTestTimer.Stop()
+		self.autoTestTimer.Start(self.autoTestInterval)
+		speech.speakMessage('%d ms' % self.autoTestInterval)
+
+	def script_autoTestPrior(self, gesture):
+		if self.autoTest_type > 0: self.autoTest_type -= 1
+		else: self.autoTest_type = len(self.autoTest_tests)-1
+		self.autoTest_charPtr = self.autoTest_cellPtr = 0
+		self.showAutoTest()
+		speech.speakMessage(_('Auto test type %d' % self.autoTest_type))
+
+	def script_autoTestNext(self, gesture):
+		if self.autoTest_type+1 < len(self.autoTest_tests): self.autoTest_type += 1
+		else: self.autoTest_type = 0
+		self.autoTest_charPtr = self.autoTest_cellPtr = 0
+		self.showAutoTest()
+		speech.speakMessage(_('Auto test type %d' % self.autoTest_type))
+
+	def script_autoTest(self, gesture):
+		if self.autoTestPlayed:
+			self.autoTestTimer.Stop()
+			for k in self.autoTest_gestures: self.removeGestureBinding(k)
+			self.autoTest_charPtr = self.autoTest_cellPtr = 0
+			self.clearMessageFlash()
+			speech.speakMessage(_('Auto test stopped'))
+			if configBE.noMessageTimeout: config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
+		else:
+			if configBE.noMessageTimeout:
+				self.backupMessageTimeout = config.conf["braille"]["noMessageTimeout"]
+				config.conf["braille"]["noMessageTimeout"] = True
+			self.showAutoTest()
+			self.autoTestTimer = wx.PyTimer(self.showAutoTest)
+			self.bindGestures(self.autoTest_gestures)
+			self.autoTestTimer.Start(self.autoTestInterval)
+			speech.speakMessage(_("Auto test started. Use the up and down arrow keys to change speed. Use the left and right arrow keys to change test type. Use space key to pause or resume the test. Use escape key to quit"))
+		self.autoTestPlayed = not self.autoTestPlayed
+	# end of section autoTest
+
+	script_autoTest.__doc__ = _('Auto test')
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
@@ -1347,6 +1454,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.autoScrollRunning:
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
+		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		configBE.saveSettings()
 		super(GlobalPlugin, self).terminate()
 

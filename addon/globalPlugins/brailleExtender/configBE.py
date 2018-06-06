@@ -96,9 +96,6 @@ def loadConf():
 		tabSize = integer(min=1, default=2, max=42)
 		postTable = string(default="None")
 		viewSaved = string(default="None")
-
-	[patch]
-		updateBraille = boolean(default=True)
 	""".format(
 		CUR_BD=curBD,
 		MAX_BD=42,

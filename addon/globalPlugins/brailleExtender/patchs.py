@@ -74,9 +74,7 @@ def update(self):
 		except BaseException:
 			if len(postTable) == 0:
 				log.error("Error with update braille function patch, disabling: %s")
-				configBE.conf["patch"]["updateBraille"] = False
-				configBE.conf["general"]["tabSpace"] = False
-				configBE.conf["general"]["postTable"] = "None"
+				braille.Region.update = backupUpdate
 				core.restart()
 				return
 			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], postTable))
@@ -127,10 +125,7 @@ def update(self):
 				for i, j in enumerate(self.brailleCells): self.brailleCells[i] &= 63
 	except BaseException as e:
 		log.error("Error with update braille patch, disabling: %s" % e)
-		configBE.conf["patch"]["updateBraille"] = False
-		configBE.conf["general"]["tabSpace"] = False
-		configBE.conf["general"]["postTable"] = "None"
-		core.restart()
+		braille.Region.update = backupUpdate
 
 
 def sayCurrentLine():
@@ -233,13 +228,9 @@ if configBE.conf['general']['tabSpace'] and os.path.exists(tabFile):
 		preTable.append(tabFile)
 		log.debug('Tab as spaces enabled')
 	f.close()
-else:
-	log.debug('Tab as spaces disabled')
-
-if configBE.conf["patch"]["updateBraille"]:
-	braille.Region.update = update
-else:
-	log.info('Update braille function patch disabled')
+else: log.debug('Tab as spaces disabled')
+backupUpdate = braille.Region.update
+braille.Region.update = update
 
 script_braille_routeTo.__doc__ = _("Routes the cursor to or activates the object under this braille cell")
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
@@ -329,3 +320,4 @@ def executeGesture(self, gesture):
 
 inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
+

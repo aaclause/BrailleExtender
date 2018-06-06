@@ -44,6 +44,7 @@ import settings
 import patchs
 import utils
 import versionInfo
+
 from configobj import ConfigObj
 from logHandler import log
 
@@ -85,6 +86,7 @@ def paramsDL(): return {
 	"channel": configBE.conf['general']['channelUpdate']
 }
 
+
 def checkUpdates(sil = False):
 
 	def availableUpdateDialog(version = '', msg = ''):
@@ -114,8 +116,7 @@ def checkUpdates(sil = False):
 			dl.retrieve(url, fp)
 			try:
 				curAddons = []
-				for addon in addonHandler.getAvailableAddons():
-					curAddons.append(addon)
+				for addon in addonHandler.getAvailableAddons(): curAddons.append(addon)
 				bundle = addonHandler.AddonBundle(fp)
 				prevAddon = None
 				bundleName = bundle.manifest['name']
@@ -123,8 +124,7 @@ def checkUpdates(sil = False):
 					if not addon.isPendingRemove and bundleName == addon.manifest['name']:
 						prevAddon = addon
 						break
-				if prevAddon:
-					prevAddon.requestRemove()
+				if prevAddon: prevAddon.requestRemove()
 				addonHandler.installAddonBundle(bundle)
 				core.restart()
 			except BaseException as e:
@@ -185,7 +185,7 @@ def decorator(fn, s):
 	def update(self):
 		fn(self)
 		if not configBE.conf['general']['attribra']: return
-		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and 'ru-compbrl.ctb' not in config.conf["braille"]["translationTable"]: return
+		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and config.conf["braille"]["translationTable"] not in ["ru-compbrl.ctb", "he.ctb"]: return
 		DOT7 = 64
 		DOT8 = 128
 		for i, j in enumerate(self.rawTextTypeforms):
@@ -210,12 +210,12 @@ def populateAttrs(pid):
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
-	hourDatePlayed = False
-	autoScrollRunning = False
 	brailleKeyboardLocked = False
 	hideDots78 = False
 	modifiersLocked = False
+	hourDatePlayed = False
 	hourDateTimer = None
+	autoScrollRunning = False
 	autoScrollTimer = None
 	modifiers = set()
 	_tGestures = OrderedDict()
@@ -260,10 +260,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def event_gainFocus(self, obj, nextHandler):
-		if self.hourDatePlayed:
-			self.script_hourDate(None)
-		if self.autoScrollRunning:
-			self.script_autoScroll(None)
+		if self.hourDatePlayed: self.script_hourDate(None)
+		if self.autoScrollRunning: self.script_autoScroll(None)
+		if self.autoTestPlayed: self.script_autoTest(None)
 
 		pid = obj.processID
 		if self.currentPid != pid:
@@ -277,8 +276,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					if config.conf["braille"]["autoTether"]:
 						self.backupTether = braille.handler.TETHER_AUTO
 						config.conf["braille"]["autoTether"] = False
-					else:
-						self.backupTether = braille.handler.tether
+					else: self.backupTether = braille.handler.tether
 					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
 					braille.handler.handleReviewMove(shouldAutoTether=False)
 				self.switchedMode = True
@@ -331,15 +329,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
 
+	def getGestureWithBrailleIdentifier(self, gesture = ''):
+		return ('br(%s):' % configBE.curBD if ':' not in gesture else '')+gesture
+
 	def gesturesInit(self):
 		# rotor gestures
 		if 'rotor' in configBE.iniProfile.keys():
 			for k in configBE.iniProfile["rotor"]:
 				if isinstance(configBE.iniProfile["rotor"][k], list):
 					for l in configBE.iniProfile["rotor"][k]:
-						self.rotorGES['br(%s):%s' % (configBE.curBD, l)] = k
+						self.rotorGES[self.getGestureWithBrailleIdentifier(l)] = k
 				else:
-					self.rotorGES['br(%s):%s' %(configBE.curBD, configBE.iniProfile["rotor"][k])] = k
+					self.rotorGES[self.getGestureWithBrailleIdentifier(configBE.iniProfile["rotor"][k])] = k
 			log.debug(self.rotorGES)
 		else:
 			log.debug('No rotor gestures for this profile')
@@ -352,17 +353,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				if k in ['enter', 'backspace']:
 					if isinstance(cK[k], list):
 						for l in cK[k]:
-							gK[inputCore.normalizeGestureIdentifier('br(%s):%s' %(configBE.curBD, l))] = 'kb:%s' % k
+							gK[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(l))] = 'kb:%s' % k
 					else:
-						gK['kb:%s' % k] = inputCore.normalizeGestureIdentifier('br(%s):%s' % (configBE.curBD, cK[k]))
+						gK['kb:%s' % k] = inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(cK[k]))
 				elif k in ['braille_dots', 'braille_enter', 'braille_translate']:
 					if isinstance(cK[k], list):
 						for i in range(len(cK[k])):
 							if ':' not in cK[k][i]:
-								cK[k][i] = inputCore.normalizeGestureIdentifier('br(%s):%s' % (configBE.curBD, cK[k][i]))
+								cK[k][i] = inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(cK[k][i]))
 					else:
 						if ':' not in cK[k]:
-							cK[k] = 'br(%s):%s' %(configBE.curBD, cK[k])
+							cK[k] = self.getGestureWithBrailleIdentifier(cK[k])
 					gK[k] = cK[k]
 			inputCore.manager.localeGestureMap.update({'globalCommands.GlobalCommands': gK})
 			self.noKC = False
@@ -403,11 +404,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				if isinstance(v, list):
 					for i, gesture in enumerate(v):
 						if k != 'shortcutsOn':
-							self._pGestures[inputCore.normalizeGestureIdentifier('br(%s):%s' % (configBE.curBD, gesture))] = k
+							self._pGestures[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(gesture))] = k
 				else:
-					self._pGestures[inputCore.normalizeGestureIdentifier('br(%s):%s' % (configBE.curBD, v))] = k
+					self._pGestures[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(v))] = k
 		self.bindGestures(self._pGestures)
-		self.bindGestures({'br(%s):%s' % (configBE.curBD, k): "quickLaunch" for k in configBE.quickLaunches.keys()})
+		self.bindGestures({self.getGestureWithBrailleIdentifier(k): "quickLaunch" for k in configBE.quickLaunches.keys()})
 		return
 
 	def bindRotorGES(self):
@@ -461,10 +462,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_nextRotor(self, gesture):
 		global rotorItem
-		if rotorItem >= len(rotorItems) - 1:
-			rotorItem = 0
-		else:
-			rotorItem += 1
+		rotorItem = 0 if rotorItem >= len(rotorItems) - 1 else rotorItem + 1
 		self.bindRotorGES()
 		return ui.message(rotorItems[rotorItem])
 
@@ -501,21 +499,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def switchSelectionRange(self, previous=False):
 		global ROTOR_RANGE
-		if previous:
-			ROTOR_RANGE = ROTOR_RANGE - 1 if ROTOR_RANGE > 0 else 5
-		else:
-			ROTOR_RANGE = ROTOR_RANGE + 1 if ROTOR_RANGE < 5 else 0
+		if previous: ROTOR_RANGE = ROTOR_RANGE - 1 if ROTOR_RANGE > 0 else 5
+		else: ROTOR_RANGE = ROTOR_RANGE + 1 if ROTOR_RANGE < 5 else 0
 		ui.message(self.getCurrentSelectionRange())
 		return
 
 	def script_nextEltRotor(self, gesture):
-		if rotorItem == ROTOR_DEF:
-			return self.sendComb('rightarrow', gesture)
+		if rotorItem == ROTOR_DEF: return self.sendComb('rightarrow', gesture)
 		elif rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
 			return self.sendComb(self.getCurrentSelectionRange(False), gesture)
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+rightarrow', gesture)
-			self.showBrailleObj()
+			# self.showBrailleObj()
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_scrollForward, gesture)
@@ -541,7 +536,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					False, True), gesture)
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+leftarrow', gesture)
-			self.showBrailleObj()
+			# self.showBrailleObj()
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_scrollBack, gesture)
@@ -561,7 +556,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return self.switchSelectionRange()
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+downarrow', gesture)
-			self.showBrailleObj()
+			# self.showBrailleObj()
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_nextLine, gesture)
@@ -575,7 +570,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			return self.switchSelectionRange(True)
 		elif rotorItem == ROTOR_OBJ:
 			self.sendComb('nvda+shift+uparrow', gesture)
-			self.showBrailleObj()
+			# self.showBrailleObj()
 			return
 		elif rotorItem == ROTOR_REVIEW:
 			scriptHandler.executeScript(
@@ -785,20 +780,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 						scriptName = 'script_%s' % lk
 						func = getattr(globalCommands.GlobalCommands, scriptName, None)
 						if isinstance(configBE.iniProfile['keyboardLayouts'][layout][lk], list):
-							t.append(utils.beautifulSht(' / '.join(configBE.iniProfile['keyboardLayouts'][layout][lk]), 1) + configBE.sep + ': ' + func.__doc__)
+							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + func.__doc__)
 						else:
-							t.append(utils.beautifulSht(str(configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + func.__doc__)
+							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + func.__doc__)
 					else:
 						if isinstance(
 								configBE.iniProfile['keyboardLayouts'][layout][lk], list):
-							t.append(
-								utils.beautifulSht(
-									' / '.join(
-										configBE.iniProfile['keyboardLayouts'][layout][lk]),
-									1) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
+							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
 						else:
-							t.append(utils.beautifulSht(str(
-								configBE.iniProfile['keyboardLayouts'][layout][lk])) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
+							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
 				yield ((configBE.sep + '; ').join(t))
 
 	def getGestures(s):
@@ -819,8 +809,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			except BaseException:
 				ui.message(_("No such file or directory"))
 			return
-	script_quickLaunch.__doc__ = _(
-		'Opens a custom program/file. Go to settings to define them')
+	script_quickLaunch.__doc__ = _('Opens a custom program/file. Go to settings to define them')
 
 	def script_checkUpdate(self, gesture):
 		if not globalVars.appArgs.secure:
@@ -1012,8 +1001,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					_tmpGesture[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g][h])).replace(
 						'br(' + configBE.curBD + '):', '')] = g.replace('kb:', '')
 			elif ('kb:' in g and g not in ['kb:alt', 'kb:ctrl', 'kb:windows', 'kb:control', 'kb:applications'] and 'br(' + configBE.curBD + '):' in str(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
-				_tmpGesture[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g])).replace(
-					'br(' + configBE.curBD + '):', '')] = g.replace('kb:', '')
+				_tmpGesture[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g])).replace('br(' + configBE.curBD + '):', '')] = g.replace('kb:', '')
 			gId = inputCore.normalizeGestureIdentifier(
 				'br(' + configBE.curBD + '):' + str(gesture.id)).replace('br(' + configBE.curBD + '):', '')
 		sht = self.getActualModifiers(False) + _tmpGesture[gId]
@@ -1325,7 +1313,111 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(configBE.conf['general']['viewSaved']), configBE.conf['general']['viewSaved']), _('View saved'), True)
 		else: ui.message(_('No saved view'))
 	script_showBrailleViewSaved.__doc__ = _('Show the saved braille view through a flash message. Press twice quickly to show it in a browseable message')
- 
+
+	# section autoTest
+	autoTestPlayed = False
+	autoTestTimer = None
+	autoTestInterval = 1000
+	autoTest_tests = ['⠁⠂⠄⡀⠈⠐⠠⢀', '⠉⠒⠤⣀⣿ ', '⡇⢸', '⣿']
+	autoTest_gestures = {
+		"kb:escape": "autoTest",
+		"kb:q": "autoTest",
+		"kb:space": "autoTestPause",
+		"kb:p": "autoTestPause",
+		"kb:r": "autoTestPause",
+		"kb:s": "autoTestPause",
+		"kb:j": "autoTestPrior",
+		"kb:leftarrow": "autoTestPrior",
+		"kb:rightarrow": "autoTestNext",
+		"kb:k": "autoTestNext",
+		"kb:uparrow": "autoTestIncrease",
+		"kb:i": "autoTestIncrease",
+		"kb:downarrow": "autoTestDecrease",
+		"kb:o": "autoTestDecrease",
+	}
+
+	autoTest_type = 0
+	autoTest_cellPtr = 0
+	autoTest_charPtr = 0
+	autoTest_pause = False
+	autoTest_RTL = False
+
+	def script_autoTestPause(self, gesture):
+		if self.autoTest_charPtr > 0: self.autoTest_charPtr -= 1
+		else: self.autoTest_charPtr = len(self.autoTest_tests[self.autoTest_type])-1
+		self.autoTest_pause = not self.autoTest_pause
+		msg = _("Pause") if self.autoTest_pause else _("Resume",)
+		speech.speakMessage(msg)
+
+	def showAutoTest(self):
+		if self.autoTest_type == 1:
+			braille.handler.message('%s' % (self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]*braille.handler.displaySize))
+		else:
+			braille.handler.message('%s%s' % (' '*self.autoTest_cellPtr, self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]))
+		if self.autoTest_pause: return
+		if self.autoTest_RTL:
+			if self.autoTest_charPtr-1 < 0:
+				if self.autoTest_cellPtr == 0: self.autoTest_RTL = False
+				else:
+					self.autoTest_cellPtr -= 1
+					self.autoTest_charPtr = len(self.autoTest_tests[self.autoTest_type])-1
+			else: self.autoTest_charPtr -= 1
+		else:
+			if self.autoTest_charPtr+1 < len(self.autoTest_tests[self.autoTest_type]): self.autoTest_charPtr += 1
+			else:
+				if self.autoTest_cellPtr+1 < braille.handler.displaySize and self.autoTest_type != 1: self.autoTest_cellPtr += 1
+				else: self.autoTest_RTL = True
+
+
+	def script_autoTestDecrease(self, gesture):
+		self.autoTestInterval += 125
+		self.autoTestTimer.Stop()
+		self.autoTestTimer.Start(self.autoTestInterval)
+		speech.speakMessage('%d ms' % self.autoTestInterval)
+
+	def script_autoTestIncrease(self, gesture):
+		if self.autoTestInterval-125 < 125: return
+		self.autoTestInterval -= 125
+		self.autoTestTimer.Stop()
+		self.autoTestTimer.Start(self.autoTestInterval)
+		speech.speakMessage('%d ms' % self.autoTestInterval)
+
+	def script_autoTestPrior(self, gesture):
+		if self.autoTest_type > 0: self.autoTest_type -= 1
+		else: self.autoTest_type = len(self.autoTest_tests)-1
+		self.autoTest_charPtr = self.autoTest_cellPtr = 0
+		self.showAutoTest()
+		speech.speakMessage(_('Auto test type %d' % self.autoTest_type))
+
+	def script_autoTestNext(self, gesture):
+		if self.autoTest_type+1 < len(self.autoTest_tests): self.autoTest_type += 1
+		else: self.autoTest_type = 0
+		self.autoTest_charPtr = self.autoTest_cellPtr = 0
+		self.showAutoTest()
+		speech.speakMessage(_('Auto test type %d' % self.autoTest_type))
+
+	def script_autoTest(self, gesture):
+		if self.autoTestPlayed:
+			self.autoTestTimer.Stop()
+			for k in self.autoTest_gestures: self.removeGestureBinding(k)
+			self.autoTest_charPtr = self.autoTest_cellPtr = 0
+			self.clearMessageFlash()
+			speech.speakMessage(_('Auto test stopped'))
+			if configBE.noMessageTimeout: config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
+		else:
+			if configBE.noMessageTimeout:
+				self.backupMessageTimeout = config.conf["braille"]["noMessageTimeout"]
+				config.conf["braille"]["noMessageTimeout"] = True
+			self.showAutoTest()
+			self.autoTestTimer = wx.PyTimer(self.showAutoTest)
+			self.bindGestures(self.autoTest_gestures)
+			self.autoTestTimer.Start(self.autoTestInterval)
+			speech.speakMessage(_("Auto test started. Use the up and down arrow keys to change speed. Use the left and right arrow keys to change test type. Use space key to pause or resume the test. Use escape key to quit"))
+		self.autoTestPlayed = not self.autoTestPlayed
+	# end of section autoTest
+
+	script_autoTest.__doc__ = _('Auto test')
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
@@ -1362,6 +1454,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.autoScrollRunning:
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
+		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		configBE.saveSettings()
 		super(GlobalPlugin, self).terminate()
 

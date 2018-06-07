@@ -1318,7 +1318,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	autoTestPlayed = False
 	autoTestTimer = None
 	autoTestInterval = 1000
-	autoTest_tests = ['⠁⠂⠄⡀⠈⠐⠠⢀', '⠉⠒⠤⣀⣿ ', '⡇⢸', '⣿']
+	autoTest_tests = ['⠁⠂⠄⡀⠈⠐⠠⢀', '⠉⠒⠤⣀ ⣀⣤⣶⣿⠿⠛⠉ ', '⡇⢸', '⣿']
 	autoTest_gestures = {
 		"kb:escape": "autoTest",
 		"kb:q": "autoTest",
@@ -1356,18 +1356,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			braille.handler.message('%s%s' % (' '*self.autoTest_cellPtr, self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]))
 		if self.autoTest_pause: return
 		if self.autoTest_RTL:
-			if self.autoTest_charPtr-1 < 0:
-				if self.autoTest_cellPtr == 0: self.autoTest_RTL = False
+			if self.autoTest_charPtr == 0:
+				if self.autoTest_cellPtr == 0 or self.autoTest_type == 1: self.autoTest_RTL = False
 				else:
 					self.autoTest_cellPtr -= 1
 					self.autoTest_charPtr = len(self.autoTest_tests[self.autoTest_type])-1
 			else: self.autoTest_charPtr -= 1
 		else:
-			if self.autoTest_charPtr+1 < len(self.autoTest_tests[self.autoTest_type]): self.autoTest_charPtr += 1
-			else:
-				if self.autoTest_cellPtr+1 < braille.handler.displaySize and self.autoTest_type != 1: self.autoTest_cellPtr += 1
-				else: self.autoTest_RTL = True
-
+			if self.autoTest_charPtr+1 == len(self.autoTest_tests[self.autoTest_type]):
+				if self.autoTest_cellPtr+1 == braille.handler.displaySize or self.autoTest_type == 1: self.autoTest_RTL = True
+				else:
+					self.autoTest_cellPtr += 1
+					self.autoTest_charPtr = 0
+			else: self.autoTest_charPtr += 1
 
 	def script_autoTestDecrease(self, gesture):
 		self.autoTestInterval += 125
@@ -1399,7 +1400,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_autoTest(self, gesture):
 		if self.autoTestPlayed:
 			self.autoTestTimer.Stop()
-			for k in self.autoTest_gestures: self.removeGestureBinding(k)
+			for k in self.autoTest_gestures:
+				try: self.removeGestureBinding(k)
+				except: pass
 			self.autoTest_charPtr = self.autoTest_cellPtr = 0
 			self.clearMessageFlash()
 			speech.speakMessage(_('Auto test stopped'))

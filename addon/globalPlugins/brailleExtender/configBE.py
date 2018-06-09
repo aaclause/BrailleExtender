@@ -22,10 +22,41 @@ import inputCore
 import languageHandler
 from logHandler import log
 
+CHANNEL_stable = "stable"
+CHANNEL_testing = "testing"
+CHANNEL_dev = "dev"
+
+CHOICE_none = 0
+CHOICE_braille = 1
+CHOICE_speech = 2
+CHOICE_speechAndBraille = 3
+CHOICE_dot78 = 1
+CHOICE_dot7 = 2
+CHOICE_dot8 = 3
+
+outputMessage = OrderedDict([
+	(CHOICE_none, _("none")),
+	(CHOICE_braille, _("braille only")),
+	(CHOICE_speech, _("speech only")),
+	(CHOICE_speechAndBraille, _("both"))
+])
+
+attributeChoices = OrderedDict([
+	(CHOICE_none, _("none")),
+	(CHOICE_dot78, _("dots 7 and 8")),
+	(CHOICE_dot7, _("dot 7")),
+	(CHOICE_dot8, _("dot 8"))
+])
+
+updateChannels = OrderedDict([
+	(CHANNEL_stable, _("stable")),
+	(CHANNEL_testing, _("testing")),
+	(CHANNEL_dev, _("development"))
+])
+
 curBD = braille.handler.display.name
 cfgFile = globalVars.appArgs.configPath + '\\BrailleExtender.conf'
 cfgFileAttribra = globalVars.appArgs.configPath + '\\attribra-BE.ini'
-reviewModeApps = []
 quickLaunches = OrderedDict()
 backupDisplaySize = braille.handler.displaySize
 conf = {}
@@ -60,23 +91,21 @@ except BaseException:
 	noUnicodeTable = True
 
 def loadConf():
-	global conf, reviewModeApps, quickLaunches, gesturesFileExists, iTables, oTables, profileFileExists, iniProfile
+	global conf, quickLaunches, gesturesFileExists, iTables, oTables, profileFileExists, iniProfile
 	confspec = ConfigObj(StringIO("""
 	[general]
 		autoCheckUpdate = boolean(default=True)
-		channelUpdate = option("stable", "dev", default="stable")
+		channelUpdate = option({CHANNEL_dev}, {CHANNEL_stable}, default={CHANNEL_stable})
 		lastCheckUpdate = float(min=0, default=0)
 		profile_{CUR_BD} = string(default="default")
 		keyboardLayout_{CUR_BD} = string(default={KEYBOARDLAYOUT})
-		feedbackModifiersKeysInBraille = boolean(default=True)
-		feedbackModifiersKeysInSpeech = boolean(default=False)
+		modifierKeysFeedback = integer(min={CHOICE_none}, max={CHOICE_speechAndBraille}, default={CHOICE_braille})
+		volumeChangeFeedback = integer(min={CHOICE_none}, max={CHOICE_speechAndBraille}, default={CHOICE_braille})
 		brailleDisplay1 = string(default="noBraille")
 		brailleDisplay2 = string(default="noBraille")
-		reportVolumeBraille = boolean(default=True)
-		reportVolumeSpeech = boolean(default=False)
-		reviewModeApps = string(default="cmd, putty, bash, powershell, py, python, ocaml, ghci")
 		hourDynamic = boolean(default=True)
-		limitCells_{CUR_BD} = integer(min=0, default=0, max={MAX_CELLS})
+		leftMarginCells_{CUR_BD} = integer(min=0, default=0, max={MAX_CELLS})
+		rightMarginCells_{CUR_BD} = integer(min=0, default=0, max={MAX_CELLS})
 		delayScroll_{CUR_BD} = float(min=0, default=3, max={MAX_DELAYSCROLL})
 		smartDelayScroll = boolean(default=False)
 		reverseScroll = boolean(default=False)
@@ -97,6 +126,12 @@ def loadConf():
 		postTable = string(default="None")
 		viewSaved = string(default="None")
 	""".format(
+		CHANNEL_dev=CHANNEL_dev,
+		CHANNEL_stable=CHANNEL_stable,
+		CHOICE_none=CHOICE_none,
+		CHOICE_braille=CHOICE_braille,
+		CHOICE_speech=CHOICE_speech,
+		CHOICE_speechAndBraille=CHOICE_speechAndBraille,
 		CUR_BD=curBD,
 		MAX_BD=42,
 		ITABLE=config.conf["braille"]["inputTable"] + ', unicode-braille.utb',
@@ -128,9 +163,8 @@ def loadConf():
 		else:
 			if curBD != 'noBraille': log.warn('%s inaccessible' % confGen)
 			else: log.debug('No braille display present')
-	if (conf['general']['limitCells_' + curBD] <= backupDisplaySize and conf['general']['limitCells_' + curBD] > 0):
-		braille.handler.displaySize = conf['general']['limitCells_' + curBD]
-	reviewModeApps = [k.strip() for k in conf["general"]["reviewModeApps"].split(',') if k.strip() != '']
+	if (backupDisplaySize-conf["general"]["rightMarginCells_" + curBD] <= backupDisplaySize and conf["general"]["rightMarginCells_" + curBD] > 0):
+		braille.handler.displaySize = backupDisplaySize-conf["general"]["rightMarginCells_" + curBD]
 	tmp1 = [k.strip() for k in conf["general"]["quickLaunchGestures_%s" % curBD].split(';') if k.strip() != '']
 	tmp2 = [k.strip() for k in conf["general"]["quickLaunchLocations_%s" % curBD].split(';') if k.strip() != '']
 	for i, gesture in enumerate(tmp1):
@@ -139,8 +173,8 @@ def loadConf():
 	if not noUnicodeTable:
 		lITables = [table[0] for table in brailleTables.listTables() if table.input]
 		lOTables = [table[0] for table in brailleTables.listTables() if table.output]
-		iTables = conf['general']['iTables']
-		oTables = conf['general']['oTables']
+		iTables = conf["general"]['iTables']
+		oTables = conf["general"]['oTables']
 		if not isinstance(iTables, list):
 			iTables = iTables.replace(', ', ',').split(',')
 		if not isinstance(oTables, list):
@@ -159,7 +193,7 @@ def loadGestures():
 		inputCore.manager.localeGestureMap.load(gesturesBDPath())
 		for fn in [gesturesBMPath, gesturesLangBMPath]:
 			f = open(fn)
-			tmp = [line.strip().replace(' ', '').replace('$', iniProfile['general']['nameBK']).replace('=', '=br(%s):' % curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
+			tmp = [line.strip().replace(' ', '').replace('$', iniProfile["general"]['nameBK']).replace('=', '=br(%s):' % curBD) for line in f if line.strip() and not line.strip().startswith('#') and line.count('=') == 1]
 			tmp = {k.split('=')[0]: k.split('=')[1] for k in tmp}
 		inputCore.manager.localeGestureMap.update({'browseMode.BrowseModeTreeInterceptor': tmp})
 
@@ -300,8 +334,8 @@ if not osp.exists(cfgFileAttribra):
 	""")
 	f.close()
 
-if conf['general']['iTableShortcuts'] not in tablesUFN:
-	conf['general']['iTableShortcuts'] = '?'
+if conf["general"]['iTableShortcuts'] not in tablesUFN:
+	conf["general"]['iTableShortcuts'] = '?'
 
 def isContractedTable(table):
 	if not table in tablesFN: return False

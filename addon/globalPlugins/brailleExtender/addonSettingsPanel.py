@@ -6,8 +6,10 @@
 from __future__ import unicode_literals
 import gui
 import wx
+import addonHandler
 import braille
 import configBE
+addonHandler.initTranslation()
 
 class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	# Translators: title of a dialog.

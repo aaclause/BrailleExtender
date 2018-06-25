@@ -34,7 +34,7 @@ postTable = []
 SELECTION_SHAPE = braille.SELECTION_SHAPE
 def script_braille_routeTo(self, gesture):
 	braille.handler.routeTo(gesture.routingIndex)
-	if configBE.conf['general']['speakRoutingTo']:
+	if config.conf["brailleExtender"]['speakRoutingTo']:
 		ch = getCurrentChar()
 		if ch != "": speech.speakSpelling(ch)
 
@@ -79,7 +79,7 @@ def update(self):
 				return
 			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], postTable))
 			postTable = []
-			configBE.conf["general"]["postTable"] = "None"
+			config.conf["brailleExtender"]["postTable"] = "None"
 			update(self)
 			return
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.
@@ -132,9 +132,9 @@ def sayCurrentLine():
 	global instanceGP
 	if not instanceGP.autoScrollRunning:
 		if braille.handler.tether == braille.handler.TETHER_REVIEW:
-			if configBE.conf['general']['speakScrollReviewMode']: scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+			if config.conf["brailleExtender"]['speakScrollReviewMode']: scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 			return
-		elif configBE.conf['general']['speakScrollFocusMode'] and configBE.conf['general']['speakScrollFocusMode']:
+		elif config.conf["brailleExtender"]['speakScrollFocusMode'] and config.conf["brailleExtender"]['speakScrollFocusMode']:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
@@ -197,28 +197,28 @@ def createTabFile(f, c):
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 
-postTableValid = True if configBE.conf['general']['postTable'] in configBE.tablesFN else False
+postTableValid = True if config.conf["brailleExtender"]["postTable"] in configBE.tablesFN else False
 
 if postTableValid:
 	postTable.append(
 		os.path.join(
 			brailleTables.TABLES_DIR,
-			configBE.conf['general']['postTable']))
+			config.conf["brailleExtender"]['postTable']))
 	log.info('Secondary table enabled: %s' %
-			 configBE.conf['general']['postTable'])
+			 config.conf["brailleExtender"]['postTable'])
 else:
-	if configBE.conf['general']['postTable'] != "None":
+	if config.conf["brailleExtender"]['postTable'] != "None":
 		log.error('Invalid secondary table')
 
 tabFile = os.path.join(os.path.dirname(__file__), "", "tab.cti").decode("mbcs")
 defTab = 'space \\t ' + \
-	('0-' * configBE.conf['general']['tabSize'])[:-1] + '\n'
+	('0-' * config.conf["brailleExtender"]['tabSize'])[:-1] + '\n'
 
-if configBE.conf['general']['tabSpace'] and not os.path.exists(tabFile):
+if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tabFile):
 	log.info('File not found, creating tab file')
 	createTabFile(tabFile, defTab)
 
-if configBE.conf['general']['tabSpace'] and os.path.exists(tabFile):
+if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tabFile):
 	f = open(tabFile, "r")
 	if f.read() != defTab:
 		log.debug('Difference, creating tab file...')
@@ -250,7 +250,7 @@ def executeGesture(self, gesture):
 		script = gesture.script
 		if 'brailleDisplayDrivers' in str(type(gesture)):
 			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.func_name != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
-			if not configBE.conf['general']['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
+			if not config.conf["brailleExtender"]['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
 			elif hasattr(script, "__func__") and (script.__func__.func_name in [
 			'script_braille_dots','script_braille_enter',
 			'script_volumePlus','script_volumeMinus','script_toggleVolume',
@@ -258,7 +258,7 @@ def executeGesture(self, gesture):
 			'script_ctrl','script_alt','script_nvda','script_win',
 			'script_ctrlAlt','script_ctrlAltWin','script_ctrlAltWinShift','script_ctrlAltShift','script_ctrlWin','script_ctrlWinShift','script_ctrlShift','script_altWin','script_altWinShift','script_altShift','script_winShift']
 			or (
-				not configBE.conf['general']['stopSpeechScroll'] and 
+				not config.conf["brailleExtender"]['stopSpeechScroll'] and 
 			script.__func__.func_name in ['script_braille_scrollBack','script_braille_scrollForward'])):
 				stopSpeech = False
 			else: stopSpeech = True

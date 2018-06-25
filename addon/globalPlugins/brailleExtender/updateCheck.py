@@ -5,12 +5,15 @@
 from __future__ import unicode_literals
 from logHandler import log
 
+import os
+import re
 import urllib
 import gui
 import wx
 
 import braille
 import config
+import globalVars
 import languageHandler
 import versionInfo
 
@@ -23,7 +26,7 @@ def paramsDL(): return {
 	"language": languageHandler.getLanguage(),
 	"installed": config.isInstalledCopy(),
 	"brailledisplay": braille.handler.display.name,
-	"channel": configBE.conf['general']['channelUpdate']
+	"channel": config.conf["brailleExtender"]['channelUpdate']
 }
 
 

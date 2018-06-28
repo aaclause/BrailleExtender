@@ -76,11 +76,11 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 	def onAttributesButton(self, evt):
 		attribraDialog = AttribraDlg(self, multiInstanceAllowed=True)
-		ret = attribraDialog.ShowModal()
+		attribraDialog.ShowModal()
 
 	def onCustomizeLabelsButton(self, evt):
 		customizeLabelsDlg = CustomizeLabelsDlg(self, multiInstanceAllowed=True)
-		ret = customizeLabelsDlg.ShowModal()
+		customizeLabelsDlg.ShowModal()
 
 	def postInit(self):
 		self.addTextBeforeCheckBox.SetFocus()
@@ -187,7 +187,7 @@ class CustomizeLabelsDlg(gui.settingsDialogs.SettingsDialog):
 			elif idCategory == 2: return braille.positiveStateLabels.keys()[idLabel]
 			elif idCategory == 3: return braille.negativeStateLabels.keys()[idLabel]
 			else: return -1
-		except: return -1
+		except BaseException: return -1
 
 	def getLabelFromID(self):
 		idCategory = self.categories.GetSelection()

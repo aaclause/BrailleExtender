@@ -53,7 +53,7 @@ import patchs
 
 instanceGP = None
 lang = configBE.lang
-ATTRS = lambda: config.conf["brailleExtender"]["attribute"].copy()
+ATTRS = lambda: config.conf["brailleExtender"]["attributes"].copy()
 logTextInfo = False
 ROTOR_DEF = 0
 ROTOR_MOVE = 1
@@ -78,11 +78,10 @@ nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else F
 
 # ***** Attribra code *****
 def attribraEnabled():
-	return config.conf["brailleExtender"]["feature"]["attribute"]
+	return config.conf["brailleExtender"]["features"]["attributes"]
 
 def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field):
-		# convention: to mark we put 4 (bold for liblouis)
 		for attr in ATTRS():
 			v = attr.split(':')
 			k = v[0]
@@ -143,14 +142,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	backupShowCursor = False
 	backupTether = braille.handler.tether
 	switchedMode = False
-	instanceST = None
 
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
-		global instanceGP
-		instanceGP = self
-		patchs.instanceGP = instanceGP
-		log.debug("! New instance of GlobalPlugin: {0}".format(id(instanceGP)))
+		patchs.instanceGP = self
 		configBE.loadConf()
 		configBE.initGestures()
 		configBE.loadGestures()
@@ -484,7 +479,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleLockModifiers.__doc__ = _('Lock/unlock modifiers keys')
 
 	def script_toggleAttribra(self, gesture):
-		config.conf["brailleExtender"]["feature"]["attribute"] = not attribraEnabled()
+		config.conf["brailleExtender"]["features"]["attributes"] = not attribraEnabled()
 		self.refreshBD()
 		speech.speakMessage('Attribra %s' % (_('enabled') if attribraEnabled() else _('disabled')))
 	script_toggleAttribra.__doc__ = _('Enable/disable Attribra')

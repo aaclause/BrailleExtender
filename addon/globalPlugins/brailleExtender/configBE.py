@@ -56,6 +56,7 @@ updateChannels = OrderedDict([
 curBD = braille.handler.display.name
 quickLaunches = OrderedDict()
 backupDisplaySize = braille.handler.displaySize
+backupRoleLabels = {}
 iniGestures = {}
 iniProfile = {}
 profileFileExists = gesturesFileExists = False
@@ -126,10 +127,11 @@ confspec = {
 	"tabSize": "integer(min=1, default=2, max=42)",
 	"postTable": 'string(default="None")',
 	"viewSaved": 'string(default="None")',
-	"feature": {
-		"attribute": "boolean(default=True)"
+	"features": {
+		"attributes": "boolean(default=True)",
+		"roleLabels": "boolean(default=True)"
 	},
-	"attribute": {
+	"attributes": {
 		"bold": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
 			CHOICE_none=CHOICE_none,
 			CHOICE_dot7=CHOICE_dot7,
@@ -154,8 +156,42 @@ confspec = {
 			CHOICE_dot8=CHOICE_dot8,
 			CHOICE_dots78=CHOICE_dots78
 		)
-	}
+	},
+	"roleLabels": {}
 }
+
+def getLabelFromID(idCategory, idLabel):
+	if idCategory == 0: return braille.roleLabels[braille.roleLabels.keys()[int(idLabel)]]
+	elif idCategory == 1: return braille.landmarkLabels[idLabel]
+	elif idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
+	elif idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
+
+def setLabelFromID(idCategory, idLabel, newLabel):
+	if idCategory == 0: braille.roleLabels[braille.roleLabels.keys()[int(idLabel)]] = newLabel
+	elif idCategory == 1: braille.landmarkLabels[idLabel] = newLabel
+	elif idCategory == 2: braille.positiveStateLabels[int(idLabel)] = newLabel
+	elif idCategory == 3: braille.negativeStateLabels[int(idLabel)] = newLabel
+
+def loadRoleLabels(roleLabels):
+	global backupRoleLabels
+	for k, v in roleLabels.items():
+		try:
+			arg1 = int(k.split(':')[0])
+			arg2 = k.split(':')[1]
+			backupRoleLabels[k] = (v, getLabelFromID(arg1, arg2))
+			setLabelFromID(arg1, arg2, v)
+		except BaseException:
+			log.error("Error during loading role label `%s`" % k)
+			roleLabels.pop(k)
+			config.conf["brailleExtender"]["roleLabels"] = roleLabels
+
+def discardRoleLabels():
+	global backupRoleLabels
+	for k, v in backupRoleLabels.items():
+		arg1 = int(k.split(':')[0])
+		arg2 = k.split(':')[1]
+		setLabelFromID(arg1, arg2, v[1])
+	backupRoleLabels = {}
 
 def loadConf():
 	global quickLaunches, gesturesFileExists, inputTables, outputTables, profileFileExists, iniProfile
@@ -192,8 +228,8 @@ def loadConf():
 		outputTables = [t for t in outputTables if t in listOutputTables]
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN:
 		config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
+	loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
-
 
 def loadGestures():
 	if gesturesFileExists:
@@ -215,8 +251,6 @@ def gesturesBDPath(a = False):
 	for p in l:
 		if os.path.exists(p): return p
 	return '?'
-
-
 
 def initGestures():
 	global gesturesFileExists, iniGestures

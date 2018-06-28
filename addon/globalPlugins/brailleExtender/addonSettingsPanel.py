@@ -9,11 +9,14 @@ import wx
 import addonHandler
 import braille
 import config
+import controlTypes
 addonHandler.initTranslation()
 
 import configBE
 from logHandler import log
+
 class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
+
 	# Translators: title of a dialog.
 	title = "Braille Extender"
 
@@ -67,11 +70,17 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self.attributesButton = bHelper.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
 		self.attributesButton.Bind(wx.EVT_BUTTON,self.onAttributesButton)
 		self.quickLaunchesButton = bHelper.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
+		self.customizeLabelsButton = bHelper.addButton(self, wx.NewId(), "%s..." % _("Customize role &labels"), wx.DefaultPosition)
+		self.customizeLabelsButton.Bind(wx.EVT_BUTTON,self.onCustomizeLabelsButton)
 		sHelper.addItem(bHelper)
 
 	def onAttributesButton(self, evt):
 		attribraDialog = AttribraDlg(self, multiInstanceAllowed=True)
-		ret = attribraDialog.ShowModal()
+		attribraDialog.ShowModal()
+
+	def onCustomizeLabelsButton(self, evt):
+		customizeLabelsDlg = CustomizeLabelsDlg(self, multiInstanceAllowed=True)
+		customizeLabelsDlg.ShowModal()
 
 	def postInit(self):
 		self.addTextBeforeCheckBox.SetFocus()
@@ -82,12 +91,14 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD] = self.rightMarginCells.Value
 
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
 	title = _("Attribra")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("Enable Attribra")))
-		self.toggleAttribra.SetValue(config.conf["brailleExtender"]["feature"]["attribute"])
+		self.toggleAttribra.SetValue(config.conf["brailleExtender"]["features"]["attributes"])
 		self.spellingErrorsAttribute = sHelper.addLabeledControl(_("Show spelling errors with"), wx.Choice, choices=configBE.attributeChoices.values())
 		self.spellingErrorsAttribute.SetSelection(self.getItemToSelect("invalid-spelling"))
 		self.boldAttribute = sHelper.addLabeledControl(_("Show bold with"), wx.Choice, choices=configBE.attributeChoices.values())
@@ -98,7 +109,7 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		self.underlineAttribute.SetSelection(self.getItemToSelect("underline"))
 
 	def getItemToSelect(self, attribute):
-		try: idx = configBE.attributeChoices.keys().index(config.conf["brailleExtender"]["attribute"][attribute])
+		try: idx = configBE.attributeChoices.keys().index(config.conf["brailleExtender"]["attributes"][attribute])
 		except BaseException as err:
 			log.error(err)
 			idx = 0
@@ -108,9 +119,93 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		self.toggleAttribra.SetFocus()
 
 	def onOk(self, evt):
-		config.conf["brailleExtender"]["feature"]["attribute"] = self.toggleAttribra.IsChecked()
-		config.conf["brailleExtender"]["attribute"]["bold"] = configBE.attributeChoices.keys()[self.boldAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attribute"]["italic"] = configBE.attributeChoices.keys()[self.italicAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attribute"]["underline"] = configBE.attributeChoices.keys()[self.underlineAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attribute"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
+		config.conf["brailleExtender"]["features"]["attributes"] = self.toggleAttribra.IsChecked()
+		config.conf["brailleExtender"]["attributes"]["bold"] = configBE.attributeChoices.keys()[self.boldAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["italic"] = configBE.attributeChoices.keys()[self.italicAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["underline"] = configBE.attributeChoices.keys()[self.underlineAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
 		super(AttribraDlg, self).onOk(evt)
+
+class CustomizeLabelsDlg(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = _("Customize role labels")
+
+	def makeSettings(self, settingsSizer):
+		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		self.categories = sHelper.addLabeledControl(_("Role category"), wx.Choice, choices=[_("General"), _("Landmark"), _("Positive state"), _("Negative state")])
+		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)
+		self.categories.SetSelection(0)
+		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
+		self.labels = sHelper2.addLabeledControl(_("Role"), wx.Choice, choices=[controlTypes.roleLabels[k] for k in braille.roleLabels.keys()])
+		self.labels.Bind(wx.EVT_CHOICE, self.onLabels)
+		self.label = sHelper2.addLabeledControl(_("Actual or new label"), wx.TextCtrl)
+		self.label.Bind(wx.EVT_TEXT, self.onLabel)
+		sHelper.addItem(sHelper2)
+		self.onCategories(None)
+
+	def onCategories(self, event):
+		idCategory = self.categories.GetSelection()
+		if idCategory == 0:
+			self.labels.SetItems([controlTypes.roleLabels[k] for k in braille.roleLabels.keys()])
+		elif idCategory == 1:
+			self.labels.SetItems(braille.landmarkLabels.keys())
+		elif idCategory == 2:
+			self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()])
+		elif idCategory == 3:
+			self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()])
+		else:
+			self.labels.SetItems([])
+		if idCategory > -1 and idCategory < 4:
+			self.labels.SetSelection(0)
+		self.onLabels(None)
+
+	def onLabels(self, event):
+		idCategory = self.categories.GetSelection()
+		idLabel = self.getIDFromIndex(idCategory, self.labels.GetSelection())
+		key = "%d:%s" % (idCategory, idLabel)
+		if key in self.roleLabels.keys():
+			self.label.SetValue(self.roleLabels[key])
+			return
+		else: self.label.SetValue(self.getLabelFromID())
+
+	def onLabel(self, evt):
+		idCategory = self.categories.GetSelection()
+		idLabel = self.labels.GetSelection()
+		key = "%d:%s" % (idCategory, self.getIDFromIndex(idCategory, idLabel))
+		label = self.label.GetValue()
+		if idCategory >= 0 and idLabel >= 0:
+			if self.getLabelFromID() == label:
+				if key in self.roleLabels.keys(): log.info("%s deleted" % self.roleLabels.pop(key))
+			else: self.roleLabels[key] = label
+
+	def getIDFromIndex(self, idCategory, idLabel):
+		try:
+			if idCategory == 0: return braille.roleLabels.keys()[idLabel]
+			elif idCategory == 1: return braille.landmarkLabels.keys()[idLabel]
+			elif idCategory == 2: return braille.positiveStateLabels.keys()[idLabel]
+			elif idCategory == 3: return braille.negativeStateLabels.keys()[idLabel]
+			else: return -1
+		except BaseException: return -1
+
+	def getLabelFromID(self):
+		idCategory = self.categories.GetSelection()
+		idLabel = self.labels.GetSelection()
+		if idCategory == 0:
+			return braille.roleLabels[braille.roleLabels.keys()[idLabel]]
+		elif idCategory == 1:
+			return braille.landmarkLabels.values()[idLabel]
+		elif idCategory == 2:
+			return braille.positiveStateLabels[braille.positiveStateLabels.keys()[idLabel]]
+		elif idCategory == 3:
+			return braille.negativeStateLabels[braille.negativeStateLabels.keys()[idLabel]]
+
+	def postInit(self):
+		self.categories.SetFocus()
+
+	def onOk(self, evt):
+		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
+		configBE.discardRoleLabels()
+		configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+		super(CustomizeLabelsDlg, self).onOk(evt)

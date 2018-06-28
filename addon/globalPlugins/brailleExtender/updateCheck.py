@@ -11,6 +11,7 @@ import urllib
 import gui
 import wx
 
+import addonHandler
 import braille
 import config
 import globalVars
@@ -18,6 +19,7 @@ import languageHandler
 import versionInfo
 
 import configBE
+addonHandler.initTranslation()
 
 def paramsDL(): return {
 	"versionProtocole": "1.4",

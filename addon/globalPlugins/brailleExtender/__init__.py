@@ -75,6 +75,7 @@ rotorItems = [
 ]
 rotorItem = 0
 nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else False
+HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
 
 # ***** Attribra code *****
 def attribraEnabled():
@@ -498,6 +499,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_('Speech off'))
 		return
 	script_toggleSpeech.__doc__ = _('Toggle speech on or off')
+
+	def script_reportExtraInfos(self, gesture):
+		obj = api.getNavigatorObject()
+		msg = []
+		if obj.name: msg.append(obj.name)
+		if obj.description: msg.append(obj.description)
+		if obj.value: msg.append(obj.value)
+		if len(msg) == 0: return ui.message(_("No extra info for this element"))
+		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message((configBE.sep+': ').join(msg))
+		else: ui.browseableMessage(('\n').join(msg))
+	# Translators: Input help mode message for report extra infos command.
+	script_reportExtraInfos.__doc__ = _("Reports some extra infos for the current element. For example, the URL on a link")+HLP_browseModeInfo
 
 	def script_getTableOverview(self, gesture):
 		inTable = brailleInput.handler.table.displayName
@@ -1174,7 +1187,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % config.conf["brailleExtender"]['viewSaved'])
 			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(config.conf["brailleExtender"]['viewSaved']), config.conf["brailleExtender"]['viewSaved']), _('View saved'), True)
 		else: ui.message(_('No saved view'))
-	script_showBrailleViewSaved.__doc__ = _('Show the saved braille view through a flash message. Press twice quickly to show it in a browseable message')
+	script_showBrailleViewSaved.__doc__ = _('Show the saved braille view through a flash message.')+HLP_browseModeInfo
 
 	# section autoTest
 	autoTestPlayed = False
@@ -1279,9 +1292,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.autoTestTimer.Start(self.autoTestInterval)
 			speech.speakMessage(_("Auto test started. Use the up and down arrow keys to change speed. Use the left and right arrow keys to change test type. Use space key to pause or resume the test. Use escape key to quit"))
 		self.autoTestPlayed = not self.autoTestPlayed
-	# end of section autoTest
-
 	script_autoTest.__doc__ = _('Auto test')
+	# end of section autoTest
 
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"

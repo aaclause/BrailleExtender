@@ -147,6 +147,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		patchs.instanceGP = self
+		addonSettingsPanel.instanceGP = self
 		configBE.loadConf()
 		configBE.initGestures()
 		configBE.loadGestures()
@@ -160,7 +161,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
-		if config.conf["brailleExtender"]['reverseScroll']:
+		if config.conf["brailleExtender"]["reverseScrollBtns"]:
 			self.reverseScrollBtns()
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):
 			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(addonSettingsPanel.AddonSettingsPanel)
@@ -582,7 +583,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			config.conf["braille"]["showCursor"] = False
 			self.autoScrollTimer = wx.PyTimer(self.autoScroll)
 			self.autoScrollTimer.Start(
-				config.conf["brailleExtender"]['delayScroll_' + configBE.curBD] * 1000)
+				config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
 		self.autoScrollRunning = not self.autoScrollRunning
 		return
 	script_autoScroll.__doc__ = _('Enable/disable autoscroll')
@@ -702,13 +703,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def increaseDelayAutoScroll():
-		config.conf["brailleExtender"]['delayScroll_' + configBE.curBD] += 0.25
+		config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] += 25
 
 	@staticmethod
 	def decreaseDelayAutoScroll():
-		if config.conf["brailleExtender"]['delayScroll_' +
-									configBE.curBD] - 0.25 >= 0.25:
-			config.conf["brailleExtender"]['delayScroll_' + configBE.curBD] -= 0.25
+		if config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] - 25 >= 25:
+			config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] -= 25
 
 	def script_increaseDelayAutoScroll(self, gesture):
 		self.increaseDelayAutoScroll()
@@ -717,7 +717,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.script_autoScroll(None)
 		else:
 			ui.message('%s s' %
-					   config.conf["brailleExtender"]['delayScroll_' + configBE.curBD])
+					   config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
 		return
 
 	def script_decreaseDelayAutoScroll(self, gesture):
@@ -726,7 +726,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.script_autoScroll(None, True)
 			self.script_autoScroll(None)
 		else:
-			ui.message('%s s' % config.conf["brailleExtender"]['delayScroll_' + configBE.curBD])
+			ui.message('%s s' % config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
 		return
 
 	script_increaseDelayAutoScroll.__doc__ = _('Increase autoscroll delay')
@@ -800,7 +800,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		configBE.initGestures()
 		configBE.loadGestures()
 		self.gesturesInit()
-		if config.conf["brailleExtender"]['reverseScroll']:
+		if config.conf["brailleExtender"]["reverseScrollBtns"]:
 			self.reverseScrollBtns()
 		if not sil:
 			ui.message(_('%s reloaded') % configBE._addonName)
@@ -817,35 +817,32 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def onWebsite(evt):
 		return os.startfile(configBE._addonURL)
 
-	def script_reloadAddon(self, gesture):
-		return self.onReload()
+	def script_reloadAddon(self, gesture): self.onReload()
 	script_reloadAddon.__doc__ = _('Reload %s') % configBE._addonName
 
-	def script_reload_brailledisplay(self, gesture):
-		if hasattr(gesture, 'id'):
-			ui.message(_('Please use the keyboard for this feature'))
-			return
-		i = 2 if 'shift' in gesture.normalizedIdentifiers[0] else 1
-		if config.conf["brailleExtender"]['brailleDisplay' + str(i)] == 'noBraille':
-			if config.conf["braille"]["display"] == 'noBraille':
-				return ui.message(
-					_('No braille display specified. No reload to do'))
+	def script_reload_brailledisplay1(self, gesture): self.reload_brailledisplay(1)
+	script_reload_brailledisplay1.__doc__ = _("Reload the first braille display defined in settings")
+
+	def script_reload_brailledisplay2(self, gesture): self.reload_brailledisplay(2)
+	script_reload_brailledisplay1.__doc__ = _("Reload the second braille display defined in settings")
+
+	def reload_brailledisplay(self, n):
+		k = "brailleDisplay%s" % (2 if n == 2 else 1)
+		if config.conf["brailleExtender"][k] == "last":
+			if config.conf["braille"]["display"] == "noBraille":
+				return ui.message(_("No braille display specified. No reload to do"))
 			else:
 				utils.reload_brailledisplay(config.conf["braille"]["display"])
 				configBE.curBD = braille.handler.display.name
 		elif config.conf["braille"]["display"] != "auto":
-			utils.reload_brailledisplay(
-				config.conf["brailleExtender"]['brailleDisplay' + str(i)])
-			configBE.curBD = config.conf["brailleExtender"]['brailleDisplay' +
-													  str(i)]
+			utils.reload_brailledisplay(config.conf["brailleExtender"][k])
+			configBE.curBD = config.conf["brailleExtender"][k]
 		else:
 			speech.speakMessage(_("Profile reloaded"))
 			configBE.curBD = braille.handler.display.name
 		self.refreshBD()
 		return self.onReload(None, True)
 
-	script_reload_brailledisplay.__doc__ = _(
-		'Reload the driver of an favorite or last braille display. Practical if the braille display is not plugged immediately or that the latter is disconnected and then reconnected')
 
 	def clearModifiers(self, forced = False):
 		if self.modifiersLocked and not forced: return
@@ -1301,8 +1298,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
 	__gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
 	__gestures["kb:shift+NVDA+y"] = "autoScroll"
-	__gestures["kb:nvda+k"] = "reload_brailledisplay"
-	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay"
+	__gestures["kb:nvda+k"] = "reload_brailledisplay1"
+	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay2"
 	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"

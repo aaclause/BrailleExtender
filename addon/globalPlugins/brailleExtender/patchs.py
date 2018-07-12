@@ -132,9 +132,10 @@ def sayCurrentLine():
 	global instanceGP
 	if not instanceGP.autoScrollRunning:
 		if braille.handler.tether == braille.handler.TETHER_REVIEW:
-			if config.conf["brailleExtender"]['speakScrollReviewMode']: scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
+				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 			return
-		elif config.conf["brailleExtender"]['speakScrollFocusMode'] and config.conf["brailleExtender"]['speakScrollFocusMode']:
+		elif config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
@@ -212,7 +213,7 @@ else:
 
 tabFile = os.path.join(os.path.dirname(__file__), "", "tab.cti").decode("mbcs")
 defTab = 'space \\t ' + \
-	('0-' * config.conf["brailleExtender"]['tabSize'])[:-1] + '\n'
+	('0-' * config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD])[:-1] + '\n'
 
 if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tabFile):
 	log.info('File not found, creating tab file')

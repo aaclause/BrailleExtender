@@ -28,7 +28,7 @@ def paramsDL(): return {
 	"language": languageHandler.getLanguage(),
 	"installed": config.isInstalledCopy(),
 	"brailledisplay": braille.handler.display.name,
-	"channel": config.conf["brailleExtender"]['channelUpdate']
+	"channel": config.conf["brailleExtender"]["updateChannel"]
 }
 
 

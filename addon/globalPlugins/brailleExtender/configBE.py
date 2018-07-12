@@ -29,30 +29,39 @@ CHOICE_none = "none"
 CHOICE_braille = "braille"
 CHOICE_speech = "speech"
 CHOICE_speechAndBraille = "speechAndBraille"
-CHOICE_dots78 = "dots78"
 CHOICE_dot7 = "dot7"
 CHOICE_dot8 = "dot8"
+CHOICE_dots78 = "dots78"
+CHOICE_focus = "focus"
+CHOICE_review = "review"
+CHOICE_focusAndReview = "focusAndReview"
 
 outputMessage = OrderedDict([
-	(CHOICE_none, _("none")),
-	(CHOICE_braille, _("braille only")),
-	(CHOICE_speech, _("speech only")),
+	(CHOICE_none,             _("none")),
+	(CHOICE_braille,          _("braille only")),
+	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
 
 attributeChoices = OrderedDict([
-	(CHOICE_none, _("none")),
+	(CHOICE_none,   _("none")),
 	(CHOICE_dots78, _("dots 7 and 8")),
-	(CHOICE_dot7, _("dot 7")),
-	(CHOICE_dot8, _("dot 8"))
+	(CHOICE_dot7,   _("dot 7")),
+	(CHOICE_dot8,   _("dot 8"))
 ])
 
 updateChannels = OrderedDict([
-	(CHANNEL_stable, _("stable")),
+	(CHANNEL_stable,  _("stable")),
 	(CHANNEL_testing, _("testing")),
-	(CHANNEL_dev, _("development"))
+	(CHANNEL_dev,     _("development"))
 ])
 
+focusOrReviewChoices = OrderedDict([
+	(CHOICE_none,           _("none")),
+	(CHOICE_focus,          _("focus mode")),
+	(CHOICE_review,         _("review mode")),
+	(CHOICE_focusAndReview, _("both"))
+])
 curBD = braille.handler.display.name
 quickLaunches = OrderedDict()
 backupDisplaySize = braille.handler.displaySize
@@ -81,9 +90,18 @@ try:
 	noUnicodeTable = False
 except BaseException:
 	noUnicodeTable = True
+
+def getValidBrailleDisplayPrefered():
+	l = braille.getDisplayList()
+	l.append(("last", _("last known")))
+	return l
+
+bds_k = [k for k, v in getValidBrailleDisplayPrefered()]
+bds_v = [v for k, v in getValidBrailleDisplayPrefered()]
+
 confspec = {
 	"autoCheckUpdate": "boolean(default=True)",
-	"channelUpdate": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
+	"updateChannel": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
 		CHOICE_none=CHOICE_none,
 		CHANNEL_dev=CHANNEL_dev,
 		CHANNEL_stable=CHANNEL_stable,
@@ -104,17 +122,21 @@ confspec = {
 		CHOICE_speech=CHOICE_speech,
 		CHOICE_speechAndBraille=CHOICE_speechAndBraille
 	),
-	"brailleDisplay1": 'string(default="noBraille")',
-	"brailleDisplay2": 'string(default="noBraille")',
+	"brailleDisplay1": "option(%s, default=last)" % ','.join(bds_k),
+	"brailleDisplay2": "option(%s, default=last)" % ','.join(bds_k),
 	"hourDynamic": "boolean(default=True)",
 	"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 	"rightMarginCells_%s" %curBD: "integer(min=0, default=0, max=80)",
-	"delayScroll_%s" % curBD: "float(min=0, default=3, max=42)",
+	"reverseScrollBtns": "boolean(default=False)",
+	"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
 	"smartDelayScroll": "boolean(default=False)",
-	"reverseScroll": "boolean(default=False)",
 	"ignoreBlankLineScroll": "boolean(default=True)",
-	"speakScrollReviewMode": "boolean(default=True)",
-	"speakScrollFocusMode": "boolean(default=False)",
+	"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
+		CHOICE_none=CHOICE_none,
+		CHOICE_focus=CHOICE_focus,
+		CHOICE_review=CHOICE_review,
+		CHOICE_focusAndReview=CHOICE_focusAndReview
+	),
 	"stopSpeechScroll": "boolean(default=False)",
 	"stopSpeechUnknown": "boolean(default=True)",
 	"speakRoutingTo": "boolean(default=True)",
@@ -124,7 +146,7 @@ confspec = {
 	"quickLaunchGestures_%s" % curBD: "string(default=\"\")",
 	"quickLaunchLocations_%s" % curBD: 'string(default="")',
 	"tabSpace": "boolean(default=False)",
-	"tabSize": "integer(min=1, default=2, max=42)",
+	"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
 	"postTable": 'string(default="None")',
 	"viewSaved": 'string(default="None")',
 	"features": {

@@ -24,6 +24,52 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		self.generalBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&General"), wx.DefaultPosition)
+		self.generalBtn.Bind(wx.EVT_BUTTON, self.onGeneralBtn)
+		self.preferredBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Prefered braille &tables"), wx.DefaultPosition)
+		self.preferredBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onPreferedBrailleTablesBtn)
+		self.attributesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
+		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
+		self.quickLaunchesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
+		self.quickLaunchesBtn.Bind(wx.EVT_BUTTON, self.onQuickLaunchesBtn)
+		self.roleLabelsBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Role &labels"), wx.DefaultPosition)
+		self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
+		sHelper.addItem(bHelper1)
+		sHelper.addItem(bHelper2)
+
+	def onGeneralBtn(self, evt):
+		generalDlg = GeneralDlg(self, multiInstanceAllowed=True)
+		generalDlg.ShowModal()
+
+	def onPreferedBrailleTablesBtn(self, evt):
+		preferredBrailleTablesDlg = PreferedBrailleTablesDlg(self, multiInstanceAllowed=True)
+		preferredBrailleTablesDlg.ShowModal()
+
+	def onAttributesBtn(self, evt):
+		attribraDlg = AttribraDlg(self, multiInstanceAllowed=True)
+		attribraDlg.ShowModal()
+
+	def onQuickLaunchesBtn(self, evt):
+		quickLaunchesDlg = QuickLaunchesDlg(self, multiInstanceAllowed=True)
+		quickLaunchesDlg.ShowModal()
+
+	def onRoleLabelsBtn(self, evt):
+		RoleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
+		RoleLabelsDlg.ShowModal()
+
+	def postInit(self):
+		self.General.SetFocus()
+
+
+class GeneralDlg(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = "Braille Extender - %s" % _("General")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		# Translators: label of a dialog.
 		self.autoCheckUpdate = sHelper.addItem(wx.CheckBox(self, label=_("Check for &updates automatically")))
 		self.autoCheckUpdate.SetValue(config.conf["brailleExtender"]["autoCheckUpdate"])
@@ -31,8 +77,8 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		# Translators: label of a dialog.
 		self.updateChannel = sHelper.addLabeledControl(_("Add-on update channel"), wx.Choice, choices=configBE.updateChannels.values())
 		if config.conf["brailleExtender"]["updateChannel"] in configBE.updateChannels.keys():
-			itemToSelect = configBE.updateChannels.keys().index(config.conf["brailleExtender"]['updateChannel'])
-		else: channel = config.conf["brailleExtender"]['updateChannel'].index(configBE.CHANNELSTABLE)
+			itemToSelect = configBE.updateChannels.keys().index(config.conf["brailleExtender"]["updateChannel"])
+		else: itemToSelect = config.conf["brailleExtender"]["updateChannel"].index(configBE.CHANNELSTABLE)
 		self.updateChannel.SetSelection(itemToSelect)
 
 		# Translators: label of a dialog.
@@ -92,29 +138,10 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=configBE.bds_v)
 		self.brailleDisplay2.SetSelection(configBE.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
 
-		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.favBrailleTablesButton = bHelper.addButton(self, wx.NewId(), "%s..." % _("Favorite braille &tables"), wx.DefaultPosition)
-		self.attributesButton = bHelper.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
-		self.attributesButton.Bind(wx.EVT_BUTTON,self.onAttributesButton)
-		self.quickLaunchesButton = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
-		self.customizeLabelsButton = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Customize role &labels"), wx.DefaultPosition)
-		self.customizeLabelsButton.Bind(wx.EVT_BUTTON,self.onCustomizeLabelsButton)
-		sHelper.addItem(bHelper)
-		sHelper.addItem(bHelper2)
-
-	def onAttributesButton(self, evt):
-		attribraDialog = AttribraDlg(self, multiInstanceAllowed=True)
-		attribraDialog.ShowModal()
-
-	def onCustomizeLabelsButton(self, evt):
-		customizeLabelsDlg = CustomizeLabelsDlg(self, multiInstanceAllowed=True)
-		customizeLabelsDlg.ShowModal()
-
 	def postInit(self):
-		self.addTextBeforeCheckBox.SetFocus()
+		self.autoCheckUpdate.SetFocus()
 
-	def onSave(self):
+	def onOk(self, evt):
 		config.conf["brailleExtender"]["autoCheckUpdate"] = self.autoCheckUpdate.IsChecked()
 		config.conf["brailleExtender"]["hourDynamic"] = self.hourDynamic.IsChecked()
 		if self.reverseScrollBtns.IsChecked(): instanceGP.reverseScrollBtns()
@@ -133,11 +160,13 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD] = self.rightMarginCells.Value
 		config.conf["brailleExtender"]["brailleDisplay1"] = configBE.bds_k[self.brailleDisplay1.GetSelection()]
 		config.conf["brailleExtender"]["brailleDisplay2"] = configBE.bds_k[self.brailleDisplay2.GetSelection()]
+		super(GeneralDlg, self).onOk(evt)
+
 
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = _("Attribra")
+	title = "Braille Extender - %s" % _("Attribra")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -170,10 +199,10 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
 		super(AttribraDlg, self).onOk(evt)
 
-class CustomizeLabelsDlg(gui.settingsDialogs.SettingsDialog):
+class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = _("Customize role labels")
+	title = "Braille Extender - %s" % _("Customize role labels")
 
 	def makeSettings(self, settingsSizer):
 		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
@@ -252,11 +281,28 @@ class CustomizeLabelsDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
 		configBE.discardRoleLabels()
 		configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
-		super(CustomizeLabelsDlg, self).onOk(evt)
+		super(RoleLabelsDlg, self).onOk(evt)
 
-class QuickLaunches(wx.Panel):
+class PreferedBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
-	title = _("Quick launches")
+	# Translators: title of a dialog.
+	title = "Braille Extender - %s" % _("Prefered braille tables")
+	outputTables = {}
+	inputTables = {}
+
+	def makeSettings(self, settingsSizer):
+		pass
+
+	def postInit(self):
+		pass
+
+	def onOk(self, evt):
+		super(PreferedBrailleTablesDlg, self).onOk(evt)
+
+class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = "Braille Extender - %s" % _("Quick launches")
 	quickLaunchGestures = {}
 
 	def makeSettings(self, settingsSizer):
@@ -266,7 +312,7 @@ class QuickLaunches(wx.Panel):
 		pass
 
 	def onOk(self, evt):
-		pass
+		super(QuickLaunchesDlg, self).onOk(evt)
 
 	def captureNow(self):
 		def getCaptured(gesture):

@@ -716,7 +716,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.script_autoScroll(None, True)
 			self.script_autoScroll(None)
 		else:
-			ui.message('%s s' %
+			ui.message('%s ms' %
 					   config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
 		return
 
@@ -726,7 +726,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.script_autoScroll(None, True)
 			self.script_autoScroll(None)
 		else:
-			ui.message('%s s' % config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
+			ui.message('%s ms' % config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
 		return
 
 	script_increaseDelayAutoScroll.__doc__ = _('Increase autoscroll delay')
@@ -824,7 +824,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_reload_brailledisplay1.__doc__ = _("Reload the first braille display defined in settings")
 
 	def script_reload_brailledisplay2(self, gesture): self.reload_brailledisplay(2)
-	script_reload_brailledisplay1.__doc__ = _("Reload the second braille display defined in settings")
+	script_reload_brailledisplay2.__doc__ = _("Reload the second braille display defined in settings")
 
 	def reload_brailledisplay(self, n):
 		k = "brailleDisplay%s" % (2 if n == 2 else 1)
@@ -1294,8 +1294,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
-	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
+	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
 	__gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
 	__gestures["kb:shift+NVDA+y"] = "autoScroll"
 	__gestures["kb:nvda+k"] = "reload_brailledisplay1"

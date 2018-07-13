@@ -290,11 +290,25 @@ class PreferedBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	# Translators: title of a dialog.
 	title = "Braille Extender - %s" % _("Prefered braille tables")
 
-	inputTablesNotInSwitch = lambda s: [table[1] for table in configBE.tables if table.input and table[0] not in configBE.inputTables] if configBE.inputTables != None else []
-	inputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.inputTables if table.strip() != ''] if configBE.inputTables != None else []
+	def inputTablesNotInSwitch(self):
+		if configBE.inputTables != None:
+			return [table[1] for table in configBE.tables if table.input and table[0] not in configBE.inputTables]
+		else: return []
 
-	outputTablesNotInSwitch = lambda s: [table[1] for table in configBE.tables if table.output and table[0] not in configBE.outputTables] if configBE.outputTables != None else []
-	outputTablesInSwitch = lambda s: [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.outputTables if table != ''] if configBE.outputTables != None else []
+	def inputTablesInSwitch(self):
+		if configBE.inputTables != None:
+			return [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.inputTables if table.strip() != ''] 
+		else: return []
+
+	def outputTablesNotInSwitch(self):
+		if configBE.outputTables != None:
+			return [table[1] for table in configBE.tables if table.output and table[0] not in configBE.outputTables]
+		else: return []
+
+	def outputTablesInSwitch(self):
+		if configBE.outputTables != None:
+			return [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.outputTables if table != ''] 
+		else: return []
 
 	def makeSettings(self, settingsSizer):
 		self.oTables = configBE.outputTables
@@ -310,6 +324,7 @@ class PreferedBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.oTablesNotPresent.SetSelection(0)
 		self.addOutputTableInSwitch = bHelper1.addButton(self, wx.NewId(), _("Add"), wx.DefaultPosition)
 		self.addOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
+		sHelper.addItem(bHelper1)
 
 		self.iTablesPresent = sHelper.addLabeledControl(_("&Input braille tables present in the switch"), wx.Choice, choices=self.inputTablesInSwitch())
 		self.iTablesPresent.SetSelection(0)
@@ -320,7 +335,6 @@ class PreferedBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.addInputTableInSwitch = bHelper2.addButton(self, wx.NewId(), _("Add"), wx.DefaultPosition)
 		self.addInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddInputTableInSwitch)
 
-		sHelper.addItem(bHelper1)
 		sHelper.addItem(bHelper2)
 
 	def postInit(self):

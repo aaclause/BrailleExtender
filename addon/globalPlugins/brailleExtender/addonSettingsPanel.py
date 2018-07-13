@@ -17,6 +17,26 @@ from logHandler import log
 
 instanceGP = None
 
+def inputTablesNotInSwitch():
+	if configBE.inputTables != None:
+		return [table[1] for table in configBE.tables if table.input and table[0] not in configBE.inputTables]
+	return []
+
+def inputTablesInSwitch():
+	if configBE.inputTables != None:
+		return [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.inputTables if table.strip() != '']
+	return []
+
+def outputTablesNotInSwitch():
+	if configBE.outputTables != None:
+		return [table[1] for table in configBE.tables if table.output and table[0] not in configBE.outputTables]
+	return []
+
+def outputTablesInSwitch():
+	if configBE.outputTables != None:
+		return [configBE.tablesTR[configBE.tablesFN.index(table)] for table in configBE.outputTables if table != ''] 
+	return []
+
 class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
@@ -38,6 +58,8 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
 		sHelper.addItem(bHelper1)
 		sHelper.addItem(bHelper2)
+
+	def onSave(self): pass
 
 	def onGeneralBtn(self, evt):
 		generalDlg = GeneralDlg(self, multiInstanceAllowed=True)
@@ -287,17 +309,84 @@ class PreferedBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
 	title = "Braille Extender - %s" % _("Prefered braille tables")
-	outputTables = {}
-	inputTables = {}
 
 	def makeSettings(self, settingsSizer):
-		pass
+		self.oTables = configBE.outputTables
+		self.iTables = configBE.inputTables
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		self.oTablesPresent = sHelper.addLabeledControl(_("&Output braille tables present in the switch"), wx.Choice, choices=outputTablesInSwitch())
+		self.oTablesPresent.SetSelection(0)
+		self.deleteOutputTableInSwitch = bHelper1.addButton(self, wx.NewId(), _("Remove"), wx.DefaultPosition)
+		self.deleteOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteOutputTableInSwitch)
+		self.oTablesNotPresent = sHelper.addLabeledControl(_("Output braille tables not present in the switch"), wx.Choice, choices=outputTablesNotInSwitch())
+		self.oTablesNotPresent.SetSelection(0)
+		self.addOutputTableInSwitch = bHelper1.addButton(self, wx.NewId(), _("Add"), wx.DefaultPosition)
+		self.addOutputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddOutputTableInSwitch)
+		sHelper.addItem(bHelper1)
+
+		self.iTablesPresent = sHelper.addLabeledControl(_("&Input braille tables present in the switch"), wx.Choice, choices=inputTablesInSwitch())
+		self.iTablesPresent.SetSelection(0)
+		self.deleteInputTableInSwitch = bHelper2.addButton(self, wx.NewId(), _("Remove"), wx.DefaultPosition)
+		self.deleteInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onDeleteInputTableInSwitch)
+		self.iTablesNotPresent = sHelper.addLabeledControl(_("Output braille tables not present in the switch"), wx.Choice, choices=inputTablesNotInSwitch())
+		self.iTablesNotPresent.SetSelection(0)
+		self.addInputTableInSwitch = bHelper2.addButton(self, wx.NewId(), _("Add"), wx.DefaultPosition)
+		self.addInputTableInSwitch.Bind(wx.EVT_BUTTON, self.onAddInputTableInSwitch)
+
+		sHelper.addItem(bHelper2)
 
 	def postInit(self):
 		pass
 
 	def onOk(self, evt):
+		config.conf["brailleExtender"]["outputTables"] = ','.join(self.oTables)
+		config.conf["brailleExtender"]["inputTables"] = ','.join(self.iTables)
 		super(PreferedBrailleTablesDlg, self).onOk(evt)
+
+	def onDeleteOutputTableInSwitch(self, event):
+		if self.oTablesPresent.GetStringSelection() != '':
+			self.oTables.remove(configBE.tablesFN[configBE.tablesTR.index(
+				self.oTablesPresent.GetStringSelection())])
+			self.oTablesNotPresent.SetItems(outputTablesNotInSwitch())
+			self.oTablesNotPresent.SetSelection(0)
+			self.oTablesPresent.SetItems(outputTablesInSwitch())
+			self.oTablesPresent.SetSelection(0)
+			self.oTablesPresent.SetFocus()
+		else: ui.message(_(u"You have no output tables present in the switch"))
+
+	def onAddOutputTableInSwitch(self, event):
+		if self.oTablesNotPresent.GetStringSelection() != '':
+			self.oTables.append(configBE.tablesFN[configBE.tablesTR.index(self.oTablesNotPresent.GetStringSelection())])
+			self.oTablesNotPresent.SetItems(outputTablesNotInSwitch())
+			self.oTablesNotPresent.SetSelection(0)
+			self.oTablesPresent.SetItems(outputTablesInSwitch())
+			self.oTablesPresent.SetSelection(0)
+			self.oTablesNotPresent.SetFocus()
+
+	def onDeleteInputTableInSwitch(self, event):
+		if self.iTablesPresent.GetStringSelection() != '':
+			self.iTables.remove(configBE.tablesFN[configBE.tablesTR.index(self.iTablesPresent.GetStringSelection())])
+			self.iTablesNotPresent.SetItems(inputTablesNotInSwitch())
+			self.iTablesNotPresent.SetSelection(0)
+			self.iTablesPresent.SetItems(inputTablesInSwitch())
+			self.iTablesPresent.SetSelection(0)
+			self.iTablesPresent.SetFocus()
+		else:
+			ui.message(_(u"You have no input tables present in the switch"))
+		return
+
+	def onAddInputTableInSwitch(self, event):
+		if self.iTablesNotPresent.GetStringSelection() != '':
+			self.iTables.append(configBE.tablesFN[configBE.tablesTR.index(
+				self.iTablesNotPresent.GetStringSelection())])
+			self.iTablesNotPresent.SetItems(inputTablesNotInSwitch())
+			self.iTablesNotPresent.SetSelection(0)
+			self.iTablesPresent.SetItems(inputTablesInSwitch())
+			self.iTablesPresent.SetSelection(0)
+			self.iTablesNotPresent.SetFocus()
+
 
 class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 

@@ -84,6 +84,7 @@ if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
 try:
 	import brailleTables
+	tables = brailleTables.listTables()
 	tablesFN = [t[0] for t in brailleTables.listTables()]
 	tablesUFN = [t[0] for t in brailleTables.listTables() if not t.contracted and t.output]
 	tablesTR = [t[1] for t in brailleTables.listTables()]

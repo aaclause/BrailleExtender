@@ -56,8 +56,8 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		quickLaunchesDlg.ShowModal()
 
 	def onRoleLabelsBtn(self, evt):
-		RoleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
-		RoleLabelsDlg.ShowModal()
+		roleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
+		roleLabelsDlg.ShowModal()
 
 	def postInit(self):
 		self.General.SetFocus()

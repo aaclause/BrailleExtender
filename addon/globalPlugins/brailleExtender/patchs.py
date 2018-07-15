@@ -29,8 +29,7 @@ import addonHandler
 addonHandler.initTranslation()
 from utils import getCurrentChar, getLine
 instanceGP = None
-preTable = []
-postTable = []
+
 SELECTION_SHAPE = braille.SELECTION_SHAPE
 def script_braille_routeTo(self, gesture):
 	braille.handler.routeTo(gesture.routingIndex)
@@ -50,7 +49,6 @@ def update(self):
 	L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are similarly updated based on L{cursorPos}, L{selectionStart} and L{selectionEnd}, respectively.
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
-	global postTable, preTable
 	try:
 		mode = louis.dotsIO
 		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
@@ -58,12 +56,12 @@ def update(self):
 		try:
 			text = unicode(self.rawText).replace('\0', '')
 			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(
-				preTable + [
+				configBE.preTable + [
 					os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
 					os.path.join(
 						brailleTables.TABLES_DIR,
 						"braille-patterns.cti")
-				] + postTable,
+				] + configBE.postTable,
 				text,
 				# liblouis mutates typeform if it is a list.
 				typeform=tuple(
@@ -72,13 +70,13 @@ def update(self):
 					list) else self.rawTextTypeforms,
 				mode=mode, cursorPos=self.cursorPos or 0)
 		except BaseException:
-			if len(postTable) == 0:
+			if len(configBE.postTable) == 0:
 				log.error("Error with update braille function patch, disabling: %s")
 				braille.Region.update = backupUpdate
 				core.restart()
 				return
-			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], postTable))
-			postTable = []
+			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], configBE.postTable))
+			configBE.postTable = []
 			config.conf["brailleExtender"]["postTable"] = "None"
 			update(self)
 			return
@@ -184,52 +182,11 @@ def previousLine(self, start=False):
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 	except BaseException as e: pass
 
-def createTabFile(f, c):
-	try:
-		f = open(f, "w")
-		f.write(c)
-		f.close()
-		return True
-	except BaseException as e:
-		log.error('Error while creating tab file (%s)' % e)
-		return False
-
-
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 
-postTableValid = True if config.conf["brailleExtender"]["postTable"] in configBE.tablesFN else False
-
-if postTableValid:
-	postTable.append(
-		os.path.join(
-			brailleTables.TABLES_DIR,
-			config.conf["brailleExtender"]['postTable']))
-	log.info('Secondary table enabled: %s' %
-			 config.conf["brailleExtender"]['postTable'])
-else:
-	if config.conf["brailleExtender"]['postTable'] != "None":
-		log.error('Invalid secondary table')
-
-tabFile = os.path.join(os.path.dirname(__file__), "", "tab.cti").decode("mbcs")
-defTab = 'space \\t ' + \
-	('0-' * config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD])[:-1] + '\n'
-
-if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tabFile):
-	log.info('File not found, creating tab file')
-	createTabFile(tabFile, defTab)
-
-if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tabFile):
-	f = open(tabFile, "r")
-	if f.read() != defTab:
-		log.debug('Difference, creating tab file...')
-		if createTabFile(tabFile, defTab):
-			preTable.append(tabFile)
-	else:
-		preTable.append(tabFile)
-		log.debug('Tab as spaces enabled')
-	f.close()
-else: log.debug('Tab as spaces disabled')
+configBE.loadPostTable()
+configBE.loadPreTable()
 backupUpdate = braille.Region.update
 braille.Region.update = update
 

@@ -34,7 +34,7 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self.generalBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&General"), wx.DefaultPosition)
 		self.generalBtn.Bind(wx.EVT_BUTTON, self.onGeneralBtn)
 		self.brailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Braille &tables"), wx.DefaultPosition)
-		self.brailleTablesBtn.Bind(wx.EVT_BUTTON, self.onPreferedBrailleTablesBtn)
+		self.brailleTablesBtn.Bind(wx.EVT_BUTTON, self.onBrailleTablesBtn)
 		self.attributesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
 		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
 		self.quickLaunchesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
@@ -44,15 +44,17 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		sHelper.addItem(bHelper1)
 		sHelper.addItem(bHelper2)
 
+	def postInit(self): self.General.SetFocus()
+
 	def onSave(self): pass
 
 	def onGeneralBtn(self, evt):
 		generalDlg = GeneralDlg(self, multiInstanceAllowed=True)
 		generalDlg.ShowModal()
 
-	def onPreferedBrailleTablesBtn(self, evt):
-		preferredBrailleTablesDlg = brailleTablesDlg(self, multiInstanceAllowed=True)
-		preferredBrailleTablesDlg.ShowModal()
+	def onBrailleTablesBtn(self, evt):
+		brailleTablesDlg = BrailleTablesDlg(self, multiInstanceAllowed=True)
+		brailleTablesDlg.ShowModal()
 
 	def onAttributesBtn(self, evt):
 		attribraDlg = AttribraDlg(self, multiInstanceAllowed=True)
@@ -65,9 +67,6 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 	def onRoleLabelsBtn(self, evt):
 		roleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
 		roleLabelsDlg.ShowModal()
-
-	def postInit(self):
-		self.General.SetFocus()
 
 
 class GeneralDlg(gui.settingsDialogs.SettingsDialog):
@@ -138,8 +137,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=configBE.bds_v)
 		self.brailleDisplay2.SetSelection(configBE.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
 
-	def postInit(self):
-		self.autoCheckUpdate.SetFocus()
+	def postInit(self): self.autoCheckUpdate.SetFocus()
 
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["autoCheckUpdate"] = self.autoCheckUpdate.IsChecked()
@@ -179,15 +177,7 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		self.underlineAttribute = sHelper.addLabeledControl(_("Show underline with"), wx.Choice, choices=configBE.attributeChoices.values())
 		self.underlineAttribute.SetSelection(self.getItemToSelect("underline"))
 
-	def getItemToSelect(self, attribute):
-		try: idx = configBE.attributeChoices.keys().index(config.conf["brailleExtender"]["attributes"][attribute])
-		except BaseException as err:
-			log.error(err)
-			idx = 0
-		return idx
-
-	def postInit(self):
-		self.toggleAttribra.SetFocus()
+	def postInit(self): self.toggleAttribra.SetFocus()
 
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["features"]["attributes"] = self.toggleAttribra.IsChecked()
@@ -196,6 +186,13 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["attributes"]["underline"] = configBE.attributeChoices.keys()[self.underlineAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
 		super(AttribraDlg, self).onOk(evt)
+
+	def getItemToSelect(self, attribute):
+		try: idx = configBE.attributeChoices.keys().index(config.conf["brailleExtender"]["attributes"][attribute])
+		except BaseException as err:
+			log.error(err)
+			idx = 0
+		return idx
 
 class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 
@@ -209,7 +206,7 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)
 		self.categories.SetSelection(0)
 		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
-		self.labels = sHelper2.addLabeledControl(_("Role"), wx.Choice, choices=[controlTypes.roleLabels[k] for k in braille.roleLabels.keys()])
+		self.labels = sHelper2.addLabeledControl(_("Role"), wx.Choice, choices=[controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()])
 		self.labels.Bind(wx.EVT_CHOICE, self.onLabels)
 		self.label = sHelper2.addLabeledControl(_("Actual or new label"), wx.TextCtrl)
 		self.label.Bind(wx.EVT_TEXT, self.onLabel)
@@ -218,27 +215,19 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onCategories(self, event):
 		idCategory = self.categories.GetSelection()
-		if idCategory == 0:
-			self.labels.SetItems([controlTypes.roleLabels[k] for k in braille.roleLabels.keys()])
-		elif idCategory == 1:
-			self.labels.SetItems(braille.landmarkLabels.keys())
-		elif idCategory == 2:
-			self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()])
-		elif idCategory == 3:
-			self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()])
-		else:
-			self.labels.SetItems([])
-		if idCategory > -1 and idCategory < 4:
-			self.labels.SetSelection(0)
+		if idCategory == 0: self.labels.SetItems([controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()])
+		elif idCategory == 1: self.labels.SetItems(braille.landmarkLabels.keys())
+		elif idCategory == 2: self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()])
+		elif idCategory == 3: self.labels.SetItems([controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()])
+		else: self.labels.SetItems([])
+		if idCategory > -1 and idCategory < 4: self.labels.SetSelection(0)
 		self.onLabels(None)
 
 	def onLabels(self, event):
 		idCategory = self.categories.GetSelection()
 		idLabel = self.getIDFromIndex(idCategory, self.labels.GetSelection())
 		key = "%d:%s" % (idCategory, idLabel)
-		if key in self.roleLabels.keys():
-			self.label.SetValue(self.roleLabels[key])
-			return
+		if key in self.roleLabels.keys(): self.label.SetValue(self.roleLabels[key])
 		else: self.label.SetValue(self.getLabelFromID())
 
 	def onLabel(self, evt):
@@ -281,7 +270,7 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 		configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 		super(RoleLabelsDlg, self).onOk(evt)
 
-class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
+class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
 	title = "Braille Extender - %s" % _("braille tables")
@@ -315,12 +304,6 @@ class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.tabSize = sHelper.addLabeledControl(_("Number of space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD])
 
-	def getTablesWithSwitches(self):
-		out = []
-		for i, tbl in enumerate(configBE.tablesTR):
-			out.append("%s%s: %s" % (tbl, configBE.sep, self.getInSwitchesText(configBE.tablesFN[i])))
-		return out
-
 	def postInit(self): self.tables.SetFocus()
 
 	def onOk(self, evt):
@@ -335,12 +318,18 @@ class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
 		configBE.loadPreTable()
-		super(brailleTablesDlg, self).onOk(evt)
+		super(BrailleTablesDlg, self).onOk(evt)
+
+	def getTablesWithSwitches(self):
+		out = []
+		for i, tbl in enumerate(configBE.tablesTR):
+			out.append("%s%s: %s" % (tbl, configBE.sep, self.getInSwitchesText(configBE.tablesFN[i])))
+		return out
 
 	def getCurrentSelection(self):
 		idx = self.tables.GetSelection()
-		name = configBE.tablesFN[self.tables.GetSelection()]
-		return idx, name
+		tbl = configBE.tablesFN[self.tables.GetSelection()]
+		return idx, tbl
 
 	def setCurrentSelection(self, tbl, newLoc):
 		if newLoc == "io":
@@ -386,17 +375,16 @@ class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.setCurrentSelection(tbl, newDir)
 
 	def onTables(self, evt):
-		values = [_("none"), _("input only"), _("output only"), _("input and output")]
 		keycode = evt.GetKeyCode()
 		if keycode in [ord(','), ord(';')]:
-			idx, name = self.getCurrentSelection()
+			idx, tbl = self.getCurrentSelection()
 			if keycode == ord(','):
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % name)
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % tbl)
 			else:
 				ui.browseableMessage("Name: %s\nFile name: %s\nIn switches: %s" % (
 					configBE.tablesTR[idx],
-					name,
-					self.getInSwitchesText(name)
+					tbl,
+					self.getInSwitchesText(tbl)
 				), "Infos about this table", False)
 		if keycode == wx.wx.WXK_F1:
 			ui.browseableMessage(
@@ -404,11 +392,11 @@ class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			_("You can also press 'comma' key to get the file name of the selected table and 'semicolon' key to view miscellaneous infos on the selected table")+".",
 			_("Contextual help"), False)
 		if keycode in [wx.WXK_LEFT, wx.WXK_RIGHT, wx.WXK_SPACE]:
-			idx, name = self.getCurrentSelection()
-			if keycode == wx.WXK_LEFT: self.changeSwitch(name, 0, False)
-			elif keycode == wx.WXK_RIGHT: self.changeSwitch(name, 1, False)
-			elif keycode == wx.WXK_SPACE: self.changeSwitch(name, 1, True)
-			newSwitch = self.getInSwitchesText(name)
+			idx, tbl = self.getCurrentSelection()
+			if keycode == wx.WXK_LEFT: self.changeSwitch(tbl, 0, False)
+			elif keycode == wx.WXK_RIGHT: self.changeSwitch(tbl, 1, False)
+			elif keycode == wx.WXK_SPACE: self.changeSwitch(tbl, 1, True)
+			newSwitch = self.getInSwitchesText(tbl)
 			self.tables.SetString(self.tables.GetSelection(), "%s%s: %s" % (configBE.tablesTR[idx], configBE.sep, newSwitch))
 			utils.refreshBD()
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
@@ -440,10 +428,10 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 			self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
 			sHelper.addItem(bHelper1)
 
-	def postInit(self):
-		self.quickKeys.SetFocus()
+	def postInit(self): self.quickKeys.SetFocus()
 
 	def onOk(self, evt):
+		config.conf["brailleExtender"]["quickLaunches"] = {}
 		for gesture, location in zip(self.quickLaunchGestures, self.quickLaunchLocations):
 			config.conf["brailleExtender"]["quickLaunches"][gesture] = location
 		instanceGP.loadQuickLaunchesGes()

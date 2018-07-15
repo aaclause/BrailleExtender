@@ -7,7 +7,6 @@ from __future__ import unicode_literals
 import gui
 import wx
 import addonHandler
-import api
 import braille
 import config
 import controlTypes
@@ -370,7 +369,7 @@ class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		elif inS[1]: inSt = _("output only")
 		return inSt
 
-	def changeSwitch(self, tbl, dir = 1, loop = True):
+	def changeSwitch(self, tbl, direction = 1, loop = True):
 		dirs = ['n', 'i', 'o', "io"]
 		iCurDir = 0
 		inS = self.inSwitches(tbl)
@@ -379,10 +378,10 @@ class brailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		elif inS[0]: iCurDir = dirs.index('i')
 		elif inS[1]: iCurDir = dirs.index('o')
 
-		if len(dirs)-1 == iCurDir and dir == 1 and loop: newDir = dirs[0]
-		elif iCurDir == 0 and dir == 0 and loop: newDir = dirs[-1]
-		elif iCurDir < len(dirs)-1 and dir == 1: newDir = dirs[iCurDir+1]
-		elif iCurDir > 0 and iCurDir < len(dirs) and dir == 0: newDir = dirs[iCurDir-1]
+		if len(dirs)-1 == iCurDir and direction == 1 and loop: newDir = dirs[0]
+		elif iCurDir == 0 and direction == 0 and loop: newDir = dirs[-1]
+		elif iCurDir < len(dirs)-1 and direction == 1: newDir = dirs[iCurDir+1]
+		elif iCurDir > 0 and iCurDir < len(dirs) and direction == 0: newDir = dirs[iCurDir-1]
 		else: return
 		self.setCurrentSelection(tbl, newDir)
 
@@ -478,11 +477,11 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 			choice = gui.messageBox(_("Are you sure to want to delete this shorcut?"), '%s – %s' % (configBE._addonName, _("Confirmation")), wx.YES_NO|wx.ICON_QUESTION)
 			if choice == wx.YES: confirmed()
 		def confirmed():
-			id = self.quickKeys.GetSelection()
-			g = self.quickLaunchGestures.pop(id)
-			self.quickLaunchLocations.pop(id)
+			i = self.quickKeys.GetSelection()
+			g = self.quickLaunchGestures.pop(i)
+			self.quickLaunchLocations.pop(i)
 			self.quickKeys.SetItems(self.getQuickLaunchList())
-			self.quickKeys.SetSelection(id-1 if id > 0 else 0)
+			self.quickKeys.SetSelection(i-1 if i > 0 else 0)
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('{BRAILLEGESTURE} removed'.format(BRAILLEGESTURE=g)))
 			self.onQuickKeys(None)
 		wx.CallAfter(askConfirmation)

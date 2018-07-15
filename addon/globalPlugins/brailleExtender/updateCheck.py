@@ -4,9 +4,9 @@
 # Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
 from __future__ import unicode_literals
 from logHandler import log
-
+import json
 import os
-import re
+
 import urllib
 import gui
 import wx
@@ -22,7 +22,7 @@ import configBE
 addonHandler.initTranslation()
 
 def paramsDL(): return {
-	"versionProtocole": "1.4",
+	"versionProtocole": "2.0",
 	"versionAddon": configBE._addonVersion,
 	"versionNVDA": versionInfo.version,
 	"language": languageHandler.getLanguage(),
@@ -41,7 +41,7 @@ def checkUpdates(sil = False):
 			wx.YES|wx.NO|wx.ICON_INFORMATION)
 		if res == wx.YES: processUpdate()
 
-	def unavailableUpdateDialog(msg = ''):
+	def upToDateDialog(msg = ''):
 		gui.messageBox(
 			(_("You are up-to-date. %s is the latest version.") % configBE._addonVersion+'\n%s' % msg).strip(),
 			title,
@@ -84,22 +84,18 @@ def checkUpdates(sil = False):
 	title = _("BrailleExtender's Update")
 	newUpdate = False
 	url = '{0}BrailleExtender.latest?{1}'.format(configBE._addonURL, urllib.urlencode(paramsDL()))
-	msg = ""
-	version = ""
 	try:
 		page = urllib.urlopen(url)
-		pageContent = page.read().strip()
-		if (page.code == 200 and len(pageContent) < 700):
-			version = re.sub('\n(.+)$', '\1', pageContent).strip().replace('\r','').replace('','')
-			msg = re.findall(r'msg: ?(.+)$', pageContent)
-			msg = msg[0].strip() if len(msg) == 1 else ''
-			if version != configBE._addonVersion: newUpdate = True
-		if not newUpdate and sil:
-			log.debug('No update')
-			return
-		if newUpdate: wx.CallAfter(availableUpdateDialog, version, msg)
-		else: wx.CallAfter(unavailableUpdateDialog, msg)
-	except BaseException, e:
-		log.debug(e)
+		if page.code == 200:
+			data = json.load(page)
+			if not data["success"]: raise ValueError("Invalid JSON response")
+			if not data["upToDate"]: newUpdate = True
+			if not newUpdate and sil:
+				return log.debug('No update')
+			if newUpdate: wx.CallAfter(availableUpdateDialog, data["lastVersion"], data["msg"])
+			else: wx.CallAfter(upToDateDialog, data["msg"])
+		else: raise ValueError("Invalid server code response: %s" % page.code)
+	except BaseException, err:
+		log.warning(err)
 		if not newUpdate and sil: return
 		wx.CallAfter(errorUpdateDialog)

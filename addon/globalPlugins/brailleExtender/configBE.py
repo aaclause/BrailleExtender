@@ -198,13 +198,13 @@ def loadPreferedTables():
 	outputTables = [t for t in outputTables if t in listOutputTables]
 
 def getLabelFromID(idCategory, idLabel):
-	if idCategory == 0: return braille.roleLabels[braille.roleLabels.keys()[int(idLabel)]]
+	if idCategory == 0: return braille.roleLabels[int(idLabel)]
 	elif idCategory == 1: return braille.landmarkLabels[idLabel]
 	elif idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
 	elif idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
 
 def setLabelFromID(idCategory, idLabel, newLabel):
-	if idCategory == 0: braille.roleLabels[braille.roleLabels.keys()[int(idLabel)]] = newLabel
+	if idCategory == 0: braille.roleLabels[int(idLabel)] = newLabel
 	elif idCategory == 1: braille.landmarkLabels[idLabel] = newLabel
 	elif idCategory == 2: braille.positiveStateLabels[int(idLabel)] = newLabel
 	elif idCategory == 3: braille.negativeStateLabels[int(idLabel)] = newLabel
@@ -217,8 +217,8 @@ def loadRoleLabels(roleLabels):
 			arg2 = k.split(':')[1]
 			backupRoleLabels[k] = (v, getLabelFromID(arg1, arg2))
 			setLabelFromID(arg1, arg2, v)
-		except BaseException:
-			log.error("Error during loading role label `%s`" % k)
+		except BaseException as err:
+			log.error("Error during loading role label `%s` (%s)" % (k, err))
 			roleLabels.pop(k)
 			config.conf["brailleExtender"]["roleLabels"] = roleLabels
 

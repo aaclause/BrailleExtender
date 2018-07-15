@@ -63,7 +63,6 @@ focusOrReviewChoices = OrderedDict([
 	(CHOICE_focusAndReview, _("both"))
 ])
 curBD = braille.handler.display.name
-quickLaunches = OrderedDict()
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}
 iniGestures = {}
@@ -73,6 +72,9 @@ lang = languageHandler.getLanguage().split('_')[-1].lower()
 noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
 sep = ' ' if 'fr' in lang else ''
 outputTables = inputTables = None
+preTable = []
+postTable = []
+
 _addonDir = os.path.join(os.path.dirname(__file__), "..", "..").decode("mbcs")
 _addonName = addonHandler.Addon(_addonDir).manifest["name"]
 _addonVersion = addonHandler.Addon(_addonDir).manifest["version"]
@@ -144,8 +146,6 @@ confspec = {
 	"inputTableShortcuts": 'string(default="?")',
 	"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 	"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
-	"quickLaunchGestures_%s" % curBD: "string(default=\"\")",
-	"quickLaunchLocations_%s" % curBD: 'string(default="")',
 	"tabSpace": "boolean(default=False)",
 	"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
 	"postTable": 'string(default="None")',
@@ -180,8 +180,22 @@ confspec = {
 			CHOICE_dots78=CHOICE_dots78
 		)
 	},
+	"quickLaunches": {},
 	"roleLabels": {}
 }
+
+def loadPreferedTables():
+	global inputTables, outputTables
+	listInputTables = [table[0] for table in brailleTables.listTables() if table.input]
+	listOutputTables = [table[0] for table in brailleTables.listTables() if table.output]
+	inputTables = config.conf["brailleExtender"]["inputTables"]
+	outputTables = config.conf["brailleExtender"]["outputTables"]
+	if not isinstance(inputTables, list):
+		inputTables = inputTables.replace(', ', ',').split(',')
+	if not isinstance(outputTables, list):
+		outputTables = outputTables.replace(', ', ',').split(',')
+	inputTables = [t for t in inputTables if t in listInputTables]
+	outputTables = [t for t in outputTables if t in listOutputTables]
 
 def getLabelFromID(idCategory, idLabel):
 	if idCategory == 0: return braille.roleLabels[braille.roleLabels.keys()[int(idLabel)]]
@@ -217,7 +231,7 @@ def discardRoleLabels():
 	backupRoleLabels = {}
 
 def loadConf():
-	global quickLaunches, gesturesFileExists, inputTables, outputTables, profileFileExists, iniProfile
+	global gesturesFileExists, profileFileExists, iniProfile
 	confGen = (r"%s\%s\%s\profile.ini" % (profilesDir, curBD, config.conf["brailleExtender"]["profile_%s" % curBD]))
 	if (curBD != "noBraille" and os.path.exists(confGen)):
 		profileFileExists = True
@@ -233,24 +247,8 @@ def loadConf():
 
 	if (backupDisplaySize-config.conf["brailleExtender"]["rightMarginCells_" + curBD] <= backupDisplaySize and config.conf["brailleExtender"]["rightMarginCells_%s" % curBD] > 0):
 		braille.handler.displaySize = backupDisplaySize-config.conf["brailleExtender"]["rightMarginCells_%s" % curBD]
-	tmp1 = [k.strip() for k in config.conf["brailleExtender"]["quickLaunchGestures_%s" % curBD].split(';') if k.strip() != ""]
-	tmp2 = [k.strip() for k in config.conf["brailleExtender"]["quickLaunchLocations_%s" % curBD].split(';') if k.strip() != ""]
-	for i, gesture in enumerate(tmp1):
-		if i >= len(tmp2): break
-		quickLaunches[gesture] = tmp2[i]
-	if not noUnicodeTable:
-		listInputTables = [table[0] for table in brailleTables.listTables() if table.input]
-		listOutputTables = [table[0] for table in brailleTables.listTables() if table.output]
-		inputTables = config.conf["brailleExtender"]["inputTables"]
-		outputTables = config.conf["brailleExtender"]["outputTables"]
-		if not isinstance(inputTables, list):
-			inputTables = inputTables.replace(', ', ',').split(',')
-		if not isinstance(outputTables, list):
-			outputTables = outputTables.replace(', ', ',').split(',')
-		inputTables = [t for t in inputTables if t in listInputTables]
-		outputTables = [t for t in outputTables if t in listOutputTables]
-	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN:
-		config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
+	if not noUnicodeTable: loadPreferedTables()
+	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
 	loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
 
@@ -309,6 +307,48 @@ def isContractedTable(table):
 	tablePos = tablesFN.index(table)
 	if brailleTables.listTables()[tablePos].contracted: return True
 	return False
+
+def loadPostTable():
+	global postTable
+	postTable = []
+	postTableValid = True if config.conf["brailleExtender"]["postTable"] in tablesFN else False
+	if postTableValid:
+		postTable.append(os.path.join(brailleTables.TABLES_DIR, config.conf["brailleExtender"]["postTable"]))
+		log.info('Secondary table enabled: %s' % config.conf["brailleExtender"]["postTable"])
+	else:
+		if config.conf["brailleExtender"]["postTable"] != "None":
+			log.error("Invalid secondary table")
+def createTabFile(f, c):
+	try:
+		f = open(f, "w")
+		f.write(c)
+		f.close()
+		return True
+	except BaseException as e:
+		log.error('Error while creating tab file (%s)' % e)
+		return False
+
+def loadPreTable():
+	global preTable
+	preTable = []
+	tabFile = os.path.join(os.path.dirname(__file__), "", "tab.cti").decode("mbcs")
+	defTab = 'space \\t ' + \
+		('0-' * config.conf["brailleExtender"]["tabSize_%s" % curBD])[:-1] + '\n'
+
+	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tabFile):
+		log.info('File not found, creating tab file')
+		createTabFile(tabFile, defTab)
+	if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tabFile):
+		f = open(tabFile, "r")
+		if f.read() != defTab:
+			log.debug('Difference, creating tab file...')
+			if createTabFile(tabFile, defTab):
+				preTable.append(tabFile)
+		else:
+			preTable.append(tabFile)
+			log.debug('Tab as spaces enabled')
+		f.close()
+	else: log.debug('Tab as spaces disabled')
 
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"

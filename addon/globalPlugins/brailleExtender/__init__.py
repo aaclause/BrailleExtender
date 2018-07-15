@@ -276,8 +276,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				else:
 					self._pGestures[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(v))] = k
 		self.bindGestures(self._pGestures)
-		self.bindGestures({self.getGestureWithBrailleIdentifier(k): "quickLaunch" for k in configBE.quickLaunches.keys()})
-		return
+		self.loadQuickLaunchesGes()
+
+	def loadQuickLaunchesGes(self):
+		self.bindGestures({k: "quickLaunch" for k in config.conf["brailleExtender"]["quickLaunches"].copy().keys() if '(%s' % configBE.curBD in k})
 
 	def bindRotorGES(self):
 		for k in self.rotorGES:
@@ -472,7 +474,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_toggleDots78(self, gesture):
 		self.hideDots78 = not self.hideDots78
 		speech.speakMessage(_('Dots 7 and 8: %s') % (_('disabled') if self.hideDots78 else _('enabled')))
-		self.refreshBD()
+		utils.refreshBD()
 	script_toggleDots78.__doc__ = _('Hide/show dots 7 and 8')
 
 	def script_toggleLockModifiers(self, gesture):
@@ -482,7 +484,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_toggleAttribra(self, gesture):
 		config.conf["brailleExtender"]["features"]["attributes"] = not attribraEnabled()
-		self.refreshBD()
+		utils.refreshBD()
 		speech.speakMessage('Attribra %s' % (_('enabled') if attribraEnabled() else _('disabled')))
 	script_toggleAttribra.__doc__ = _('Enable/disable Attribra')
 
@@ -604,16 +606,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_volumePlus.__doc__ = _('Increase the master volume')
 
 	@staticmethod
-	def refreshBD():
-		obj = api.getFocusObject()
-		if obj.treeInterceptor is not None:
-			ti = treeInterceptorHandler.update(obj)
-			if not ti.passThrough:
-				braille.handler.handleGainFocus(ti)
-		else:
-			braille.handler.handleGainFocus(api.getFocusObject())
-
-	@staticmethod
 	def clearMessageFlash():
 		if config.conf["braille"]["messageTimeout"] != 0:
 			if braille.handler.buffer is braille.handler.messageBuffer:
@@ -677,17 +669,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return s.__gestures
 
 	def script_quickLaunch(self, gesture):
-		if gesture.id not in configBE.quickLaunches.keys():
-			gesture.id = gesture.normalizedIdentifiers[0].split(':')[1]
-			if gesture.id not in configBE.quickLaunches.keys():
-				log.info(configBE.quickLaunches)
-				ui.message('Target for %s not defined.' % gesture.id)
-				return
-		try:
-			return subprocess.Popen(configBE.quickLaunches[gesture.id])
+		g = gesture.normalizedIdentifiers[0]
+		quickLaunches = config.conf["brailleExtender"]["quickLaunches"].copy()
+		if g not in quickLaunches.keys():
+			ui.message('Target for %s not defined.' % gesture.id)
+			return
+		try: return subprocess.Popen(quickLaunches[g])
 		except BaseException:
 			try:
-				os.startfile(configBE.quickLaunches[gesture.id])
+				os.startfile(quickLaunches[g])
 			except BaseException:
 				ui.message(_("No such file or directory"))
 			return
@@ -761,7 +751,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			config.conf["braille"]["translationTable"])
 		nID = tid + 1 if tid + 1 < len(configBE.outputTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.outputTables[nID]
-		self.refreshBD()
+		utils.refreshBD()
 		ui.message(_('Output: %s') % configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
 		return
 
@@ -840,7 +830,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			speech.speakMessage(_("Profile reloaded"))
 			configBE.curBD = braille.handler.display.name
-		self.refreshBD()
+		utils.refreshBD()
 		return self.onReload(None, True)
 
 

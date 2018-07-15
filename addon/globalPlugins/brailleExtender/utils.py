@@ -417,7 +417,6 @@ def isLastLine():
 	except BaseException: return True
 	return False
 
-	
 def isEnd():
 	obj = api.getFocusObject()
 	treeInterceptor = obj.treeInterceptor
@@ -455,3 +454,12 @@ def uncapitalize(s): return s[:1].lower() + s[1:] if s else ''
 
 translatePercent = lambda p, q = braille.handler.displaySize - 4: u'⣦%s⣴' % ''.join(
 	[u'⢼' if k <= int(float(p) / 100. * float(q - 2)) - 1 else u'⠤' for k in range(q - 2)])
+
+def refreshBD():
+	obj = api.getFocusObject()
+	if obj.treeInterceptor is not None:
+		ti = treeInterceptorHandler.update(obj)
+		if not ti.passThrough:
+			braille.handler.handleGainFocus(ti)
+	else:
+		braille.handler.handleGainFocus(api.getFocusObject())

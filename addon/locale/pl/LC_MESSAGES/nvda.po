@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-07-15 17:43+0200\n"
-"PO-Revision-Date: 2018-07-15 18:00+0100\n"
+"PO-Revision-Date: 2018-07-15 20:40+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -255,7 +255,7 @@ msgid ""
 "Reports some extra infos for the current element. For example, the URL on a "
 "link"
 msgstr ""
-"Pokazuje informacje dodatkowe dla tego elementu. Na przykład adres URl dla "
+"Pokazuje informacje dodatkowe dla tego elementu. Na przykład adres URL dla "
 "linku"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:521
@@ -363,7 +363,7 @@ msgstr ""
 #, python-format
 msgid "Check for %s updates, and starts the download if there is one"
 msgstr ""
-"Sprawdza, czy jest dostępna nowa wersja %s ,i rozpoczyna pobieranie,jeżeli "
+"Sprawdza, czy jest dostępna nowa wersja %s ,i rozpoczyna pobieranie, jeżeli "
 "istnieje."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:722
@@ -424,7 +424,7 @@ msgstr "I:{I} ⣿ O: {O}"
 #: addon/globalPlugins/brailleExtender/__init__.py:768
 #, python-brace-format
 msgid "Input: {I}; Output: {O}"
-msgstr "Wejście: {I}; yjście: {O}"
+msgstr "Wejście: {I}; Wyjście: {O}"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:772
 msgid "Announce the current input and output braille tables"
@@ -450,7 +450,7 @@ msgstr "Ponownie wczytuje %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:814
 msgid "Reload the first braille display defined in settings"
-msgstr "Wczytuję pierwszy ustawiony monitow brajlowski "
+msgstr "Wczytuję pierwszy ustawiony monitor brajlowski "
 
 #: addon/globalPlugins/brailleExtender/__init__.py:817
 msgid "Reload the second braille display defined in settings"
@@ -816,7 +816,7 @@ msgstr "Ogólne"
 
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:36
 msgid "Braille &tables"
-msgstr "&Tablice brajloskie"
+msgstr "&Tablice brajlowskie"
 
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:38
 msgid "Text &attributes"
@@ -828,7 +828,7 @@ msgstr "&Szybkie uruchamiania"
 
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:42
 msgid "Role &labels"
-msgstr "&Oznaki kontrolek"
+msgstr "&Oznaczenia kontrolek"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:75
@@ -907,7 +907,7 @@ msgstr "Pierwszy preferowany monitor brajlowski"
 
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:137
 msgid "Second braille display preferred"
-msgstr "Drugi monitor brajlowski preferowany"
+msgstr "Drugi preferowany monitor brajlowski"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:165
@@ -1017,16 +1017,16 @@ msgid ""
 "In this combo box, all tables are present. Press space bar, left or right "
 "arrow keys to include (or not) the selected table in switches"
 msgstr ""
-"W tym polu kombi, Wszyyyyyyyyyyystkie taice brajlowskie są dostępne. "
-"Naciśnij spację, strzałkę w lewo albo w prawo aby dodać lub usunąć wybraną "
-"tablice brajlowską w rotorach"
+"W tym polu kombi, Wszystkie tablice brajlowskie są dostępne. Naciśnij "
+"spację, strzałkę w lewo albo w prawo aby dodać lub usunąć wybraną tablice "
+"brajlowską do rotorów"
 
 #: addon/globalPlugins/brailleExtender/addonSettingsPanel.py:392
 msgid ""
 "You can also press 'comma' key to get the file name of the selected table "
 "and 'semicolon' key to view miscellaneous infos on the selected table"
 msgstr ""
-"Także można nacisnąć przycisk 'przecinek' aby dostać nazwę liku tablicy "
+"Także można nacisnąć przycisk 'przecinek' aby dostać nazwę pliku tablicy "
 "brajlowskiej i przycisk 'średnik' aby się dowiedzieć innych informacji o "
 "wybranej tablicy brajlowskiej"
 
@@ -1245,8 +1245,8 @@ msgid ""
 "Oops! There was a problem checking for updates. Please retry later or go to "
 "manually at"
 msgstr ""
-"Kurcze! Istnieje problem przy sprawdzaniu aktualizacji. Prosimy spróbować "
-"później, lub przejdź do"
+"Kurcze! Wystąpił problem przy sprawdzaniu aktualizacji. Prosimy spróbować "
+"później, lub przejść do"
 
 #: addon/globalPlugins/brailleExtender/updateCheck.py:80
 msgid "Unable to save or download update file. Opening your browser"

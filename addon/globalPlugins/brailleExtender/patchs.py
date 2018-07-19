@@ -14,20 +14,19 @@ import config
 import configBE
 import globalCommands
 import inputCore
-import sayAllHandler
-import queueHandler
-import scriptHandler
-import treeInterceptorHandler
-import watchdog
 import louis
+import queueHandler
+import sayAllHandler
 import scriptHandler
 import speech
 import textInfos
+import treeInterceptorHandler
+import watchdog
 from logHandler import log
 import addonHandler
 
 addonHandler.initTranslation()
-from utils import getCurrentChar, getLine
+from utils import getCurrentChar
 instanceGP = None
 
 SELECTION_SHAPE = braille.SELECTION_SHAPE
@@ -158,7 +157,7 @@ def nextLine(self):
 		self._setCursor(dest)
 		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
-	except BaseException as e: pass
+	except BaseException: pass
 
 # braille.TextInfoRegion.previousLine()
 def previousLine(self, start=False):

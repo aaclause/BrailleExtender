@@ -46,7 +46,7 @@ import versionInfo
 import virtualBuffers
 
 import configBE
-config.conf.spec["brailleExtender"] = configBE.confspec
+config.conf.spec["brailleExtender"] = configBE.getConfspec()
 import utils
 from updateCheck import *
 import patchs
@@ -518,7 +518,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_getTableOverview(self, gesture):
 		inTable = brailleInput.handler.table.displayName
 		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		grade = [_('uncontracted'), _('contracted')]
 		t = (_(' Input table')+': %s\n'+_('Output table')+': %s\n\n') % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
 		t += utils.getTableOverview()
 		ui.browseableMessage('<pre>%s</pre>' % t, _('Table overview (%s)' % brailleInput.handler.table.displayName), True)
@@ -786,6 +785,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.bindGestures(self.__gestures)
 		self._pGestures=OrderedDict()
 		configBE.quickLaunches = OrderedDict()
+		config.conf.spec["brailleExtender"] = configBE.getConfspec()
 		configBE.loadConf()
 		configBE.initGestures()
 		configBE.loadGestures()
@@ -821,16 +821,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"][k] == "last":
 			if config.conf["braille"]["display"] == "noBraille":
 				return ui.message(_("No braille display specified. No reload to do"))
-			else:
+			utils.reload_brailledisplay(config.conf["braille"]["display"])
+			if config.conf["braille"]["display"] != "auto":
 				utils.reload_brailledisplay(config.conf["braille"]["display"])
 				configBE.curBD = braille.handler.display.name
-		elif config.conf["braille"]["display"] != "auto":
+				utils.refreshBD()
+			else:
+				speech.speakMessage(_("Profile reloaded"))
+				configBE.curBD = braille.handler.display.name
+		else:
 			utils.reload_brailledisplay(config.conf["brailleExtender"][k])
 			configBE.curBD = config.conf["brailleExtender"][k]
-		else:
-			speech.speakMessage(_("Profile reloaded"))
-			configBE.curBD = braille.handler.display.name
-		utils.refreshBD()
+			utils.refreshBD()
 		return self.onReload(None, True)
 
 

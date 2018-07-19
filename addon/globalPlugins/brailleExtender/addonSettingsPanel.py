@@ -4,6 +4,8 @@
 # Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
+import glob
+import os
 import gui
 import wx
 import addonHandler
@@ -11,8 +13,10 @@ import braille
 import config
 import controlTypes
 import inputCore
+import keyLabels
 import queueHandler
 import scriptHandler
+import speech
 import ui
 addonHandler.initTranslation()
 
@@ -25,7 +29,7 @@ instanceGP = None
 class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender (%s)" % _("%s configuration" % configBE.curBD)
+	title = "Braille Extender"
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -35,12 +39,14 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		self.generalBtn.Bind(wx.EVT_BUTTON, self.onGeneralBtn)
 		self.brailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Braille &tables"), wx.DefaultPosition)
 		self.brailleTablesBtn.Bind(wx.EVT_BUTTON, self.onBrailleTablesBtn)
-		self.attributesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
+		self.attributesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
 		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
 		self.quickLaunchesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
 		self.quickLaunchesBtn.Bind(wx.EVT_BUTTON, self.onQuickLaunchesBtn)
 		self.roleLabelsBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Role &labels"), wx.DefaultPosition)
 		self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
+		self.profileEditorBtn = bHelper2.addButton(self, wx.NewId(), "%s... (%s)" % (_("&Profile editor"), _("feature in process")), wx.DefaultPosition)
+		self.profileEditorBtn.Bind(wx.EVT_BUTTON, self.onProfileEditorBtn)
 		sHelper.addItem(bHelper1)
 		sHelper.addItem(bHelper2)
 
@@ -68,6 +74,9 @@ class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		roleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
 		roleLabelsDlg.ShowModal()
 
+	def onProfileEditorBtn(self, evt):
+		profileEditorDlg = ProfileEditorDlg(self, multiInstanceAllowed=True)
+		profileEditorDlg.ShowModal()
 
 class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
@@ -125,6 +134,11 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.modifierKeysFeedback.SetSelection(itemToSelect)
 		self.rightMarginCells = sHelper.addLabeledControl(_("Right margin on cells")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=0, max=100, initial=config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD])
+		if configBE.gesturesFileExists:
+			lb = [k for k in instanceGP.getKeyboardLayouts()]
+			# Translators: label of a dialog.
+			self.KBMode = sHelper.addLabeledControl(_("Braille keyboard configuration"), wx.Choice, choices=lb)
+			self.KBMode.SetSelection(self.getKeyboardLayout())
 
 		# Translators: label of a dialog.
 		self.reverseScrollBtns = sHelper.addItem(wx.CheckBox(self, label=_("Reverse forward scroll and back scroll buttons")))
@@ -156,7 +170,15 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD] = self.rightMarginCells.Value
 		config.conf["brailleExtender"]["brailleDisplay1"] = configBE.bds_k[self.brailleDisplay1.GetSelection()]
 		config.conf["brailleExtender"]["brailleDisplay2"] = configBE.bds_k[self.brailleDisplay2.GetSelection()]
+		if configBE.gesturesFileExists:
+			config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] = configBE.iniProfile["keyboardLayouts"].keys()[self.KBMode.GetSelection()]
 		super(GeneralDlg, self).onOk(evt)
+
+	def getKeyboardLayout(self):
+		if (config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] is not None
+		and config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] in configBE.iniProfile['keyboardLayouts'].keys()):
+			return configBE.iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD])
+		else: return 0
 
 
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):
@@ -197,7 +219,7 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("Customize role labels")
+	title = "Braille Extender - %s" % _("Role labels")
 
 	def makeSettings(self, settingsSizer):
 		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
@@ -386,7 +408,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 					tbl,
 					self.getInSwitchesText(tbl)
 				), "Infos about this table", False)
-		if keycode == wx.wx.WXK_F1:
+		if keycode == wx.WXK_F1:
 			ui.browseableMessage(
 				_("In this combo box, all tables are present. Press space bar, left or right arrow keys to include (or not) the selected table in switches")+".\n"+
 			_("You can also press 'comma' key to get the file name of the selected table and 'semicolon' key to view miscellaneous infos on the selected table")+".",
@@ -398,8 +420,8 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			elif keycode == wx.WXK_SPACE: self.changeSwitch(tbl, 1, True)
 			newSwitch = self.getInSwitchesText(tbl)
 			self.tables.SetString(self.tables.GetSelection(), "%s%s: %s" % (configBE.tablesTR[idx], configBE.sep, newSwitch))
-			utils.refreshBD()
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
+			utils.refreshBD()
 		else: evt.Skip()
 
 class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
@@ -414,19 +436,18 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		self.quickLaunchLocations = config.conf["brailleExtender"]["quickLaunches"].copy().values()
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		if configBE.curBD != "noBraille":
-			self.quickKeys = sHelper.addLabeledControl(_("&Gestures"), wx.Choice, choices=self.getQuickLaunchList())
-			self.quickKeys.SetSelection(0)
-			self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
-			self.target = sHelper.addLabeledControl(_("Location"), wx.TextCtrl, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
-			self.target.Bind(wx.EVT_TEXT, self.onTarget)
-			self.browseBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Browse"), wx.DefaultPosition)
-			self.removeGestureBtn = bHelper1.addButton(self, wx.NewId(), _("&Remove this gesture"), wx.DefaultPosition)
-			self.addGestureBtn = bHelper1.addButton(self, wx.NewId(), _("&Add a quick launch"), wx.DefaultPosition)
-			self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
-			self.removeGestureBtn.Bind(wx.EVT_BUTTON, self.onRemoveGestureBtn)
-			self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
-			sHelper.addItem(bHelper1)
+		self.quickKeys = sHelper.addLabeledControl(_("&Gestures"), wx.Choice, choices=self.getQuickLaunchList())
+		self.quickKeys.SetSelection(0)
+		self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
+		self.target = sHelper.addLabeledControl(_("Location"), wx.TextCtrl, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
+		self.target.Bind(wx.EVT_TEXT, self.onTarget)
+		self.browseBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Browse"), wx.DefaultPosition)
+		self.removeGestureBtn = bHelper1.addButton(self, wx.NewId(), _("&Remove this gesture"), wx.DefaultPosition)
+		self.addGestureBtn = bHelper1.addButton(self, wx.NewId(), _("&Add a quick launch"), wx.DefaultPosition)
+		self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
+		self.removeGestureBtn.Bind(wx.EVT_BUTTON, self.onRemoveGestureBtn)
+		self.addGestureBtn.Bind(wx.EVT_BUTTON, self.onAddGestureBtn)
+		sHelper.addItem(bHelper1)
 
 	def postInit(self): self.quickKeys.SetFocus()
 
@@ -505,3 +526,155 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		dlg.Destroy()
 		return self.quickKeys.SetFocus()
 
+class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
+	title = _("Profiles editor") + " (%s)" % configBE.curBD
+	profilesList = []
+	addonGesturesPrfofile = None
+	generalGesturesProfile = None
+	keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
+
+	def makeSettings(self, settingsSizer):
+		if configBE.curBD == 'noBraille':
+			self.Destroy()
+			wx.CallAfter(gui.messageBox, _("You must have a braille display to editing a profile"), self.title, wx.OK|wx.ICON_ERROR)
+
+		if not os.path.exists(configBE.profilesDir):
+			self.Destroy()
+			wx.CallAfter(gui.messageBox, _("Profiles directory is not present or accessible. Unable to edit profiles"), self.title, wx.OK|wx.ICON_ERROR)
+
+		self.profilesList = self.getListProfiles()
+
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+
+		labelText = _("Profile to edit")
+		self.profiles = sHelper.addLabeledControl(labelText, wx.Choice, choices=self.profilesList)
+		self.profiles.SetSelection(0)
+		self.profiles.Bind(wx.EVT_CHOICE, self.onProfiles)
+
+		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
+		labelText = _('Gestures category')
+		categoriesList = [_("Single keys"), _("Modifier keys"), _("Practical shortcuts"), _("NVDA commands"), _("Addon features")]
+		self.categories = sHelper2.addLabeledControl(labelText, wx.Choice, choices=categoriesList)
+		self.categories.SetSelection(0)
+		self.categories.Bind(wx.EVT_CHOICE, self.refreshGestures)
+		labelText = _('Gestures list')
+		self.gestures = sHelper2.addLabeledControl(labelText, wx.Choice, choices=[])
+		self.gestures.Bind(wx.EVT_CHOICE, self.onGesture)
+
+		sHelper.addItem(sHelper2)
+
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+
+		addGestureButtonID = wx.NewId()
+		self.addGestureButton = bHelper.addButton(self, addGestureButtonID, _("Add gesture"), wx.DefaultPosition)
+
+		self.removeGestureButton = bHelper.addButton(self, addGestureButtonID, _("Remove this gesture"), wx.DefaultPosition)
+
+		assignGestureButtonID = wx.NewId()
+		self.assignGestureButton = bHelper.addButton(self, assignGestureButtonID, _("Assign a braille gesture"), wx.DefaultPosition)
+
+		sHelper.addItem(bHelper)
+
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+
+		removeProfileButtonID = wx.NewId()
+		self.removeProfileButton = bHelper.addButton(self, removeProfileButtonID, _("Remove this profile"), wx.DefaultPosition)
+
+		addProfileButtonID = wx.NewId()
+		self.addProfileButton = bHelper.addButton(self, addProfileButtonID, _("Add a profile"), wx.DefaultPosition)
+		self.addProfileButton.Bind(wx.EVT_BUTTON, self.onAddProfileButton)
+
+		sHelper.addItem(bHelper)
+
+		edHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
+		labelText = _('Name for the new profile')
+		self.newProfileName = edHelper.addLabeledControl(labelText, wx.TextCtrl)
+		sHelper.addItem(edHelper)
+
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		validNewProfileNameButtonID = wx.NewId()
+		self.validNewProfileNameButton = bHelper.addButton(self, validNewProfileNameButtonID, _('Create'))
+
+		sHelper.addItem(bHelper)
+
+	def postInit(self):
+		self.hideNewProfileSection()
+		self.refreshGestures()
+		if len(self.profilesList)>0:
+			self.profiles.SetSelection(self.profilesList.index(config.conf["brailleExtender"]["profile_%s" % configBE.curBD]))
+		self.onProfiles()
+		self.profiles.SetFocus()
+
+	def refreshGestures(self, evt = None):
+		category = self.categories.GetSelection()
+		items = []
+		ALT = keyLabels.localizedKeyLabels['alt'].capitalize()
+		CTRL = keyLabels.localizedKeyLabels['control'].capitalize()
+		SHIFT = keyLabels.localizedKeyLabels['shift'].capitalize()
+		WIN = keyLabels.localizedKeyLabels['windows'].capitalize()
+		if category == 0: items = [k[0].capitalize() for k in self.keyLabelsList]
+		elif category == 1:
+			items = [ALT, CTRL, SHIFT, WIN, "NVDA",
+			'%s+%s' % (ALT, CTRL),
+			'%s+%s' % (ALT, SHIFT),
+			'%s+%s' % (ALT, WIN),
+			'%s+%s+%s' % (ALT, CTRL, SHIFT), 
+			'%s+%s+%s+%s' % (ALT, CTRL, SHIFT, WIN),
+			'%s+%s+%s' % (ALT, CTRL, WIN),
+			'%s+%s' % (CTRL, SHIFT),
+			'%s+%s' % (CTRL, WIN),
+				'%s+%s+%s' % (CTRL, SHIFT, WIN),
+			'%s+%s' % (SHIFT, WIN)
+			]
+		elif category == 2:
+			items = sorted([
+				'%s+F4' % ALT,
+				'%s+Tab' % ALT,
+				'%s+Tab' % SHIFT,
+			])
+		self.gestures.SetItems(items)
+		self.gestures.SetSelection(0)
+		self.gestures.SetSelection(0)
+		if category<2:
+			self.addGestureButton.Disable()
+			self.removeGestureButton.Disable()
+		else:
+			self.addGestureButton.Enable()
+			self.removeGestureButton.Enable()
+
+	def onProfiles(self, evt = None):
+		if len(self.profilesList) == 0: return
+		curProfile = self.profilesList[self.profiles.GetSelection()]
+		self.addonGesturesPrfofile = config.ConfigObj('%s/baum/%s/profile.ini' % (configBE.profilesDir, curProfile), encoding="UTF-8")
+		self.generalGesturesProfile = config.ConfigObj('%s/baum/%s/gestures.ini' % (configBE.profilesDir, curProfile), encoding="UTF-8")
+		if self.addonGesturesPrfofile == {}:
+			wx.CallAfter(gui.messageBox, _("Unable to load this profile. Malformed or inaccessible file"), self.title, wx.OK|wx.ICON_ERROR)
+
+	def getListProfiles(self):
+		profilesDir = '%s\%s' %(configBE.profilesDir, configBE.curBD)
+		res = []
+		ls = glob.glob(profilesDir+'\\*')  
+		for e in ls:
+			if os.path.isdir(e) and os.path.exists('%s\%s' %(e, 'profile.ini')): res.append(e.split('\\')[-1])
+		return res
+
+	def switchProfile(self, evt = None):
+		self.refreshGestures()
+
+	def onGesture(self, evt = None):
+		category = self.categories.GetSelection()
+		gesture = self.gestures.GetSelection()
+		gestureName = self.keyLabelsList[gesture][1]
+
+	def onAddProfileButton(self, evt = None):
+		if not self.addProfileButton.IsEnabled():
+			self.hideNewProfileSection()
+			self.addProfileButton.Enable()
+		else:
+			self.newProfileName.Enable()
+			self.validNewProfileNameButton.Enable()
+			self.addProfileButton.Disable()
+
+	def hideNewProfileSection(self, evt = None):
+		self.validNewProfileNameButton.Disable()
+		self.newProfileName.Disable()

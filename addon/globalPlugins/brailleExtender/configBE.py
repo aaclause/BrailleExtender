@@ -5,12 +5,10 @@
 
 from __future__ import unicode_literals
 import os
-import ui
-import re
 from cStringIO import StringIO
 from validate import Validator
 import globalVars
-from colors import RGB
+#from colors import RGB
 from collections import OrderedDict
 
 import addonHandler
@@ -101,88 +99,90 @@ def getValidBrailleDisplayPrefered():
 
 bds_k = [k for k, v in getValidBrailleDisplayPrefered()]
 bds_v = [v for k, v in getValidBrailleDisplayPrefered()]
-
-confspec = {
-	"autoCheckUpdate": "boolean(default=True)",
-	"updateChannel": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
-		CHOICE_none=CHOICE_none,
-		CHANNEL_dev=CHANNEL_dev,
-		CHANNEL_stable=CHANNEL_stable,
-		CHANNEL_testing=CHANNEL_testing
-	),
-	"lastCheckUpdate": "float(min=0, default=0)",
-	"profile_%s" % curBD: 'string(default="default")',
-	"keyboardLayout_%s" % curBD: "string(default=\"?\")",
-	"modifierKeysFeedback": "option({CHOICE_none}, {CHOICE_braille}, {CHOICE_speech}, {CHOICE_speechAndBraille}, default={CHOICE_braille})".format(
-		CHOICE_none=CHOICE_none,
-		CHOICE_braille=CHOICE_braille,
-		CHOICE_speech=CHOICE_speech,
-		CHOICE_speechAndBraille=CHOICE_speechAndBraille
-	),
-	"volumeChangeFeedback": "option({CHOICE_none}, {CHOICE_braille}, {CHOICE_speech}, {CHOICE_speechAndBraille}, default={CHOICE_braille})".format(
-		CHOICE_none=CHOICE_none,
-		CHOICE_braille=CHOICE_braille,
-		CHOICE_speech=CHOICE_speech,
-		CHOICE_speechAndBraille=CHOICE_speechAndBraille
-	),
-	"brailleDisplay1": "option(%s, default=last)" % ','.join(bds_k),
-	"brailleDisplay2": "option(%s, default=last)" % ','.join(bds_k),
-	"hourDynamic": "boolean(default=True)",
-	"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
-	"rightMarginCells_%s" %curBD: "integer(min=0, default=0, max=80)",
-	"reverseScrollBtns": "boolean(default=False)",
-	"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-	"smartDelayScroll": "boolean(default=False)",
-	"ignoreBlankLineScroll": "boolean(default=True)",
-	"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
-		CHOICE_none=CHOICE_none,
-		CHOICE_focus=CHOICE_focus,
-		CHOICE_review=CHOICE_review,
-		CHOICE_focusAndReview=CHOICE_focusAndReview
-	),
-	"stopSpeechScroll": "boolean(default=False)",
-	"stopSpeechUnknown": "boolean(default=True)",
-	"speakRoutingTo": "boolean(default=True)",
-	"inputTableShortcuts": 'string(default="?")',
-	"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
-	"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
-	"tabSpace": "boolean(default=False)",
-	"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
-	"postTable": 'string(default="None")',
-	"viewSaved": 'string(default="None")',
-	"features": {
-		"attributes": "boolean(default=True)",
-		"roleLabels": "boolean(default=True)"
-	},
-	"attributes": {
-		"bold": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
+def getConfspec():
+	global curBD
+	curBD = braille.handler.display.name
+	return {
+		"autoCheckUpdate": "boolean(default=True)",
+		"updateChannel": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
 			CHOICE_none=CHOICE_none,
-			CHOICE_dot7=CHOICE_dot7,
-			CHOICE_dot8=CHOICE_dot8,
-			CHOICE_dots78=CHOICE_dots78
+			CHANNEL_dev=CHANNEL_dev,
+			CHANNEL_stable=CHANNEL_stable,
+			CHANNEL_testing=CHANNEL_testing
 		),
-		"italic": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+		"lastCheckUpdate": "float(min=0, default=0)",
+		"profile_%s" % curBD: 'string(default="default")',
+		"keyboardLayout_%s" % curBD: "string(default=\"?\")",
+		"modifierKeysFeedback": "option({CHOICE_none}, {CHOICE_braille}, {CHOICE_speech}, {CHOICE_speechAndBraille}, default={CHOICE_braille})".format(
 			CHOICE_none=CHOICE_none,
-			CHOICE_dot7=CHOICE_dot7,
-			CHOICE_dot8=CHOICE_dot8,
-			CHOICE_dots78=CHOICE_dots78
+			CHOICE_braille=CHOICE_braille,
+			CHOICE_speech=CHOICE_speech,
+			CHOICE_speechAndBraille=CHOICE_speechAndBraille
 		),
-		"underline": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+		"volumeChangeFeedback": "option({CHOICE_none}, {CHOICE_braille}, {CHOICE_speech}, {CHOICE_speechAndBraille}, default={CHOICE_braille})".format(
 			CHOICE_none=CHOICE_none,
-			CHOICE_dot7=CHOICE_dot7,
-			CHOICE_dot8=CHOICE_dot8,
-			CHOICE_dots78=CHOICE_dots78
+			CHOICE_braille=CHOICE_braille,
+			CHOICE_speech=CHOICE_speech,
+			CHOICE_speechAndBraille=CHOICE_speechAndBraille
 		),
-		"invalid-spelling": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
+		"brailleDisplay1": "option(%s, default=last)" % ','.join(bds_k),
+		"brailleDisplay2": "option(%s, default=last)" % ','.join(bds_k),
+		"hourDynamic": "boolean(default=True)",
+		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
+		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
+		"reverseScrollBtns": "boolean(default=False)",
+		"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
+		"smartDelayScroll": "boolean(default=False)",
+		"ignoreBlankLineScroll": "boolean(default=True)",
+		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,
-			CHOICE_dot7=CHOICE_dot7,
-			CHOICE_dot8=CHOICE_dot8,
-			CHOICE_dots78=CHOICE_dots78
-		)
-	},
-	"quickLaunches": {},
-	"roleLabels": {}
-}
+			CHOICE_focus=CHOICE_focus,
+			CHOICE_review=CHOICE_review,
+			CHOICE_focusAndReview=CHOICE_focusAndReview
+		),
+		"stopSpeechScroll": "boolean(default=False)",
+		"stopSpeechUnknown": "boolean(default=True)",
+		"speakRoutingTo": "boolean(default=True)",
+		"inputTableShortcuts": 'string(default="?")',
+		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
+		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
+		"tabSpace": "boolean(default=False)",
+		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
+		"postTable": 'string(default="None")',
+		"viewSaved": 'string(default="None")',
+		"features": {
+			"attributes": "boolean(default=True)",
+			"roleLabels": "boolean(default=True)"
+		},
+		"attributes": {
+			"bold": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			),
+			"italic": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			),
+			"underline": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			),
+			"invalid-spelling": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			)
+		},
+		"quickLaunches": {},
+		"roleLabels": {}
+	}
 
 def loadPreferedTables():
 	global inputTables, outputTables
@@ -231,7 +231,21 @@ def discardRoleLabels():
 	backupRoleLabels = {}
 
 def loadConf():
-	global gesturesFileExists, profileFileExists, iniProfile
+	global curBD, gesturesFileExists, profileFileExists, iniProfile
+	curBD = braille.handler.display.name
+	brlextConf = config.conf["brailleExtender"].copy()
+	if "profile_%s" % curBD not in brlextConf.keys():
+		config.conf["brailleExtender"]["profile_%s" % curBD] = "default"
+	if "tabSize_%s" % curBD not in brlextConf.keys():
+		config.conf["brailleExtender"]["tabSize_%s" % curBD] = 2
+	if "leftMarginCells__%s" % curBD not in brlextConf.keys():
+		config.conf["brailleExtender"]["leftMarginCells_%s" % curBD] = 0
+	if "rightMarginCells__%s" % curBD not in brlextConf.keys():
+		config.conf["brailleExtender"]["rightMarginCells_%s" % curBD] = 0
+	if "autoScrollDelay_%s" % curBD not in brlextConf.keys():
+		config.conf["brailleExtender"]["autoScrollDelay_%s" % curBD] = 3000
+	if "keyboardLayout_%s" % curBD not in brlextConf.keys():
+		config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] = "?"
 	confGen = (r"%s\%s\%s\profile.ini" % (profilesDir, curBD, config.conf["brailleExtender"]["profile_%s" % curBD]))
 	if (curBD != "noBraille" and os.path.exists(confGen)):
 		profileFileExists = True
@@ -254,7 +268,7 @@ def loadConf():
 
 def loadGestures():
 	if gesturesFileExists:
-		if os.path.exists(os.path.join(profilesDir, "_BrowseMode", config.conf["braille"]["inputTable"] + '.ini')): GLng = config.conf["braille"]["inputTable"]
+		if os.path.exists(os.path.join(profilesDir, "_BrowseMode", config.conf["braille"]["inputTable"] + ".ini")): GLng = config.conf["braille"]["inputTable"]
 		else: GLng = 'en-us-comp8.utb'
 		gesturesBMPath = os.path.join(profilesDir, "_BrowseMode", "common.ini")
 		gesturesLangBMPath = os.path.join(profilesDir, "_BrowseMode/", GLng + ".ini")

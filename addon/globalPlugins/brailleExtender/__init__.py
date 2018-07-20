@@ -168,6 +168,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.createMenu()
 
 	def event_gainFocus(self, obj, nextHandler):
+		if config.conf["brailleExtender"]["reviewModeTerminal"]:
+			if obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
+				if not hasattr(braille.handler, "TETHER_AUTO"):
+					self.backupTether = braille.handler.tether
+					braille.handler.tether = braille.handler.TETHER_REVIEW
+				else:
+					if config.conf["braille"]["autoTether"]:
+						self.backupTether = braille.handler.TETHER_AUTO
+						config.conf["braille"]["autoTether"] = False
+					else:
+						self.backupTether = braille.handler.tether
+					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
+					braille.handler.handleReviewMove(shouldAutoTether=False)
+				self.switchedMode = True
+			elif self.switchedMode and obj.role != controlTypes.ROLE_TERMINAL: self.restorReviewCursorTethering()
+
+		if "tabSize_%s" % configBE.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)
 		if self.autoScrollRunning: self.script_autoScroll(None)
 		if self.autoTestPlayed: self.script_autoTest(None)
@@ -186,8 +203,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
 		#item = menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
 		#gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, item)
-		item = menu.Append(wx.ID_ANY, _(u"Profiles &editor..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
+		#item = menu.Append(wx.ID_ANY, _(u"Profiles &editor..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
+		#gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
 		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, item)
 		item = menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
@@ -196,6 +213,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
+
+	def restorReviewCursorTethering(self):
+		if not self.switchedMode: return
+		if not hasattr(braille.handler, "TETHER_AUTO"):
+			braille.handler.tether = self.backupTether
+		else:
+			if self.backupTether == braille.handler.TETHER_AUTO:
+				config.conf["braille"]["autoTether"] = True
+				config.conf["braille"]["tetherTo"] = braille.handler.TETHER_FOCUS
+			else:
+				config.conf["braille"]["autoTether"] = False
+				braille.handler.setTether(self.backupTether, auto=False)
+				if self.backupTether == braille.handler.TETHER_REVIEW:
+					braille.handler.handleReviewMove(shouldAutoTether=False)
+				else:
+					focus = api.getFocusObject()
+					if focus.treeInterceptor and not focus.treeInterceptor.passThrough:
+						braille.handler.handleGainFocus(focus.treeInterceptor,shouldAutoTether=False)
+					else:
+						braille.handler.handleGainFocus(focus,shouldAutoTether=False)
+		self.switchedMode = False
 
 	def getGestureWithBrailleIdentifier(self, gesture = ''):
 		return ('br(%s):' % configBE.curBD if ':' not in gesture else '')+gesture
@@ -1308,6 +1346,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
 		self.removeMenu()
+		self.restorReviewCursorTethering()
 		if configBE.noUnicodeTable:
 			brailleInput.handler.table = self.backupInputTable
 		if self.hourDatePlayed:

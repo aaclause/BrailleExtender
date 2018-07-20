@@ -114,6 +114,8 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("Display time and date infinitely")))
 		self.hourDynamic.SetValue(config.conf["brailleExtender"]["hourDynamic"])
+		self.reviewModeTerminal = sHelper.addItem(wx.CheckBox(self, label=_("Review mode automatic for terminals")+" (cmd, bash, PuTTY, PowerShell Maxima…)"))
+		self.reviewModeTerminal.SetValue(config.conf["brailleExtender"]["reviewModeTerminal"])
 
 		# Translators: label of a dialog.
 		self.volumeChangeFeedback = sHelper.addLabeledControl(_("Feedback for volume change in"), wx.Choice, choices=configBE.outputMessage.values())
@@ -155,6 +157,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["autoCheckUpdate"] = self.autoCheckUpdate.IsChecked()
 		config.conf["brailleExtender"]["hourDynamic"] = self.hourDynamic.IsChecked()
+		config.conf["brailleExtender"]["reviewModeTerminal"] = self.reviewModeTerminal.IsChecked()
 		if self.reverseScrollBtns.IsChecked(): instanceGP.reverseScrollBtns()
 		else: instanceGP.reverseScrollBtns(None, True)
 		config.conf["brailleExtender"]["reverseScrollBtns"] = self.reverseScrollBtns.IsChecked()

@@ -16,7 +16,6 @@ import inputCore
 import keyLabels
 import queueHandler
 import scriptHandler
-import speech
 import ui
 addonHandler.initTranslation()
 
@@ -172,6 +171,8 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["brailleDisplay2"] = configBE.bds_k[self.brailleDisplay2.GetSelection()]
 		if configBE.gesturesFileExists:
 			config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] = configBE.iniProfile["keyboardLayouts"].keys()[self.KBMode.GetSelection()]
+		config.conf["brailleExtender"]["volumeChangeFeedback"] = configBE.outputMessage.keys()[self.volumeChangeFeedback.GetSelection()]
+		config.conf["brailleExtender"]["modifierKeysFeedback"] = configBE.outputMessage.keys()[self.modifierKeysFeedback.GetSelection()]
 		super(GeneralDlg, self).onOk(evt)
 
 	def getKeyboardLayout(self):
@@ -618,7 +619,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			'%s+%s' % (ALT, CTRL),
 			'%s+%s' % (ALT, SHIFT),
 			'%s+%s' % (ALT, WIN),
-			'%s+%s+%s' % (ALT, CTRL, SHIFT), 
+			'%s+%s+%s' % (ALT, CTRL, SHIFT),
 			'%s+%s+%s+%s' % (ALT, CTRL, SHIFT, WIN),
 			'%s+%s+%s' % (ALT, CTRL, WIN),
 			'%s+%s' % (CTRL, SHIFT),

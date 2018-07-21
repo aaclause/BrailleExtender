@@ -14,6 +14,7 @@ import config
 import configBE
 import globalCommands
 import inputCore
+import keyboardHandler
 import louis
 import queueHandler
 import sayAllHandler
@@ -29,10 +30,24 @@ addonHandler.initTranslation()
 from utils import getCurrentChar
 instanceGP = None
 
-SELECTION_SHAPE = braille.SELECTION_SHAPE
+SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 def script_braille_routeTo(self, gesture):
+	obj = obj = api.getNavigatorObject()
+	if obj.hasFocus and braille.handler._cursorPos and (obj.role == controlTypes.ROLE_TERMINAL or (obj.role == controlTypes.ROLE_EDITABLETEXT and braille.handler.tether == braille.handler.TETHER_REVIEW)):
+		speechMode = speech.speechMode
+		speech.speechMode = 0
+		nb = braille.handler._cursorPos-gesture.routingIndex
+		i = 0
+		dir = 0 if nb > 0 else 1
+		key = "leftarrow" if nb > 0 else "rightarrow"
+		while i < abs(nb):
+			keyboardHandler.KeyboardInputGesture.fromName(key).send()
+			i += 1
+		speech.speechMode = speechMode
+		speech.speakSpelling(getCurrentChar())
+		return
 	braille.handler.routeTo(gesture.routingIndex)
-	if config.conf["brailleExtender"]['speakRoutingTo']:
+	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]['speakRoutingTo']:
 		ch = getCurrentChar()
 		if ch != "": speech.speakSpelling(ch)
 
@@ -115,7 +130,7 @@ def update(self):
 				for pos in xrange(
 						self.brailleSelectionStart,
 						self.brailleSelectionEnd):
-					self.brailleCells[pos] |= SELECTION_SHAPE
+					self.brailleCells[pos] |= SELECTION_SHAPE()
 			except IndexError: pass
 		else:
 			if instanceGP.hideDots78:

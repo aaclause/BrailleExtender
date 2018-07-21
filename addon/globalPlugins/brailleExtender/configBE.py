@@ -150,6 +150,7 @@ def getConfspec():
 		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
 		"postTable": 'string(default="None")',
 		"viewSaved": 'string(default="None")',
+		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
 			"attributes": "boolean(default=True)",
 			"roleLabels": "boolean(default=True)"

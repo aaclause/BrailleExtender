@@ -169,7 +169,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def event_gainFocus(self, obj, nextHandler):
 		if config.conf["brailleExtender"]["reviewModeTerminal"]:
-			if obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
+			if not self.switchedMode and obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
 				if not hasattr(braille.handler, "TETHER_AUTO"):
 					self.backupTether = braille.handler.tether
 					braille.handler.tether = braille.handler.TETHER_REVIEW

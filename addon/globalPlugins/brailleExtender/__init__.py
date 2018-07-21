@@ -571,12 +571,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.browseableMessage('<pre>%s</pre>' % t, _('BFU conversion'), True)
 	script_translateInBRU.__doc__ = _('Convert the text selection in unicode braille and display it in a browseable message')
 
-	def script_translateInCellDescription(self, gesture):
+	def script_charsToCellDescriptions(self, gesture):
 		t = utils.getTextInBraille()
 		t = utils.unicodeBrailleToDescription(t)
 		if t.strip() == "": return ui.message(_('No text selection'))
 		ui.browseableMessage(t)
-	script_translateInCellDescription.__doc__ = _('Convert text selection in braille cell descriptions and display it in a browseable message')
+	script_charsToCellDescriptions.__doc__ = _('Convert text selection in braille cell descriptions and display it in a browseable message')
+
+	def script_cellDescriptionsToChars(self, gesture):
+		t = utils.getTextSelection()
+		if t.strip() == "": return ui.message(_('No text selection'))
+		t = utils.descriptionToUnicodeBraille(t)
+		ui.browseableMessage(t)
+	script_cellDescriptionsToChars.__doc__ = _("Braille cell description to Unicode Braille. E.g.: in a edit field type '125-24-0-1-123-123'. Then select this text and execute this command")
 
 	def script_position(self, gesture=None):
 		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
@@ -813,11 +820,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"Announce the current input and output braille tables")
 
 	def script_brlDescChar(self, gesture):
-		utils.currentCharDesc()
+		utils.currentDescCellToChar()
 	script_brlDescChar.__doc__ = _(
 		"Gives the Unicode value of the "
 		"character where the cursor is located "
 		"and the decimal, binary and octal equivalent.")
+
 
 	def onDoc(self, evt):
 		return self.script_getHelp(None)
@@ -1339,7 +1347,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:volumeUp"] = "volumePlus"
 	__gestures["kb:volumeDown"] = "volumeMinus"
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
-	__gestures["kb:nvda+alt+i"] = "translateInCellDescription"
+	__gestures["kb:nvda+alt+i"] = "charsToCellDescriptions"
+	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
 	__gestures["kb:nvda+alt+y"] = "getTableOverview"
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 

@@ -21,12 +21,6 @@ addonHandler.initTranslation()
 import treeInterceptorHandler
 from logHandler import log 
 
-DIRECTION_AUTO = 0
-DIRECTION_BRU = 1
-DIRECTION_noBRU = 2
-DIRECTION_CELLDESC = 1
-DIRECTION_noCELLDESC = 2
-
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -259,16 +253,21 @@ def getTextInBraille(t = ''):
 		return t
 	else: return ''
 
-def getDescriptionBrailleCell(ch):
+def cellDescToChar(cell):
+	if not re.match("^[0-8]+$", cell): return '?'
+	toAdd = 0
+	for dot in cell: toAdd += 1 << int(dot)-1 if int(dot) > 0 else 0
+	return unichr(10240+toAdd)
+
+def charToCellDesc(ch):
 	"""
 	Return a description of an unicode braille char
-	:param ch: the unicode braille character to describe
+	@param ch: the unicode braille character to describe
 		must be between 0x2800 and 0x2999 included
-	:type ch: str
-	:return: the list of dots describing the braille cell
-	:rtype: str
-	
-	:Example: "d" -> "145"
+	@type ch: str
+	@return: the list of dots describing the braille cell
+	@rtype: str
+	@Example: "d" -> "145"
 	"""
 	res = ""
 	if len(ch) != 1: raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
@@ -330,9 +329,12 @@ def unicodeBrailleToDescription(t, sep = '-'):
 		if ch in ['\r', '\n']:
 			nt += ch
 			continue
-		nt += '%s%s' %(sep if i != 0 else '', getDescriptionBrailleCell(ch))
+		nt += '%s%s' %(sep if i != 0 else '', charToCellDesc(ch))
 	nt = nt.replace('\n'+sep, '\n')
 	return nt
+
+def descriptionToUnicodeBraille(t):
+	return re.sub('([0-8]+)', lambda m: cellDescToChar(m.group(0)), t)
 
 def beautifulSht(t, curBD='baum', model = True, sep = ' / '):
 	if isinstance(t, list): t = ' '.join(t)

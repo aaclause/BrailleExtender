@@ -33,6 +33,7 @@ CHOICE_dots78 = "dots78"
 CHOICE_focus = "focus"
 CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
+NOVIEWSAVED = chr(4)
 
 outputMessage = OrderedDict([
 	(CHOICE_none,             _("none")),
@@ -149,7 +150,7 @@ def getConfspec():
 		"tabSpace": "boolean(default=False)",
 		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
 		"postTable": 'string(default="None")',
-		"viewSaved": 'string(default="None")',
+		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
 			"attributes": "boolean(default=True)",

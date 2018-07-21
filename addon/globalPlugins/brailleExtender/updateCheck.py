@@ -13,6 +13,7 @@ import wx
 
 import addonHandler
 import braille
+import core
 import config
 import globalVars
 import languageHandler

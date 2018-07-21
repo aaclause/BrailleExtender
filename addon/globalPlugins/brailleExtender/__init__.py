@@ -109,13 +109,17 @@ def decorator(fn, s):
 	def update(self):
 		fn(self)
 		if not attribraEnabled(): return
-		if not config.conf["braille"]["translationTable"].endswith('.utb') and 'comp8' not in config.conf["braille"]["translationTable"] and config.conf["braille"]["translationTable"] not in ["ru-compbrl.ctb", "he.ctb"]: return
 		DOT7 = 64
 		DOT8 = 128
+		size = len(self.rawTextTypeforms)
 		for i, j in enumerate(self.rawTextTypeforms):
-			if j == 78: self.brailleCells[i] |= DOT7 | DOT8
-			if j == 7: self.brailleCells[i] |= DOT7
-			if j == 8: self.brailleCells[i] |= DOT8
+			start = self.rawToBraillePos[i]
+			end = self.rawToBraillePos[i+1 if i+1 < size else i]
+			k = start
+			for k in range(start, end):
+				if j == 78: self.brailleCells[k] |= DOT7 | DOT8
+				if j == 7: self.brailleCells[k] |= DOT7
+				if j == 8: self.brailleCells[k] |= DOT8
 
 	if s == "addTextWithFields": return addTextWithFields_edit
 	if s == "update": return update

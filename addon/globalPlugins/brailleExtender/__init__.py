@@ -156,9 +156,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		configBE.initGestures()
 		configBE.loadGestures()
 		self.gesturesInit()
-		if not globalVars.appArgs.secure and config.conf["brailleExtender"]['autoCheckUpdate'] and time.time() - config.conf["brailleExtender"]['lastCheckUpdate'] > 86400:
+		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and time.time() - config.conf["brailleExtender"]["lastCheckUpdate"] > 86400:
 			checkUpdates(True)
-			config.conf["brailleExtender"]['lastCheckUpdate'] = time.time()
+			config.conf["brailleExtender"]["lastCheckUpdate"] = time.time()
 		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields
 		self.backup__update = braille.TextInfoRegion.update
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
@@ -258,7 +258,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		# keyboard layout gestures
 		gK = OrderedDict()
 		try:
-			cK = configBE.iniProfile['keyboardLayouts'][config.conf["brailleExtender"]['keyboardLayout_%s' % configBE.curBD]] if config.conf["brailleExtender"]['keyboardLayout_%s' % configBE.curBD] and config.conf["brailleExtender"]['keyboardLayout_%s' % configBE.curBD] in configBE.iniProfile['keyboardLayouts'] is not None else configBE.iniProfile['keyboardLayouts'].keys()[0]
+			cK = configBE.iniProfile["keyboardLayouts"][config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD]] if config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] and config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] in configBE.iniProfile["keyboardLayouts"] is not None else configBE.iniProfile["keyboardLayouts"].keys()[0]
 			for k in cK:
 				if k in ['enter', 'backspace']:
 					if isinstance(cK[k], list):
@@ -277,7 +277,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					gK[k] = cK[k]
 			inputCore.manager.localeGestureMap.update({'globalCommands.GlobalCommands': gK})
 			self.noKC = False
-			log.debug('Keyboard conf found, loading layout `%s`' %config.conf["brailleExtender"]['keyboardLayout_' + configBE.curBD])
+			log.debug('Keyboard conf found, loading layout `%s`' %config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD])
 		except BaseException:
 			log.debug('No keyboard conf found')
 			self.noKC = True
@@ -531,8 +531,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleAttribra.__doc__ = _('Enable/disable Attribra')
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
-		config.conf["brailleExtender"]['speakScrollFocusMode'] = not config.conf["brailleExtender"]['speakScrollFocusMode']
-		ui.message(_('Speech %s while scrolling') % (_('enabled') if config.conf["brailleExtender"]['speakScrollFocusMode'] else _('disabled')))
+		config.conf["brailleExtender"]["speakScrollFocusMode"] = not config.conf["brailleExtender"]["speakScrollFocusMode"]
+		ui.message(_('Speech %s while scrolling') % (_('enabled') if config.conf["brailleExtender"]["speakScrollFocusMode"] else _('disabled')))
 	script_toggleSpeechScrollFocusMode.__doc__ = _('Enable/disable speech while scrolling in focus mode')
 
 	def script_toggleSpeech(self, gesture):
@@ -591,12 +591,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if configBE.noMessageTimeout:
 				config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
 		else:
-			if config.conf["brailleExtender"]['hourDynamic']:
+			if config.conf["brailleExtender"]["hourDynamic"]:
 				if configBE.noMessageTimeout:
 					self.backupMessageTimeout = config.conf["braille"]["noMessageTimeout"]
 					config.conf["braille"]["noMessageTimeout"] = True
 			self.showHourDate()
-			if config.conf["brailleExtender"]['hourDynamic']:
+			if config.conf["brailleExtender"]["hourDynamic"]:
 				self.hourDateTimer = wx.PyTimer(self.showHourDate)
 				time.sleep(1.02 - round(time.time() - int(time.time()), 3))
 				self.showHourDate()
@@ -687,23 +687,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return self.noKC
 
 	def getKeyboardLayouts(self):
-		if not self.noKC and 'keyboardLayouts' in configBE.iniProfile:
-			for layout in configBE.iniProfile['keyboardLayouts']:
+		if not self.noKC and "keyboardLayouts" in configBE.iniProfile:
+			for layout in configBE.iniProfile["keyboardLayouts"]:
 				t = []
-				for lk in configBE.iniProfile['keyboardLayouts'][layout]:
+				for lk in configBE.iniProfile["keyboardLayouts"][layout]:
 					if lk in ['braille_dots', 'braille_enter', 'braille_translate']:
 						scriptName = 'script_%s' % lk
 						func = getattr(globalCommands.GlobalCommands, scriptName, None)
-						if isinstance(configBE.iniProfile['keyboardLayouts'][layout][lk], list):
-							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + func.__doc__)
+						if isinstance(configBE.iniProfile["keyboardLayouts"][layout][lk], list):
+							t.append(utils.beautifulSht(configBE.iniProfile["keyboardLayouts"][layout][lk]) + configBE.sep + ': ' + func.__doc__)
 						else:
-							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + func.__doc__)
+							t.append(utils.beautifulSht(configBE.iniProfile["keyboardLayouts"][layout][lk]) + configBE.sep + ': ' + func.__doc__)
 					else:
 						if isinstance(
-								configBE.iniProfile['keyboardLayouts'][layout][lk], list):
-							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
+								configBE.iniProfile["keyboardLayouts"][layout][lk], list):
+							t.append(utils.beautifulSht(configBE.iniProfile["keyboardLayouts"][layout][lk]) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
 						else:
-							t.append(utils.beautifulSht(configBE.iniProfile['keyboardLayouts'][layout][lk]) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
+							t.append(utils.beautifulSht(configBE.iniProfile["keyboardLayouts"][layout][lk]) + configBE.sep + ': ' + utils.getKeysTranslation(lk))
 				yield ((configBE.sep + '; ').join(t))
 
 	def getGestures(s):
@@ -926,15 +926,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ch = gesture.normalizedIdentifiers[0].split(':')[1]
 			self.sendComb(self.getActualModifiers(False) + ch, gesture)
 		else:
-			if config.conf["brailleExtender"]['inputTableShortcuts'] != '?':
-				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, config.conf["brailleExtender"]['inputTableShortcuts']), gesture)
+			if config.conf["brailleExtender"]["inputTableShortcuts"] != '?':
+				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, config.conf["brailleExtender"]["inputTableShortcuts"]), gesture)
 			else:
 				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
 		self.clearModifiers()
 
 	def sendComb(self, sht, gesture):
-		if ((config.conf["brailleExtender"]['inputTableShortcuts'] != '?' and configBE.isContractedTable(config.conf["brailleExtender"]['inputTableShortcuts']))
-			or (config.conf["brailleExtender"]['inputTableShortcuts'] == '?' and configBE.isContractedTable(brailleInput.handler.table.fileName))
+		if ((config.conf["brailleExtender"]["inputTableShortcuts"] != '?' and configBE.isContractedTable(config.conf["brailleExtender"]["inputTableShortcuts"]))
+			or (config.conf["brailleExtender"]["inputTableShortcuts"] == '?' and configBE.isContractedTable(brailleInput.handler.table.fileName))
 		):
 			ui.message(_('You should specify a braille table for shortcuts when you work with a contracted input. Please go in the settings'))
 			return
@@ -1206,18 +1206,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:
-			config.conf["brailleExtender"]['viewSaved'] = braille.handler.mainBuffer.rawText
-			ui.message(_('Current braille view saved'))
+			config.conf["brailleExtender"]["viewSaved"] = braille.handler.mainBuffer.rawText
+			ui.message(_("Current braille view saved"))
 		else:
-			config.conf["brailleExtender"]['viewSaved'] = None
-			ui.message(_('Saved view cleaned'))
+			config.conf["brailleExtender"]["viewSaved"] = configBE.NOVIEWSAVED
+			ui.message(_("Buffer cleaned"))
 	script_saveCurrentBrailleView.__doc__ = _('Save the current braille view. Press twice quickly to clean the buffer')
 
 	def script_showBrailleViewSaved(self, gesture):
-		if config.conf["brailleExtender"]['viewSaved']:
-			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % config.conf["brailleExtender"]['viewSaved'])
-			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(config.conf["brailleExtender"]['viewSaved']), config.conf["brailleExtender"]['viewSaved']), _('View saved'), True)
-		else: ui.message(_('No saved view'))
+		if config.conf["brailleExtender"]["viewSaved"] != configBE.NOVIEWSAVED:
+			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % config.conf["brailleExtender"]["viewSaved"])
+			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(config.conf["brailleExtender"]["viewSaved"]), config.conf["brailleExtender"]["viewSaved"]), _('View saved'), True)
+		else: ui.message(_("Buffer empty"))
 	script_showBrailleViewSaved.__doc__ = _('Show the saved braille view through a flash message.')+HLP_browseModeInfo
 
 	# section autoTest

@@ -311,7 +311,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 				iSht = configBE.tablesUFN.index(config.conf["brailleExtender"]["inputTableShortcuts"]) + 1
 			else: iSht = 0
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.tables = sHelper.addLabeledControl(_("Prefered braille tables")+" (%s)" % ("press F1 for help"), wx.Choice, choices=self.getTablesWithSwitches())
+		self.tables = sHelper.addLabeledControl(_("Prefered braille tables")+" (%s)" % _("press F1 for help"), wx.Choice, choices=self.getTablesWithSwitches())
 		self.tables.SetSelection(0)
 		self.tables.Bind(wx.EVT_CHAR, self.onTables)
 
@@ -407,11 +407,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			if keycode == ord(','):
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % tbl)
 			else:
-				ui.browseableMessage("Name: %s\nFile name: %s\nIn switches: %s" % (
-					configBE.tablesTR[idx],
-					tbl,
-					self.getInSwitchesText(tbl)
-				), "Infos about this table", False)
+				ui.browseableMessage('\n'.join([
+					_("Table name: %s") % configBE.tablesTR[idx],
+					_("File name: %s") % tbl,
+					_("In switches: %s") % self.getInSwitchesText(tbl)
+					]), _("About this table"), False)
 		if keycode == wx.WXK_F1:
 			ui.browseableMessage(
 				_("In this combo box, all tables are present. Press space bar, left or right arrow keys to include (or not) the selected table in switches")+".\n"+

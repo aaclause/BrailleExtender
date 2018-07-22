@@ -1,5 +1,5 @@
 # coding: utf-8
-# addonSettingsPanel.py
+# settings.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
 
@@ -24,58 +24,58 @@ import utils
 from logHandler import log
 
 instanceGP = None
+if hasattr(gui.settingsDialogs, "SettingsPanel"):
+	class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
-class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
+		# Translators: title of a dialog.
+		title = "Braille Extender"
 
-	# Translators: title of a dialog.
-	title = "Braille Extender"
+		def makeSettings(self, settingsSizer):
+			sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+			bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+			bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+			self.generalBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&General"), wx.DefaultPosition)
+			self.generalBtn.Bind(wx.EVT_BUTTON, self.onGeneralBtn)
+			self.brailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Braille &tables"), wx.DefaultPosition)
+			self.brailleTablesBtn.Bind(wx.EVT_BUTTON, self.onBrailleTablesBtn)
+			self.attributesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
+			self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
+			self.quickLaunchesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
+			self.quickLaunchesBtn.Bind(wx.EVT_BUTTON, self.onQuickLaunchesBtn)
+			self.roleLabelsBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Role &labels"), wx.DefaultPosition)
+			self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
+			self.profileEditorBtn = bHelper2.addButton(self, wx.NewId(), "%s... (%s)" % (_("&Profile editor"), _("feature in process")), wx.DefaultPosition)
+			self.profileEditorBtn.Bind(wx.EVT_BUTTON, self.onProfileEditorBtn)
+			sHelper.addItem(bHelper1)
+			sHelper.addItem(bHelper2)
 
-	def makeSettings(self, settingsSizer):
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.generalBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&General"), wx.DefaultPosition)
-		self.generalBtn.Bind(wx.EVT_BUTTON, self.onGeneralBtn)
-		self.brailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Braille &tables"), wx.DefaultPosition)
-		self.brailleTablesBtn.Bind(wx.EVT_BUTTON, self.onBrailleTablesBtn)
-		self.attributesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
-		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
-		self.quickLaunchesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
-		self.quickLaunchesBtn.Bind(wx.EVT_BUTTON, self.onQuickLaunchesBtn)
-		self.roleLabelsBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Role &labels"), wx.DefaultPosition)
-		self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
-		self.profileEditorBtn = bHelper2.addButton(self, wx.NewId(), "%s... (%s)" % (_("&Profile editor"), _("feature in process")), wx.DefaultPosition)
-		self.profileEditorBtn.Bind(wx.EVT_BUTTON, self.onProfileEditorBtn)
-		sHelper.addItem(bHelper1)
-		sHelper.addItem(bHelper2)
+		def postInit(self): self.General.SetFocus()
 
-	def postInit(self): self.General.SetFocus()
+		def onSave(self): pass
 
-	def onSave(self): pass
+		def onGeneralBtn(self, evt):
+			generalDlg = GeneralDlg(self, multiInstanceAllowed=True)
+			generalDlg.ShowModal()
 
-	def onGeneralBtn(self, evt):
-		generalDlg = GeneralDlg(self, multiInstanceAllowed=True)
-		generalDlg.ShowModal()
+		def onBrailleTablesBtn(self, evt):
+			brailleTablesDlg = BrailleTablesDlg(self, multiInstanceAllowed=True)
+			brailleTablesDlg.ShowModal()
 
-	def onBrailleTablesBtn(self, evt):
-		brailleTablesDlg = BrailleTablesDlg(self, multiInstanceAllowed=True)
-		brailleTablesDlg.ShowModal()
+		def onAttributesBtn(self, evt):
+			attribraDlg = AttribraDlg(self, multiInstanceAllowed=True)
+			attribraDlg.ShowModal()
 
-	def onAttributesBtn(self, evt):
-		attribraDlg = AttribraDlg(self, multiInstanceAllowed=True)
-		attribraDlg.ShowModal()
+		def onQuickLaunchesBtn(self, evt):
+			quickLaunchesDlg = QuickLaunchesDlg(self, multiInstanceAllowed=True)
+			quickLaunchesDlg.ShowModal()
 
-	def onQuickLaunchesBtn(self, evt):
-		quickLaunchesDlg = QuickLaunchesDlg(self, multiInstanceAllowed=True)
-		quickLaunchesDlg.ShowModal()
+		def onRoleLabelsBtn(self, evt):
+			roleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
+			roleLabelsDlg.ShowModal()
 
-	def onRoleLabelsBtn(self, evt):
-		roleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
-		roleLabelsDlg.ShowModal()
-
-	def onProfileEditorBtn(self, evt):
-		profileEditorDlg = ProfileEditorDlg(self, multiInstanceAllowed=True)
-		profileEditorDlg.ShowModal()
+		def onProfileEditorBtn(self, evt):
+			profileEditorDlg = ProfileEditorDlg(self, multiInstanceAllowed=True)
+			profileEditorDlg.ShowModal()
 
 class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
@@ -120,7 +120,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.volumeChangeFeedback = sHelper.addLabeledControl(_("Feedback for volume change in"), wx.Choice, choices=configBE.outputMessage.values())
 		if config.conf["brailleExtender"]["volumeChangeFeedback"] in configBE.outputMessage:
-			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["volumeChangeFeedback"]) 
+			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["volumeChangeFeedback"])
 		else:
 			itemToSelect = configBE.outputMessage.keys().index(configBE.CHOICE_braille)
 		self.volumeChangeFeedback.SetSelection(itemToSelect)
@@ -128,7 +128,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.modifierKeysFeedback = sHelper.addLabeledControl(_("Feedback for modifier keys in"), wx.Choice, choices=configBE.outputMessage.values())
 		if config.conf["brailleExtender"]["modifierKeysFeedback"] in configBE.outputMessage:
-			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["modifierKeysFeedback"]) 
+			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["modifierKeysFeedback"])
 		else:
 			itemToSelect = configBE.outputMessage.keys().index(configBE.CHOICE_braille)
 
@@ -139,7 +139,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 			lb = [k for k in instanceGP.getKeyboardLayouts()]
 			# Translators: label of a dialog.
 			self.KBMode = sHelper.addLabeledControl(_("Braille keyboard configuration"), wx.Choice, choices=lb)
-			self.KBMode.SetSelection(self.getKeyboardLayout())
+			self.KBMode.SetSelection(configBE.getKeyboardLayout())
 
 		# Translators: label of a dialog.
 		self.reverseScrollBtns = sHelper.addItem(wx.CheckBox(self, label=_("Reverse forward scroll and back scroll buttons")))
@@ -178,13 +178,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = configBE.outputMessage.keys()[self.modifierKeysFeedback.GetSelection()]
 		super(GeneralDlg, self).onOk(evt)
 
-	def getKeyboardLayout(self):
-		if (config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] is not None
-		and config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] in configBE.iniProfile['keyboardLayouts'].keys()):
-			return configBE.iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD])
-		else: return 0
-
-
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
@@ -213,7 +206,8 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
 		super(AttribraDlg, self).onOk(evt)
 
-	def getItemToSelect(self, attribute):
+	@staticmethod
+	def getItemToSelect(attribute):
 		try: idx = configBE.attributeChoices.keys().index(config.conf["brailleExtender"]["attributes"][attribute])
 		except BaseException as err:
 			log.error(err)
@@ -266,7 +260,8 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 				if key in self.roleLabels.keys(): log.info("%s deleted" % self.roleLabels.pop(key))
 			else: self.roleLabels[key] = label
 
-	def getIDFromIndex(self, idCategory, idLabel):
+	@staticmethod
+	def getIDFromIndex(idCategory, idLabel):
 		try:
 			if idCategory == 0: return braille.roleLabels.keys()[idLabel]
 			elif idCategory == 1: return braille.landmarkLabels.keys()[idLabel]
@@ -311,7 +306,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 				iSht = configBE.tablesUFN.index(config.conf["brailleExtender"]["inputTableShortcuts"]) + 1
 			else: iSht = 0
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.tables = sHelper.addLabeledControl(_("Prefered braille tables")+" (%s)" % ("press F1 for help"), wx.Choice, choices=self.getTablesWithSwitches())
+		self.tables = sHelper.addLabeledControl(_("Prefered braille tables")+" (%s)" % _("press F1 for help"), wx.Choice, choices=self.getTablesWithSwitches())
 		self.tables.SetSelection(0)
 		self.tables.Bind(wx.EVT_CHAR, self.onTables)
 
@@ -407,11 +402,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			if keycode == ord(','):
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % tbl)
 			else:
-				ui.browseableMessage("Name: %s\nFile name: %s\nIn switches: %s" % (
-					configBE.tablesTR[idx],
-					tbl,
-					self.getInSwitchesText(tbl)
-				), "Infos about this table", False)
+				ui.browseableMessage('\n'.join([
+					_("Table name: %s") % configBE.tablesTR[idx],
+					_("File name: %s") % tbl,
+					_("In switches: %s") % self.getInSwitchesText(tbl)
+					]), _("About this table"), False)
 		if keycode == wx.WXK_F1:
 			ui.browseableMessage(
 				_("In this combo box, all tables are present. Press space bar, left or right arrow keys to include (or not) the selected table in switches")+".\n"+
@@ -654,10 +649,11 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		if self.addonGesturesPrfofile == {}:
 			wx.CallAfter(gui.messageBox, _("Unable to load this profile. Malformed or inaccessible file"), self.title, wx.OK|wx.ICON_ERROR)
 
-	def getListProfiles(self):
+	@staticmethod
+	def getListProfiles():
 		profilesDir = '%s\%s' %(configBE.profilesDir, configBE.curBD)
 		res = []
-		ls = glob.glob(profilesDir+'\\*')  
+		ls = glob.glob(profilesDir+'\\*')
 		for e in ls:
 			if os.path.isdir(e) and os.path.exists('%s\%s' %(e, 'profile.ini')): res.append(e.split('\\')[-1])
 		return res

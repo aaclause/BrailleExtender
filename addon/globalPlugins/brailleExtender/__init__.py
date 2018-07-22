@@ -21,7 +21,7 @@ import wx
 
 import addonHandler
 addonHandler.initTranslation()
-import addonSettingsPanel
+import settings
 import api
 import appModuleHandler
 import braille
@@ -151,7 +151,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self):
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		patchs.instanceGP = self
-		addonSettingsPanel.instanceGP = self
+		settings.instanceGP = self
 		configBE.loadConf()
 		configBE.initGestures()
 		configBE.loadGestures()
@@ -168,7 +168,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reverseScrollBtns"]:
 			self.reverseScrollBtns()
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):
-			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(addonSettingsPanel.AddonSettingsPanel)
+			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(settings.AddonSettingsPanel)
 		self.createMenu()
 
 	def event_gainFocus(self, obj, nextHandler):
@@ -205,15 +205,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		item = menu.Append(wx.ID_ANY, _("Documentation"), _("Opens the addon's documentation."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
-		#item = menu.Append(wx.ID_ANY, _("Settings..."), _("Opens the addon's settings."))
-		#gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onSettings, item)
-		#item = menu.Append(wx.ID_ANY, _(u"Profiles &editor..."), _(u"Edit the current profile gestures or create a new one (modifier keys, etc.)."))
-		#gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
+		item = menu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
+		item = menu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onBrailleTablesSettings, item)
+		item = menu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onAttributesSettings, item)
+		item = menu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onQuickLaunchesSettings, item)
+		item = menu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onRoleLabelsSettings, item)
+		item = menu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
 		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, item)
 		item = menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, item)
-		item = menu.Append(wx.ID_ANY, _("&Check for update..."), _("Checks if update is available"))
+		item = menu.Append(wx.ID_ANY, "%s..." % _("&Check for update"), _("Checks if update is available"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
@@ -1202,9 +1210,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def inProcess():
 		ui.browseableMessage('Feature in process.')
 
+	def onGeneralSettings(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.GeneralDlg)
+
+	def onBrailleTablesSettings(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.BrailleTablesDlg)
+
+	def onAttributesSettings(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.AttribraDlg)
+
+	def onQuickLaunchesSettings(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.QuickLaunchesDlg)
+
+	def onRoleLabelsSettings(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.RoleLabelsDlg)
+
 	def onProfilesEditor(self, evt):
-		import profilesEditor
-		gui.mainFrame._popupSettingsDialog(profilesEditor.ProfilesEditor)
+		gui.mainFrame._popupSettingsDialog(settings.ProfileEditorDlg)
 
 	def script_logFieldsAtCursor(self, gesture):
 		global logTextInfo
@@ -1354,7 +1376,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def terminate(self):
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):
-			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(addonSettingsPanel.AddonSettingsPanel)
+			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(settings.AddonSettingsPanel)
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField

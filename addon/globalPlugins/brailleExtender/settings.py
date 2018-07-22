@@ -120,7 +120,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.volumeChangeFeedback = sHelper.addLabeledControl(_("Feedback for volume change in"), wx.Choice, choices=configBE.outputMessage.values())
 		if config.conf["brailleExtender"]["volumeChangeFeedback"] in configBE.outputMessage:
-			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["volumeChangeFeedback"]) 
+			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["volumeChangeFeedback"])
 		else:
 			itemToSelect = configBE.outputMessage.keys().index(configBE.CHOICE_braille)
 		self.volumeChangeFeedback.SetSelection(itemToSelect)
@@ -128,7 +128,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.modifierKeysFeedback = sHelper.addLabeledControl(_("Feedback for modifier keys in"), wx.Choice, choices=configBE.outputMessage.values())
 		if config.conf["brailleExtender"]["modifierKeysFeedback"] in configBE.outputMessage:
-			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["modifierKeysFeedback"]) 
+			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["modifierKeysFeedback"])
 		else:
 			itemToSelect = configBE.outputMessage.keys().index(configBE.CHOICE_braille)
 
@@ -139,7 +139,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 			lb = [k for k in instanceGP.getKeyboardLayouts()]
 			# Translators: label of a dialog.
 			self.KBMode = sHelper.addLabeledControl(_("Braille keyboard configuration"), wx.Choice, choices=lb)
-			self.KBMode.SetSelection(self.getKeyboardLayout())
+			self.KBMode.SetSelection(configBE.getKeyboardLayout())
 
 		# Translators: label of a dialog.
 		self.reverseScrollBtns = sHelper.addItem(wx.CheckBox(self, label=_("Reverse forward scroll and back scroll buttons")))
@@ -178,13 +178,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = configBE.outputMessage.keys()[self.modifierKeysFeedback.GetSelection()]
 		super(GeneralDlg, self).onOk(evt)
 
-	def getKeyboardLayout(self):
-		if (config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] is not None
-		and config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] in configBE.iniProfile['keyboardLayouts'].keys()):
-			return configBE.iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD])
-		else: return 0
-
-
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
@@ -213,7 +206,8 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
 		super(AttribraDlg, self).onOk(evt)
 
-	def getItemToSelect(self, attribute):
+	@staticmethod
+	def getItemToSelect(attribute):
 		try: idx = configBE.attributeChoices.keys().index(config.conf["brailleExtender"]["attributes"][attribute])
 		except BaseException as err:
 			log.error(err)
@@ -266,7 +260,8 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 				if key in self.roleLabels.keys(): log.info("%s deleted" % self.roleLabels.pop(key))
 			else: self.roleLabels[key] = label
 
-	def getIDFromIndex(self, idCategory, idLabel):
+	@staticmethod
+	def getIDFromIndex(idCategory, idLabel):
 		try:
 			if idCategory == 0: return braille.roleLabels.keys()[idLabel]
 			elif idCategory == 1: return braille.landmarkLabels.keys()[idLabel]
@@ -654,10 +649,11 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		if self.addonGesturesPrfofile == {}:
 			wx.CallAfter(gui.messageBox, _("Unable to load this profile. Malformed or inaccessible file"), self.title, wx.OK|wx.ICON_ERROR)
 
-	def getListProfiles(self):
+	@staticmethod
+	def getListProfiles():
 		profilesDir = '%s\%s' %(configBE.profilesDir, configBE.curBD)
 		res = []
-		ls = glob.glob(profilesDir+'\\*')  
+		ls = glob.glob(profilesDir+'\\*')
 		for e in ls:
 			if os.path.isdir(e) and os.path.exists('%s\%s' %(e, 'profile.ini')): res.append(e.split('\\')[-1])
 		return res

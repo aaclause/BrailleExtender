@@ -366,6 +366,13 @@ def loadPreTable():
 		f.close()
 	else: log.debug('Tab as spaces disabled')
 
+def getKeyboardLayout():
+	if (config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] is not None
+	and config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] in iniProfile['keyboardLayouts'].keys()):
+		return iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % curBD])
+	else: return 0
+
+
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"
 cfgFileAttribra = globalVars.appArgs.configPath + r"\attribra-BE.ini"

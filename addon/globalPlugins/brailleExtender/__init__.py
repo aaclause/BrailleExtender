@@ -1207,25 +1207,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	@staticmethod
-	def inProcess():
-		ui.browseableMessage('Feature in process.')
-
-	def onGeneralSettings(self, evt):
+	def onGeneralSettings(evt):
 		gui.mainFrame._popupSettingsDialog(settings.GeneralDlg)
 
-	def onBrailleTablesSettings(self, evt):
+	@staticmethod
+	def onBrailleTablesSettings(evt):
 		gui.mainFrame._popupSettingsDialog(settings.BrailleTablesDlg)
 
-	def onAttributesSettings(self, evt):
+	@staticmethod
+	def onAttributesSettings(evt):
 		gui.mainFrame._popupSettingsDialog(settings.AttribraDlg)
 
-	def onQuickLaunchesSettings(self, evt):
+	@staticmethod
+	def onQuickLaunchesSettings(evt):
 		gui.mainFrame._popupSettingsDialog(settings.QuickLaunchesDlg)
 
-	def onRoleLabelsSettings(self, evt):
+	@staticmethod
+	def onRoleLabelsSettings(evt):
 		gui.mainFrame._popupSettingsDialog(settings.RoleLabelsDlg)
 
-	def onProfilesEditor(self, evt):
+	@staticmethod
+	def onProfilesEditor(evt):
 		gui.mainFrame._popupSettingsDialog(settings.ProfileEditorDlg)
 
 	def script_logFieldsAtCursor(self, gesture):

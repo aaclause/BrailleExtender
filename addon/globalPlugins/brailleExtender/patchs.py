@@ -38,7 +38,6 @@ def script_braille_routeTo(self, gesture):
 		speech.speechMode = 0
 		nb = braille.handler._cursorPos-gesture.routingIndex
 		i = 0
-		dir = 0 if nb > 0 else 1
 		key = "leftarrow" if nb > 0 else "rightarrow"
 		while i < abs(nb):
 			keyboardHandler.KeyboardInputGesture.fromName(key).send()
@@ -230,7 +229,7 @@ def executeGesture(self, gesture):
 			'script_ctrl','script_alt','script_nvda','script_win',
 			'script_ctrlAlt','script_ctrlAltWin','script_ctrlAltWinShift','script_ctrlAltShift','script_ctrlWin','script_ctrlWinShift','script_ctrlShift','script_altWin','script_altWinShift','script_altShift','script_winShift']
 			or (
-				not config.conf["brailleExtender"]['stopSpeechScroll'] and 
+				not config.conf["brailleExtender"]['stopSpeechScroll'] and
 			script.__func__.func_name in ['script_braille_scrollBack','script_braille_scrollForward'])):
 				stopSpeech = False
 			else: stopSpeech = True

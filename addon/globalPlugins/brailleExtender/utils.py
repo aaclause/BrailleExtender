@@ -19,7 +19,6 @@ from keyboardHandler import KeyboardInputGesture
 import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
-from logHandler import log 
 
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!

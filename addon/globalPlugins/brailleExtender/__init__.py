@@ -53,7 +53,7 @@ import patchs
 
 instanceGP = None
 lang = configBE.lang
-ATTRS = lambda: config.conf["brailleExtender"]["attributes"].copy()
+ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
 logTextInfo = False
 ROTOR_DEF = 0
 ROTOR_MOVE = 1
@@ -83,14 +83,14 @@ def attribraEnabled():
 
 def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field):
-		for attr in ATTRS():
+		for attr in ATTRS:
 			v = attr.split(':')
 			k = v[0]
 			v = True if len(v) == 1 else v[1]
 			if k in field and (field[k] == v or field[k] == '1'):
-				if ATTRS()[attr] == configBE.CHOICE_dot7: return 7
-				if ATTRS()[attr] == configBE.CHOICE_dot8: return 8
-				if ATTRS()[attr] == configBE.CHOICE_dots78: return 78
+				if config.conf["brailleExtender"]["attributes"][attr] == configBE.CHOICE_dot7: return 7
+				if config.conf["brailleExtender"]["attributes"][attr] == configBE.CHOICE_dot8: return 8
+				if config.conf["brailleExtender"]["attributes"][attr] == configBE.CHOICE_dots78: return 78
 		# if COMPLCOLORS != None:
 			# col = field.get("color",False)
 			# if col and (col != COMPLCOLORS):
@@ -964,7 +964,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		elif not NVDASht:  # and 'nvda' in sht.lower()
 			return ui.message(_("%s is not part of a NVDA commands") % sht)
 
-	def sendCombKeysNVDA(self, sht, gesture):
+	@staticmethod
+	def sendCombKeysNVDA(sht, gesture):
 		if nativeModifiers:
 			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
 			return True

@@ -126,8 +126,8 @@ def getConfspec():
 			CHOICE_speech=CHOICE_speech,
 			CHOICE_speechAndBraille=CHOICE_speechAndBraille
 		),
-		"brailleDisplay1": "option(%s, default=last)" % ','.join(bds_k),
-		"brailleDisplay2": "option(%s, default=last)" % ','.join(bds_k),
+		"brailleDisplay1": 'option(%s, "last", default="last")' % ','.join(bds_k),
+		"brailleDisplay2": 'option(%s, "last" default="last")' % ','.join(bds_k),
 		"hourDynamic": "boolean(default=True)",
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
@@ -265,7 +265,8 @@ def loadConf():
 		braille.handler.displaySize = backupDisplaySize-config.conf["brailleExtender"]["rightMarginCells_%s" % curBD]
 	if not noUnicodeTable: loadPreferedTables()
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
-	loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+	if config.conf["brailleExtender"]["features"]["roleLabels"]:
+		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
 
 def loadGestures():

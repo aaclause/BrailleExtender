@@ -29,7 +29,6 @@ import brailleInput
 import brailleTables
 import config
 import controlTypes
-import core
 import cursorManager
 import globalCommands
 import globalPluginHandler
@@ -107,7 +106,8 @@ def decorator(fn, s):
 		fn(self, info, conf, isSelection)
 
 	def update(self):
-		fn(self)
+		try: fn(self)
+		except BaseException as e: log.error("Fatal error: %s" % e)
 		if not attribraEnabled(): return
 		DOT7 = 64
 		DOT8 = 128
@@ -828,7 +828,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"Announce the current input and output braille tables")
 
 	def script_brlDescChar(self, gesture):
-		utils.currentDescCellToChar()
+		utils.currentCharDesc()
 	script_brlDescChar.__doc__ = _(
 		"Gives the Unicode value of the "
 		"character where the cursor is located "
@@ -850,8 +850,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.gesturesInit()
 		if config.conf["brailleExtender"]["reverseScrollBtns"]:
 			self.reverseScrollBtns()
-		if not sil:
-			ui.message(_("%s reloaded") % configBE._addonName)
+		if not sil: ui.message(_("%s reloaded") % configBE._addonName)
 		return
 
 	@staticmethod
@@ -879,7 +878,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"][k] == "last":
 			if config.conf["braille"]["display"] == "noBraille":
 				return ui.message(_("No braille display specified. No reload to do"))
-			utils.reload_brailledisplay(config.conf["braille"]["display"])
 			if config.conf["braille"]["display"] != "auto":
 				utils.reload_brailledisplay(config.conf["braille"]["display"])
 				configBE.curBD = braille.handler.display.name
@@ -1385,6 +1383,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
 		self.removeMenu()
 		self.restorReviewCursorTethering()
+		configBE.discardRoleLabels()
 		if configBE.noUnicodeTable:
 			brailleInput.handler.table = self.backupInputTable
 		if self.hourDatePlayed:

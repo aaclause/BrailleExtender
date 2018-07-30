@@ -585,10 +585,10 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		return self.quickKeys.SetFocus()
 
 class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
-	title = _("Profiles editor") + " (%s)" % configBE.curBD
+	title = "Braille Extender - %s" % _("Profiles editor")
 	profilesList = []
-	addonGesturesPrfofile = None
-	generalGesturesProfile = None
+	addonGesturesPrfofile = {}
+	generalGesturesProfile = {}
 	keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
 
 	def makeSettings(self, settingsSizer):
@@ -656,11 +656,13 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		sHelper.addItem(bHelper)
 
 	def postInit(self):
+		self.onProfiles()
 		self.hideNewProfileSection()
 		self.refreshGestures()
 		if len(self.profilesList)>0:
 			self.profiles.SetSelection(self.profilesList.index(config.conf["brailleExtender"]["profile_%s" % configBE.curBD]))
 		self.onProfiles()
+		self.refreshGestures()
 		self.profiles.SetFocus()
 
 	def refreshGestures(self, evt = None):
@@ -670,7 +672,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		CTRL = keyLabels.localizedKeyLabels['control'].capitalize()
 		SHIFT = keyLabels.localizedKeyLabels['shift'].capitalize()
 		WIN = keyLabels.localizedKeyLabels['windows'].capitalize()
-		if category == 0: items = [k[0].capitalize() for k in self.keyLabelsList]
+		if category == 0: items = ["%s%s: %s" % (k[0].capitalize(), configBE.sep, self.getBrailleGesture(k[1])) for k in self.keyLabelsList]
 		elif category == 1:
 			items = [ALT, CTRL, SHIFT, WIN, "NVDA",
 			'%s+%s' % (ALT, CTRL),
@@ -701,10 +703,13 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			self.removeGestureButton.Enable()
 
 	def onProfiles(self, evt = None):
-		if len(self.profilesList) == 0: return
+		if len(self.profilesList) == 0:
+			log.info("No profile found for this braille display")
+			return
 		curProfile = self.profilesList[self.profiles.GetSelection()]
-		self.addonGesturesPrfofile = config.ConfigObj('%s/baum/%s/profile.ini' % (configBE.profilesDir, curProfile), encoding="UTF-8")
-		self.generalGesturesProfile = config.ConfigObj('%s/baum/%s/gestures.ini' % (configBE.profilesDir, curProfile), encoding="UTF-8")
+		log.info("Loading %s profile" % curProfile)
+		self.addonGesturesPrfofile = config.ConfigObj('%s/%s/%s/profile.ini' % (configBE.profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
+		self.generalGesturesProfile = config.ConfigObj('%s/%s/%s/gestures.ini' % (configBE.profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
 		if self.addonGesturesPrfofile == {}:
 			wx.CallAfter(gui.messageBox, _("Unable to load this profile. Malformed or inaccessible file"), self.title, wx.OK|wx.ICON_ERROR)
 
@@ -719,6 +724,12 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 
 	def switchProfile(self, evt = None):
 		self.refreshGestures()
+
+	def getBrailleGesture(self, KBGesture):
+		if ("globalCommands.GlobalCommands" in self.generalGesturesProfile.keys()
+			and "kb:%s" % KBGesture in self.generalGesturesProfile["globalCommands.GlobalCommands"].keys()):
+			return utils.beautifulSht(self.generalGesturesProfile["globalCommands.GlobalCommands"]["kb:%s" % KBGesture])
+		return _("Undefined")
 
 	def onGesture(self, evt = None):
 		category = self.categories.GetSelection()

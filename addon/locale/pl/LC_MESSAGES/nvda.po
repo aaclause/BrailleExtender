@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-07-28 21:03+0200\n"
-"PO-Revision-Date: 2018-07-28 21:15+0100\n"
+"POT-Creation-Date: 2018-08-04 10:50+0200\n"
+"PO-Revision-Date: 2018-08-04 10:53+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -1307,9 +1307,13 @@ msgstr "Nazwa dla nowego profilu"
 msgid "Create"
 msgstr "Utwórz"
 
-#: addon/globalPlugins/brailleExtender/settings.py:709
+#: addon/globalPlugins/brailleExtender/settings.py:714
 msgid "Unable to load this profile. Malformed or inaccessible file"
 msgstr "Nie można załadować tego profilu. Zniszczony lub niedostępny plik"
+
+#: addon/globalPlugins/brailleExtender/settings.py:732
+msgid "Undefined"
+msgstr "Nieokreślone"
 
 #: addon/globalPlugins/brailleExtender/updateCheck.py:40
 #, python-format
@@ -1638,9 +1642,6 @@ msgstr "akcje i szybka nawigacja za pomocą rotora"
 
 #~ msgid "Italic"
 #~ msgstr "Kursywa"
-
-#~ msgid "Underline"
-#~ msgstr "podkreślenie"
 
 #~ msgid "Input tables not present in the switch"
 #~ msgstr "Tablice brajlowskie niedostępne w rotorze"

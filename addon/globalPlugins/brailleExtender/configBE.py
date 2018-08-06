@@ -127,7 +127,7 @@ def getConfspec():
 			CHOICE_speechAndBraille=CHOICE_speechAndBraille
 		),
 		"brailleDisplay1": 'option(%s, "last", default="last")' % ','.join(bds_k),
-		"brailleDisplay2": 'option(%s, "last" default="last")' % ','.join(bds_k),
+		"brailleDisplay2": 'option(%s, "last", default="last")' % ','.join(bds_k),
 		"hourDynamic": "boolean(default=True)",
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",

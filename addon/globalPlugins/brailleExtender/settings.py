@@ -692,7 +692,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 				'%s+Tab' % ALT,
 				'%s+Tab' % SHIFT,
 			])
-		self.gestures.SetItems(items)
+		self.gestures.SetItems(["%s%s: %s" % (item, configBE.sep, self.getBrailleGesture("kb:%s" % item)) for item in items])
 		self.gestures.SetSelection(0)
 		self.gestures.SetSelection(0)
 		if category<2:

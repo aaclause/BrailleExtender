@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-08-04 10:50+0200\n"
-"PO-Revision-Date: 2018-08-05 13:44+0100\n"
+"PO-Revision-Date: 2018-08-06 19:20+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,7 +52,7 @@ msgstr "орфографические ошибки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:77
 msgid "If pressed twice, presents the information in browse mode"
-msgstr ""
+msgstr "Если нажато дважды, показывает информацию в режиме просмотра"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:204
 #, python-format
@@ -106,11 +106,11 @@ msgstr "Настройки приложений для быстрого запу
 #: addon/globalPlugins/brailleExtender/__init__.py:216
 #: addon/globalPlugins/brailleExtender/settings.py:45
 msgid "Role &labels"
-msgstr ""
+msgstr "&Сокращения элементов"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:216
 msgid "Role labels configuration"
-msgstr ""
+msgstr "Конфигурация сокращений элементов"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:218
 #: addon/globalPlugins/brailleExtender/settings.py:47
@@ -123,23 +123,23 @@ msgstr "Редактор профилей"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:220
 msgid "Overview of the current input braille table"
-msgstr ""
+msgstr "Просмотр актуальной брайлевской таблицы"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:222
 msgid "Reload add-on"
-msgstr ""
+msgstr "Перезагрузить дополнение"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:222
 msgid "Reload this add-on."
-msgstr ""
+msgstr "Перезагружает дополнение."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:224
 msgid "&Check for update"
-msgstr ""
+msgstr "&Проверить наличие обновлений"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:224
 msgid "Checks if update is available"
-msgstr ""
+msgstr "Проверяет наличие обновления"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:226
 msgid "&Website"
@@ -180,7 +180,7 @@ msgstr "Не поддерживается здесь или режим прос�
 
 #: addon/globalPlugins/brailleExtender/__init__.py:446
 msgid "Not implemented yet"
-msgstr ""
+msgstr "ещё не имплементирано"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:447
 msgid "Select previous rotor setting"
@@ -188,29 +188,31 @@ msgstr "Выбирает предыдущую настройку в роторе
 
 #: addon/globalPlugins/brailleExtender/__init__.py:448
 msgid "Select next rotor setting"
-msgstr ""
+msgstr "Выделяет следующую настройку в роторе"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:503
 msgid "Move to previous item depending rotor setting"
-msgstr ""
+msgstr "Переходит к предыдущему елементу в зависимой настройки в роторе"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:505
 msgid "Move to next item depending rotor setting"
-msgstr ""
+msgstr "Переходит к следующему елементу в зависимой настройки в роторе"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:513
 msgid ""
 "Varies depending on rotor setting. Eg: in object mode, it's similar to NVDA"
 "+enter"
 msgstr ""
+"варьирует зависимо от настройки ротора. то есть: в режиме объекта, оно "
+"похоже на  NVDA+enter"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:516
 msgid "Move to previous item using rotor setting"
-msgstr ""
+msgstr "переходит к предыдущему элементу пользуясь ротором"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:517
 msgid "Move to next item using rotor setting"
-msgstr ""
+msgstr "Переходит к следующей настройке, пользуясь ротором"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:521
 #, python-format
@@ -255,11 +257,11 @@ msgstr "Скрыть/показывать точки 7 и 8"
 #: addon/globalPlugins/brailleExtender/__init__.py:532
 #, python-format
 msgid "Modifier keys %s"
-msgstr ""
+msgstr "модификаторы %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:533
 msgid "Lock/unlock modifiers keys"
-msgstr ""
+msgstr "Блокирует/разблокирует модификаторы"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:539
 msgid "Enable/disable Attribra"
@@ -268,11 +270,11 @@ msgstr "включает/выключает Attribra"
 #: addon/globalPlugins/brailleExtender/__init__.py:543
 #, python-format
 msgid "Speech %s while scrolling"
-msgstr ""
+msgstr "говори %s при прокрутке"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:544
 msgid "Enable/disable speech while scrolling in focus mode"
-msgstr ""
+msgstr "в режиме фокуса, включи или выключи речь при прокрутке"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:549
 msgid "Speech on"
@@ -296,6 +298,7 @@ msgid ""
 "Reports some extra infos for the current element. For example, the URL on a "
 "link"
 msgstr ""
+"Даёт добавочную информацию об актуальном элементе. На пример, адрес ссылки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:571
 msgid " Input table"
@@ -312,17 +315,17 @@ msgstr "Просмотр таблицы (%s)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:574
 msgid "Display an overview of current input braille table"
-msgstr ""
+msgstr "Показывает просмотр для актуальной брайлевской таблицы ввода"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:578
 #: addon/globalPlugins/brailleExtender/__init__.py:585
 #: addon/globalPlugins/brailleExtender/__init__.py:591
 msgid "No text selection"
-msgstr ""
+msgstr "нет выделенного текста"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:579
 msgid "Unicode Braille conversion"
-msgstr ""
+msgstr "Преобразование в брайлевский юникод"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:580
 msgid ""
@@ -348,15 +351,15 @@ msgstr ""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:624
 msgid "Hour and date with autorefresh"
-msgstr ""
+msgstr "Дата и время с автообновлением"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:637
 msgid "Autoscroll stopped"
-msgstr ""
+msgstr "Автопрокрутка перервана"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:647
 msgid "Enable/disable autoscroll"
-msgstr ""
+msgstr "Включи/выключи автопрокрутку"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:662
 msgid "Increase the master volume"

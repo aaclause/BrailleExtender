@@ -306,7 +306,7 @@ def initGestures():
 			gesturesFileExists = False
 		else: gesturesFileExists = True
 	else:
-		log.warn('No main gestures map (%s) found' % gesturesBDPath(1))
+		if curBD != "noBraille": log.warn('No main gestures map (%s) found' % gesturesBDPath(1))
 		gesturesFileExists = False
 	if gesturesFileExists:
 		for g in iniGestures["globalCommands.GlobalCommands"]:

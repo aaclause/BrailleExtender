@@ -170,6 +170,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):
 			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(settings.AddonSettingsPanel)
 		self.createMenu()
+		log.info("%s %s loaded" % (configBE._addonName, configBE._addonVersion))
 
 	def event_gainFocus(self, obj, nextHandler):
 		if config.conf["brailleExtender"]["reviewModeTerminal"]:

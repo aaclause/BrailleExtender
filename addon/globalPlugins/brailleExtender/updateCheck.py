@@ -27,7 +27,6 @@ def paramsDL(): return {
 	"versionAddon": configBE._addonVersion,
 	"versionNVDA": versionInfo.version,
 	"language": languageHandler.getLanguage(),
-	"installed": config.isInstalledCopy(),
 	"brailledisplay": braille.handler.display.name,
 	"channel": config.conf["brailleExtender"]["updateChannel"]
 }

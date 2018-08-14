@@ -6,7 +6,6 @@
 from __future__ import unicode_literals
 import os
 from cStringIO import StringIO
-from validate import Validator
 import globalVars
 #from colors import RGB
 from collections import OrderedDict
@@ -15,6 +14,10 @@ import addonHandler
 addonHandler.initTranslation()
 import braille
 import config
+import configobj
+if hasattr(configobj, "validate"):
+	Validator = configobj.validate.Validator
+else: from validate import Validator
 import inputCore
 import languageHandler
 from logHandler import log

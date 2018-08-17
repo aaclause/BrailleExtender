@@ -5,8 +5,11 @@ here are some ideas of features for BrailleExtender that might be implemented. P
 - Braille tables switcher: implement group of input/output tables
 - Braille multiple through language detection (in tagged documents)
 - Quick launches -> quick actions: system of macros (write text, make a succession of shortcuts...)
-- System of gestures in several step / custom modifiers. E.g.: b1+b0 then b1 -> go to desktop
+- System of gestures in several step / custom virtual  modifiers. E.g.: b1+b0 then b1 -> go to desktop
 - Text attributes with tags.
 - Text attributes with dot(s) 7 or/and 8 blinking
 - "Virtual settings" mode (like "auto test" mode)
-- clic with routings cursors in review mode
+- Clic with routings cursors in review mode
+ - Left margin
+ - One Hand Mode
+ 

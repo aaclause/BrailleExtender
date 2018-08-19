@@ -88,6 +88,7 @@ if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
 try:
 	import brailleTables
+	brailleTablesDir = brailleTables.TABLES_DIR
 	tables = brailleTables.listTables()
 	tablesFN = [t[0] for t in brailleTables.listTables()]
 	tablesUFN = [t[0] for t in brailleTables.listTables() if not t.contracted and t.output]
@@ -186,7 +187,8 @@ def getConfspec():
 			)
 		},
 		"quickLaunches": {},
-		"roleLabels": {}
+		"roleLabels": {},
+		"customBrailleTables": {}
 	}
 
 def loadPreferedTables():
@@ -213,6 +215,13 @@ def setLabelFromID(idCategory, idLabel, newLabel):
 	elif idCategory == 1: braille.landmarkLabels[idLabel] = newLabel
 	elif idCategory == 2: braille.positiveStateLabels[int(idLabel)] = newLabel
 	elif idCategory == 3: braille.negativeStateLabels[int(idLabel)] = newLabel
+
+def loadCustomBrailleTables(customBrailleTables):
+	for k, v in customBrailleTables.items():
+		vs = v.split(':')
+		if len(vs) != 3: continue
+		brailleTables.addTable(k, vs[2], contracted=True if vs[0] == '1' else False)
+	refreshTablesCache
 
 def loadRoleLabels(roleLabels):
 	global backupRoleLabels
@@ -376,6 +385,12 @@ def getKeyboardLayout():
 		return iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % curBD])
 	else: return 0
 
+def refreshTablesCache():
+	global tables, tablesFN, tablesUFN, tablesTR
+	tables = brailleTables.listTables()
+	tablesFN = [t[0] for t in brailleTables.listTables()]
+	tablesUFN = [t[0] for t in brailleTables.listTables() if not t.contracted and t.output]
+	tablesTR = [t[1] for t in brailleTables.listTables()]
 
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"

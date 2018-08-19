@@ -75,6 +75,7 @@ rotorItems = [
 rotorItem = 0
 nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else False
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
+configBE.loadCustomBrailleTables(config.conf["brailleExtender"]["customBrailleTables"].copy())
 
 # ***** Attribra code *****
 def attribraEnabled():
@@ -788,8 +789,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			configBE.inputTables.append(config.conf["braille"]["inputTable"])
 		tid = configBE.inputTables.index(config.conf["braille"]["inputTable"])
 		nID = tid + 1 if tid + 1 < len(configBE.inputTables) else 0
-		brailleInput.handler.table = brailleTables.listTables(
-		)[configBE.tablesFN.index(configBE.inputTables[nID])]
+		brailleInput.handler.table = brailleTables.getTable(configBE.inputTables[nID])
 		ui.message(_("Input: %s") % brailleInput.handler.table.displayName)
 		return
 
@@ -809,7 +809,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.outputTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.outputTables[nID]
 		utils.refreshBD()
-		ui.message(_("Output: %s") % configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
+		ui.message(_("Output: %s") % brailleTables.getTable(config.conf["braille"]["translationTable"]).displayName)
 		return
 
 	script_switchOutputBrailleTable.__doc__ = _("Switch between his favorite output braille tables")

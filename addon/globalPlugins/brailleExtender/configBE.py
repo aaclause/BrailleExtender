@@ -76,14 +76,15 @@ sep = ' ' if 'fr' in lang else ''
 outputTables = inputTables = None
 preTable = []
 postTable = []
-
-_addonDir = os.path.join(os.path.dirname(__file__), "..", "..").decode("mbcs")
+baseDir = os.path.dirname(__file__).decode("mbcs")
+_addonDir = os.path.join(baseDir, "..", "..")
 _addonName = addonHandler.Addon(_addonDir).manifest["name"]
 _addonVersion = addonHandler.Addon(_addonDir).manifest["version"]
 _addonURL = addonHandler.Addon(_addonDir).manifest["url"]
 _addonAuthor = addonHandler.Addon(_addonDir).manifest["author"]
 _addonDesc = addonHandler.Addon(_addonDir).manifest["description"]
-profilesDir = os.path.join(os.path.dirname(__file__), "Profiles").decode('mbcs')
+
+profilesDir = os.path.join(baseDir, "Profiles")
 if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
 try:
@@ -360,7 +361,7 @@ def createTabFile(f, c):
 def loadPreTable():
 	global preTable
 	preTable = []
-	tabFile = os.path.join(os.path.dirname(__file__), "", "tab.cti").decode("mbcs")
+	tabFile = os.path.join(baseDir, "", "tab.cti")
 	defTab = 'space \\t ' + \
 		('0-' * config.conf["brailleExtender"]["tabSize_%s" % curBD])[:-1] + '\n'
 

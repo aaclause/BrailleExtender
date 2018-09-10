@@ -33,7 +33,12 @@ instanceGP = None
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 def script_braille_routeTo(self, gesture):
 	obj = obj = api.getNavigatorObject()
-	if obj.hasFocus and braille.handler._cursorPos and (obj.role == controlTypes.ROLE_TERMINAL or (obj.role == controlTypes.ROLE_EDITABLETEXT and braille.handler.tether == braille.handler.TETHER_REVIEW)):
+	if (config.conf["brailleExtender"]['emulateMouse'] and
+            obj.hasFocus and
+            braille.handler._cursorPos and
+            (obj.role == controlTypes.ROLE_TERMINAL or
+             (obj.role == controlTypes.ROLE_EDITABLETEXT and
+              braille.handler.tether == braille.handler.TETHER_REVIEW))):
 		speechMode = speech.speechMode
 		speech.speechMode = 0
 		nb = braille.handler._cursorPos-gesture.routingIndex
@@ -291,4 +296,3 @@ def executeGesture(self, gesture):
 
 inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
-

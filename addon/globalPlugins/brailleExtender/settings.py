@@ -112,7 +112,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.speakRoutingTo.SetValue(config.conf["brailleExtender"]["speakRoutingTo"])
 
 		# Translators: label of a dialog.
-		self.emulateMouse = sHelper.addItem(wx.CheckBox(self, label=_("Emulates mouse with arrow keys")))
+		self.emulateMouse = sHelper.addItem(wx.CheckBox(self, label=_("Try to emulate keyboard movements via routing cursors")))
 		self.emulateMouse.SetValue(config.conf["brailleExtender"]["emulateMouse"])
 
 		# Translators: label of a dialog.

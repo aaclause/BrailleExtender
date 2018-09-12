@@ -1187,12 +1187,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_braille_scrollForward.bypassInputHelp = True
 
 	def reverseScrollBtns(self, gesture=None, cancel=False):
+		keyBraille = globalCommands.SCRCAT_BRAILLE
 		if cancel:
-			scbtns = [inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollForward'] + \
-				[inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollBack']
+			scbtns = [inputCore.manager.getAllGestureMappings()[keyBraille][g].gestures for g in inputCore.manager.getAllGestureMappings()[keyBraille] if inputCore.manager.getAllGestureMappings()[keyBraille][g].scriptName == 'braille_scrollForward'] + \
+				[inputCore.manager.getAllGestureMappings()[keyBraille][g].gestures for g in inputCore.manager.getAllGestureMappings()[keyBraille] if inputCore.manager.getAllGestureMappings()[keyBraille][g].scriptName == 'braille_scrollBack']
 		else:
-			scbtns = [inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollBack'] + \
-				[inputCore.manager.getAllGestureMappings()['Braille'][g].gestures for g in inputCore.manager.getAllGestureMappings()['Braille'] if inputCore.manager.getAllGestureMappings()['Braille'][g].scriptName == 'braille_scrollForward']
+			scbtns = [inputCore.manager.getAllGestureMappings()[keyBraille][g].gestures for g in inputCore.manager.getAllGestureMappings()[keyBraille] if inputCore.manager.getAllGestureMappings()[keyBraille][g].scriptName == 'braille_scrollBack'] + \
+				[inputCore.manager.getAllGestureMappings()[keyBraille][g].gestures for g in inputCore.manager.getAllGestureMappings()[keyBraille] if inputCore.manager.getAllGestureMappings()[keyBraille][g].scriptName == 'braille_scrollForward']
 		for k in scbtns[0]:
 			if k.lower() not in [
 				'br(freedomscientific):leftwizwheelup',

@@ -154,6 +154,8 @@ def getConfspec():
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
 		"tabSpace": "boolean(default=False)",
 		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
+		"preventUndefinedCharHex":  "boolean(default=False)",
+		"undefinedCharRepr": "string(default=0)",
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
@@ -344,11 +346,27 @@ def loadPostTable():
 	postTableValid = True if config.conf["brailleExtender"]["postTable"] in tablesFN else False
 	if postTableValid:
 		postTable.append(os.path.join(brailleTables.TABLES_DIR, config.conf["brailleExtender"]["postTable"]))
-		log.info('Secondary table enabled: %s' % config.conf["brailleExtender"]["postTable"])
+		log.debug('Secondary table enabled: %s' % config.conf["brailleExtender"]["postTable"])
 	else:
 		if config.conf["brailleExtender"]["postTable"] != "None":
 			log.error("Invalid secondary table")
-def createTabFile(f, c):
+	tableChangesFile = os.path.join(baseDir, "", "undefinedChar.cti")
+	defUndefinedChar = "undefined %s\n" % config.conf["brailleExtender"]["undefinedCharRepr"]
+	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and not os.path.exists(tableChangesFile):
+		log.debug("File not found, creating undefined char file")
+		createTableChangesFile(tableChangesFile, defUndefinedChar)
+	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and os.path.exists(tableChangesFile):
+		f = open(tableChangesFile, "r")
+		if f.read() != defUndefinedChar:
+			log.debug("Difference, creating undefined char file...")
+			if createTableChangesFile(tableChangesFile, defUndefinedChar):
+				postTable.append(tableChangesFile)
+		else:
+			postTable.append(tableChangesFile)
+		f.close()
+
+
+def createTableChangesFile(f, c):
 	try:
 		f = open(f, "w")
 		f.write(c)
@@ -361,21 +379,20 @@ def createTabFile(f, c):
 def loadPreTable():
 	global preTable
 	preTable = []
-	tabFile = os.path.join(baseDir, "", "tab.cti")
+	tableChangesFile = os.path.join(baseDir, "", "changes.cti")
 	defTab = 'space \\t ' + \
 		('0-' * config.conf["brailleExtender"]["tabSize_%s" % curBD])[:-1] + '\n'
-
-	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tabFile):
-		log.info('File not found, creating tab file')
-		createTabFile(tabFile, defTab)
-	if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tabFile):
-		f = open(tabFile, "r")
+	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tableChangesFile):
+		log.debug("File not found, creating table changes file")
+		createTableChangesFile(tableChangesFile, defTab)
+	if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tableChangesFile):
+		f = open(tableChangesFile, "r")
 		if f.read() != defTab:
 			log.debug('Difference, creating tab file...')
-			if createTabFile(tabFile, defTab):
-				preTable.append(tabFile)
+			if createTableChangesFile(tableChangesFile, defTab):
+				preTable.append(tableChangesFile)
 		else:
-			preTable.append(tabFile)
+			preTable.append(tableChangesFile)
 			log.debug('Tab as spaces enabled')
 		f.close()
 	else: log.debug('Tab as spaces disabled')

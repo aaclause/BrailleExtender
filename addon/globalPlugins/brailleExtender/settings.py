@@ -8,6 +8,7 @@ import glob
 import os
 import gui
 import wx
+import re
 import addonHandler
 import braille
 import config
@@ -388,6 +389,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 		# Translators: label of a dialog.
 		self.tabSize = sHelper.addLabeledControl(_("Number of space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD])
+		# Translators: label of a dialog.
+		self.preventUndefinedCharHex = sHelper.addItem(wx.CheckBox(self, label=_("Prevent undefined characters with Hexadecimal Unicode value")))
+		self.preventUndefinedCharHex.SetValue(config.conf["brailleExtender"]["preventUndefinedCharHex"])
+		# Translators: label of a dialog.
+		self.undefinedCharRepr = sHelper.addLabeledControl(_("Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
 
 	def postInit(self): self.addBrailleTablesBtn.SetFocus()
 
@@ -402,7 +408,13 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		configBE.loadPostTable()
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
+		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
+		repr = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
+		repr = re.sub('\-+','-', repr)
+		if not repr or repr.startswith('-') or repr.endswith('-'): repr = "0"
+		config.conf["brailleExtender"]["undefinedCharRepr"] = repr
 		configBE.loadPreTable()
+		configBE.loadPostTable()
 		super(BrailleTablesDlg, self).onOk(evt)
 
 	def getTablesWithSwitches(self):

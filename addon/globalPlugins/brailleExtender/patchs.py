@@ -33,7 +33,7 @@ instanceGP = None
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 def script_braille_routeTo(self, gesture):
 	obj = obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]['emulateMouse'] and
+	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
             obj.hasFocus and
             braille.handler._cursorPos and
             (obj.role == controlTypes.ROLE_TERMINAL or

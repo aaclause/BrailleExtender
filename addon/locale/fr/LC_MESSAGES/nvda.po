@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-09-11 09:59+0200\n"
-"PO-Revision-Date: 2018-09-11 10:15+0200\n"
+"POT-Creation-Date: 2018-09-12 08:51+0200\n"
+"PO-Revision-Date: 2018-09-12 09:01+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -962,9 +962,8 @@ msgstr "Annoncer le caractère lors du déplacement avec les boutons de routage"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:115
-msgid "Try to emulate keyboard movements via routing cursors"
-msgstr ""
-"Tenter d'émuler les mouvements des flèches grâce aux boutons de routage"
+msgid "Use cursor keys to route cursor in review mode"
+msgstr "En mode revue, utiliser les flèches pour déplacer le curseur"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:119
@@ -1558,6 +1557,10 @@ msgstr "de lancer rapidement des applications"
 #: buildVars.py:36
 msgid "actions and quick navigation through a rotor"
 msgstr "actions et navigation rapide au travers d'un rotor"
+
+#~ msgid "Try to emulate keyboard movements via routing cursors"
+#~ msgstr ""
+#~ "Tenter d'émuler les mouvements des flèches grâce aux boutons de routage"
 
 #~ msgid "Emulates mouse with arrow keys"
 #~ msgstr "Émuler la souris avec les touches flèchées"

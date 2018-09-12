@@ -113,6 +113,10 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.speakRoutingTo.SetValue(config.conf["brailleExtender"]["speakRoutingTo"])
 
 		# Translators: label of a dialog.
+		self.routingReviewModeWithCursorKeys = sHelper.addItem(wx.CheckBox(self, label=_("Use cursor keys to route cursor in review mode")))
+		self.routingReviewModeWithCursorKeys.SetValue(config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"])
+
+		# Translators: label of a dialog.
 		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("Display time and date infinitely")))
 		self.hourDynamic.SetValue(config.conf["brailleExtender"]["hourDynamic"])
 		self.reviewModeTerminal = sHelper.addItem(wx.CheckBox(self, label=_("Automatic review mode for apps with terminal")+" (cmd, bash, PuTTY, PowerShell Maxima…)"))
@@ -165,6 +169,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["stopSpeechScroll"] = self.stopSpeechScroll.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
+		config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"] = self.routingReviewModeWithCursorKeys.IsChecked()
 
 		config.conf["brailleExtender"]["updateChannel"] = configBE.updateChannels.keys()[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = configBE.focusOrReviewChoices.keys()[self.speakScroll.GetSelection()]

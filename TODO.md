@@ -10,6 +10,6 @@ here are some ideas of features for BrailleExtender that might be implemented. P
 - Text attributes with dot(s) 7 or/and 8 blinking
 - "Virtual settings" mode (like "auto test" mode)
 - Clic with routings cursors in review mode
- - Left margin
- - One Hand Mode
- 
+- Left margin
+- One Hand Mode
+- Code cleaning

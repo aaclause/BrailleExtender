@@ -82,6 +82,8 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
 	title = "Braille Extender - %s" % _("General")
+	bds_k = [k for k, v in configBE.getValidBrailleDisplayPrefered()]
+	bds_v = [v for k, v in configBE.getValidBrailleDisplayPrefered()]
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -152,10 +154,10 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
 		# Translators: label of a dialog.
 		self.autoScrollDelay = sHelper.addLabeledControl(_("Autoscroll delay (ms)")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=125, max=42000, initial=config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
-		self.brailleDisplay1 = sHelper.addLabeledControl(_("First braille display preferred"), wx.Choice, choices=configBE.bds_v)
-		self.brailleDisplay1.SetSelection(configBE.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
-		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=configBE.bds_v)
-		self.brailleDisplay2.SetSelection(configBE.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
+		self.brailleDisplay1 = sHelper.addLabeledControl(_("First braille display preferred"), wx.Choice, choices=self.bds_v)
+		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
+		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=self.bds_v)
+		self.brailleDisplay2.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
 
 	def postInit(self): self.autoCheckUpdate.SetFocus()
 
@@ -176,8 +178,8 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
 		config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] = self.autoScrollDelay.Value
 		config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD] = self.rightMarginCells.Value
-		config.conf["brailleExtender"]["brailleDisplay1"] = configBE.bds_k[self.brailleDisplay1.GetSelection()]
-		config.conf["brailleExtender"]["brailleDisplay2"] = configBE.bds_k[self.brailleDisplay2.GetSelection()]
+		config.conf["brailleExtender"]["brailleDisplay1"] = self.bds_k[self.brailleDisplay1.GetSelection()]
+		config.conf["brailleExtender"]["brailleDisplay2"] = self.bds_k[self.brailleDisplay2.GetSelection()]
 		if configBE.gesturesFileExists:
 			config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] = configBE.iniProfile["keyboardLayouts"].keys()[self.KBMode.GetSelection()]
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = configBE.outputMessage.keys()[self.volumeChangeFeedback.GetSelection()]

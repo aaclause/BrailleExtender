@@ -879,13 +879,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"][k] == "last":
 			if config.conf["braille"]["display"] == "noBraille":
 				return ui.message(_("No braille display specified. No reload to do"))
-			if config.conf["braille"]["display"] != "auto":
+			else:
 				utils.reload_brailledisplay(config.conf["braille"]["display"])
 				configBE.curBD = braille.handler.display.name
 				utils.refreshBD()
-			else:
-				speech.speakMessage(_("Profile reloaded"))
-				configBE.curBD = braille.handler.display.name
 		else:
 			utils.reload_brailledisplay(config.conf["brailleExtender"][k])
 			configBE.curBD = config.conf["brailleExtender"][k]

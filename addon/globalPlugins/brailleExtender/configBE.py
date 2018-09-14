@@ -103,8 +103,6 @@ def getValidBrailleDisplayPrefered():
 	l.append(("last", _("last known")))
 	return l
 
-bds_k = [k for k, v in getValidBrailleDisplayPrefered()]
-bds_v = [v for k, v in getValidBrailleDisplayPrefered()]
 def getConfspec():
 	global curBD
 	curBD = braille.handler.display.name
@@ -131,8 +129,8 @@ def getConfspec():
 			CHOICE_speech=CHOICE_speech,
 			CHOICE_speechAndBraille=CHOICE_speechAndBraille
 		),
-		"brailleDisplay1": 'option(%s, "last", default="last")' % ','.join(bds_k),
-		"brailleDisplay2": 'option(%s, "last", default="last")' % ','.join(bds_k),
+		"brailleDisplay1": 'string(default="last")',
+		"brailleDisplay2": 'string(default="last")',
 		"hourDynamic": "boolean(default=True)",
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",

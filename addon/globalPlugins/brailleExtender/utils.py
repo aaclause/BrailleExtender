@@ -5,6 +5,7 @@
 
 from __future__ import unicode_literals
 import os.path as osp
+import random
 import re
 import api
 import braille
@@ -181,10 +182,10 @@ def bkToChar(dots, inTable=-1):
 def reload_brailledisplay(bd_name):
 	try:
 		if braille.handler.setDisplayByName(bd_name):
-			speech.speakMessage(_("%s device reloaded") % bd_name.capitalize())
+			speech.speakMessage(_("Reload successful"))
 			return True
-		else: ui.message(_("No %s display found") % bd_name.capitalize())
-	except BaseException: ui.message(_("No %s display found") % bd_name.capitalize())
+	except (RuntimeError): pass
+	ui.message(_("Reload failed"))
 	return False
 
 def currentCharDesc():

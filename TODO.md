@@ -11,5 +11,6 @@ here are some ideas of features for BrailleExtender that might be implemented. P
 - "Virtual settings" mode (like "auto test" mode)
 - Clic with routings cursors in review mode
 - Left margin
+- Read from right to left
 - One Hand Mode
 - Code cleaning

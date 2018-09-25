@@ -82,7 +82,7 @@ def attribraEnabled():
 	return config.conf["brailleExtender"]["features"]["attributes"]
 
 def decorator(fn, s):
-	def _getTypeformFromFormatField(self, field):
+	def _getTypeformFromFormatField(self, field, formatConfig=None):
 		for attr in ATTRS:
 			v = attr.split(':')
 			k = v[0]
@@ -165,7 +165,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
 		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
-		#braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
+		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if config.conf["brailleExtender"]["reverseScrollBtns"]:
 			self.reverseScrollBtns()
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):

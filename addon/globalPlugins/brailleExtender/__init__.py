@@ -540,9 +540,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleAttribra.__doc__ = _("Enable/disable Attribra")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
-		config.conf["brailleExtender"]["speakScrollFocusMode"] = not config.conf["brailleExtender"]["speakScrollFocusMode"]
-		ui.message(_("Speech %s while scrolling") % (_("enabled") if config.conf["brailleExtender"]["speakScrollFocusMode"] else _("disabled")))
-	script_toggleSpeechScrollFocusMode.__doc__ = _("Enable/disable speech while scrolling in focus mode")
+		choices = configBE.focusOrReviewChoices
+		curChoice = config.conf["brailleExtender"]["speakScroll"]
+		curChoiceID = choices.keys().index(curChoice)
+		newChoiceID = (curChoiceID+1) % len(choices)
+		newChoice = choices.keys()[newChoiceID]
+		config.conf["brailleExtender"]["speakScroll"] = newChoice
+		ui.message(choices.values()[newChoiceID])
+	script_toggleSpeechScrollFocusMode.__doc__ = _("Quick access to the \"say current line while scrolling in\" option")
 
 	def script_toggleSpeech(self, gesture):
 		if speech.speechMode == 0:

@@ -1046,9 +1046,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					return false
 
 	def initCombKeys(self):
-		if len(self.modifiers) == 1: self.bindGestures(self._tGestures)
+		if not nativeModifiers and len(self.modifiers) == 1: self.bindGestures(self._tGestures)
+
 	def getActualModifiers(self, short=True):
-		if len(self.modifiers) == 0:
+		if nativeModifiers: modifiers = brailleInput.handler.currentModifiers
+		else: modifiers = self.modifiers
+		if len(modifiers) == 0:
 			return self.script_cancelShortcut(None)
 		s = ""
 		t = {
@@ -1057,7 +1060,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			"shift": _("SHIFT"),
 			"alt": _("ALT"),
 			"nvda": "NVDA"}
-		for k in self.modifiers:
+		for k in modifiers:
 			s += t[k] + '+' if short else k + '+'
 		if not short:
 			return s
@@ -1068,6 +1071,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def toggleModifier(self, modifier):
 		if modifier.lower() not in ["alt","control","nvda","shift","windows"]:
+			return
+		if nativeModifiers:
+			brailleInput.handler.currentModifiers.add(modifier)
 			return
 		if modifier not in self.modifiers: self.modifiers.add(modifier)
 		else: self.modifiers.discard(modifier)
@@ -1401,4 +1407,4 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):
-		if hasattr(self, "brailleExtenderMenu"): self.NVDAMenu.RemoveItem(self.brailleExtenderMenu)
+		if hasattr(self, "brailleExtenderMenu"): self.NVDAMenu.Remove(self.brailleExtenderMenu)

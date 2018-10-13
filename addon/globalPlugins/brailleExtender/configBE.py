@@ -122,6 +122,7 @@ def getConfspec():
 			CHOICE_speech=CHOICE_speech,
 			CHOICE_speechAndBraille=CHOICE_speechAndBraille
 		),
+		"beepsModifiers": "boolean(default=False)",
 		"volumeChangeFeedback": "option({CHOICE_none}, {CHOICE_braille}, {CHOICE_speech}, {CHOICE_speechAndBraille}, default={CHOICE_braille})".format(
 			CHOICE_none=CHOICE_none,
 			CHOICE_braille=CHOICE_braille,

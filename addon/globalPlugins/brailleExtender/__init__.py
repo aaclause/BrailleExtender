@@ -40,6 +40,7 @@ import languageHandler
 import scriptHandler
 import speech
 import treeInterceptorHandler
+import tones
 import ui
 import versionInfo
 import virtualBuffers
@@ -897,11 +898,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def clearModifiers(self, forced = False):
 		if self.modifiersLocked and not forced: return
-		self.modifiers.clear()
-		self.clearGestureBindings()
-		self.bindGestures(self.__gestures)
-		self.bindGestures(self._pGestures)
-		self.gesturesInit()
+		if nativeModifiers: modifiers = brailleInput.handler.currentModifiers
+		else: modifiers = self.modifiers
+		modifiers.clear()
+		if not nativeModifiers:
+			self.clearGestureBindings()
+			self.bindGestures(self.__gestures)
+			self.bindGestures(self._pGestures)
+			self.gesturesInit()
 
 	@staticmethod
 	def sendCombKeys(sendKS, send=True):
@@ -1072,12 +1076,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def toggleModifier(self, modifier):
 		if modifier.lower() not in ["alt","control","nvda","shift","windows"]:
 			return
-		if nativeModifiers:
-			brailleInput.handler.currentModifiers.add(modifier)
-			return
-		if modifier not in self.modifiers: self.modifiers.add(modifier)
-		else: self.modifiers.discard(modifier)
-		if len(self.modifiers) == 0: self.clearModifiers(True)
+		if nativeModifiers: modifiers = brailleInput.handler.currentModifiers
+		else: modifiers = self.modifiers
+		if modifier not in modifiers:
+			modifiers.add(modifier)
+			if config.conf["brailleExtender"]["beepsModifiers"]: tones.beep(275, 50)
+		else:
+			modifiers.discard(modifier)
+			if config.conf["brailleExtender"]["beepsModifiers"]: tones.beep(100, 100 if len(modifiers) > 0 else 200)
+		if len(modifiers) == 0: self.clearModifiers(True)
 
 	def script_ctrl(self, gesture=None, sil=True):
 		self.toggleModifier("control")
@@ -1157,7 +1164,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_cancelShortcut(self, g):
 		self.clearModifiers()
 		self.clearMessageFlash()
-		ui.message(_("Keyboard shortcut cancelled"))
+		if not config.conf["brailleExtender"]["beepsModifiers"]:
+			ui.message(_("Keyboard shortcut cancelled"))
 		return
 	script_nvda.bypassInputHelp = True
 	script_alt.bypassInputHelp = True

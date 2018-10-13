@@ -138,6 +138,9 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 			itemToSelect = configBE.outputMessage.keys().index(config.conf["brailleExtender"]["modifierKeysFeedback"])
 		else:
 			itemToSelect = configBE.outputMessage.keys().index(configBE.CHOICE_braille)
+		# Translators: label of a dialog.
+		self.beepsModifiers = sHelper.addItem(wx.CheckBox(self, label=_("Play beeps for modifier keys")))
+		self.beepsModifiers.SetValue(config.conf["brailleExtender"]["beepsModifiers"])
 
 		# Translators: label of a dialog.
 		self.modifierKeysFeedback.SetSelection(itemToSelect)
@@ -184,6 +187,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 			config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD] = configBE.iniProfile["keyboardLayouts"].keys()[self.KBMode.GetSelection()]
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = configBE.outputMessage.keys()[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = configBE.outputMessage.keys()[self.modifierKeysFeedback.GetSelection()]
+		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
 		super(GeneralDlg, self).onOk(evt)
 
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):

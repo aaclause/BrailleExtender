@@ -55,25 +55,46 @@ instanceGP = None
 lang = configBE.lang
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
 logTextInfo = False
-ROTOR_DEF = 0
-ROTOR_MOVE = 1
-ROTOR_SELECT = 2
-ROTOR_OBJ = 3
-ROTOR_REVIEW = 4
-ROTOR_TABLES = 5
-ROTOR_ERR = 6
-ROTOR_RANGE = 1
-
 rotorItems = [
-	_("Default"),
-	_("Moving in the text"),
-	_("Text selection"),
-	_("Objects"),
-	_("Review"),
-	_("Tables"),
-	_("Spelling errors")
+	("default", _("Default")),
+	("moveInText", _("Moving in the text")),
+	("textSelection", _("Text selection")),
+	("object", _("Objects")),
+	("review", _("Review")),
+	("Link", _("Links")),
+	("UnvisitedLink", _("Unvisited links")),
+	("VisitedLink", _("Visited links")),
+	("Landmark", "Landmark"),
+	("Heading", _("Headings")),
+	("Heading1", _("Headings at level 1")),
+	("Heading2", _("Headings at level 2")),
+	("Heading3", _("Headings at level 3")),
+	("Heading4", _("Headings at level 4")),
+	("Heading5", _("Headings at level 5")),
+	("Heading6", _("Headings at level 6")),
+	("List", _("Lists")),
+	("ListItem", _("List items")),
+	("Graphic", _("Graphics")),
+	("BlockQuote", _("Block quotes")),
+	("Button", _("Buttons")),
+	("FormField", _("Form fields")),
+	("Edit", _("Edit fields")),
+	("RadioButton", _("Radio buttons")),
+	("ComboBox", _("Combo boxes")),
+	("CheckBox", _("Check boxes")),
+	("NotLinkBlock", _("Not link blocks")),
+	("Frame", "Frames"),
+	("Separator", "Separators"),
+	("EmbeddedObject", _("Embedded objects")),
+	("Annotation", _("Annotations")),
+	("Error", _("Spelling errors")),
+	("Table", _("Tables")),
+	("moveInTable", _("Move in table")),
 ]
 rotorItem = 0
+rotorRange = 0
+lastRotorItemInVD = 0
+lastRotorItemInVDSaved = True
 nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else False
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
 
@@ -174,6 +195,18 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		log.info("%s %s loaded" % (configBE._addonName, configBE._addonVersion))
 
 	def event_gainFocus(self, obj, nextHandler):
+		global rotorItem, lastRotorItemInVD, lastRotorItemInVDSaved
+		isVirtualBuff = obj is not None and isinstance(obj.treeInterceptor, virtualBuffers.VirtualBuffer)
+		if lastRotorItemInVDSaved and isVirtualBuff:
+			rotorItem = lastRotorItemInVD
+			self.bindRotorGES()
+			lastRotorItemInVDSaved = False
+		elif not lastRotorItemInVDSaved and not isVirtualBuff:
+			lastRotorItemInVD = rotorItem
+			lastRotorItemInVDSaved = True
+			rotorItem = 0
+			self.bindRotorGES()
+
 		if config.conf["brailleExtender"]["reviewModeTerminal"]:
 			if not self.switchedMode and obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
 				if not hasattr(braille.handler, "TETHER_AUTO"):
@@ -337,19 +370,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		for k in self.rotorGES:
 			try: self.removeGestureBinding(k)
 			except BaseException: pass
-		if rotorItem == ROTOR_DEF:
-			return
-		if rotorItem in [
-				ROTOR_OBJ,
-				ROTOR_REVIEW,
-				ROTOR_SELECT,
-				ROTOR_MOVE,
-				ROTOR_TABLES]:
+		if rotorItems[rotorItem][0] == "default": return
+		if rotorItems[rotorItem][0] in ["object", "review", "textSelection", "moveInText", "moveInTable"]:
 			self.bindGestures(self.rotorGES)
 		else:
 			for k in self.rotorGES:
-				if self.rotorGES[k] not in [
-						'selectElt', 'nextSetRotor', 'priorSetRotor']:
+				if self.rotorGES[k] not in ["selectElt", "nextSetRotor", "priorSetRotor"]:
 					self.bindGestures({k: self.rotorGES[k]})
 
 	@staticmethod
@@ -375,18 +401,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_priorRotor(self, gesture):
 		global rotorItem
+		idRotorItem = rotorItems.index
 		if rotorItem > 0:
 			rotorItem -= 1
 		else:
 			rotorItem = len(rotorItems) - 1
 		self.bindRotorGES()
-		return ui.message(rotorItems[rotorItem])
+		return ui.message(rotorItems[rotorItem][1])
 
 	def script_nextRotor(self, gesture):
 		global rotorItem
 		rotorItem = 0 if rotorItem >= len(rotorItems) - 1 else rotorItem + 1
 		self.bindRotorGES()
-		return ui.message(rotorItems[rotorItem])
+		return ui.message(rotorItems[rotorItem][1])
 
 	@staticmethod
 	def getCurrentSelectionRange(pretty=True, back=False):
@@ -398,7 +425,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				_("Paragraph"),
 				_("Page"),
 				_("Document")]
-			return labels[ROTOR_RANGE]
+			return labels[rotorRange]
 		else:
 			keys = [
 				('leftarrow',
@@ -413,91 +440,95 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				 'pagedown'),
 				('control+home',
 				 'control+end')]
-			if rotorItem == ROTOR_SELECT:
-				return 'shift+%s' % (keys[ROTOR_RANGE]
-									 [0] if back else keys[ROTOR_RANGE][1])
+			if rotorItems[rotorItem][0] == "textSelection":
+				return 'shift+%s' % (keys[rotorRange]
+									 [0] if back else keys[rotorRange][1])
 			else:
-				return keys[ROTOR_RANGE][0] if back else keys[ROTOR_RANGE][1]
+				return keys[rotorRange][0] if back else keys[rotorRange][1]
 
 	def switchSelectionRange(self, previous=False):
-		global ROTOR_RANGE
-		if previous: ROTOR_RANGE = ROTOR_RANGE - 1 if ROTOR_RANGE > 0 else 5
-		else: ROTOR_RANGE = ROTOR_RANGE + 1 if ROTOR_RANGE < 5 else 0
+		global rotorRange
+		if previous: rotorRange = rotorRange - 1 if rotorRange > 0 else 5
+		else: rotorRange = rotorRange + 1 if rotorRange < 5 else 0
 		ui.message(self.getCurrentSelectionRange())
 		return
 
+	def moveTo(self, direction, gesture = None):
+		global rotorItem
+		obj = api.getFocusObject()
+		if obj.treeInterceptor is not None:
+			func = getattr(obj.treeInterceptor, "script_%s%s" % (direction, rotorItems[rotorItem][0]), None)
+			if func: return func(gesture)
+		ui.message(_("Not available here"))
+
 	def script_nextEltRotor(self, gesture):
-		if rotorItem == ROTOR_DEF: return self.sendComb('rightarrow', gesture)
-		elif rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+		if rotorItems[rotorItem][0] == "default": return self.sendComb('rightarrow', gesture)
+		elif rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
 			return self.sendComb(self.getCurrentSelectionRange(False), gesture)
-		elif rotorItem == ROTOR_OBJ:
+		elif rotorItems[rotorItem][0] == "object":
 			self.sendComb('nvda+shift+rightarrow', gesture)
 			# self.showBrailleObj()
-		elif rotorItem == ROTOR_REVIEW:
+		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_scrollForward, gesture)
-		elif rotorItem == ROTOR_TABLES:
+		elif rotorItems[rotorItem][0] == "moveInTable":
 			self.sendComb('control+alt+rightarrow', gesture)
-		elif rotorItem == ROTOR_ERR:
+		elif rotorItems[rotorItem][0] == "spellingErrors":
 			obj = api.getFocusObject()
 			if obj.treeInterceptor is not None:
 				obj.treeInterceptor.script_nextError(gesture)
 			else:
 				ui.message(_("Not supported here or browse mode not enabled"))
-		else:
-			return ui.message(_("Not implemented yet"))
+		else: return self.moveTo("next", gesture)
 	script_priorRotor.__doc__ = _("Select previous rotor setting")
 	script_nextRotor.__doc__ = _("Select next rotor setting")
 
 	def script_priorEltRotor(self, gesture):
-		if rotorItem == ROTOR_DEF:
+		if rotorItems[rotorItem][0] == "default":
 			return self.sendComb('leftarrow', gesture)
-		elif rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
-			return self.sendComb(
-				self.getCurrentSelectionRange(
-					False, True), gesture)
-		elif rotorItem == ROTOR_OBJ:
-			self.sendComb('nvda+shift+leftarrow', gesture)
+		elif rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
+			return self.sendComb(self.getCurrentSelectionRange(False, True), gesture)
+		elif rotorItems[rotorItem][0] == "object":
+			self.sendComb("nvda+shift+leftarrow", gesture)
 			# self.showBrailleObj()
-		elif rotorItem == ROTOR_REVIEW:
+		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_scrollBack, gesture)
-		elif rotorItem == ROTOR_TABLES:
+		elif rotorItems[rotorItem][0] == "moveInTable":
 			self.sendComb('control+alt+leftarrow', gesture)
-		elif rotorItem == ROTOR_ERR:
+		elif rotorItems[rotorItem][0] == "spellingErrors":
 			obj = api.getFocusObject()
 			if obj.treeInterceptor is not None:
 				obj.treeInterceptor.script_previousError(gesture)
 			else:
 				ui.message(_("Not supported here or browse mode not enabled"))
-		else:
-			return ui.message('Not implemented yet')
+		else: return self.moveTo("previous", gesture)
 
 	def script_nextSetRotor(self, gesture):
-		if rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+		if rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
 			return self.switchSelectionRange()
-		elif rotorItem == ROTOR_OBJ:
+		elif rotorItems[rotorItem][0] == "object":
 			self.sendComb('nvda+shift+downarrow', gesture)
 			# self.showBrailleObj()
-		elif rotorItem == ROTOR_REVIEW:
+		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_nextLine, gesture)
-		elif rotorItem == ROTOR_TABLES:
+		elif rotorItems[rotorItem][0] == "moveInTable":
 			self.sendComb('control+alt+downarrow', gesture)
 		else:
 			return self.sendComb('downarrow', gesture)
 
 	def script_priorSetRotor(self, gesture):
-		if rotorItem in [ROTOR_MOVE, ROTOR_SELECT]:
+		if rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
 			return self.switchSelectionRange(True)
-		elif rotorItem == ROTOR_OBJ:
+		elif rotorItems[rotorItem][0] == "object":
 			self.sendComb('nvda+shift+uparrow', gesture)
 			# self.showBrailleObj()
 			return
-		elif rotorItem == ROTOR_REVIEW:
+		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_previousLine, gesture)
-		elif rotorItem == ROTOR_TABLES:
+		elif rotorItems[rotorItem][0] == "moveInTable":
 			self.sendComb('control+alt+uparrow', gesture)
 		else:
 			return self.sendComb('uparrow', gesture)
@@ -507,7 +538,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		'Move to next item depending rotor setting')
 
 	def script_selectElt(self, gesture):
-		if rotorItem == ROTOR_OBJ:
+		if rotorItems[rotorItem][0] == "object":
 			return self.sendComb('NVDA+enter', gesture)
 		else:
 			return self.sendComb('enter', gesture)

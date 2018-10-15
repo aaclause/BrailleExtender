@@ -1125,7 +1125,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return self.initCombKeys()
 
 	def script_nvda(self, gesture=None):
-		self.toggleModifier("nvda", sil)
+		self.toggleModifier("nvda")
 		self.getActualModifiers()
 		return self.initCombKeys()
 

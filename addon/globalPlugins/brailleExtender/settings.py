@@ -144,7 +144,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
 		# Translators: label of a dialog.
 		self.modifierKeysFeedback.SetSelection(itemToSelect)
-		self.rightMarginCells = sHelper.addLabeledControl(_("Right margin on cells")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=0, max=100, initial=config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD])
+		self.rightMarginCells = sHelper.addLabeledControl(_("Right margin on cells")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=0, max=100, initial=int(config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD]))
 		if configBE.gesturesFileExists:
 			lb = [k for k in instanceGP.getKeyboardLayouts()]
 			# Translators: label of a dialog.
@@ -156,7 +156,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.reverseScrollBtns.SetValue(config.conf["brailleExtender"]["reverseScrollBtns"])
 
 		# Translators: label of a dialog.
-		self.autoScrollDelay = sHelper.addLabeledControl(_("Autoscroll delay (ms)")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=125, max=42000, initial=config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
+		self.autoScrollDelay = sHelper.addLabeledControl(_("Autoscroll delay (ms)")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=125, max=42000, initial=int(config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD]))
 		self.brailleDisplay1 = sHelper.addLabeledControl(_("First braille display preferred"), wx.Choice, choices=self.bds_v)
 		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=self.bds_v)
@@ -394,7 +394,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.tabSpace.SetValue(config.conf["brailleExtender"]["tabSpace"])
 
 		# Translators: label of a dialog.
-		self.tabSize = sHelper.addLabeledControl(_("Number of space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD])
+		self.tabSize = sHelper.addLabeledControl(_("Number of space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
 		# Translators: label of a dialog.
 		self.preventUndefinedCharHex = sHelper.addItem(wx.CheckBox(self, label=_("Prevent undefined characters with Hexadecimal Unicode value")))
 		self.preventUndefinedCharHex.SetValue(config.conf["brailleExtender"]["preventUndefinedCharHex"])

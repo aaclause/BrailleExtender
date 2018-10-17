@@ -248,7 +248,7 @@ def loadConf():
 		config.conf["brailleExtender"]["tabSize_%s" % curBD] = 2
 	if "leftMarginCells__%s" % curBD not in brlextConf.keys():
 		config.conf["brailleExtender"]["leftMarginCells_%s" % curBD] = 0
-	if "rightMarginCells__%s" % curBD not in brlextConf.keys():
+	if "rightMarginCells_%s" % curBD not in brlextConf.keys():
 		config.conf["brailleExtender"]["rightMarginCells_%s" % curBD] = 0
 	if "autoScrollDelay_%s" % curBD not in brlextConf.keys():
 		config.conf["brailleExtender"]["autoScrollDelay_%s" % curBD] = 3000
@@ -267,8 +267,9 @@ def loadConf():
 		if curBD != "noBraille": log.warn("%s inaccessible" % confGen)
 		else: log.debug("No braille display present")
 
-	if (backupDisplaySize-config.conf["brailleExtender"]["rightMarginCells_" + curBD] <= backupDisplaySize and config.conf["brailleExtender"]["rightMarginCells_%s" % curBD] > 0):
-		braille.handler.displaySize = backupDisplaySize-config.conf["brailleExtender"]["rightMarginCells_%s" % curBD]
+	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
+	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
+		braille.handler.displaySize = backupDisplaySize-limitCellsRight
 	if not noUnicodeTable: loadPreferedTables()
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
@@ -372,7 +373,7 @@ def loadPreTable():
 	preTable = []
 	tableChangesFile = os.path.join(baseDir, "", "changes.cti")
 	defTab = 'space \\t ' + \
-		('0-' * config.conf["brailleExtender"]["tabSize_%s" % curBD])[:-1] + '\n'
+		('0-' * int(config.conf["brailleExtender"]["tabSize_%s" % curBD]))[:-1] + '\n'
 	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tableChangesFile):
 		log.debug("File not found, creating table changes file")
 		createTableChangesFile(tableChangesFile, defTab)

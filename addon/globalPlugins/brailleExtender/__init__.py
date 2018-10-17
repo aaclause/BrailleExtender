@@ -676,7 +676,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		else:
 			self.autoScrollTimer = wx.PyTimer(self.autoScroll)
-			try: self.autoScrollTimer.Start(config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
+			try: self.autoScrollTimer.Start(int(config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD]))
 			except BaseException as e:
 				log.error("%s | %s" % (config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD], e))
 				ui.message(_("Unable to start autoscroll. More info in NVDA log"))

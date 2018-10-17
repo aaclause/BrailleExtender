@@ -95,7 +95,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.updateChannel = sHelper.addLabeledControl(_("Add-on update channel"), wx.Choice, choices=configBE.updateChannels.values())
 		if config.conf["brailleExtender"]["updateChannel"] in configBE.updateChannels.keys():
 			itemToSelect = configBE.updateChannels.keys().index(config.conf["brailleExtender"]["updateChannel"])
-		else: itemToSelect = config.conf["brailleExtender"]["updateChannel"].index(configBE.CHANNELSTABLE)
+		else: itemToSelect = config.conf["brailleExtender"]["updateChannel"].index(configBE.CHANNEL_stable)
 		self.updateChannel.SetSelection(itemToSelect)
 
 		# Translators: label of a dialog.

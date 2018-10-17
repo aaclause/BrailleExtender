@@ -178,7 +178,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		configBE.initGestures()
 		configBE.loadGestures()
 		self.gesturesInit()
-		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and time.time() - config.conf["brailleExtender"]["lastCheckUpdate"] > 86400:
+		delayChecking = 86400 if config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
+		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and time.time() - config.conf["brailleExtender"]["lastCheckUpdate"] > delayChecking:
 			checkUpdates(True)
 			config.conf["brailleExtender"]["lastCheckUpdate"] = time.time()
 		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields

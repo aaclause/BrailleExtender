@@ -107,6 +107,7 @@ def getConfspec():
 	curBD = braille.handler.display.name
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
+		"lastNVDAVersion": 'string(default="unknown")',
 		"updateChannel": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
 			CHOICE_none=CHOICE_none,
 			CHANNEL_dev=CHANNEL_dev,

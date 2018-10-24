@@ -13,4 +13,6 @@ here are some ideas of features for BrailleExtender that might be implemented. P
 - Left margin
 - Read from right to left
 - One Hand Mode
+- Try to report center, left and right alignments
+- Imitate formatting mode from JAWS
 - Code cleaning

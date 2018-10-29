@@ -39,13 +39,19 @@ class AddonDoc():
 				'>',
 				'&gt;'),
 			URL='<a href="%s">%s</a>' % (configBE._addonURL, configBE._addonURL),
-			DESC=self.getDescFormated(configBE._addonDesc))
-		doc += '<h2 lang="en">Copyrights and acknowledgements</h2>' + ('\n'.join([
+			DESC=self.getDescFormated(configBE._addonDesc)
+		)
+		doc += "<p>" + _("You can find some ideas of features for BrailleExtender that might be implemented here") + """:<br /> <a href="https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list">https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list</a></p>
+		"""
+		doc += '<h2>Copyrights and acknowledgements</h2>' + ('\n'.join([
 			"<p>",
 			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
-			"<ul><li>Adriani Botez &lt;adriani.botez@gmail.com&gt; and Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation"), ";</li>",
+			"<ul>",
+				"<li>Adriani Botez &lt;adriani.botez@gmail.com&gt; and Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation") + ";</li>",
 				"<li>Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;: " + _("Persian translation") + ";</li>",
-			"<li>Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li></ul>",
+				"<li>Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;: " + _("Hebrew translation") + ";</li>",
+				"<li>Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li>",
+			"</ul>",
 			"<p>" + _("Additional third party copyrighted code is included:") + "</p>",
 			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
 		""".format(SEP=configBE.sep), "</ul>",
@@ -55,50 +61,7 @@ class AddonDoc():
 			"<li>Zvonimir Stanečić " + _("for his tests and suggestions with") + " Braille Wave.</li></ul>",
 			"<p>" + _("And Thank you very much for all your feedback and comments via email.") + " :)</p>"])
 		)
-		doc += """
-		<div id="changelog"><h2>{lastChanges}</h2>
-		<p>{future}{sep}: {toCome}</p>
-		<h3>2017.12.28</h3>
-		<ul>
-			<li>{newf}{sep}: {secTable}{sep};</li>
-			<li>{newf}{sep}: {tabSpaces}{sep};</li>
-			<li>{newf}{sep}: {sayReviewModeScroll}{sep};</li>
-			<li>{best} {profs}. {profile1}{sep};</li>
-			<li>{best} {rotor}. {rotor1}{sep};</li>
-			<li>{bug} {bug1}{sep};</li>
-			<li>{bug} {bug2}.</li>
-		</ul>
-		<h3>2017.11.11</h3>
-		<ul>
-			<li>{newt}{sep}: {t1}{sep};</li>
-			<li>{newt}{sep}: {t2}{sep};</li>
-			<li>{bug} {bug0}{sep};</li>
-		</ul>
-		<hr />
-		</div>
-		""".format(
-			sep=configBE.sep,
-			future=_('Coming soon in the next versions'),
-			toCome=_('gesture profiles, finalizing tabs in settings, some shortcuts revisions...'),
-			lastChanges=_('Change Log'),
-			newf=_('New feature'),
-			newt=_('New translation'),
-			t1=_('Polish'),
-			t2=_('Croatian'),
-			bug=_('Fix a bug preventing'),
-			bug0=_('scroll with the usual gestures on Brailliant displays'),
-			bug1=_('the use of locale gestures'),
-			bug2=_('keyboard shortcuts from working as expected when a table is specified'),
-			best=_('Improvement concerning'),
-			profs=_('profiles'),
-			profile1=_('Profiles are now reloaded automatically if braille display changes during execution'),
-			rotor=_('the rotor'),
-			rotor1=_('New modes') + ': ' + _('review') + ', ' + _('Tables') + ', ' + _('Moving in the text') + ' ' + _('and') + ' ' + _('Text selection'),
-			secTable=_('possibility to specify a secondary output braille table'),
-			tabSpaces=_('Display tab signs as spaces'),
-			sayReviewModeScroll=_('In review mode, say the current line during text scrolling'),
-			shortcut=_('keyboard shortcuts on braille display')
-		)
+		
 		if configBE.gesturesFileExists:
 			mKB = OrderedDict()
 			mNV = OrderedDict()

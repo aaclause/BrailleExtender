@@ -49,7 +49,7 @@ class AddonDoc():
 			"<ul>",
 				"<li>Adriani Botez &lt;adriani.botez@gmail.com&gt; and Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation") + ";</li>",
 				"<li>Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;: " + _("Persian translation") + ";</li>",
-				"<li>Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer and David Rechtman: " + _("Hebrew translation") + ";</li>",
+				"<li>Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer, David Rechtman and Pavel Kaplan: " + _("Hebrew translation") + ";</li>",
 				"<li>Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li>",
 			"</ul>",
 			"<p>" + _("Additional third party copyrighted code is included:") + "</p>",
@@ -61,7 +61,7 @@ class AddonDoc():
 			"<li>Zvonimir Stanečić " + _("for his tests and suggestions with") + " Braille Wave.</li></ul>",
 			"<p>" + _("And Thank you very much for all your feedback and comments via email.") + " :)</p>"])
 		)
-		
+
 		if configBE.gesturesFileExists:
 			mKB = OrderedDict()
 			mNV = OrderedDict()

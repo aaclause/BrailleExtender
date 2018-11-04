@@ -1,5 +1,5 @@
 # To do list
-here are some ideas of features for BrailleExtender that might be implemented. Possibly unsorted, immature and useless. Everyone can enrich it:
+Here are some ideas of features for BrailleExtender that might be implemented. Possibly unsorted, immature and useless. Everyone can enrich it:
 
 - Add his own input/output braille tables
 - Braille tables switcher: implement group of input/output tables
@@ -17,4 +17,5 @@ here are some ideas of features for BrailleExtender that might be implemented. P
 - Imitate formatting mode from JAWS
 - Import/export settings (particularly for role labels)
 - Mark selected elements with dots 7 and 8 (e.g. in explorer)
+- Skip cells with non-functioning dots
 - Code cleaning

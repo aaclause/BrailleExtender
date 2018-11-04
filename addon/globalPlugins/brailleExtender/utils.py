@@ -10,8 +10,10 @@ import re
 import api
 import braille
 import brailleTables
+import characterProcessing
 import louis
 import config
+import languageHandler
 import ui
 import scriptHandler
 import speech
@@ -223,7 +225,10 @@ def getTextSelection():
 		obj=treeInterceptor
 	try: info=obj.makeTextInfo(textInfos.POSITION_SELECTION)
 	except (RuntimeError, NotImplementedError): info=None
-	if not info or info.isCollapsed: return ''
+	if not info or info.isCollapsed:
+		obj = api.getNavigatorObject()
+		text = obj.name
+		return "%s" % text if text else ''
 	else: return info.text
 
 def getKeysTranslation(n):
@@ -465,3 +470,10 @@ def refreshBD():
 			braille.handler.handleGainFocus(ti)
 	else:
 		braille.handler.handleGainFocus(api.getFocusObject())
+
+def getSpeechSymbols(text = None):
+	if not text: text = getTextSelection()
+	if not text: return ui.message(_("No text selected"))
+	locale = languageHandler.getLanguage()
+	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_CHAR).strip()
+

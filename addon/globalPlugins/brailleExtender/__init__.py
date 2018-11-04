@@ -879,6 +879,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"character where the cursor is located "
 		"and the decimal, binary and octal equivalent.")
 
+	def script_getSpeechOutput(self, gesture):
+		braille.handler.message(utils.getSpeechSymbols())
+	script_getSpeechOutput.__doc__ = _("Show the output speech for selected text in braille. Useful for emojis for example")
 
 	def onDoc(self, evt):
 		return self.script_getHelp(None)

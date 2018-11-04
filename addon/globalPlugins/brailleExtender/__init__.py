@@ -880,8 +880,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		"and the decimal, binary and octal equivalent.")
 
 	def script_getSpeechOutput(self, gesture):
-		braille.handler.message(utils.getSpeechSymbols())
-	script_getSpeechOutput.__doc__ = _("Show the output speech for selected text in braille. Useful for emojis for example")
+		out = utils.getSpeechSymbols()
+		if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message(out)
+		else: ui.browseableMessage(out)
+	script_getSpeechOutput.__doc__ = _("Show the output speech for selected text in braille. Useful for emojis for example" + HLP_browseModeInfo)
 
 	def onDoc(self, evt):
 		return self.script_getHelp(None)

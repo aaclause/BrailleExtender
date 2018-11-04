@@ -475,5 +475,5 @@ def getSpeechSymbols(text = None):
 	if not text: text = getTextSelection()
 	if not text: return ui.message(_("No text selected"))
 	locale = languageHandler.getLanguage()
-	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_CHAR).strip()
+	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_MOST).strip()
 

@@ -41,9 +41,9 @@ class AddonDoc():
 			URL='<a href="%s">%s</a>' % (configBE._addonURL, configBE._addonURL),
 			DESC=self.getDescFormated(configBE._addonDesc)
 		)
-		doc += "<p>" + _("You can find some ideas of features for BrailleExtender that might be implemented here") + """:<br /> <a href="https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list">https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list</a></p>
+		doc += "<p>" + _("You can find some ideas of features for BrailleExtender that might be implemented here") + configBE.sep + """:<br /> <a href="https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list">https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list</a></p>
 		"""
-		doc += '<h2>Copyrights and acknowledgements</h2>' + ('\n'.join([
+		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>' + ('\n'.join([
 			"<p>",
 			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
 			"<ul>",

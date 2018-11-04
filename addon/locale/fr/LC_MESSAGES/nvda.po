@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-04 11:47+0100\n"
-"PO-Revision-Date: 2018-11-04 12:01+0100\n"
+"POT-Creation-Date: 2018-11-04 12:27+0100\n"
+"PO-Revision-Date: 2018-11-04 12:28+0100\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -47,6 +47,10 @@ msgstr "Liens non visités"
 #: addon\globalPlugins\brailleExtender\__init__.py:66
 msgid "Visited links"
 msgstr "Liens visités"
+
+#: addon\globalPlugins\brailleExtender\__init__.py:67
+msgid "Landmarks"
+msgstr "Repères"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:68
 msgid "Headings"
@@ -119,6 +123,14 @@ msgstr "Cases à cocher"
 #: addon\globalPlugins\brailleExtender\__init__.py:85
 msgid "Not link blocks"
 msgstr "Fin de bloc de liens"
+
+#: addon\globalPlugins\brailleExtender\__init__.py:86
+msgid "Frames"
+msgstr "Cadres"
+
+#: addon\globalPlugins\brailleExtender\__init__.py:87
+msgid "Separators"
+msgstr "Séparateurs"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:88
 msgid "Embedded objects"
@@ -715,6 +727,10 @@ msgid ""
 msgstr ""
 "Vous pouvez trouver ici quelques idées de fonctionnalités pour "
 "BrailleExtender qui pourraient être implémentées"
+
+#: addon\globalPlugins\brailleExtender\addonDoc.py:46
+msgid "Copyrights and acknowledgements"
+msgstr "Droits d'auteur et remerciements"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:48
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"

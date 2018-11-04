@@ -15,4 +15,6 @@ here are some ideas of features for BrailleExtender that might be implemented. P
 - One Hand Mode
 - Try to report center, left and right alignments
 - Imitate formatting mode from JAWS
+- Import/export settings (particularly for role labels)
+- Mark selected elements with dots 7 and 8 (e.g. in explorer)
 - Code cleaning

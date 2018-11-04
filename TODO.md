@@ -18,4 +18,5 @@ Here are some ideas of features for BrailleExtender that might be implemented. P
 - Import/export settings (particularly for role labels)
 - Mark selected elements with dots 7 and 8 (e.g. in explorer)
 - Skip cells with non-functioning dots
+- Rotor: customization via settings and make it smarter (e.g. don't show links, headings… in non-virtual documents)
 - Code cleaning

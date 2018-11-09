@@ -31,7 +31,6 @@ def paramsDL(): return {
 	"channel": config.conf["brailleExtender"]["updateChannel"]
 }
 
-url = configBE._addonURL + "latest?" + urllib.urlencode(paramsDL())
 
 def checkUpdates(sil = False):
 
@@ -56,6 +55,7 @@ def checkUpdates(sil = False):
 		if res == wx.YES: os.startfile(configBE._addonURL)
 
 	def processUpdate():
+		url = configBE._addonURL + "latest?" + urllib.urlencode(paramsDL())
 		fp = os.path.join(globalVars.appArgs.configPath, "brailleExtender.nvda-addon")
 		try:
 			dl = urllib.URLopener()

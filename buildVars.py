@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import time
+
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
 
@@ -14,7 +15,7 @@ addon_info = {
 	"addon_name" : "BrailleExtender",
 	# Add-on summary, usually the user visible name of the addon.
 	# Translators: Summary for this add-on to be shown on installation and add-on information.
-	"addon_summary" : _("BrailleExtender"),
+	"addon_summary" : _("Braille Extender"),
 	# Add-on description
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : [
@@ -43,11 +44,18 @@ addon_info = {
 	"addon_url" : "https://andreabc.net/projects/NVDA_addons/BrailleExtender/",
 	# Documentation file name
 	"addon_docFileName" : None,
+	# Minimum NVDA version supported (e.g. "2018.3")
+	"addon_minimumNVDAVersion" : "2018.3",
+	# Last NVDA version supported/tested (e.g. "2018.4", ideally more recent than minimum version)
+	"addon_lastTestedNVDAVersion" : "2019.1",
+	# Add-on update channel (default is stable or None)
+	"addon_updateChannel" : None,
 }
+
 
 import os.path
 
-# Define the python files that are the ²s of your add-on.
+# Define the python files that are the sources of your add-on.
 # You can use glob expressions here, they will be expanded.
 pythonSources = [os.path.join("addon", "*.py"),
 os.path.join("addon", "globalPlugins", "brailleExtender", "*.py")]

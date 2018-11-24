@@ -217,7 +217,7 @@ def executeGesture(self, gesture):
 			raise NoInputGestureAction
 
 		script = gesture.script
-		if 'brailleDisplayDrivers' in str(type(gesture)):
+		if "brailleDisplayDrivers" in str(type(gesture)):
 			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.func_name != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
 			if not config.conf["brailleExtender"]['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
 			elif hasattr(script, "__func__") and (script.__func__.func_name in [
@@ -286,6 +286,29 @@ def executeGesture(self, gesture):
 			return
 
 		raise NoInputGestureAction
+
+# reason for patching: possibility to repeat last shortcut performed quickly
+def emulateKey(self, key, withModifiers=True):
+	"""Emulates a key using the keyboard emulation system.
+	If emulation fails (e.g. because of an unknown key), a debug warning is logged
+	and the system falls back to sending unicode characters.
+	@param withModifiers: Whether this key emulation should include the modifiers that are held virtually.
+		Note that this method does not take care of clearing L{self.currentModifiers}.
+	@type withModifiers: bool
+	"""
+	if withModifiers:
+		# The emulated key should be the last item in the identifier string.
+		keys = list(self.currentModifiers)
+		keys.append(key)
+		gesture = "+".join(keys)
+	else:
+		gesture = key
+	try:
+		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(gesture))
+		instanceGP.lastShortcutPerformed = gesture
+	except:
+		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
+		self.sendChars(key)
 
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input
 def _translate(self, endWord):
@@ -361,5 +384,5 @@ script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
+brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
-

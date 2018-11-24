@@ -152,6 +152,7 @@ def decorator(fn, s):
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = configBE._addonName
 	brailleKeyboardLocked = False
+	lastShortcutPerformed = None
 	hideDots78 = False
 	modifiersLocked = False
 	hourDatePlayed = False
@@ -884,6 +885,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message(out)
 		else: ui.browseableMessage(out)
 	script_getSpeechOutput.__doc__ = _("Show the output speech for selected text in braille. Useful for emojis for example" + HLP_browseModeInfo)
+
+	def script_repeatLastShortcut(self, gesture):
+		if not self.lastShortcutPerformed:
+			ui.message(_("No shortcut performed from a braille display"))
+			return
+		sht =  self.lastShortcutPerformed
+		if nativeModifiers:
+			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
+		else: self.sendComb(sht)
+	script_repeatLastShortcut.__doc__ = _("Repeat the last shortcut performed from a braille display")
 
 	def onDoc(self, evt):
 		return self.script_getHelp(None)

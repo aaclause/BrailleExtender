@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-11-25 14:30+0100\n"
-"PO-Revision-Date: 2018-11-25 14:37+0100\n"
+"PO-Revision-Date: 2018-11-25 19:53+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -596,14 +596,12 @@ msgstr ""
 "Это например, полезно для эмодзи"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:891
-#, fuzzy
 msgid "No shortcut performed from a braille display"
-msgstr " комбинации клавиш на брайлевском дисплее"
+msgstr "Нет выполненой комбинасии клавиш"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:897
-#, fuzzy
 msgid "Repeat the last shortcut performed from a braille display"
-msgstr " комбинации клавиш на брайлевском дисплее"
+msgstr "Повторяет последнюю комбинацию клавишей на брайлевском дисплее"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:914
 #, python-format
@@ -1475,9 +1473,8 @@ msgstr "Нет выделенного текста"
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
 #: buildVars.py:18
-#, fuzzy
 msgid "Braille Extender"
-msgstr "BrailleExtender"
+msgstr "Braille Extender"
 
 #: buildVars.py:22
 msgid ""
@@ -1493,13 +1490,12 @@ msgid "reload two favorite braille display with shortcuts"
 msgstr "перезагрузка до двух брайлевских дисплеев по горячим клавишам."
 
 #: buildVars.py:24
-#, fuzzy
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
 msgstr ""
-"автоматическая привязка брайлевского курсора к режиму просмотра для "
-"избранных приложений  (default: PuTTY, Powershell, bash, cmd)"
+"Автоматическая привязка курсора в терминальных приложениях, как например "
+"PuTTY, Powershell, bash, cmd"
 
 #: buildVars.py:25
 msgid "auto scroll"
@@ -1514,6 +1510,7 @@ msgstr ""
 #: buildVars.py:27
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
 msgstr ""
+"Подчёркивает текст специальными атрибутами с помощью точек 7, и 8 или обеих"
 
 #: buildVars.py:28
 msgid "use two output braille tables simultaneously"
@@ -1528,30 +1525,30 @@ msgid "reverse forward scroll and back scroll buttons"
 msgstr "возможность поменять местами функции правой и левой клавиши прокрутки."
 
 #: buildVars.py:31
-#, fuzzy
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
-msgstr "проговаривание текущей строки во время прокрутки в режиме просмотра."
+msgstr "Проговаривание актуальной строки в режиме просмотра или обзора"
 
 #: buildVars.py:32
 msgid "translate text easily in Unicode braille and vice versa"
-msgstr ""
+msgstr "Легкий перевод в юникодовый брайль и так далее"
 
 #: buildVars.py:33
 msgid ""
 "convert quickly cell description to Unicode braille and vice versa. E.g.: "
 "123 <--> ⠇"
 msgstr ""
+"Бытрая конвертация описания брайлевских клеток на юникод и на описания. нпр: "
+"123 <--> ⠇"
 
 #: buildVars.py:34
-#, fuzzy
 msgid "lock braille keyboard"
-msgstr "Заблокировать/разблокировать брайлевскую клавиатуру"
+msgstr "Заблокировать брайлевскую клавиатуру"
 
 #: buildVars.py:35
 msgid "and much more!"
-msgstr ""
+msgstr "И ещё больше!"
 
 #: buildVars.py:36
 msgid ""
@@ -1561,13 +1558,12 @@ msgstr ""
 "набор горячих клавиш чтобы иметь возможность"
 
 #: buildVars.py:37
-#, fuzzy
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
 msgstr ""
-"эмуляции функциональных клавиш, клавиш управления мультимедийными "
-"проигрывателями, а также для эмуляции клавиш быстрой навигации."
+"Предоставляет готовые сочетания клавиш включая клавиши функций, "
+"мультимедиальных клавиш, быстрой навигации, итд."
 
 #: buildVars.py:38
 msgid "emulate modifier keys, and thus any keyboard shortcut"

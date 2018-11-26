@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-11-25 14:30+0100\n"
-"PO-Revision-Date: 2018-11-25 14:39+0100\n"
+"PO-Revision-Date: 2018-11-26 11:31+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:59
 msgid "Default"
-msgstr "Podrazumjevano"
+msgstr "Podrazumijevano"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:60
 msgid "Moving in the text"
@@ -590,14 +590,12 @@ msgstr ""
 "simbole"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:891
-#, fuzzy
 msgid "No shortcut performed from a braille display"
-msgstr "tipkovnički prečaci na brajičnom redku"
+msgstr "Nema izvođenog prečaca sa brajičnog redka"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:897
-#, fuzzy
 msgid "Repeat the last shortcut performed from a braille display"
-msgstr "tipkovnički prečaci na brajičnom redku"
+msgstr "Ponovi zadnji prečac sa brajičnog retka"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:914
 #, python-format
@@ -1461,9 +1459,8 @@ msgstr "Nema označenog teksta"
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
 #: buildVars.py:18
-#, fuzzy
 msgid "Braille Extender"
-msgstr "BrailleExtender"
+msgstr "Braille Extender"
 
 #: buildVars.py:22
 msgid ""
@@ -1478,13 +1475,12 @@ msgid "reload two favorite braille display with shortcuts"
 msgstr "Ponovno učitavanje dvaju omiljenihbrajičnih redaka sa prečacima"
 
 #: buildVars.py:24
-#, fuzzy
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
 msgstr ""
-"Automatsko prebacivanje u način pregleda u označenim "
-"aplikacijamaaplikacijama (default: PuTTY, Powershell, bash, cmd)"
+"Automatsko prebacivanje kursora u određenim aplikacijama terminala kao što "
+"su to default: PuTTY, Powershell, bash, cmd"
 
 #: buildVars.py:25
 msgid "auto scroll"
@@ -1497,6 +1493,8 @@ msgstr "prebacuje između nekoliko ulaznih ili izlaznih brajičnih tablica"
 #: buildVars.py:27
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
 msgstr ""
+"Označavanje teksta uz pomoć posebnih oznaka koristeći točkice 7 8 ili obje "
+"točkice zajedno"
 
 #: buildVars.py:28
 msgid "use two output braille tables simultaneously"
@@ -1511,31 +1509,32 @@ msgid "reverse forward scroll and back scroll buttons"
 msgstr "zamjena mjesta tipkama za čitanje napred /nazad"
 
 #: buildVars.py:31
-#, fuzzy
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
 msgstr ""
-"U načinu pregleda, izgovori trenutni redak u načinu automatskog čitanja"
+"Izgovori trenutni redak u načinu teksta radi li se o načinu fokusa pregleda "
+"ili obaju"
 
 #: buildVars.py:32
 msgid "translate text easily in Unicode braille and vice versa"
-msgstr ""
+msgstr "Prijevod teksta u brajični Unicode i obratno"
 
 #: buildVars.py:33
 msgid ""
 "convert quickly cell description to Unicode braille and vice versa. E.g.: "
 "123 <--> ⠇"
 msgstr ""
+"Pretvaranje tekstau brajični unicode ili opis znakova i obratno. NPR: 123 <--"
+"> ⠇"
 
 #: buildVars.py:34
-#, fuzzy
 msgid "lock braille keyboard"
-msgstr "Zaključava/otključava brajičnu tipkovnicu"
+msgstr "Zaključavanje brajičnog retka"
 
 #: buildVars.py:35
 msgid "and much more!"
-msgstr ""
+msgstr "I još puno toga!"
 
 #: buildVars.py:36
 msgid ""
@@ -1545,11 +1544,12 @@ msgstr ""
 "omogućio"
 
 #: buildVars.py:37
-#, fuzzy
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
-msgstr "Pristup multimedijskim, funkcijskim, te prečacima brze navigacije"
+msgstr ""
+"Nudi konfigurirane prečace uključujući funkcijske tipke, multimedijske "
+"tipke, brzo kretanje, itd."
 
 #: buildVars.py:38
 msgid "emulate modifier keys, and thus any keyboard shortcut"

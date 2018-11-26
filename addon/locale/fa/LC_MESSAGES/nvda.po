@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-11-25 14:30+0100\n"
-"PO-Revision-Date: 2018-11-25 14:38+0100\n"
+"PO-Revision-Date: 2018-11-26 23:46+0330\n"
 "Last-Translator: Mohammadreza Rashad <mohammadreza5712@gmail.com>\n"
 "Language-Team: \n"
 "Language: fa\n"
@@ -583,13 +583,12 @@ msgstr ""
 "ایمُجی‌ها مفید است"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:891
-#, fuzzy
 msgid "No shortcut performed from a braille display"
-msgstr "برای نمایشگرِ بریلِ فعلی"
+msgstr "میانبری از نمایشگرِ بریل اجرا نشد"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:897
 msgid "Repeat the last shortcut performed from a braille display"
-msgstr ""
+msgstr "تکرارِ آخرین میانبری که توسطِ نمایشگرِ بریل اجرا شده است"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:914
 #, python-format
@@ -1448,7 +1447,6 @@ msgstr "متنی انتخاب نشده است"
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
 #: buildVars.py:18
-#, fuzzy
 msgid "Braille Extender"
 msgstr "BrailleExtender"
 
@@ -1466,13 +1464,12 @@ msgid "reload two favorite braille display with shortcuts"
 msgstr "بارگذاریِ دو نمایشگر بریل با استفاده از میانبر"
 
 #: buildVars.py:24
-#, fuzzy
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
 msgstr ""
-"اتصالِ خودکارِ مکان‌نمای بازبینی به بریل در برنامه‌های منتخب (بطور پیش‌فرض: "
-"PuTTY, Powershell, bash, cmd)"
+"اتصالِ خودکارِ مکان‌نمای بازبینی به بریل در نقش‌های پایانه‌مانند، مثلا PuTTY, "
+"Powershell, bash, cmd"
 
 #: buildVars.py:25
 msgid "auto scroll"
@@ -1484,7 +1481,7 @@ msgstr "بینِ چندین جدولِ بریلِ ورودی و خروجی سو�
 
 #: buildVars.py:27
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
-msgstr ""
+msgstr "نشانه‌گذاری متنِ دارای ویژگی‌های خاص با نقطه‌ی ۷ یا ۸ یا هردو"
 
 #: buildVars.py:28
 msgid "use two output braille tables simultaneously"
@@ -1499,30 +1496,29 @@ msgid "reverse forward scroll and back scroll buttons"
 msgstr "کارِ دکمه‌های جلو بردن و عقب بردن را معکوس میکند"
 
 #: buildVars.py:31
-#, fuzzy
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
-msgstr "خواندنِ خطِّ جاری هنگامِ مرور در حالت بازبینی"
+msgstr "خواندنِ خطِّ جاری هنگامِ مرور در حالت بازبینی، حالتِ فرمان‌پذیری یا هردو"
 
 #: buildVars.py:32
 msgid "translate text easily in Unicode braille and vice versa"
-msgstr ""
+msgstr "برگرداندنِ متن به بریلِ یونیکُد و برعکس به‌راحتی"
 
 #: buildVars.py:33
 msgid ""
 "convert quickly cell description to Unicode braille and vice versa. E.g.: "
 "123 <--> ⠇"
 msgstr ""
+"تبدیلِ سریعِ توصیفِ خانه‌های بریل به بریلِ یونیکُد و برعکس؛ مثلِ: : 123 <--> ⠇"
 
 #: buildVars.py:34
-#, fuzzy
 msgid "lock braille keyboard"
-msgstr "قفل یا باز کردنِ صفحه‌کلیدِ بریل"
+msgstr "قفل کردنِ صفحه‌کلیدِ بریل"
 
 #: buildVars.py:35
 msgid "and much more!"
-msgstr ""
+msgstr "و بیشتر از این‌ها!"
 
 #: buildVars.py:36
 msgid ""
@@ -1532,11 +1528,12 @@ msgstr ""
 "را فراهم کند"
 
 #: buildVars.py:37
-#, fuzzy
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
-msgstr "دسترسی به کلیدهای کاربردی (اف‌ها)، کلیدهای چندرسانه‌ای، پیمایشِ سریع"
+msgstr ""
+"ارائه‌ی نقشه‌ی کاملی از فرمان‌ها شامل کلید‌های کاربردی (F)، کلیدهای چندرسانه‌ای، "
+"پیمایشِ سریع و غیره"
 
 #: buildVars.py:38
 msgid "emulate modifier keys, and thus any keyboard shortcut"

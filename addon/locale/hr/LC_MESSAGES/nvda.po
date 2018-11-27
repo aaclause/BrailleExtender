@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-25 14:30+0100\n"
-"PO-Revision-Date: 2018-11-26 11:31+0100\n"
+"POT-Creation-Date: 2018-11-27 16:05+0100\n"
+"PO-Revision-Date: 2018-11-27 16:08+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -731,76 +731,91 @@ msgstr "Automatsko testiranje"
 msgid "%s braille display"
 msgstr "%s brajični redak"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:44
+#: addon/globalPlugins/brailleExtender/addonDoc.py:35
+#, python-format
+msgid "profile loaded: %s"
+msgstr "Profil je učitan: %s"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:45
 msgid ""
 "You can find some ideas of features for BrailleExtender that might be "
 "implemented here"
 msgstr "Ovdje možete pronaći neke ideje za nove značajke u braille extenderu"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:46
+#: addon/globalPlugins/brailleExtender/addonDoc.py:47
 msgid "Copyrights and acknowledgements"
 msgstr "Autorska prava i zahvale"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:48
+#: addon/globalPlugins/brailleExtender/addonDoc.py:49
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr "Autorska prava (C) 2017 André-Abush Clause, i drugi doprinositelji:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:50
-msgid "German translation"
-msgstr "Njemački prijevod"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:51
-msgid "Persian translation"
-msgstr "Perzijski prijevod"
+msgid "Translators"
+msgstr "Prevoditelji"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:52
-msgid "Hebrew translation"
-msgstr "Hebrejski prijevod"
+msgid "Croatian"
+msgstr "Hrvatski"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:53
-msgid "Polish and Croatian translations"
-msgstr "Poljski i hrvatski prijevod"
+msgid "German"
+msgstr "njemački"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:54
+msgid "Hebrew"
+msgstr "hebrejski"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:55
+msgid "Persian"
+msgstr "Perzijski"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+msgid "Polish"
+msgstr "Poljski"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
+msgid "Russian"
+msgstr "Ruski"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+msgid "Code contributions and other"
+msgstr "doprinosi u kodu i ostalo"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Additional third party copyrighted code is included:"
 msgstr "Dodan je kod treće strane, zaštićen autorskim pravima:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:58
+#: addon/globalPlugins/brailleExtender/addonDoc.py:62
 msgid "Thanks also to"
 msgstr "također zahvaljujem"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
-#: addon/globalPlugins/brailleExtender/addonDoc.py:60
-#: addon/globalPlugins/brailleExtender/addonDoc.py:61
-msgid "for his tests and suggestions with"
-msgstr "Za njegove testowe i sugestije"
+#: addon/globalPlugins/brailleExtender/addonDoc.py:64
+msgid "And thank you very much for all your feedback and comments."
+msgstr "i hvala vam za sve vaše povratne informacije i e-mail komentare"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
-msgid "And Thank you very much for all your feedback and comments via email."
-msgstr "i hvala ti za sve tvoje povratne informacje i e-mail komentare"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:78
+#: addon/globalPlugins/brailleExtender/addonDoc.py:80
 msgid "Simple keys"
 msgstr "jednostavne tipke"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:80
+#: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "Usual shortcuts"
 msgstr "uobičajeni prečaci"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:83
+#: addon/globalPlugins/brailleExtender/addonDoc.py:85
 msgid "Standard NVDA commands"
 msgstr "standardni NVDA prečaci"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:86
+#: addon/globalPlugins/brailleExtender/addonDoc.py:88
 #: addon/globalPlugins/brailleExtender/settings.py:637
 msgid "Modifier keys"
 msgstr "Modifikacijske tipke"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:89
+#: addon/globalPlugins/brailleExtender/addonDoc.py:91
 msgid "Quick navigation keys"
 msgstr "Tipke za brzu navigaciju"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:90
+#: addon/globalPlugins/brailleExtender/addonDoc.py:92
 msgid ""
 "In virtual documents (HTML/PDF/…) you can navigate element type by element "
 "type using keyboard. These navigation keys should work with your braille "
@@ -811,35 +826,35 @@ msgstr ""
 "elemenata koristeći tipkovnicu. ovi tipkovnički prečaci bi trebali raditi sa "
 "vašim brajičnim retkom podjednako.</p><p>Postoje također i dodatni prečaci:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:93
+#: addon/globalPlugins/brailleExtender/addonDoc.py:95
 msgid "Rotor feature"
 msgstr "značajka rotora"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:96
+#: addon/globalPlugins/brailleExtender/addonDoc.py:98
 msgid "Gadget commands"
 msgstr "komande gadgeti"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:100
+#: addon/globalPlugins/brailleExtender/addonDoc.py:102
 msgid "Shortcuts defined outside add-on"
 msgstr "Prečaci definirani izvan dodatka"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:121
+#: addon/globalPlugins/brailleExtender/addonDoc.py:123
 msgid "Keyboard configurations provided"
 msgstr "Omogućene konfiguracije tipkovnice"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:123
+#: addon/globalPlugins/brailleExtender/addonDoc.py:125
 msgid "Keyboard configurations are"
 msgstr "tipkovničke konfiguracije su"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:128
+#: addon/globalPlugins/brailleExtender/addonDoc.py:130
 msgid "Warning:"
 msgstr "Upozorenje:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:129
+#: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "BrailleExtender doesn't seem to support your braille display."
 msgstr "Čini se da BrailleExtender ne podržava vaš brajični redak."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:130
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
 msgid ""
 "However, you can reassign most of these features in the \"Command Gestures\" "
 "dialog in the \"Preferences\" of NVDA."
@@ -847,26 +862,26 @@ msgstr ""
 "Međutim, možete prenamijeniti te geste koristeći dijaloški okvir \"ulazne "
 "geste\" u NVDA \"postavkama\"."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:134
 msgid "Shortcuts on system keyboard specific to the add-on"
 msgstr ""
 "Tipkovnički prečaci na tipkovnici sustava specifični samo za ovaj dodatak"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:151
+#: addon/globalPlugins/brailleExtender/addonDoc.py:153
 #, python-format
 msgid "%s's documentation"
 msgstr "%s's pomoć"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:170
+#: addon/globalPlugins/brailleExtender/addonDoc.py:172
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "Oponaša pritisak %s na tipkovnici sustava"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:177
+#: addon/globalPlugins/brailleExtender/addonDoc.py:179
 msgid "description currently unavailable for this shortcut"
 msgstr "Opis je trenutno nedostupan za ovaj prečac"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:195
+#: addon/globalPlugins/brailleExtender/addonDoc.py:197
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1571,6 +1586,21 @@ msgstr "Brzo pokretanje aplikacije"
 msgid "actions and quick navigation through a rotor"
 msgstr "Brzo kretanje i navigacija putem rotora"
 
+#~ msgid "German translation"
+#~ msgstr "Njemački prijevod"
+
+#~ msgid "Persian translation"
+#~ msgstr "Perzijski prijevod"
+
+#~ msgid "Hebrew translation"
+#~ msgstr "Hebrejski prijevod"
+
+#~ msgid "Polish and Croatian translations"
+#~ msgstr "Poljski i hrvatski prijevod"
+
+#~ msgid "for his tests and suggestions with"
+#~ msgstr "Za njegove testowe i sugestije"
+
 #~ msgid ""
 #~ "define custom rules to mark text with special fields option with braille "
 #~ "dots 7 and 8"
@@ -1590,12 +1620,6 @@ msgstr "Brzo kretanje i navigacija putem rotora"
 
 #~ msgid "New feature"
 #~ msgstr "Nova značajka"
-
-#~ msgid "Polish"
-#~ msgstr "Poljski"
-
-#~ msgid "Croatian"
-#~ msgstr "Hrvatski"
 
 #~ msgid "Fix a bug preventing"
 #~ msgstr "odstranjena greška, koja je onemogućavala"
@@ -1677,9 +1701,6 @@ msgstr "Brzo kretanje i navigacija putem rotora"
 
 #~ msgid "Contracted (grade 2) braille table"
 #~ msgstr "Kratkopisna brajična tablica"
-
-#~ msgid "Profile reloaded"
-#~ msgstr "Profil je ponovno učitaqn"
 
 #~ msgid "%s device reloaded"
 #~ msgstr "Uređaj %s je ponovno učitan"

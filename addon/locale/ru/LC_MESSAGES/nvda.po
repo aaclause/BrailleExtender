@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-25 14:30+0100\n"
-"PO-Revision-Date: 2018-11-25 19:53+0100\n"
+"POT-Creation-Date: 2018-11-27 16:05+0100\n"
+"PO-Revision-Date: 2018-11-27 16:34+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -738,7 +738,12 @@ msgstr "автотест"
 msgid "%s braille display"
 msgstr "Брайлевский дисплей %s"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:44
+#: addon/globalPlugins/brailleExtender/addonDoc.py:35
+#, python-format
+msgid "profile loaded: %s"
+msgstr "профиль загружен: %s"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:45
 msgid ""
 "You can find some ideas of features for BrailleExtender that might be "
 "implemented here"
@@ -746,75 +751,85 @@ msgstr ""
 "Здесь вы можете найти некоторые идеи для улучшений функционала Braille "
 "extender"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:46
+#: addon/globalPlugins/brailleExtender/addonDoc.py:47
 msgid "Copyrights and acknowledgements"
 msgstr "Авторские права и благодарность"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:48
+#: addon/globalPlugins/brailleExtender/addonDoc.py:49
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr ""
 "авторские права (C) 2017 André-Abush Clause, и другие участники проекта"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:50
-msgid "German translation"
-msgstr "перевод на немецкий"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:51
-msgid "Persian translation"
-msgstr "перевод на персидский "
+msgid "Translators"
+msgstr "переводчики"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:52
-msgid "Hebrew translation"
-msgstr "Перевод на иврит"
+msgid "Croatian"
+msgstr "хорватский"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:53
-msgid "Polish and Croatian translations"
-msgstr "перевод на Польский и хорватский "
+msgid "German"
+msgstr "немецкий"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:54
+msgid "Hebrew"
+msgstr "Иврит"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:55
+msgid "Persian"
+msgstr "персидский"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+msgid "Polish"
+msgstr "Польский"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
+msgid "Russian"
+msgstr "русский"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+msgid "Code contributions and other"
+msgstr "Внесение в код и другие"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Additional third party copyrighted code is included:"
 msgstr ""
 "содержит Дополнительные фрагменты кода от третьих лиц, защищенные авторским "
 "правом.  "
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:58
+#: addon/globalPlugins/brailleExtender/addonDoc.py:62
 msgid "Thanks also to"
 msgstr "спасибо также"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
-#: addon/globalPlugins/brailleExtender/addonDoc.py:60
-#: addon/globalPlugins/brailleExtender/addonDoc.py:61
-msgid "for his tests and suggestions with"
-msgstr "за его предложения и тесты"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
-msgid "And Thank you very much for all your feedback and comments via email."
+#: addon/globalPlugins/brailleExtender/addonDoc.py:64
+msgid "And thank you very much for all your feedback and comments."
 msgstr ""
 "а Также, спасибо всем вам за ваши коментарии пересланные по электронной "
 "почте."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:78
+#: addon/globalPlugins/brailleExtender/addonDoc.py:80
 msgid "Simple keys"
 msgstr "Простые сочетания клавиш"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:80
+#: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "Usual shortcuts"
 msgstr "стандартные сочитания клавиш"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:83
+#: addon/globalPlugins/brailleExtender/addonDoc.py:85
 msgid "Standard NVDA commands"
 msgstr "Стандартные команды NVDA"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:86
+#: addon/globalPlugins/brailleExtender/addonDoc.py:88
 #: addon/globalPlugins/brailleExtender/settings.py:637
 msgid "Modifier keys"
 msgstr "Модификаторы"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:89
+#: addon/globalPlugins/brailleExtender/addonDoc.py:91
 msgid "Quick navigation keys"
 msgstr "Клавиши быстрой навигации"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:90
+#: addon/globalPlugins/brailleExtender/addonDoc.py:92
 msgid ""
 "In virtual documents (HTML/PDF/…) you can navigate element type by element "
 "type using keyboard. These navigation keys should work with your braille "
@@ -826,35 +841,35 @@ msgstr ""
 "клавиатуры брайлевского ввода вашего дисплея. кроме этого имеются также "
 "несколько дополнительных специфических команд."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:93
+#: addon/globalPlugins/brailleExtender/addonDoc.py:95
 msgid "Rotor feature"
 msgstr "Функция ротора"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:96
+#: addon/globalPlugins/brailleExtender/addonDoc.py:98
 msgid "Gadget commands"
 msgstr "специальные команды дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:100
+#: addon/globalPlugins/brailleExtender/addonDoc.py:102
 msgid "Shortcuts defined outside add-on"
 msgstr "Сочетания клавиш назначенные вне дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:121
+#: addon/globalPlugins/brailleExtender/addonDoc.py:123
 msgid "Keyboard configurations provided"
 msgstr "установленные профили клавиатуры брайлевского ввода"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:123
+#: addon/globalPlugins/brailleExtender/addonDoc.py:125
 msgid "Keyboard configurations are"
 msgstr "доступны следующие профили конфигурации брайлевской клавиатуры:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:128
+#: addon/globalPlugins/brailleExtender/addonDoc.py:130
 msgid "Warning:"
 msgstr "предупреждение"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:129
+#: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "BrailleExtender doesn't seem to support your braille display."
 msgstr "Braille Extender вероятно не поддерживает ваш брайлевский дисплей."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:130
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
 msgid ""
 "However, you can reassign most of these features in the \"Command Gestures\" "
 "dialog in the \"Preferences\" of NVDA."
@@ -862,27 +877,27 @@ msgstr ""
 "однако вы можете самостоятельно назначить сочитания горячих клавиш для "
 "большинства функций Braille Extender в настройках жестов ввода NVDA."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:134
 msgid "Shortcuts on system keyboard specific to the add-on"
 msgstr ""
 "сочитания горячих клавиш системной клавиатуры для специфических функций "
 "дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:151
+#: addon/globalPlugins/brailleExtender/addonDoc.py:153
 #, python-format
 msgid "%s's documentation"
 msgstr "помощь для %s"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:170
+#: addon/globalPlugins/brailleExtender/addonDoc.py:172
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "эмулирует нажатие %s на системной клавиатуре."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:177
+#: addon/globalPlugins/brailleExtender/addonDoc.py:179
 msgid "description currently unavailable for this shortcut"
 msgstr "описание функции данного сочитания клавиш пока недоступно."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:195
+#: addon/globalPlugins/brailleExtender/addonDoc.py:197
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1588,6 +1603,21 @@ msgid "actions and quick navigation through a rotor"
 msgstr ""
 "выполнение некоторых действий и функций быстрой навигации посредствам ротора."
 
+#~ msgid "German translation"
+#~ msgstr "перевод на немецкий"
+
+#~ msgid "Persian translation"
+#~ msgstr "перевод на персидский "
+
+#~ msgid "Hebrew translation"
+#~ msgstr "Перевод на иврит"
+
+#~ msgid "Polish and Croatian translations"
+#~ msgstr "перевод на Польский и хорватский "
+
+#~ msgid "for his tests and suggestions with"
+#~ msgstr "за его предложения и тесты"
+
 #~ msgid ""
 #~ "define custom rules to mark text with special fields option with braille "
 #~ "dots 7 and 8"
@@ -1608,12 +1638,6 @@ msgstr ""
 
 #~ msgid "New feature"
 #~ msgstr "Новая функция"
-
-#~ msgid "Polish"
-#~ msgstr "Польский"
-
-#~ msgid "Croatian"
-#~ msgstr "хорватский"
 
 #~ msgid "Fix a bug preventing"
 #~ msgstr "Исправлена ошибка, которая мешала"
@@ -1694,9 +1718,6 @@ msgstr ""
 
 #~ msgid "Contracted (grade 2) braille table"
 #~ msgstr "Брайлевская таблица 2-ой ступени (краткопись)"
-
-#~ msgid "Profile reloaded"
-#~ msgstr "Профиль - перезагружен"
 
 #~ msgid "%s device reloaded"
 #~ msgstr "устройство %s перезагружено"

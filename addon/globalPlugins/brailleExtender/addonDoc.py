@@ -24,7 +24,7 @@ class AddonDoc():
 		instanceGP = instanceGp
 		gestures = instanceGP.getGestures()
 		doc = """
-		<h1>{NAME}{DISPLAY}</h1>
+		<h1>{NAME}{DISPLAY}{PROFILE}</h1>
 		<p>Version {VERSION}<br />
 		{AUTHOR}<br />
 		{URL}</p>
@@ -32,6 +32,7 @@ class AddonDoc():
 		""".format(
 			NAME=configBE._addonName,
 			DISPLAY=configBE.sep + ': ' + _('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '',
+			PROFILE = ", "+_("profile loaded: %s") % "default",
 			VERSION=configBE._addonVersion,
 			AUTHOR=configBE._addonAuthor.replace(
 				'<',
@@ -43,25 +44,26 @@ class AddonDoc():
 		)
 		doc += "<p>" + _("You can find some ideas of features for BrailleExtender that might be implemented here") + configBE.sep + """:<br /> <a href="https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list">https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list</a></p>
 		"""
-		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>" + ('\n'.join([
+		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>" + (''.join([
 			"<p>",
 			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
-			"<ul>",
-				"<li>Adriani Botez &lt;adriani.botez@gmail.com&gt; and Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;: " + _("German translation") + ";</li>",
-				"<li>Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;: " + _("Persian translation") + ";</li>",
-				"<li>Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer, David Rechtman and Pavel Kaplan: " + _("Hebrew translation") + ";</li>",
-				"<li>Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;: " + _("Polish and Croatian translations") + ".</li>",
+			"<h3>"+_("Translators")+"""</h3>
+			<ul>""",
+				"<li>", _("Croatian"), configBE.sep, ": Zvonimir Stanečić <zvonimirek222@yandex.com>",
+				"<li>", _("German"), configBE.sep, ": Adriani Botez <adriani.botez@gmail.com>, Jürgen Schwingshandl <jbs@b-a-c.at>",
+				"<li>", _("Hebrew"), configBE.sep, ": Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
+				"<li>", _("Persian"), configBE.sep, ": Mohammadreza Rashad <mohammadreza5712@gmail.com>",
+				"<li>", _("Polish"), configBE.sep, ": Zvonimir Stanečić, Dorota Krać",
+				"<li>", _("Russian"), configBE.sep, ": Zvonimir Stanečić, Pavel Kaplan <pavel46@gmail.com>",
 			"</ul>",
-			"<p>" + _("Additional third party copyrighted code is included:") + "</p>",
+			"<h3>"+_("Code contributions and other")+"</h3><p>" + _("Additional third party copyrighted code is included:") + "</p>",
 			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
 		""".format(SEP=configBE.sep), "</ul>",
-			"<p>" + _("Thanks also to") + ":</p>",
-			"<ul><li>Corentin " + _("for his tests and suggestions with") + " Brailliant;</li>",
-			"<li>Louis " + _("for his tests and suggestions with") + " Focus.</li>",
-			"<li>Zvonimir Stanečić " + _("for his tests and suggestions with") + " Braille Wave.</li></ul>",
-			"<p>" + _("And Thank you very much for all your feedback and comments via email.") + " :)</p>"])
+			"<p>" + _("Thanks also to") + configBE.sep +": ",
+			"Daniel Cotto, Corentin, Louis.</p>",
+			"<p>" + _("And thank you very much for all your feedback and comments.") + " 😀</p>"
+			])
 		)
-
 		if configBE.gesturesFileExists:
 			mKB = OrderedDict()
 			mNV = OrderedDict()

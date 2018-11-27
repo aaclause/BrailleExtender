@@ -347,17 +347,17 @@ def beautifulSht(t, curBD='baum', model = True, sep = ' / '):
 	t = t.replace(';',' ')
 	t = t.replace('  ',' ')
 	reps = {
-		'b10': 'b0',
-		'braillespacebar': _('braillespacebar'),
-		'space': _('space'),
-		'leftshiftkey': _('left SHIFT'),
-		'rightshiftkey': _('right SHIFT'),
-		'leftgdfbutton': _('left selector'),
-		'rightgdfbutton': _('right selector'),
-		'Dot': _('Dot')
+		"b10": "b0",
+		"braillespacebar": "space",
+		"space": _('space'),
+		"leftshiftkey": _("left SHIFT"),
+		"rightshiftkey": _("right SHIFT"),
+		"leftgdfbutton": _("left selector"),
+		"rightgdfbutton": _("right selector"),
+		"Dot": _("Dot")
 	}
 	mdl = ''
-	patern = r'^.+\.([^)]+)\).+$'
+	patern = r"^.+\.([^)]+)\).+$"
 	t = t.replace(';', ',')
 	out = []
 	for gesture in t.split(' '):
@@ -366,7 +366,8 @@ def beautifulSht(t, curBD='baum', model = True, sep = ' / '):
 		if re.match(patern, gesture): mdl = re.sub(patern, r'\1', gesture)
 		gesture = re.sub(r'.+:', '', gesture)
 		gesture = '+'.join(sorted(gesture.split('+')))
-		for rep in reps: gesture = gesture.replace(rep, reps[rep])
+		for rep in reps:
+			gesture = re.sub("(\+|^)%s(\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
 		out.append(_('{gesture} on {brailleDisplay}').format(gesture=gesture, brailleDisplay=mdl) if mdl != '' else gesture)
 	return out if sep == '' else sep.join(out)
 

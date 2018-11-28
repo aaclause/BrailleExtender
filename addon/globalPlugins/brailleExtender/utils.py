@@ -354,7 +354,7 @@ def beautifulSht(t, curBD='baum', model = True, sep = ' / '):
 		"rightshiftkey": _("right SHIFT"),
 		"leftgdfbutton": _("left selector"),
 		"rightgdfbutton": _("right selector"),
-		"Dot": _("Dot")
+		"dot": _("dot")
 	}
 	mdl = ''
 	patern = r"^.+\.([^)]+)\).+$"
@@ -367,7 +367,7 @@ def beautifulSht(t, curBD='baum', model = True, sep = ' / '):
 		gesture = re.sub(r'.+:', '', gesture)
 		gesture = '+'.join(sorted(gesture.split('+')))
 		for rep in reps:
-			gesture = re.sub("(\+|^)%s(\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
+			gesture = re.sub("(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
 		out.append(_('{gesture} on {brailleDisplay}').format(gesture=gesture, brailleDisplay=mdl) if mdl != '' else gesture)
 	return out if sep == '' else sep.join(out)
 

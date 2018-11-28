@@ -620,21 +620,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_translateInBRU(self, gesture):
 		t = utils.getTextInBraille()
 		if not t.strip(): return ui.message(_("No text selection"))
-		ui.browseableMessage('<pre>%s</pre>' % t, _("Unicode Braille conversion"), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion"), True)
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")
 
 	def script_charsToCellDescriptions(self, gesture):
 		t = utils.getTextInBraille()
 		t = utils.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
-		ui.browseableMessage(t)
+		ui.browseableMessage(t, _("Braille Unicode to cell descriptions"))
 	script_charsToCellDescriptions.__doc__ = _("Convert text selection in braille cell descriptions and display it in a browseable message")
 
 	def script_cellDescriptionsToChars(self, gesture):
 		t = utils.getTextSelection()
 		if not t.strip(): return ui.message(_("No text selection"))
 		t = utils.descriptionToUnicodeBraille(t)
-		ui.browseableMessage(t)
+		ui.browseableMessage(t, _("Cell descriptions to braille Unicode"))
 	script_cellDescriptionsToChars.__doc__ = _("Braille cell description to Unicode Braille. E.g.: in a edit field type '125-24-0-1-123-123'. Then select this text and execute this command")
 
 	def script_position(self, gesture=None):

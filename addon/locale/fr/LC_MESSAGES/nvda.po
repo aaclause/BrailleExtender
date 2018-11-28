@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-27 15:58+0100\n"
-"PO-Revision-Date: 2018-11-27 16:18+0100\n"
+"POT-Creation-Date: 2018-11-28 09:51+0100\n"
+"PO-Revision-Date: 2018-11-28 09:59+0100\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -431,6 +431,10 @@ msgstr ""
 "Convertir la sélection de texte en braille unicode et l’afficher dans un "
 "message navigable"
 
+#: addon\globalPlugins\brailleExtender\__init__.py:630
+msgid "Braille Unicode to cell descriptions"
+msgstr "Braille Unicode vers descriptions de cellule"
+
 #: addon\globalPlugins\brailleExtender\__init__.py:631
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
@@ -438,6 +442,10 @@ msgid ""
 msgstr ""
 "Convertir la sélection de texte en descriptions de cellules braille et "
 "l’afficher dans un message navigable"
+
+#: addon\globalPlugins\brailleExtender\__init__.py:637
+msgid "Cell descriptions to braille Unicode"
+msgstr "Descriptions de cellules vers braille Unicode"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:638
 msgid ""
@@ -1434,10 +1442,6 @@ msgstr "Combinaisons disponibles"
 msgid "One combination available"
 msgstr "Une combinaison disponible"
 
-#: addon\globalPlugins\brailleExtender\utils.py:351
-msgid "braillespacebar"
-msgstr "barre d’espace"
-
 #: addon\globalPlugins\brailleExtender\utils.py:352
 msgid "space"
 msgstr "espace"
@@ -1459,23 +1463,23 @@ msgid "right selector"
 msgstr "sélecteur droit"
 
 #: addon\globalPlugins\brailleExtender\utils.py:357
-msgid "Dot"
-msgstr "Point"
+msgid "dot"
+msgstr "point"
 
-#: addon\globalPlugins\brailleExtender\utils.py:370
+#: addon\globalPlugins\brailleExtender\utils.py:371
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} sur {brailleDisplay}"
 
-#: addon\globalPlugins\brailleExtender\utils.py:447
+#: addon\globalPlugins\brailleExtender\utils.py:448
 msgid "No text"
 msgstr "Pas de texte"
 
-#: addon\globalPlugins\brailleExtender\utils.py:456
+#: addon\globalPlugins\brailleExtender\utils.py:457
 msgid "Not text"
 msgstr "Ce n’est pas du texte"
 
-#: addon\globalPlugins\brailleExtender\utils.py:476
+#: addon\globalPlugins\brailleExtender\utils.py:477
 msgid "No text selected"
 msgstr "Pas de sélection de texte"
 
@@ -1502,16 +1506,12 @@ msgstr ""
 "aisément"
 
 #: buildVars.py:24
-#, fuzzy
-#| msgid ""
-#| "Automatic review cursor tethering for selected apps (default: PuTTY, "
-#| "Powershell, bash, cmd)"
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
 msgstr ""
-"de basculer automatiquement en mode revue dans les applications (par "
-"défaut : PuTTY, Powershell, bash, cmd)"
+"basculer automatiquement le suivi braille en mode revue dans les "
+"applications avec terminal comme PuTTY, Powershell, bash, cmd"
 
 #: buildVars.py:25
 msgid "auto scroll"
@@ -1540,12 +1540,12 @@ msgid "reverse forward scroll and back scroll buttons"
 msgstr "Inverser les boutons de défilement arrière et avant"
 
 #: buildVars.py:31
-#, fuzzy
-#| msgid "say the current line during text scrolling, in review mode"
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
-msgstr "en mode revue, énoncer le texte pendant le défilement"
+msgstr ""
+"énoncer la ligne en cours en mode revue et/ou en mode focus pendant le "
+"défilement du texte"
 
 #: buildVars.py:32
 msgid "translate text easily in Unicode braille and vice versa"
@@ -1601,6 +1601,12 @@ msgstr "de lancer rapidement des applications"
 #: buildVars.py:41
 msgid "actions and quick navigation through a rotor"
 msgstr "actions et navigation rapide au travers d’un rotor"
+
+#~ msgid "braillespacebar"
+#~ msgstr "barre d’espace"
+
+#~ msgid "Dot"
+#~ msgstr "Point"
 
 #~ msgid "German translation"
 #~ msgstr "Traduction en allemand"

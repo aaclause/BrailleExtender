@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-27 16:05+0100\n"
-"PO-Revision-Date: 2018-11-27 16:28+0100\n"
+"POT-Creation-Date: 2018-11-28 16:29+0100\n"
+"PO-Revision-Date: 2018-11-28 16:32+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -434,6 +434,10 @@ msgstr ""
 "przekształca zaznaczenie tekstu do brajla unikodowego i wyświetla "
 "zaznaczenie w wirtualizowanym oknie"
 
+#: addon/globalPlugins/brailleExtender/__init__.py:630
+msgid "Braille Unicode to cell descriptions"
+msgstr "Brajl unikodowy do opisu znaków"
+
 #: addon/globalPlugins/brailleExtender/__init__.py:631
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
@@ -441,6 +445,10 @@ msgid ""
 msgstr ""
 "Przekształca zaznaczenie tekstu do opisów komórek brajlowskich i wyświetla "
 "zaznaczenie w wirtualizowanym oknie"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:637
+msgid "Cell descriptions to braille Unicode"
+msgstr "Opis brajlowskich komórek do brajla unikodowego"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:638
 msgid ""
@@ -1436,10 +1444,6 @@ msgstr "dostępne skróty"
 msgid "One combination available"
 msgstr "Jeden dostępny skrót"
 
-#: addon/globalPlugins/brailleExtender/utils.py:351
-msgid "braillespacebar"
-msgstr "brajlowskaspacja"
-
 #: addon/globalPlugins/brailleExtender/utils.py:352
 msgid "space"
 msgstr "spacja"
@@ -1461,23 +1465,23 @@ msgid "right selector"
 msgstr "Prawe zaznaczanie"
 
 #: addon/globalPlugins/brailleExtender/utils.py:357
-msgid "Dot"
-msgstr "Punkt"
+msgid "dot"
+msgstr "punkt"
 
-#: addon/globalPlugins/brailleExtender/utils.py:370
+#: addon/globalPlugins/brailleExtender/utils.py:371
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} na {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:447
+#: addon/globalPlugins/brailleExtender/utils.py:448
 msgid "No text"
 msgstr "Brak tekstu"
 
-#: addon/globalPlugins/brailleExtender/utils.py:456
+#: addon/globalPlugins/brailleExtender/utils.py:457
 msgid "Not text"
 msgstr "Nie jest tekstem"
 
-#: addon/globalPlugins/brailleExtender/utils.py:476
+#: addon/globalPlugins/brailleExtender/utils.py:477
 msgid "No text selected"
 msgstr "Brak zaznaczonego tekstu"
 
@@ -1598,6 +1602,12 @@ msgstr "Szybkie uruchamianie aplikacji"
 #: buildVars.py:41
 msgid "actions and quick navigation through a rotor"
 msgstr "akcje i szybka nawigacja za pomocą rotora"
+
+#~ msgid "braillespacebar"
+#~ msgstr "brajlowskaspacja"
+
+#~ msgid "Dot"
+#~ msgstr "Punkt"
 
 #~ msgid "German translation"
 #~ msgstr "Tłumaczenie niemieckie"

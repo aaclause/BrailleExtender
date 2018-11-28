@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-27 16:05+0100\n"
-"PO-Revision-Date: 2018-11-27 16:34+0100\n"
+"POT-Creation-Date: 2018-11-28 16:29+0100\n"
+"PO-Revision-Date: 2018-11-28 16:35+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -434,6 +434,10 @@ msgstr ""
 "Преобразует выделенный текст в брайлевском юникоде, и показывает его в окне "
 "просмотра"
 
+#: addon/globalPlugins/brailleExtender/__init__.py:630
+msgid "Braille Unicode to cell descriptions"
+msgstr "юникод брайл до описаний знаков"
+
 #: addon/globalPlugins/brailleExtender/__init__.py:631
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
@@ -441,6 +445,10 @@ msgid ""
 msgstr ""
 "Преобразует выделенный текст в описание брайлевских клеток и  показывает его "
 "в окне просмотра"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:637
+msgid "Cell descriptions to braille Unicode"
+msgstr "Описаний знаков до юникод брайля"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:638
 msgid ""
@@ -1440,10 +1448,6 @@ msgstr "Доступные сочетания"
 msgid "One combination available"
 msgstr "Одно сочетание доступно"
 
-#: addon/globalPlugins/brailleExtender/utils.py:351
-msgid "braillespacebar"
-msgstr "Брайлевский пробел"
-
 #: addon/globalPlugins/brailleExtender/utils.py:352
 msgid "space"
 msgstr "пробел"
@@ -1465,23 +1469,23 @@ msgid "right selector"
 msgstr "Правое выбирание"
 
 #: addon/globalPlugins/brailleExtender/utils.py:357
-msgid "Dot"
-msgstr "Точка"
+msgid "dot"
+msgstr "точка"
 
-#: addon/globalPlugins/brailleExtender/utils.py:370
+#: addon/globalPlugins/brailleExtender/utils.py:371
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} на {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:447
+#: addon/globalPlugins/brailleExtender/utils.py:448
 msgid "No text"
 msgstr "Нет текста"
 
-#: addon/globalPlugins/brailleExtender/utils.py:456
+#: addon/globalPlugins/brailleExtender/utils.py:457
 msgid "Not text"
 msgstr "вне текста"
 
-#: addon/globalPlugins/brailleExtender/utils.py:476
+#: addon/globalPlugins/brailleExtender/utils.py:477
 msgid "No text selected"
 msgstr "Нет выделенного текста"
 
@@ -1602,6 +1606,12 @@ msgstr "запускайте программы быстро"
 msgid "actions and quick navigation through a rotor"
 msgstr ""
 "выполнение некоторых действий и функций быстрой навигации посредствам ротора."
+
+#~ msgid "braillespacebar"
+#~ msgstr "Брайлевский пробел"
+
+#~ msgid "Dot"
+#~ msgstr "Точка"
 
 #~ msgid "German translation"
 #~ msgstr "перевод на немецкий"

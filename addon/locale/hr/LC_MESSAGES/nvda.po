@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-27 16:05+0100\n"
-"PO-Revision-Date: 2018-11-27 16:08+0100\n"
+"POT-Creation-Date: 2018-11-28 16:29+0100\n"
+"PO-Revision-Date: 2018-11-28 16:38+0100\n"
 "Last-Translator: Zvonimir Stanečić <zvonimirek222@webczatnet.pl>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -430,6 +430,10 @@ msgid ""
 msgstr ""
 "Pretvara tekst u Unicode brajicu i prikazuje ga kao virtualiziranu poruku"
 
+#: addon/globalPlugins/brailleExtender/__init__.py:630
+msgid "Braille Unicode to cell descriptions"
+msgstr "Brajični unicode na opise znakova"
+
 #: addon/globalPlugins/brailleExtender/__init__.py:631
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
@@ -437,6 +441,10 @@ msgid ""
 msgstr ""
 "Pretvara tekst u format opisa brajičnih ćelija i prikazuje ga u virtualnom "
 "prozoru"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:637
+msgid "Cell descriptions to braille Unicode"
+msgstr "Opisi znakova na brajični unicode"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:638
 msgid ""
@@ -1426,10 +1434,6 @@ msgstr "Dostupne kombinacije"
 msgid "One combination available"
 msgstr "Jedna kombinacija dostupna"
 
-#: addon/globalPlugins/brailleExtender/utils.py:351
-msgid "braillespacebar"
-msgstr "Brajičnirazmak"
-
 #: addon/globalPlugins/brailleExtender/utils.py:352
 msgid "space"
 msgstr "razmak"
@@ -1451,23 +1455,23 @@ msgid "right selector"
 msgstr "Desni odabirnik"
 
 #: addon/globalPlugins/brailleExtender/utils.py:357
-msgid "Dot"
+msgid "dot"
 msgstr "točkica"
 
-#: addon/globalPlugins/brailleExtender/utils.py:370
+#: addon/globalPlugins/brailleExtender/utils.py:371
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} na {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:447
+#: addon/globalPlugins/brailleExtender/utils.py:448
 msgid "No text"
 msgstr "Nema teksta"
 
-#: addon/globalPlugins/brailleExtender/utils.py:456
+#: addon/globalPlugins/brailleExtender/utils.py:457
 msgid "Not text"
 msgstr "Nije tekst"
 
-#: addon/globalPlugins/brailleExtender/utils.py:476
+#: addon/globalPlugins/brailleExtender/utils.py:477
 msgid "No text selected"
 msgstr "Nema označenog teksta"
 
@@ -1585,6 +1589,12 @@ msgstr "Brzo pokretanje aplikacije"
 #: buildVars.py:41
 msgid "actions and quick navigation through a rotor"
 msgstr "Brzo kretanje i navigacija putem rotora"
+
+#~ msgid "braillespacebar"
+#~ msgstr "Brajičnirazmak"
+
+#~ msgid "Dot"
+#~ msgstr "točkica"
 
 #~ msgid "German translation"
 #~ msgstr "Njemački prijevod"

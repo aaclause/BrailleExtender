@@ -2,9 +2,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-11-25 14:30+0100\n"
-"PO-Revision-Date: 2018-11-26 23:46+0330\n"
-"Last-Translator: Mohammadreza Rashad <mohammadreza5712@gmail.com>\n"
+"POT-Creation-Date: 2018-11-30 10:32+0100\n"
+"PO-Revision-Date: 2018-11-30 10:38+0100\n"
+"Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
@@ -424,6 +424,10 @@ msgid ""
 msgstr ""
 "متنِ انتخاب‌شده را به بریلِ یونیکُد تبدیل کرده و در یک پیامِ قابلِ مرور نمایش میدهد"
 
+#: addon/globalPlugins/brailleExtender/__init__.py:630
+msgid "Braille Unicode to cell descriptions"
+msgstr ""
+
 #: addon/globalPlugins/brailleExtender/__init__.py:631
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
@@ -431,6 +435,10 @@ msgid ""
 msgstr ""
 "متنِ انتخاب‌شده را به شکلِ توصیفِ خانه‌ی بریل تبدیل کرده و در یک پیامِ قابلِ مرور "
 "نمایش میدهد"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:637
+msgid "Cell descriptions to braille Unicode"
+msgstr ""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:638
 msgid ""
@@ -721,7 +729,12 @@ msgstr "آزمونِ خودکار"
 msgid "%s braille display"
 msgstr "نمایشگرِ بریلِ %s"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:44
+#: addon/globalPlugins/brailleExtender/addonDoc.py:35
+#, fuzzy, python-format
+msgid "profile loaded: %s"
+msgstr "نامِ فایل: %s"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:45
 msgid ""
 "You can find some ideas of features for BrailleExtender that might be "
 "implemented here"
@@ -729,73 +742,84 @@ msgstr ""
 "میتوانید برخی ایده‌های مربوط به امکانات BrailleExtender را که ممکن است در "
 "افزونه به کار گرفته شده باشد، اینجا بیابید"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:46
+#: addon/globalPlugins/brailleExtender/addonDoc.py:47
 msgid "Copyrights and acknowledgements"
 msgstr "حقوقِ تألیف و قدردانی‌ها"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:48
+#: addon/globalPlugins/brailleExtender/addonDoc.py:49
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr ""
 "حقِ تألیف (C) 2017 متعلق است به André-Abush Clause و دیگر مشارکت‌کنندگان:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:50
-msgid "German translation"
-msgstr "ترجمه‌ی آلمانی"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:51
-msgid "Persian translation"
-msgstr "ترجمه‌ی فارسی"
+msgid "Translators"
+msgstr ""
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:52
-msgid "Hebrew translation"
-msgstr "ترجمه‌ی عِبری"
+msgid "Croatian"
+msgstr ""
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:53
-msgid "Polish and Croatian translations"
-msgstr "ترجمه‌های لهستانی و کرواتی"
+msgid "German"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:54
+msgid "Hebrew"
+msgstr ""
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:55
+msgid "Persian"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+msgid "Polish"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
+msgid "Russian"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+msgid "Code contributions and other"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Additional third party copyrighted code is included:"
 msgstr "کدِ دارای حقِ تألیفِ افزونتری در این افزونه موجود است:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:58
+#: addon/globalPlugins/brailleExtender/addonDoc.py:62
 msgid "Thanks also to"
 msgstr "همچنین تشکر میکنم از"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
-#: addon/globalPlugins/brailleExtender/addonDoc.py:60
-#: addon/globalPlugins/brailleExtender/addonDoc.py:61
-msgid "for his tests and suggestions with"
-msgstr "برای آزمایش‌ها و پیشنهادهایش با"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
-msgid "And Thank you very much for all your feedback and comments via email."
+#: addon/globalPlugins/brailleExtender/addonDoc.py:64
+#, fuzzy
+msgid "And thank you very much for all your feedback and comments."
 msgstr ""
 "و از شما برای بازخوردهایتان و دیدگاه‌هایی که با ایمیل ارسال میکنید، بسیار "
 "سپاسگزارم."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:78
+#: addon/globalPlugins/brailleExtender/addonDoc.py:80
 msgid "Simple keys"
 msgstr "کلیدهای ساده"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:80
+#: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "Usual shortcuts"
 msgstr "میانبرهای معمول"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:83
+#: addon/globalPlugins/brailleExtender/addonDoc.py:85
 msgid "Standard NVDA commands"
 msgstr "فرمان‌های استانداردِ NVDA"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:86
+#: addon/globalPlugins/brailleExtender/addonDoc.py:88
 #: addon/globalPlugins/brailleExtender/settings.py:637
 msgid "Modifier keys"
 msgstr "کلیدهای مبدل"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:89
+#: addon/globalPlugins/brailleExtender/addonDoc.py:91
 msgid "Quick navigation keys"
 msgstr "کلیدهای پیمایشِ سریع"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:90
+#: addon/globalPlugins/brailleExtender/addonDoc.py:92
 msgid ""
 "In virtual documents (HTML/PDF/…) you can navigate element type by element "
 "type using keyboard. These navigation keys should work with your braille "
@@ -807,35 +831,35 @@ msgstr ""
 "نیز همانند صفحه‌کلید معمولی کار کنند.</p><p>افزون بر این، چند کلید میانبر "
 "ویژه هم وجود دارد:: "
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:93
+#: addon/globalPlugins/brailleExtender/addonDoc.py:95
 msgid "Rotor feature"
 msgstr "امکانِ گردونه"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:96
+#: addon/globalPlugins/brailleExtender/addonDoc.py:98
 msgid "Gadget commands"
 msgstr "فرمان‌های گجت"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:100
+#: addon/globalPlugins/brailleExtender/addonDoc.py:102
 msgid "Shortcuts defined outside add-on"
 msgstr "میانبرهای تعیین‌شده خارج از افزونه"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:121
+#: addon/globalPlugins/brailleExtender/addonDoc.py:123
 msgid "Keyboard configurations provided"
 msgstr "پیکره‌بندی‌های صفحه‌کلید ارائه شده است"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:123
+#: addon/globalPlugins/brailleExtender/addonDoc.py:125
 msgid "Keyboard configurations are"
 msgstr "پیکره‌بندی‌های صفحه‌کلید عبارتند از"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:128
+#: addon/globalPlugins/brailleExtender/addonDoc.py:130
 msgid "Warning:"
 msgstr "هشدار:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:129
+#: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "BrailleExtender doesn't seem to support your braille display."
 msgstr "به نظر میرسد BrailleExtender نمایشگرِ بریلِ شما را پشتیبانی نمیکند."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:130
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
 msgid ""
 "However, you can reassign most of these features in the \"Command Gestures\" "
 "dialog in the \"Preferences\" of NVDA."
@@ -843,25 +867,25 @@ msgstr ""
 "با این حال، میتوانید بیشترِ این امکانات را با اختصاص دادَنِ کلیدهای مورد نظرتان "
 "در پنجره‌ی مدیریتِ فرمان‌های ورودی ذیلِ منوی تنظیماتِ  NVDA به کار بگیرید."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:134
 msgid "Shortcuts on system keyboard specific to the add-on"
 msgstr "میانبرهای ویژه‌ی این افزونه روی صفحه‌کلیدِ سیستم"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:151
+#: addon/globalPlugins/brailleExtender/addonDoc.py:153
 #, python-format
 msgid "%s's documentation"
 msgstr "راهنمای %s"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:170
+#: addon/globalPlugins/brailleExtender/addonDoc.py:172
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "فِشُردنِ %s را روی صفحه‌کلیدِ سیستم تقلید میکند"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:177
+#: addon/globalPlugins/brailleExtender/addonDoc.py:179
 msgid "description currently unavailable for this shortcut"
 msgstr "در حالِ حاضر توضیحی برای این میانبر موجود نیست"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:195
+#: addon/globalPlugins/brailleExtender/addonDoc.py:197
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1399,10 +1423,6 @@ msgstr "ترکیب‌های موجود"
 msgid "One combination available"
 msgstr "یک ترکیب موجود است"
 
-#: addon/globalPlugins/brailleExtender/utils.py:351
-msgid "braillespacebar"
-msgstr "فاصله‌ی بریل"
-
 #: addon/globalPlugins/brailleExtender/utils.py:352
 msgid "space"
 msgstr "فاصله"
@@ -1424,23 +1444,24 @@ msgid "right selector"
 msgstr "انتخابگرِ راست"
 
 #: addon/globalPlugins/brailleExtender/utils.py:357
-msgid "Dot"
-msgstr "نقطه"
+#, fuzzy
+msgid "dot"
+msgstr "نقطه‌ی ۷"
 
-#: addon/globalPlugins/brailleExtender/utils.py:370
+#: addon/globalPlugins/brailleExtender/utils.py:371
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} روی {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:447
+#: addon/globalPlugins/brailleExtender/utils.py:448
 msgid "No text"
 msgstr "بدونِ متن"
 
-#: addon/globalPlugins/brailleExtender/utils.py:456
+#: addon/globalPlugins/brailleExtender/utils.py:457
 msgid "Not text"
 msgstr "متن نیست"
 
-#: addon/globalPlugins/brailleExtender/utils.py:476
+#: addon/globalPlugins/brailleExtender/utils.py:477
 msgid "No text selected"
 msgstr "متنی انتخاب نشده است"
 
@@ -1554,6 +1575,27 @@ msgstr "راه‌اندازیِ سریعِ یک برنامه"
 #: buildVars.py:41
 msgid "actions and quick navigation through a rotor"
 msgstr "عملیات و پیمایشِ سریع از طریق یک گردونه (Rotor)"
+
+#~ msgid "German translation"
+#~ msgstr "ترجمه‌ی آلمانی"
+
+#~ msgid "Persian translation"
+#~ msgstr "ترجمه‌ی فارسی"
+
+#~ msgid "Hebrew translation"
+#~ msgstr "ترجمه‌ی عِبری"
+
+#~ msgid "Polish and Croatian translations"
+#~ msgstr "ترجمه‌های لهستانی و کرواتی"
+
+#~ msgid "for his tests and suggestions with"
+#~ msgstr "برای آزمایش‌ها و پیشنهادهایش با"
+
+#~ msgid "braillespacebar"
+#~ msgstr "فاصله‌ی بریل"
+
+#~ msgid "Dot"
+#~ msgstr "نقطه"
 
 #~ msgid ""
 #~ "define custom rules to mark text with special fields option with braille "

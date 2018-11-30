@@ -50,7 +50,7 @@ class AddonDoc():
 			"<h3>"+_("Translators")+"""</h3>
 			<ul>""",
 				"<li>", _("Croatian"), configBE.sep, ": Zvonimir Stanečić <zvonimirek222@yandex.com>",
-				"<li>", _("German"), configBE.sep, ": Adriani Botez <adriani.botez@gmail.com>, Jürgen Schwingshandl <jbs@b-a-c.at>",
+				"<li>", _("German"), configBE.sep, ": Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
 				"<li>", _("Hebrew"), configBE.sep, ": Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
 				"<li>", _("Persian"), configBE.sep, ": Mohammadreza Rashad <mohammadreza5712@gmail.com>",
 				"<li>", _("Polish"), configBE.sep, ": Zvonimir Stanečić, Dorota Krać",

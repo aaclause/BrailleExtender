@@ -49,12 +49,12 @@ class AddonDoc():
 			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
 			"<h3>"+_("Translators")+"""</h3>
 			<ul>""",
-				"<li>", _("Croatian"), configBE.sep, ": Zvonimir Stanečić <zvonimirek222@yandex.com>",
-				"<li>", _("German"), configBE.sep, ": Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
-				"<li>", _("Hebrew"), configBE.sep, ": Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
-				"<li>", _("Persian"), configBE.sep, ": Mohammadreza Rashad <mohammadreza5712@gmail.com>",
+				"<li>", _("Croatian"), configBE.sep, ": Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;",
+				"<li>", _("German"), configBE.sep, ": Adriani Botez &lt;adriani.botez@gmail.com&gt;, Karl Eick, Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;",
+				"<li>", _("Hebrew"), configBE.sep, ": Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer, David Rechtman, Pavel Kaplan",
+				"<li>", _("Persian"), configBE.sep, ": Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;",
 				"<li>", _("Polish"), configBE.sep, ": Zvonimir Stanečić, Dorota Krać",
-				"<li>", _("Russian"), configBE.sep, ": Zvonimir Stanečić, Pavel Kaplan <pavel46@gmail.com>",
+				"<li>", _("Russian"), configBE.sep, ": Zvonimir Stanečić, Pavel Kaplan &lt;pavel46@gmail.com&gt;",
 			"</ul>",
 			"<h3>"+_("Code contributions and other")+"</h3><p>" + _("Additional third party copyrighted code is included:") + "</p>",
 			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>

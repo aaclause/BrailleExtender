@@ -23,10 +23,11 @@ BrailleExtender is an [NVDA](http://nvda-project.org/) add-on that provides vari
 * and much more!
 
 For some braille displays, it extends the braille display commands to provide:
+
 * offer complete gesture maps including function keys, multimedia keys, quick navigation, etc.;
 * emulate modifier keys, and thus any keyboard shortcut;
 * offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace;
 * launch an application quickly;
 * actions and quick navigation through a rotor.
 
-Once the add-on is installed, read the documentation and go through the settings using the BrailleExtender menu (located at the root of NVDA menu). The documentation is mainly generated automatically because it depends on the braille display in use.
+Once the add-on is installed, read the documentation and go through the settings using the BrailleExtender submenu (located in preferences menu) or under NVDA Menu -> Preferences -> Settings -> *Braille Extender*. The documentation is mainly generated automatically because it depends on the braille display in use.

@@ -18,7 +18,7 @@ BrailleExtender is an [NVDA](http://nvda-project.org/) add-on that provides vari
 * reverse forward scroll and back scroll buttons;
 * say the current line during text scrolling either in review mode, or in focus mode or both;
 * translate text easily in Unicode braille and vice versa;
-* convert quickly cell description to Unicode braille and vice versa. E.g.: 123 <--> ?;
+* convert quickly cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇;
 * lock braille keyboard;
 * and much more!
 

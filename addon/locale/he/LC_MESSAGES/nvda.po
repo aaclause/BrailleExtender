@@ -8,9 +8,10 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
 "POT-Creation-Date: 2018-11-30 10:32+0100\n"
-"PO-Revision-Date: 2018-11-30 10:36+0100\n"
-"Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2018-12-09 14:55+0100\n"
+"Last-Translator: shmuel naaman <shmuel_naaman@yahoo.com>\n"
+"Language-Team: Shmuel Naaman,Pavel Kaplan,David Rechtman <nvda.israle@gmail."
+"com>\n"
 "Language: he_IL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,9 +53,8 @@ msgid "Visited links"
 msgstr "קישור שנצפה"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:67
-#, fuzzy
 msgid "Landmarks"
-msgstr "ציון דרך"
+msgstr "ציוניי דרך"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:68
 msgid "Headings"
@@ -130,11 +130,11 @@ msgstr "אינו קישור"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:86
 msgid "Frames"
-msgstr ""
+msgstr "מסגרות"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:87
 msgid "Separators"
-msgstr ""
+msgstr "מפרידים"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:88
 msgid "Embedded objects"
@@ -432,7 +432,7 @@ msgstr "המר את הטקסט המסומן  בברייל Unicode והצג או�
 
 #: addon/globalPlugins/brailleExtender/__init__.py:630
 msgid "Braille Unicode to cell descriptions"
-msgstr ""
+msgstr "המרת ברייל לתא "
 
 #: addon/globalPlugins/brailleExtender/__init__.py:631
 msgid ""
@@ -442,7 +442,7 @@ msgstr "המר את הטקסט המסומן בתאי תיאור ברייל וה�
 
 #: addon/globalPlugins/brailleExtender/__init__.py:637
 msgid "Cell descriptions to braille Unicode"
-msgstr ""
+msgstr "תאור תא לברייל יוניקוד"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:638
 msgid ""
@@ -466,7 +466,7 @@ msgstr "גלילה אוטומטית נעצר"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:688
 msgid "Unable to start autoscroll. More info in NVDA log"
-msgstr ""
+msgstr "לא ניתן להתחיל בגלילה אוטומתית. פרטים נוספים בלוג התיעוד של NVDA "
 
 #: addon/globalPlugins/brailleExtender/__init__.py:693
 msgid "Enable/disable autoscroll"
@@ -586,16 +586,15 @@ msgid ""
 "Show the output speech for selected text in braille. Useful for emojis for "
 "example"
 msgstr ""
+"מציג את הטקסט האחרון שהושמע בצג הברייל. שימושי בעבור תאור תמונות לדוגמא."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:891
-#, fuzzy
 msgid "No shortcut performed from a braille display"
-msgstr "קיצורי מקשים על צג ברייל"
+msgstr "לא הופעלו מקשי קיצור מצג ברייל"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:897
-#, fuzzy
 msgid "Repeat the last shortcut performed from a braille display"
-msgstr "קיצורי מקשים על צג ברייל"
+msgstr "הפעל שוב  מקש קיצור האחרון שהופעל מצג ברייל"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:914
 #, python-format
@@ -729,28 +728,27 @@ msgid "%s braille display"
 msgstr "%s צג ברייל"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:35
-#, fuzzy, python-format
+#, python-format
 msgid "profile loaded: %s"
-msgstr "Профиль - перезагружен"
+msgstr "פרופיל %s ניטען"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:45
 msgid ""
 "You can find some ideas of features for BrailleExtender that might be "
 "implemented here"
-msgstr ""
+msgstr "ביכולתך לראות כמה רעיונות לגבי שימוש בברייל אקסטנדר כאן."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:47
 msgid "Copyrights and acknowledgements"
-msgstr ""
+msgstr "זכויות יוצרים"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:49
 msgid "Copyright (C) 2017 André-Abush Clause, and other contributors:"
 msgstr "זכויות יוצרים (C) 2017 André-Abush Clause, ותורמים אחרים:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:50
-#, fuzzy
 msgid "Translators"
-msgstr "תרגום חדש"
+msgstr "מתרגמים"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:52
 msgid "Croatian"
@@ -758,15 +756,15 @@ msgstr "קרואטית"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:53
 msgid "German"
-msgstr ""
+msgstr "גרמנית"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:54
 msgid "Hebrew"
-msgstr ""
+msgstr "עברית"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:55
 msgid "Persian"
-msgstr ""
+msgstr "פרסית"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:56
 msgid "Polish"
@@ -774,11 +772,11 @@ msgstr "פולנית"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:57
 msgid "Russian"
-msgstr ""
+msgstr "רוסית"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Code contributions and other"
-msgstr ""
+msgstr "תרומות בפיתוח הקוד ועוד "
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Additional third party copyrighted code is included:"
@@ -789,9 +787,8 @@ msgid "Thanks also to"
 msgstr "תודות בנוסך ל"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:64
-#, fuzzy
 msgid "And thank you very much for all your feedback and comments."
-msgstr "תודה רבה על כל המשוב וההערות שלך באמצעות הדוא\"ל."
+msgstr "תודה רבה על כל המשוב וההערות שלך."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:80
 msgid "Simple keys"
@@ -1374,13 +1371,14 @@ msgid "You are up-to-date. %s is the latest version."
 msgstr "אתה מעודכן. %s הוא הגירסה העדכנית ביותר."
 
 #: addon/globalPlugins/brailleExtender/updateCheck.py:52
-#, fuzzy, python-format
+#, python-format
 msgid ""
 "Oops! There was a problem checking for updates. Please retry later or "
 "download and install manually via %s. Do you want open this URL in your "
 "browser now?"
 msgstr ""
-"אופס! הייתה בעיה בבדיקת עדכונים. נסה שוב מאוחר יותר או עבור באופן ידני אל"
+"אופס! הייתה בעיה בבדיקת עדכונים. נסה שוב מאוחר יותר או התקן מחדש. האם ברצונך "
+"לפתוח את כתובת האינטרנט %s בדפדפן שלך עכשיו ?"
 
 #: addon/globalPlugins/brailleExtender/updateCheck.py:81
 msgid "Unable to save or download update file. Opening your browser"
@@ -1431,9 +1429,8 @@ msgid "right selector"
 msgstr "בורר ימיני"
 
 #: addon/globalPlugins/brailleExtender/utils.py:357
-#, fuzzy
 msgid "dot"
-msgstr "נקודה 7"
+msgstr "נקודה"
 
 #: addon/globalPlugins/brailleExtender/utils.py:371
 #, python-brace-format
@@ -1449,16 +1446,14 @@ msgid "Not text"
 msgstr "לא טקסט"
 
 #: addon/globalPlugins/brailleExtender/utils.py:477
-#, fuzzy
 msgid "No text selected"
-msgstr "אין טקסט מסומן"
+msgstr "אין טקסט מסומן."
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
 #: buildVars.py:18
-#, fuzzy
 msgid "Braille Extender"
-msgstr "BrailleExtender"
+msgstr "BrailleExtenderהרחבות ברייל  "
 
 #: buildVars.py:22
 msgid ""
@@ -1473,13 +1468,12 @@ msgid "reload two favorite braille display with shortcuts"
 msgstr "טעינה מחדש של שני צגי ברייל מועדפים באמצעות מקשי קיצור"
 
 #: buildVars.py:24
-#, fuzzy
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
 msgstr ""
 "מעבר אוטומטי למצב סקירה עבור  אפליקציות שנבחרו (ברירת מחדל: PuTTY, "
-"Powershell, bash, cmd)"
+"Powershell, bash, cmd)."
 
 #: buildVars.py:25
 msgid "auto scroll"
@@ -1491,7 +1485,7 @@ msgstr "מעבר בין מספר טבלאות קלט\\פלט ברייל"
 
 #: buildVars.py:27
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
-msgstr ""
+msgstr "סימון מאפיני טקסט מסויימים בעזרת נקודות 7 או 8 או שתיהן ."
 
 #: buildVars.py:28
 msgid "use two output braille tables simultaneously"
@@ -1506,30 +1500,29 @@ msgid "reverse forward scroll and back scroll buttons"
 msgstr "הפיכת כפתורי גלילה קדימה ואחורה"
 
 #: buildVars.py:31
-#, fuzzy
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
-msgstr "הכרזת השורה הנוכחית במהלך גלילה טקסט, במצב סקירה"
+msgstr ""
+"הכרזת השורה הנוכחית במהלך גלילה טקסט, במצב סקיר או במצב פוקוס או שניהם.ה"
 
 #: buildVars.py:32
 msgid "translate text easily in Unicode braille and vice versa"
-msgstr ""
+msgstr "תרגום מהיר בין טקסט וברייל יוניקוד והלהפך"
 
 #: buildVars.py:33
 msgid ""
 "convert quickly cell description to Unicode braille and vice versa. E.g.: "
 "123 <--> ⠇"
-msgstr ""
+msgstr "המרה מהירה של תאור תאי לברייל יוניקוד ולהפך"
 
 #: buildVars.py:34
-#, fuzzy
 msgid "lock braille keyboard"
-msgstr "נעילה\\פתיחה מקלדת ברייל"
+msgstr "נעל מקלדת ברייל"
 
 #: buildVars.py:35
 msgid "and much more!"
-msgstr ""
+msgstr "ועוד ועוד!"
 
 #: buildVars.py:36
 msgid ""
@@ -1537,11 +1530,10 @@ msgid ""
 msgstr "עבור כמה צגי ברייל, הוא מרחיב את פקודות צג ברייל כדי לספק"
 
 #: buildVars.py:37
-#, fuzzy
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
-msgstr "גישה לכפתורי  פונקציה, מקשי מולטימדיה, ניווט מהיר"
+msgstr "מאפשר גישה לכפתורי  פונקציה, מקשי מולטימדיה, ניווט מהיר"
 
 #: buildVars.py:38
 msgid "emulate modifier keys, and thus any keyboard shortcut"

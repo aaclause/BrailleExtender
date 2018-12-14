@@ -596,7 +596,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onBrowseBtn(self, event):
 		oldS = self.quickKeys.GetSelection()
-		dlg = wx.FileDialog(None, _("Choose a file for {0}".format(self.quickLaunchGestures[self.quickKeys.GetSelection()])), "%PROGRAMFILES%", "", "*", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+		dlg = wx.FileDialog(None, _("Choose a file for {0}").format(self.quickLaunchGestures[self.quickKeys.GetSelection()]), "%PROGRAMFILES%", "", "*", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 		if dlg.ShowModal() != wx.ID_OK:
 			dlg.Destroy()
 			return self.quickKeys.SetFocus()

@@ -511,6 +511,8 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 	title = "Braille Extender - %s" % _("Quick launches")
 	quickLaunchGestures = []
 	quickLaunchLocations = []
+	captureEnabled = False
+	captureLabelBtn = None
 
 	def makeSettings(self, settingsSizer):
 		self.quickLaunchGestures = config.conf["brailleExtender"]["quickLaunches"].copy().keys()
@@ -520,7 +522,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		self.quickKeys = sHelper.addLabeledControl(_("&Gestures"), wx.Choice, choices=self.getQuickLaunchList())
 		self.quickKeys.SetSelection(0)
 		self.quickKeys.Bind(wx.EVT_CHOICE, self.onQuickKeys)
-		self.target = sHelper.addLabeledControl(_("Location"), wx.TextCtrl, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
+		self.target = sHelper.addLabeledControl(_("Location (file path, URL or command)"), wx.TextCtrl, value=self.quickLaunchLocations[0] if self.quickLaunchLocations != [] else '')
 		self.target.Bind(wx.EVT_TEXT, self.onTarget)
 		self.browseBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Browse"), wx.DefaultPosition)
 		self.removeGestureBtn = bHelper1.addButton(self, wx.NewId(), _("&Remove this gesture"), wx.DefaultPosition)
@@ -533,36 +535,54 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 	def postInit(self): self.quickKeys.SetFocus()
 
 	def onOk(self, evt):
+		if inputCore.manager._captureFunc:
+			inputCore.manager._captureFunc = None
 		config.conf["brailleExtender"]["quickLaunches"] = {}
 		for gesture, location in zip(self.quickLaunchGestures, self.quickLaunchLocations):
 			config.conf["brailleExtender"]["quickLaunches"][gesture] = location
 		instanceGP.loadQuickLaunchesGes()
 		super(QuickLaunchesDlg, self).onOk(evt)
 
+	def onCancel(self, evt):
+		if inputCore.manager._captureFunc:
+			inputCore.manager._captureFunc = None
+		super(QuickLaunchesDlg, self).onCancel(evt)
+
 	def captureNow(self):
 		def getCaptured(gesture):
-			if gesture.isModifier: return False
-			if scriptHandler.findScript(gesture) is not None:
+			script = scriptHandler.findScript(gesture)
+			if script and hasattr(script, "bypassInputHelp") and script.bypassInputHelp: return False
+			elif script is not None:
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Unable to associate this gesture. Please enter another, now"))
 				return False
-			if gesture.normalizedIdentifiers[0].startswith("kb") and ":escape" not in gesture.normalizedIdentifiers[0]:
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Please enter a gesture from your {NAME_BRAILLE_DISPLAY} braille display. Press Escape to cancel.".format(NAME_BRAILLE_DISPLAY=configBE.curBD)))
+			elif gesture.isModifier: return False
+			elif gesture.normalizedIdentifiers[0].endswith(":space"):
+				inputCore.manager._captureFunc = None
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Out of capture"))
+			elif gesture.normalizedIdentifiers[0].startswith("kb") and not gesture.normalizedIdentifiers[0].endswith(":escape"):
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Please enter a gesture from your {NAME_BRAILLE_DISPLAY} braille display. Press space to cancel.".format(NAME_BRAILLE_DISPLAY=configBE.curBD)))
 				return False
-			if ':escape' not in gesture.normalizedIdentifiers[0]:
+			elif not gesture.normalizedIdentifiers[0].endswith(":escape"):
 				self.quickLaunchGestures.append(gesture.normalizedIdentifiers[0])
 				self.quickLaunchLocations.append('')
 				self.quickKeys.SetItems(self.getQuickLaunchList())
 				self.quickKeys.SetSelection(len(self.quickLaunchGestures)-1)
 				self.onQuickKeys(None)
 				self.quickKeys.SetFocus()
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("OK. The gesture captured is %s") % gesture.normalizedIdentifiers[0])
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("OK. The gesture captured is %s") % utils.beautifulSht(gesture.normalizedIdentifiers[0]))
 				inputCore.manager._captureFunc = None
+				self.captureEnabled = False
+				self.addGestureBtn.SetLabel(self.captureLabelBtn)
+			return True
 		inputCore.manager._captureFunc = getCaptured
 
 	def getQuickLaunchList(s):
 		return ['%s%s: %s' % (utils.beautifulSht(s.quickLaunchGestures[i]), configBE.sep, s.quickLaunchLocations[i]) for i, v in enumerate(s.quickLaunchLocations)]
 
 	def onRemoveGestureBtn(self, event):
+		if self.quickKeys.GetSelection() < 0:
+			self.askCreateQuickLaunch()
+			return
 		def askConfirmation():
 			choice = gui.messageBox(_("Are you sure to want to delete this shorcut?"), '%s – %s' % (configBE._addonName, _("Confirmation")), wx.YES_NO|wx.ICON_QUESTION)
 			if choice == wx.YES: confirmed()
@@ -570,25 +590,39 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 			i = self.quickKeys.GetSelection()
 			g = self.quickLaunchGestures.pop(i)
 			self.quickLaunchLocations.pop(i)
-			self.quickKeys.SetItems(self.getQuickLaunchList())
-			self.quickKeys.SetSelection(i-1 if i > 0 else 0)
+			listQuickLaunches = self.getQuickLaunchList()
+			self.quickKeys.SetItems(listQuickLaunches)
+			if len(listQuickLaunches) > 0: self.quickKeys.SetSelection(i-1 if i > 0 else 0)
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('{BRAILLEGESTURE} removed'.format(BRAILLEGESTURE=g)))
 			self.onQuickKeys(None)
 		wx.CallAfter(askConfirmation)
 		self.quickKeys.SetFocus()
 
 	def onAddGestureBtn(self, event):
+		if self.captureEnabled:
+			self.captureEnabled = False
+			self.addGestureBtn.SetLabel(self.captureLabelBtn)
+			return
 		self.captureNow()
-		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('Please enter the desired gesture for this command, now'))
+		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Please enter the desired gesture for the new quick launch. Press \"space bar\" to cancel"))
+		self.captureEnabled = True
+		self.captureLabelBtn = self.addGestureBtn.GetLabel()
+		self.addGestureBtn.SetLabel(_("Don't add a quick launch"))
 		return
 
 	def onTarget(self, event):
 		oldS = self.quickKeys.GetSelection()
+		if oldS < 0:
+			self.target.SetValue('')
+			return
 		self.quickLaunchLocations[self.quickKeys.GetSelection()] = self.target.GetValue()
 		self.quickKeys.SetItems(self.getQuickLaunchList())
 		self.quickKeys.SetSelection(oldS)
 
 	def onQuickKeys(self, event):
+		if self.quickKeys.GetSelection() < 0:
+			self.target.SetValue('')
+			return
 		if not self.quickKeys.GetStringSelection().strip().startswith(':'):
 			self.target.SetValue(self.quickKeys.GetStringSelection().split(': ')[1])
 		else: self.target.SetValue('')
@@ -596,6 +630,9 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onBrowseBtn(self, event):
 		oldS = self.quickKeys.GetSelection()
+		if oldS < 0:
+			self.askCreateQuickLaunch()
+			return
 		dlg = wx.FileDialog(None, _("Choose a file for {0}").format(self.quickLaunchGestures[self.quickKeys.GetSelection()]), "%PROGRAMFILES%", "", "*", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
 		if dlg.ShowModal() != wx.ID_OK:
 			dlg.Destroy()
@@ -606,6 +643,10 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		self.quickKeys.SetSelection(oldS)
 		dlg.Destroy()
 		return self.quickKeys.SetFocus()
+
+	def askCreateQuickLaunch(self):
+		gui.messageBox(_("Please create or select a quick launch first"), '%s – %s' % (configBE._addonName, _("Error")), wx.OK|wx.ICON_ERROR)
+
 
 class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 	title = "Braille Extender - %s" % _("Profiles editor")

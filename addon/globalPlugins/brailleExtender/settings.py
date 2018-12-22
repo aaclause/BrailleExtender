@@ -551,7 +551,9 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 	def captureNow(self):
 		def getCaptured(gesture):
 			script = scriptHandler.findScript(gesture)
-			if script and hasattr(script, "bypassInputHelp") and script.bypassInputHelp: return False
+			if script and hasattr(script, "bypassInputHelp") and script.bypassInputHelp: 
+				queueHandler.queueFunction(queueHandler.eventQueue, gesture.script, gesture)
+				return False
 			elif script is not None:
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Unable to associate this gesture. Please enter another, now"))
 				return False

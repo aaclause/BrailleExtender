@@ -182,6 +182,24 @@ def getConfspec():
 				CHOICE_dot8=CHOICE_dot8,
 				CHOICE_dots78=CHOICE_dots78
 			),
+			"strikethrough": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			),
+			"text-position:sub": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			),
+			"text-position:super": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
+				CHOICE_none=CHOICE_none,
+				CHOICE_dot7=CHOICE_dot7,
+				CHOICE_dot8=CHOICE_dot8,
+				CHOICE_dots78=CHOICE_dots78
+			),
 			"invalid-spelling": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
 				CHOICE_none=CHOICE_none,
 				CHOICE_dot7=CHOICE_dot7,

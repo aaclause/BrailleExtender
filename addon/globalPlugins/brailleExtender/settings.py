@@ -207,15 +207,24 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		self.italicAttribute.SetSelection(self.getItemToSelect("italic"))
 		self.underlineAttribute = sHelper.addLabeledControl(_("Show underline with"), wx.Choice, choices=configBE.attributeChoices.values())
 		self.underlineAttribute.SetSelection(self.getItemToSelect("underline"))
+		self.strikethroughAttribute = sHelper.addLabeledControl(_("Show strikethrough with"), wx.Choice, choices=configBE.attributeChoices.values())
+		self.strikethroughAttribute.SetSelection(self.getItemToSelect("strikethrough"))
+		self.subAttribute = sHelper.addLabeledControl(_("Show subscript with"), wx.Choice, choices=configBE.attributeChoices.values())
+		self.subAttribute.SetSelection(self.getItemToSelect("text-position:sub"))
+		self.superAttribute = sHelper.addLabeledControl(_("Show superscript with"), wx.Choice, choices=configBE.attributeChoices.values())
+		self.superAttribute.SetSelection(self.getItemToSelect("text-position:super"))
 
 	def postInit(self): self.toggleAttribra.SetFocus()
 
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["features"]["attributes"] = self.toggleAttribra.IsChecked()
+		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["bold"] = configBE.attributeChoices.keys()[self.boldAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["italic"] = configBE.attributeChoices.keys()[self.italicAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["underline"] = configBE.attributeChoices.keys()[self.underlineAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoices.keys()[self.spellingErrorsAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["strikethrough"] = configBE.attributeChoices.keys()[self.strikethroughAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = configBE.attributeChoices.keys()[self.subAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["text-position:super"] = configBE.attributeChoices.keys()[self.superAttribute.GetSelection()]
 		super(AttribraDlg, self).onOk(evt)
 
 	@staticmethod

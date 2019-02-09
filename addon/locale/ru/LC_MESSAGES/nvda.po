@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2018-12-01 15:52+0100\n"
-"PO-Revision-Date: 2018-12-01 16:01+0100\n"
+"POT-Creation-Date: 2019-02-09 20:03+0100\n"
+"PO-Revision-Date: 2019-02-09 20:24+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -773,71 +773,75 @@ msgid "Translators"
 msgstr "переводчики"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:52
+msgid "Arabic"
+msgstr "Арабский"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:53
 msgid "Croatian"
 msgstr "хорватский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:53
+#: addon/globalPlugins/brailleExtender/addonDoc.py:54
 msgid "German"
 msgstr "немецкий"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:54
+#: addon/globalPlugins/brailleExtender/addonDoc.py:55
 msgid "Hebrew"
 msgstr "Иврит"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:55
+#: addon/globalPlugins/brailleExtender/addonDoc.py:56
 msgid "Persian"
 msgstr "персидский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
 msgid "Polish"
 msgstr "Польский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:57
+#: addon/globalPlugins/brailleExtender/addonDoc.py:58
 msgid "Russian"
 msgstr "русский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+#: addon/globalPlugins/brailleExtender/addonDoc.py:60
 msgid "Code contributions and other"
 msgstr "Внесение в код и другие"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+#: addon/globalPlugins/brailleExtender/addonDoc.py:60
 msgid "Additional third party copyrighted code is included:"
 msgstr ""
 "содержит Дополнительные фрагменты кода от третьих лиц, защищенные авторским "
 "правом.  "
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
+#: addon/globalPlugins/brailleExtender/addonDoc.py:63
 msgid "Thanks also to"
 msgstr "спасибо также"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:64
+#: addon/globalPlugins/brailleExtender/addonDoc.py:65
 msgid "And thank you very much for all your feedback and comments."
 msgstr ""
 "а Также, спасибо всем вам за ваши коментарии пересланные по электронной "
 "почте."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:80
+#: addon/globalPlugins/brailleExtender/addonDoc.py:81
 msgid "Simple keys"
 msgstr "Простые сочетания клавиш"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:82
+#: addon/globalPlugins/brailleExtender/addonDoc.py:83
 msgid "Usual shortcuts"
 msgstr "стандартные сочитания клавиш"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:85
+#: addon/globalPlugins/brailleExtender/addonDoc.py:86
 msgid "Standard NVDA commands"
 msgstr "Стандартные команды NVDA"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:88
-#: addon/globalPlugins/brailleExtender/settings.py:637
+#: addon/globalPlugins/brailleExtender/addonDoc.py:89
+#: addon/globalPlugins/brailleExtender/settings.py:689
 msgid "Modifier keys"
 msgstr "Модификаторы"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:91
+#: addon/globalPlugins/brailleExtender/addonDoc.py:92
 msgid "Quick navigation keys"
 msgstr "Клавиши быстрой навигации"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:92
+#: addon/globalPlugins/brailleExtender/addonDoc.py:93
 msgid ""
 "In virtual documents (HTML/PDF/…) you can navigate element type by element "
 "type using keyboard. These navigation keys should work with your braille "
@@ -849,35 +853,35 @@ msgstr ""
 "клавиатуры брайлевского ввода вашего дисплея. кроме этого имеются также "
 "несколько дополнительных специфических команд."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:95
+#: addon/globalPlugins/brailleExtender/addonDoc.py:96
 msgid "Rotor feature"
 msgstr "Функция ротора"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:98
+#: addon/globalPlugins/brailleExtender/addonDoc.py:99
 msgid "Gadget commands"
 msgstr "специальные команды дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:102
+#: addon/globalPlugins/brailleExtender/addonDoc.py:103
 msgid "Shortcuts defined outside add-on"
 msgstr "Сочетания клавиш назначенные вне дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:123
+#: addon/globalPlugins/brailleExtender/addonDoc.py:124
 msgid "Keyboard configurations provided"
 msgstr "установленные профили клавиатуры брайлевского ввода"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:125
+#: addon/globalPlugins/brailleExtender/addonDoc.py:126
 msgid "Keyboard configurations are"
 msgstr "доступны следующие профили конфигурации брайлевской клавиатуры:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:130
+#: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "Warning:"
 msgstr "предупреждение"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:131
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
 msgid "BrailleExtender doesn't seem to support your braille display."
 msgstr "Braille Extender вероятно не поддерживает ваш брайлевский дисплей."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:133
 msgid ""
 "However, you can reassign most of these features in the \"Command Gestures\" "
 "dialog in the \"Preferences\" of NVDA."
@@ -885,34 +889,34 @@ msgstr ""
 "однако вы можете самостоятельно назначить сочитания горячих клавиш для "
 "большинства функций Braille Extender в настройках жестов ввода NVDA."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:134
+#: addon/globalPlugins/brailleExtender/addonDoc.py:135
 msgid "Shortcuts on system keyboard specific to the add-on"
 msgstr ""
 "сочитания горячих клавиш системной клавиатуры для специфических функций "
 "дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:153
+#: addon/globalPlugins/brailleExtender/addonDoc.py:154
 #, python-format
 msgid "%s's documentation"
 msgstr "помощь для %s"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:172
+#: addon/globalPlugins/brailleExtender/addonDoc.py:173
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "эмулирует нажатие %s на системной клавиатуре."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:179
+#: addon/globalPlugins/brailleExtender/addonDoc.py:180
 msgid "description currently unavailable for this shortcut"
 msgstr "описание функции данного сочитания клавиш пока недоступно."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:197
+#: addon/globalPlugins/brailleExtender/addonDoc.py:198
 msgid "caps lock"
 msgstr "caps lock"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:42
 #: addon/globalPlugins/brailleExtender/configBE.py:49
 #: addon/globalPlugins/brailleExtender/configBE.py:62
-#: addon/globalPlugins/brailleExtender/settings.py:459
+#: addon/globalPlugins/brailleExtender/settings.py:468
 msgid "none"
 msgstr "Ничего"
 
@@ -971,7 +975,7 @@ msgstr "Функциа в разработке"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:84
-#: addon/globalPlugins/brailleExtender/settings.py:241
+#: addon/globalPlugins/brailleExtender/settings.py:250
 msgid "General"
 msgstr "Общее"
 
@@ -1042,7 +1046,7 @@ msgstr " отступление клеток по правому краю"
 
 #: addon/globalPlugins/brailleExtender/settings.py:147
 #: addon/globalPlugins/brailleExtender/settings.py:159
-#: addon/globalPlugins/brailleExtender/settings.py:397
+#: addon/globalPlugins/brailleExtender/settings.py:406
 msgid "for the currrent braille display"
 msgstr "для актуального брайлевского дисплея"
 
@@ -1094,52 +1098,64 @@ msgstr "Показывать курсив с помощью"
 msgid "Show underline with"
 msgstr "Показывать подчёркивание с помощью"
 
+#: addon/globalPlugins/brailleExtender/settings.py:210
+msgid "Show strikethrough with"
+msgstr "показывать зачеркнутые буквы с помощью"
+
+#: addon/globalPlugins/brailleExtender/settings.py:212
+msgid "Show subscript with"
+msgstr "Показывать подстрочные буквы с помощью"
+
+#: addon/globalPlugins/brailleExtender/settings.py:214
+msgid "Show superscript with"
+msgstr "Показывать надстрочные буквы с помощью"
+
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:232
+#: addon/globalPlugins/brailleExtender/settings.py:241
 msgid "Role labels"
 msgstr "Сокращения элементов"
 
-#: addon/globalPlugins/brailleExtender/settings.py:239
+#: addon/globalPlugins/brailleExtender/settings.py:248
 msgid "Enable this feature"
 msgstr "Включить эту функцию"
 
-#: addon/globalPlugins/brailleExtender/settings.py:241
+#: addon/globalPlugins/brailleExtender/settings.py:250
 msgid "Role category"
 msgstr "Категория элемента"
 
-#: addon/globalPlugins/brailleExtender/settings.py:241
+#: addon/globalPlugins/brailleExtender/settings.py:250
 msgid "Landmark"
 msgstr "область"
 
-#: addon/globalPlugins/brailleExtender/settings.py:241
+#: addon/globalPlugins/brailleExtender/settings.py:250
 msgid "Positive state"
 msgstr "положительное состояние"
 
-#: addon/globalPlugins/brailleExtender/settings.py:241
+#: addon/globalPlugins/brailleExtender/settings.py:250
 msgid "Negative state"
 msgstr "Отрицательное состояние"
 
-#: addon/globalPlugins/brailleExtender/settings.py:245
+#: addon/globalPlugins/brailleExtender/settings.py:254
 msgid "Role"
 msgstr "тип элемента"
 
-#: addon/globalPlugins/brailleExtender/settings.py:247
+#: addon/globalPlugins/brailleExtender/settings.py:256
 msgid "Actual or new label"
 msgstr "текущая или новая метка"
 
-#: addon/globalPlugins/brailleExtender/settings.py:251
+#: addon/globalPlugins/brailleExtender/settings.py:260
 msgid "&Reset this role label"
 msgstr "вернуть сокращение для этого элемента к настройкам поумолчанию"
 
-#: addon/globalPlugins/brailleExtender/settings.py:253
+#: addon/globalPlugins/brailleExtender/settings.py:262
 msgid "Reset all role labels"
 msgstr "вернуть все метки к настройкам поумолчанию."
 
-#: addon/globalPlugins/brailleExtender/settings.py:318
+#: addon/globalPlugins/brailleExtender/settings.py:327
 msgid "You have no customized label."
 msgstr "у вас нет пользовательских меток."
 
-#: addon/globalPlugins/brailleExtender/settings.py:321
+#: addon/globalPlugins/brailleExtender/settings.py:330
 #, python-format
 msgid ""
 "Do you want really reset all labels? Currently, you have %d customized "
@@ -1148,95 +1164,95 @@ msgstr ""
 "вы действительно хотите вернуть все метки к настройкам поумолчанию? в данный "
 "момент у вас установлено %d пользовательских меток."
 
-#: addon/globalPlugins/brailleExtender/settings.py:322
-#: addon/globalPlugins/brailleExtender/settings.py:567
+#: addon/globalPlugins/brailleExtender/settings.py:331
+#: addon/globalPlugins/brailleExtender/settings.py:598
 msgid "Confirmation"
 msgstr "подтверждение"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:368
+#: addon/globalPlugins/brailleExtender/settings.py:377
 msgid "braille tables"
 msgstr "Брайлевские таблицы"
 
-#: addon/globalPlugins/brailleExtender/settings.py:373
+#: addon/globalPlugins/brailleExtender/settings.py:382
 msgid "Use the current input table"
 msgstr "Использовать актуальную таблицу ввода"
 
-#: addon/globalPlugins/brailleExtender/settings.py:380
+#: addon/globalPlugins/brailleExtender/settings.py:389
 msgid "Prefered braille tables"
 msgstr "Предпочитаемые брайлевские таблицы"
 
-#: addon/globalPlugins/brailleExtender/settings.py:380
+#: addon/globalPlugins/brailleExtender/settings.py:389
 msgid "press F1 for help"
 msgstr "Для помощи, нажмите ф1"
 
-#: addon/globalPlugins/brailleExtender/settings.py:384
+#: addon/globalPlugins/brailleExtender/settings.py:393
 msgid "Input braille table for keyboard shortcut keys"
 msgstr "таблица брайлевского ввода для  сочитаний горячих клавиш."
 
-#: addon/globalPlugins/brailleExtender/settings.py:386
+#: addon/globalPlugins/brailleExtender/settings.py:395
 msgid "None"
 msgstr "Ничего"
 
-#: addon/globalPlugins/brailleExtender/settings.py:389
+#: addon/globalPlugins/brailleExtender/settings.py:398
 msgid "Secondary output table to use"
 msgstr "Вторичная брайлевская таблица для исьпользования"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:393
+#: addon/globalPlugins/brailleExtender/settings.py:402
 msgid "Display tab signs as spaces"
 msgstr "Показывать знаки табуляции как пробелы"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:397
+#: addon/globalPlugins/brailleExtender/settings.py:406
 msgid "Number of space for a tab sign"
 msgstr "Число пробелов для одного знака табуляции"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:399
+#: addon/globalPlugins/brailleExtender/settings.py:408
 msgid "Prevent undefined characters with Hexadecimal Unicode value"
 msgstr "Запрещение показывания юникод номеров при неопределённых знаках"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:402
+#: addon/globalPlugins/brailleExtender/settings.py:411
 msgid ""
 "Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"
 msgstr ""
 "Показывать неопределённые знаки как например: 0 для пустой клетки, 12345678, "
 "6-123456)"
 
-#: addon/globalPlugins/brailleExtender/settings.py:458
+#: addon/globalPlugins/brailleExtender/settings.py:467
 msgid "input and output"
 msgstr "Ввод и вывод"
 
-#: addon/globalPlugins/brailleExtender/settings.py:460
+#: addon/globalPlugins/brailleExtender/settings.py:469
 msgid "input only"
 msgstr "Только ввод"
 
-#: addon/globalPlugins/brailleExtender/settings.py:461
+#: addon/globalPlugins/brailleExtender/settings.py:470
 msgid "output only"
 msgstr "Только вывод"
 
-#: addon/globalPlugins/brailleExtender/settings.py:488
+#: addon/globalPlugins/brailleExtender/settings.py:497
 #, python-format
 msgid "Table name: %s"
 msgstr "Имя таблицы: %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:489
+#: addon/globalPlugins/brailleExtender/settings.py:498
 #, python-format
 msgid "File name: %s"
 msgstr "Имя файла: %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:490
+#: addon/globalPlugins/brailleExtender/settings.py:499
 #, python-format
 msgid "In switches: %s"
 msgstr "В роторах: %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:491
+#: addon/globalPlugins/brailleExtender/settings.py:500
 msgid "About this table"
 msgstr "Об этой таблице"
 
-#: addon/globalPlugins/brailleExtender/settings.py:494
+#: addon/globalPlugins/brailleExtender/settings.py:503
 msgid ""
 "In this combo box, all tables are present. Press space bar, left or right "
 "arrow keys to include (or not) the selected table in switches"
@@ -1246,7 +1262,7 @@ msgstr ""
 "предпочетаемую таблицу в список таблиц ввода и вывода для быстрого "
 "переключения между ними."
 
-#: addon/globalPlugins/brailleExtender/settings.py:495
+#: addon/globalPlugins/brailleExtender/settings.py:504
 msgid ""
 "You can also press 'comma' key to get the file name of the selected table "
 "and 'semicolon' key to view miscellaneous infos on the selected table"
@@ -1254,147 +1270,168 @@ msgstr ""
 "вы также можете нажать запятую, чтобы узнать имя файла выбранной таблицы или "
 "многоточее, чтобы получить дополнительную информацию о таблице."
 
-#: addon/globalPlugins/brailleExtender/settings.py:496
+#: addon/globalPlugins/brailleExtender/settings.py:505
 msgid "Contextual help"
 msgstr "Контекстная помощь"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:511
+#: addon/globalPlugins/brailleExtender/settings.py:520
 msgid "Quick launches"
 msgstr "Быстрый запуск"
 
-#: addon/globalPlugins/brailleExtender/settings.py:520
+#: addon/globalPlugins/brailleExtender/settings.py:531
 msgid "&Gestures"
 msgstr "&Жесты"
 
-#: addon/globalPlugins/brailleExtender/settings.py:523
-msgid "Location"
-msgstr "местоположение"
+#: addon/globalPlugins/brailleExtender/settings.py:534
+msgid "Location (file path, URL or command)"
+msgstr "Местоположение (путь к файлу, URL или жест)"
 
-#: addon/globalPlugins/brailleExtender/settings.py:525
+#: addon/globalPlugins/brailleExtender/settings.py:536
 msgid "&Browse"
 msgstr "обзор"
 
-#: addon/globalPlugins/brailleExtender/settings.py:526
+#: addon/globalPlugins/brailleExtender/settings.py:537
 msgid "&Remove this gesture"
 msgstr "удалить этот жест"
 
-#: addon/globalPlugins/brailleExtender/settings.py:527
+#: addon/globalPlugins/brailleExtender/settings.py:538
 msgid "&Add a quick launch"
 msgstr "добавить клавишу для быстрого запуска"
 
-#: addon/globalPlugins/brailleExtender/settings.py:546
+#: addon/globalPlugins/brailleExtender/settings.py:567
 msgid "Unable to associate this gesture. Please enter another, now"
 msgstr ""
 "невозможно ассоциировать данный жест. пожалуйста, введите другой жест сейчас."
 
-#: addon/globalPlugins/brailleExtender/settings.py:549
+#: addon/globalPlugins/brailleExtender/settings.py:572
+msgid "Out of capture"
+msgstr "Вне жеста"
+
+#: addon/globalPlugins/brailleExtender/settings.py:574
 #, python-brace-format
 msgid ""
 "Please enter a gesture from your {NAME_BRAILLE_DISPLAY} braille display. "
-"Press Escape to cancel."
+"Press space to cancel."
 msgstr ""
-"пожалуйста введите жест с вашего  {NAME_BRAILLE_DISPLAY} брайлевского "
-"дисплея. нажмите escape для отмены."
+"Пожалуйста, введите жест с ващего брайлевского дисплея "
+"{NAME_BRAILLE_DISPLAY}. Для отмены, пожалуйста, нажмите пробел."
 
-#: addon/globalPlugins/brailleExtender/settings.py:558
+#: addon/globalPlugins/brailleExtender/settings.py:583
 #, python-format
 msgid "OK. The gesture captured is %s"
 msgstr "OK. жест назначен на клавиши %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:567
+#: addon/globalPlugins/brailleExtender/settings.py:598
 msgid "Are you sure to want to delete this shorcut?"
 msgstr "вы действительно хотите удалить данное сочитание горячих клавиш?"
 
-#: addon/globalPlugins/brailleExtender/settings.py:575
+#: addon/globalPlugins/brailleExtender/settings.py:607
 #, python-brace-format
 msgid "{BRAILLEGESTURE} removed"
 msgstr "{BRAILLEGESTURE} удален"
 
-#: addon/globalPlugins/brailleExtender/settings.py:582
-msgid "Please enter the desired gesture for this command, now"
-msgstr "пожалуйста введите сейчас желаемый жест для данной функции."
+#: addon/globalPlugins/brailleExtender/settings.py:618
+msgid ""
+"Please enter the desired gesture for the new quick launch. Press \"space bar"
+"\" to cancel"
+msgstr ""
+"Пожалуйста, введите жалаемый вами жест для данной функции. нажмите \"пробел"
+"\" для отменения"
 
-#: addon/globalPlugins/brailleExtender/settings.py:599
+#: addon/globalPlugins/brailleExtender/settings.py:621
+msgid "Don't add a quick launch"
+msgstr "Ек добавлять быстрый запуск"
+
+#: addon/globalPlugins/brailleExtender/settings.py:647
 #, python-brace-format
 msgid "Choose a file for {0}"
 msgstr "Выберьте фал для {0}"
 
-#: addon/globalPlugins/brailleExtender/settings.py:611
+#: addon/globalPlugins/brailleExtender/settings.py:659
+msgid "Please create or select a quick launch first"
+msgstr ""
+"Пожалуйста, вам надо сначала создать или выбрать команду быстрого запуска"
+
+#: addon/globalPlugins/brailleExtender/settings.py:659
+msgid "Error"
+msgstr "Ошибка"
+
+#: addon/globalPlugins/brailleExtender/settings.py:663
 msgid "Profiles editor"
 msgstr "редактор профилей"
 
-#: addon/globalPlugins/brailleExtender/settings.py:620
+#: addon/globalPlugins/brailleExtender/settings.py:672
 msgid "You must have a braille display to editing a profile"
 msgstr "Чтобы редактировать профиль, вам нужен брайлевский дисплей"
 
-#: addon/globalPlugins/brailleExtender/settings.py:624
+#: addon/globalPlugins/brailleExtender/settings.py:676
 msgid ""
 "Profiles directory is not present or accessible. Unable to edit profiles"
 msgstr ""
 "папка профилей отсутствует или недоступна. невозможно редактировать профили."
 
-#: addon/globalPlugins/brailleExtender/settings.py:630
+#: addon/globalPlugins/brailleExtender/settings.py:682
 msgid "Profile to edit"
 msgstr "Профиль для редактирования"
 
-#: addon/globalPlugins/brailleExtender/settings.py:636
+#: addon/globalPlugins/brailleExtender/settings.py:688
 msgid "Gestures category"
 msgstr "Категория жестов"
 
-#: addon/globalPlugins/brailleExtender/settings.py:637
+#: addon/globalPlugins/brailleExtender/settings.py:689
 msgid "Single keys"
 msgstr "ординарные клавиши"
 
-#: addon/globalPlugins/brailleExtender/settings.py:637
+#: addon/globalPlugins/brailleExtender/settings.py:689
 msgid "Practical shortcuts"
 msgstr "Полезные клавишы"
 
-#: addon/globalPlugins/brailleExtender/settings.py:637
+#: addon/globalPlugins/brailleExtender/settings.py:689
 msgid "NVDA commands"
 msgstr "Команды NVDA"
 
-#: addon/globalPlugins/brailleExtender/settings.py:637
+#: addon/globalPlugins/brailleExtender/settings.py:689
 msgid "Addon features"
 msgstr "Функции дополнения"
 
-#: addon/globalPlugins/brailleExtender/settings.py:641
+#: addon/globalPlugins/brailleExtender/settings.py:693
 msgid "Gestures list"
 msgstr "Список жестов"
 
-#: addon/globalPlugins/brailleExtender/settings.py:650
+#: addon/globalPlugins/brailleExtender/settings.py:702
 msgid "Add gesture"
 msgstr "Добавить жест"
 
-#: addon/globalPlugins/brailleExtender/settings.py:652
+#: addon/globalPlugins/brailleExtender/settings.py:704
 msgid "Remove this gesture"
 msgstr "Удалить этот жест"
 
-#: addon/globalPlugins/brailleExtender/settings.py:655
+#: addon/globalPlugins/brailleExtender/settings.py:707
 msgid "Assign a braille gesture"
 msgstr "назначте брайлевский жест"
 
-#: addon/globalPlugins/brailleExtender/settings.py:662
+#: addon/globalPlugins/brailleExtender/settings.py:714
 msgid "Remove this profile"
 msgstr "Удалить этот профиль"
 
-#: addon/globalPlugins/brailleExtender/settings.py:665
+#: addon/globalPlugins/brailleExtender/settings.py:717
 msgid "Add a profile"
 msgstr "Добавить профиль"
 
-#: addon/globalPlugins/brailleExtender/settings.py:671
+#: addon/globalPlugins/brailleExtender/settings.py:723
 msgid "Name for the new profile"
 msgstr "Имя нового профиля"
 
-#: addon/globalPlugins/brailleExtender/settings.py:677
+#: addon/globalPlugins/brailleExtender/settings.py:729
 msgid "Create"
 msgstr "Создать"
 
-#: addon/globalPlugins/brailleExtender/settings.py:737
+#: addon/globalPlugins/brailleExtender/settings.py:789
 msgid "Unable to load this profile. Malformed or inaccessible file"
 msgstr "невозможно загрузить данный профиль. файл поврежден или недоступен."
 
-#: addon/globalPlugins/brailleExtender/settings.py:755
+#: addon/globalPlugins/brailleExtender/settings.py:807
 msgid "Undefined"
 msgstr "Неопределено"
 
@@ -1606,6 +1643,9 @@ msgstr "запускайте программы быстро"
 msgid "actions and quick navigation through a rotor"
 msgstr ""
 "выполнение некоторых действий и функций быстрой навигации посредствам ротора."
+
+#~ msgid "Location"
+#~ msgstr "местоположение"
 
 #~ msgid "braillespacebar"
 #~ msgstr "Брайлевский пробел"

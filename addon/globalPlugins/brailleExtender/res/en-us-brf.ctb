@@ -1,0 +1,103 @@
+# liblouis: en-us-brf.dis
+
+#  Based on the Linux screenreader BRLTTY, copyright (C) 1999-2006 by
+#  The BRLTTY Team
+#
+#  Copyright (C) 2004-2006 ViewPlus Technologies, Inc. www.viewplus.com
+#  Copyright (C) 2004-2006 JJB Software, Inc. www.jjb-software.com
+#
+#  This file is part of liblouis.
+#
+#  liblouis is free software: you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as
+#  published by the Free Software Foundation, either version 2.1 of the
+#  License, or (at your option) any later version.
+#
+#  liblouis is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with liblouis. If not, see
+#  <http://www.gnu.org/licenses/>.
+#
+# Display table for working with 6-dot BRF files.
+#
+# This representation form is known as Braille ASCII, or more formally,
+# The North American Braille ASCII Code.
+#
+# Note: Braille ASCII only defines 64 dot combinations consisting of dots 1-6,
+# thus this table DOES NOT map combinations with dots 7 and/or 8 to any
+# particular output characters.
+#
+# If your device supports 8-dot braille, or you want to convert a lowercase
+# braille file, you may want to use text_nabcc.dis table instead of this one.
+#
+# For more information, refer to https://en.wikipedia.org/wiki/Braille_ASCII
+
+sign \s 0
+sign A 1
+sign B 12
+sign C 14
+sign D 145
+sign E 15
+sign F 124
+sign G 1245
+sign H 125
+sign I 24
+sign J 245
+sign K 13
+sign L 123
+sign M 134
+sign N 1345
+sign O 135
+sign P 1234
+sign Q 12345
+sign R 1235
+sign S 234
+sign T 2345
+sign U 136
+sign V 1236
+sign W 2456
+sign X 1346
+sign Y 13456
+sign Z 1356
+sign 0 356
+sign 1 2
+sign 2 23
+sign 3 25
+sign 4 256
+sign 5 26
+sign 6 235
+sign 7 2356
+sign 8 236
+sign 9 35
+sign ' 3
+sign @ 4
+sign " 5
+sign , 6
+sign * 16
+sign / 34
+sign - 36
+sign ^ 45
+sign . 46
+sign ; 56
+sign < 126
+sign % 146
+sign : 156
+sign [ 246
+sign > 345
+sign + 346
+sign _ 456
+sign $ 1246
+sign \\ 1256
+sign ? 1456
+sign ! 2346
+sign # 3456
+sign & 12346
+sign ( 12356
+sign ] 12456
+sign ) 23456
+sign = 123456
+undefined 0

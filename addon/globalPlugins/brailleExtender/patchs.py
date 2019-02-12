@@ -78,14 +78,18 @@ def update(self):
 		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
 			mode |= louis.compbrlAtCursor
 		try:
-			text = unicode(self.rawText).replace('\0', '')
-			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(
-				configBE.preTable + [
+			if instanceGP.BRFMode:
+				tables = [
+					os.path.join(configBE.baseDir, "res", "en-us-brf.ctb"),
+					os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+				]
+			else:
+				tables = configBE.preTable + [
 					os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-					os.path.join(
-						brailleTables.TABLES_DIR,
-						"braille-patterns.cti")
-				] + configBE.postTable,
+					os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+				] + configBE.postTable
+			text = unicode(self.rawText).replace('\0', '')
+			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(tables,
 				text,
 				# liblouis mutates typeform if it is a list.
 				typeform=tuple(
@@ -93,9 +97,9 @@ def update(self):
 					self.rawTextTypeforms,
 					list) else self.rawTextTypeforms,
 				mode=mode, cursorPos=self.cursorPos or 0)
-		except BaseException:
+		except BaseException as e:
 			if len(configBE.postTable) == 0:
-				log.error("Error with update braille function patch, disabling: %s")
+				log.error("Error with update braille function patch, disabling: %s" % e)
 				core.restart()
 				return
 			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], configBE.postTable))

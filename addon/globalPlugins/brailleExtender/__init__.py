@@ -100,6 +100,7 @@ HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in b
 
 # ***** Attribra code *****
 def attribraEnabled():
+	if instanceGP and instanceGP.BRFMode: return False
 	return config.conf["brailleExtender"]["features"]["attributes"]
 
 def decorator(fn, s):
@@ -154,6 +155,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	brailleKeyboardLocked = False
 	lastShortcutPerformed = None
 	hideDots78 = False
+	BRFMode = False
 	modifiersLocked = False
 	hourDatePlayed = False
 	hourDateTimer = None
@@ -565,6 +567,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		speech.speakMessage(_("Dots 7 and 8: %s") % (_("disabled") if self.hideDots78 else _("enabled")))
 		utils.refreshBD()
 	script_toggleDots78.__doc__ = _("Hide/show dots 7 and 8")
+
+	def script_toggleBRFMode(self, gesture):
+		self.BRFMode = not self.BRFMode
+		speech.speakMessage(_("BRF mode: %s") % (_("enabled") if self.BRFMode else _("disabled")))
+		utils.refreshBD()
+	script_toggleBRFMode.__doc__ = _("Enable/disable BRF mode")
 
 	def script_toggleLockModifiers(self, gesture):
 		self.modifiersLocked = not self.modifiersLocked
@@ -1437,6 +1445,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:shift+NVDA+y"] = "autoScroll"
 	__gestures["kb:nvda+k"] = "reload_brailledisplay1"
 	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay2"
+	__gestures["kb:nvda+alt+h"] = "toggleDots78"
+	__gestures["kb:nvda+alt+f"] = "toggleBRFMode"
 	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"

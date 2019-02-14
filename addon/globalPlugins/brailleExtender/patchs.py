@@ -80,7 +80,7 @@ def update(self):
 		try:
 			if instanceGP.BRFMode:
 				tables = [
-					os.path.join(configBE.baseDir, "res", "en-us-brf.ctb"),
+					os.path.join(configBE.baseDir, "res", "brf.ctb"),
 					os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 				]
 			else:

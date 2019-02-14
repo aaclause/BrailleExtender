@@ -361,7 +361,7 @@ def loadPostTable():
 	else:
 		if config.conf["brailleExtender"]["postTable"] != "None":
 			log.error("Invalid secondary table")
-	tableChangesFile = os.path.join(baseDir, "", "undefinedChar.cti")
+	tableChangesFile = os.path.join(baseDir, "res", "undefinedChar.cti")
 	defUndefinedChar = "undefined %s\n" % config.conf["brailleExtender"]["undefinedCharRepr"]
 	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and not os.path.exists(tableChangesFile):
 		log.debug("File not found, creating undefined char file")
@@ -390,7 +390,7 @@ def createTableChangesFile(f, c):
 def loadPreTable():
 	global preTable
 	preTable = []
-	tableChangesFile = os.path.join(baseDir, "", "changes.cti")
+	tableChangesFile = os.path.join(baseDir, "res", "changes.cti")
 	defTab = 'space \\t ' + \
 		('0-' * int(config.conf["brailleExtender"]["tabSize_%s" % curBD]))[:-1] + '\n'
 	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tableChangesFile):

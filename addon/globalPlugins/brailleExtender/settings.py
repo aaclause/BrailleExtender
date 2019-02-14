@@ -25,6 +25,9 @@ import utils
 from logHandler import log
 
 instanceGP = None
+def notImplemented():
+	gui.messageBox(_("The feature implementation is in progress. Thanks for your patience."), _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
+
 if hasattr(gui.settingsDialogs, "SettingsPanel"):
 	class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
@@ -386,6 +389,8 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 				iSht = configBE.tablesUFN.index(config.conf["brailleExtender"]["inputTableShortcuts"]) + 1
 			else: iSht = 0
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+
 		self.tables = sHelper.addLabeledControl(_("Prefered braille tables")+" (%s)" % _("press F1 for help"), wx.Choice, choices=self.getTablesWithSwitches())
 		self.tables.SetSelection(0)
 		self.tables.Bind(wx.EVT_CHAR, self.onTables)
@@ -409,6 +414,10 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.preventUndefinedCharHex.SetValue(config.conf["brailleExtender"]["preventUndefinedCharHex"])
 		# Translators: label of a dialog.
 		self.undefinedCharRepr = sHelper.addLabeledControl(_("Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
+
+		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Custom braille tables"), wx.DefaultPosition)
+		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
+		sHelper.addItem(bHelper1)
 
 	def postInit(self): self.tables.SetFocus()
 
@@ -486,6 +495,10 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		else: return
 		self.setCurrentSelection(tbl, newDir)
 
+	def onCustomBrailleTablesBtn(self, evt):
+		customBrailleTablesDlg = CustomBrailleTablesDlg(self, multiInstanceAllowed=True)
+		customBrailleTablesDlg.ShowModal()
+
 	def onTables(self, evt):
 		keycode = evt.GetKeyCode()
 		if keycode in [ord(','), ord(';')]:
@@ -513,6 +526,75 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
+
+class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = "Braille Extender - %s" % _("Custom braille tables")
+
+	def makeSettings(self, settingsSizer):
+		wx.CallAfter(notImplemented)
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		self.inTable = sHelper.addItem(wx.CheckBox(self, label=_("Use a custom table as input table")))
+		self.outTable = sHelper.addItem(wx.CheckBox(self, label=_("Use a custom table as output table")))
+		self.addBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Add a braille table"), wx.DefaultPosition)
+		self.addBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onAddBrailleTablesBtn)
+		sHelper.addItem(bHelper1)
+
+	def onAddBrailleTablesBtn(self, evt):
+		addBrailleTablesDlg = AddBrailleTablesDlg(self, multiInstanceAllowed=True)
+		addBrailleTablesDlg.ShowModal()
+
+	def postInit(self): self.inTable.SetFocus()
+
+	def onOk(self, evt):
+		super(CustomBrailleTablesDlg, self).onOk(evt)
+
+
+class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
+	# Translators: title of a dialog.
+	title = "Braille Extender - %s" % _("Add a braille table")
+	tbl = []
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		self.path = sHelper.addLabeledControl(_("Path"), wx.TextCtrl)
+		self.browseBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Browse"), wx.DefaultPosition)
+		self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
+		sHelper.addItem(bHelper1)
+		self.isContracted = sHelper.addItem(wx.CheckBox(self, label=_("Contracted (grade 2) braille table")))
+		# Translators: label of a dialog.
+		self.inputOrOutput = sHelper.addLabeledControl(_("Available for"), wx.Choice, choices=["Input and output", "Input only", "Output only"])
+		self.inputOrOutput.SetSelection(0)
+
+	def postInit(self): self.path.SetFocus()
+
+	def onBrowseBtn(self, event):
+		dlg = wx.FileDialog(None, _("Choose a table file"), "%PROGRAMFILES%", "", "%s (*.ctb, *.cti, *.utb, *.uti)|*.ctb;*.cti;*.utb;*.uti" % _("Liblouis table files"), style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
+		if dlg.ShowModal() != wx.ID_OK:
+			dlg.Destroy()
+			return self.path.SetFocus()
+		self.path.SetValue(dlg.GetDirectory() + '\\' + dlg.GetFilename())
+		dlg.Destroy()
+		self.path.SetFocus()
+
+	def onOk(self, evt):
+		super(AddBrailleTablesDlg, self).onOk(evt)
+
+	@staticmethod
+	def getAvailableBrailleTables():
+		out = []
+		brailleTablesDir = configBE.brailleTables.TABLES_DIR
+		ls = glob.glob(brailleTablesDir+'\\*.ctb')+glob.glob(brailleTablesDir+'\\*.cti')+glob.glob(brailleTablesDir+'\\*.utb')
+		for i, e in enumerate(ls):
+			e = str(e.split('\\')[-1])
+			if e in configBE.tablesFN or e.lower() in configBE.tablesFN: del ls[i]
+			else: out.append(e.lower())
+		out = sorted(out)
+		return out
+
 
 class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 
@@ -667,6 +749,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 	keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
 
 	def makeSettings(self, settingsSizer):
+		wx.CallAfter(notImplemented)
 		if configBE.curBD == 'noBraille':
 			self.Destroy()
 			wx.CallAfter(gui.messageBox, _("You must have a braille display to editing a profile"), self.title, wx.OK|wx.ICON_ERROR)

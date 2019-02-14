@@ -34,10 +34,12 @@ from utils import getCurrentChar
 instanceGP = None
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
+errorTable = False
 origFunc = {
 	"script_braille_routeTo": globalCommands.GlobalCommands.script_braille_routeTo,
 	"update": braille.Region.update
 }
+
 
 def script_braille_routeTo(self, gesture):
 	obj = obj = api.getNavigatorObject()
@@ -62,6 +64,24 @@ def script_braille_routeTo(self, gesture):
 	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]['speakRoutingTo']:
 		ch = getCurrentChar()
 		if ch != "": speech.speakSpelling(ch)
+def getCurrentBrailleTables():
+	if errorTable:
+		if instanceGP.BRFMode: instanceGP.BRFMode = False
+		tables = [
+			os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
+	elif instanceGP.BRFMode:
+		tables = [
+			os.path.join(configBE.baseDir, "res", "brf.ctb"),
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
+	else:
+		tables = configBE.preTable + [
+			os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		] + configBE.postTable
+	return tables
 
 # braille.Region.update
 def update(self):
@@ -78,18 +98,8 @@ def update(self):
 		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
 			mode |= louis.compbrlAtCursor
 		try:
-			if instanceGP.BRFMode:
-				tables = [
-					os.path.join(configBE.baseDir, "res", "brf.ctb"),
-					os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-				]
-			else:
-				tables = configBE.preTable + [
-					os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-					os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-				] + configBE.postTable
 			text = unicode(self.rawText).replace('\0', '')
-			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(tables,
+			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
 				text,
 				# liblouis mutates typeform if it is a list.
 				typeform=tuple(
@@ -98,14 +108,11 @@ def update(self):
 					list) else self.rawTextTypeforms,
 				mode=mode, cursorPos=self.cursorPos or 0)
 		except BaseException as e:
-			if len(configBE.postTable) == 0:
-				log.error("Error with update braille function patch, disabling: %s" % e)
-				core.restart()
-				return
-			log.warning('Unable to translate with secondary table: %s and %s.' % (config.conf["braille"]["translationTable"], configBE.postTable))
-			configBE.postTable = []
-			config.conf["brailleExtender"]["postTable"] = "None"
-			update(self)
+			log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
+			global errorTable
+			errorTable = True
+			if instanceGP.BRFMode: instanceGP.BRFMode = False
+			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
 			return
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.
 		# For some reason, the highest bit is set, so only grab the lower 8

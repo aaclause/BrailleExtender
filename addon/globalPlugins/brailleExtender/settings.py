@@ -566,7 +566,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		sHelper.addItem(bHelper1)
 		self.isContracted = sHelper.addItem(wx.CheckBox(self, label=_("Contracted (grade 2) braille table")))
 		# Translators: label of a dialog.
-		self.inputOrOutput = sHelper.addLabeledControl(_("Available for"), wx.Choice, choices=["Input and output", "Input only", "Output only"])
+		self.inputOrOutput = sHelper.addLabeledControl(_("Available for"), wx.Choice, choices=[_("Input and output"), _("Input only"), _("Output only")])
 		self.inputOrOutput.SetSelection(0)
 
 	def postInit(self): self.path.SetFocus()

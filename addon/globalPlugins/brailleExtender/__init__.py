@@ -570,8 +570,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_toggleBRFMode(self, gesture):
 		self.BRFMode = not self.BRFMode
-		speech.speakMessage(_("BRF mode: %s") % (_("enabled") if self.BRFMode else _("disabled")))
 		utils.refreshBD()
+		speech.speakMessage(_("BRF mode: %s") % (_("enabled") if self.BRFMode else _("disabled")))
 	script_toggleBRFMode.__doc__ = _("Enable/disable BRF mode")
 
 	def script_toggleLockModifiers(self, gesture):
@@ -1480,3 +1480,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def removeMenu(self):
 		if hasattr(self, "brailleExtenderMenu"): self.NVDAMenu.Remove(self.brailleExtenderMenu)
+
+	@staticmethod
+	def errorMessage(msg):
+		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+

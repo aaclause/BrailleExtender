@@ -37,7 +37,8 @@ SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 errorTable = False
 origFunc = {
 	"script_braille_routeTo": globalCommands.GlobalCommands.script_braille_routeTo,
-	"update": braille.Region.update
+	"update": braille.Region.update,
+	"_createTablesString": louis._createTablesString
 }
 
 
@@ -73,7 +74,7 @@ def getCurrentBrailleTables():
 		]
 	elif instanceGP.BRFMode:
 		tables = [
-			os.path.join(configBE.baseDir, "res", "brf.ctb"),
+			os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 		]
 	else:
@@ -397,3 +398,9 @@ inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
 brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
+
+def _createTablesString(tablesList):
+	"""Creates a tables string for liblouis calls"""
+	return b",".join([x.decode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
+
+louis._createTablesString = _createTablesString

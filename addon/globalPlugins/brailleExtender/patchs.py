@@ -6,6 +6,7 @@
 
 from __future__ import unicode_literals
 import os
+import sys
 import time
 import api
 import braille
@@ -45,11 +46,11 @@ origFunc = {
 def script_braille_routeTo(self, gesture):
 	obj = obj = api.getNavigatorObject()
 	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
-            obj.hasFocus and
-            braille.handler._cursorPos and
-            (obj.role == controlTypes.ROLE_TERMINAL or
-             (obj.role == controlTypes.ROLE_EDITABLETEXT and
-              braille.handler.tether == braille.handler.TETHER_REVIEW))):
+			obj.hasFocus and
+			braille.handler._cursorPos and
+			(obj.role == controlTypes.ROLE_TERMINAL or
+			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
+			  braille.handler.tether == braille.handler.TETHER_REVIEW))):
 		speechMode = speech.speechMode
 		speech.speechMode = 0
 		nb = braille.handler._cursorPos-gesture.routingIndex
@@ -401,6 +402,15 @@ brailleInput.BrailleInputHandler._translate = _translate
 
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
-	return b",".join([x.decode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
+	if sys.version_info.major == 2:
+		if sys.platform == "win32":
+			return b",".join([x.decode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
+		else:
+			return b",".join([x.decode("UTF-8").encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
+	else:
+		if sys.platform == "win32":
+			return b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in tablesList])
+		else:
+			return b",".join([x.encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
 
 louis._createTablesString = _createTablesString

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@freelists.org\n"
-"POT-Creation-Date: 2019-02-14 18:43+0100\n"
-"PO-Revision-Date: 2019-02-14 18:52+0100\n"
+"POT-Creation-Date: 2019-02-16 20:02+0100\n"
+"PO-Revision-Date: 2019-02-16 20:07+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -344,13 +344,13 @@ msgid "Dots 7 and 8: %s"
 msgstr "Точки 7 и 8: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:567
-#: addon/globalPlugins/brailleExtender/__init__.py:573
+#: addon/globalPlugins/brailleExtender/__init__.py:574
 #: addon/globalPlugins/brailleExtender/__init__.py:585
 msgid "disabled"
 msgstr "Выключено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:567
-#: addon/globalPlugins/brailleExtender/__init__.py:573
+#: addon/globalPlugins/brailleExtender/__init__.py:574
 #: addon/globalPlugins/brailleExtender/__init__.py:585
 msgid "enabled"
 msgstr "Включено"
@@ -359,7 +359,7 @@ msgstr "Включено"
 msgid "Hide/show dots 7 and 8"
 msgstr "Скрыть/показывать точки 7 и 8"
 
-#: addon/globalPlugins/brailleExtender/__init__.py:573
+#: addon/globalPlugins/brailleExtender/__init__.py:574
 #, python-format
 msgid "BRF mode: %s"
 msgstr "режим форматированного брайля: %s"
@@ -752,6 +752,13 @@ msgstr ""
 msgid "Auto test"
 msgstr "автотест"
 
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on to be shown on installation and add-on information.
+#: addon/globalPlugins/brailleExtender/__init__.py:1486
+#: addon/globalPlugins/brailleExtender/settings.py:29 buildVars.py:18
+msgid "Braille Extender"
+msgstr "Braille Extender"
+
 #: addon/globalPlugins/brailleExtender/addonDoc.py:34
 #, python-format
 msgid "%s braille display"
@@ -980,16 +987,21 @@ msgstr "Режим просмотра"
 msgid "last known"
 msgstr "Последний известный"
 
+#: addon/globalPlugins/brailleExtender/patchs.py:117
+msgid ""
+"An unexpected error was produced while using several braille tables. Using "
+"default settings to avoid other errors. More information in NVDA log. Thanks "
+"to report it."
+msgstr ""
+"Вышла неожиданная ошибка при использовании нескольких брайлевских таблиц. "
+"Будут использованы настройки по умолчанию, чтобы избежать дальших ошибок. "
+"Больше сведений вы найдёте в журнале NVDA. Спасибо для что вы пришлёте отчёт "
+"об ошибке."
+
 #: addon/globalPlugins/brailleExtender/settings.py:29
 msgid "The feature implementation is in progress. Thanks for your patience."
 msgstr ""
 "Имплементация этой фукции продлится некоторое время. Спасибо з терпение."
-
-#. Add-on summary, usually the user visible name of the addon.
-#. Translators: Summary for this add-on to be shown on installation and add-on information.
-#: addon/globalPlugins/brailleExtender/settings.py:29 buildVars.py:18
-msgid "Braille Extender"
-msgstr "Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/settings.py:51
 msgid "feature in process"
@@ -1339,6 +1351,18 @@ msgstr "Брайлевская таблица 2-ой ступени (кратк�
 #: addon/globalPlugins/brailleExtender/settings.py:569
 msgid "Available for"
 msgstr "Доступны для"
+
+#: addon/globalPlugins/brailleExtender/settings.py:569
+msgid "Input and output"
+msgstr "Ввод и вывод"
+
+#: addon/globalPlugins/brailleExtender/settings.py:569
+msgid "Input only"
+msgstr "Только ввод"
+
+#: addon/globalPlugins/brailleExtender/settings.py:569
+msgid "Output only"
+msgstr "Только вывод"
 
 #: addon/globalPlugins/brailleExtender/settings.py:575
 msgid "Choose a table file"

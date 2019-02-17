@@ -14,7 +14,6 @@ import cursorManager
 import globalCommands
 import utils
 import ui
-from logHandler import log
 
 instanceGP = None
 
@@ -46,7 +45,7 @@ class AddonDoc():
 		"""
 		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>" + (''.join([
 			"<p>",
-			_("Copyright (C) 2017 André-Abush Clause, and other contributors:"), "</p>",
+			_("Copyright (C) 2017-2019 André-Abush Clause, and other contributors:"), "</p>",
 			"<h3>"+_("Translators")+"""</h3>
 			<ul>""",
 				"<li>", _("Arabic"), configBE.sep, ": Ikrami Ahmad",
@@ -62,7 +61,7 @@ class AddonDoc():
 		""".format(SEP=configBE.sep), "</ul>",
 			"<p>" + _("Thanks also to") + configBE.sep +": ",
 			"Daniel Cotto, Corentin, Louis.</p>",
-			"<p>" + _("And thank you very much for all your feedback and comments.") + " 😀</p>"
+			"<p>" + _("And thank you very much for all your feedback and comments.") + " ☺</p>"
 			])
 		)
 		if configBE.gesturesFileExists:
@@ -128,12 +127,12 @@ class AddonDoc():
 					doc += '<li>{}.</li>'.format(l)
 				doc += '</ol>'
 		else:
-			doc += ('<h2>' + _("Warning:") + '</h2><p>' +
-					_("BrailleExtender doesn't seem to support your braille display.") + '<br />' +
-					_('However, you can reassign most of these features in the "Command Gestures" dialog in the "Preferences" of NVDA.') + '</p>'
+			doc += ("<h2>" + _("Warning:") + "</h2><p>" +
+					_("BrailleExtender has no gesture map yet for your braille display.") + "<br />" +
+					_("However, you can still assign your own gestures in the \"Input Gestures\" dialog (under Preferences menu).") + "</p>"
 					)
-		doc += ('<h2>' + _('Shortcuts on system keyboard specific to the add-on') +
-				' (%s)</h2>') % str(len(gestures) - 4)
+		doc += ("<h2>" + _("Shortcuts on system keyboard specific to the add-on") +
+				" (%s)</h2>") % str(len(gestures) - 4)
 		doc += '<ul>'
 		for g in [k for k in gestures if k.lower().startswith('kb:')]:
 			if g.lower() not in [

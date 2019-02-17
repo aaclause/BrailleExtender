@@ -13,7 +13,6 @@ import braille
 import brailleInput
 import brailleTables
 import controlTypes
-import core
 import config
 import configBE
 import globalCommands
@@ -156,7 +155,7 @@ def update(self):
 			except IndexError: pass
 		else:
 			if instanceGP.hideDots78:
-				for i, j in enumerate(self.brailleCells): self.brailleCells[i] &= 63
+				self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 	except BaseException as e:
 		log.error("Error with update braille patch, disabling: %s" % e)
 
@@ -215,7 +214,7 @@ def previousLine(self, start=False):
 		self._setCursor(dest)
 		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
-	except BaseException as e: pass
+	except BaseException: pass
 
 def executeGesture(self, gesture):
 		"""Perform the action associated with a gesture.
@@ -276,7 +275,7 @@ def executeGesture(self, gesture):
 			try:
 				if self._captureFunc(gesture) is False:
 					return
-			except:
+			except BaseException:
 				log.error("Error in capture function, disabling", exc_info=True)
 				self._captureFunc = None
 

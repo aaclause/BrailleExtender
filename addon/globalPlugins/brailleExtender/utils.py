@@ -5,7 +5,6 @@
 
 from __future__ import unicode_literals
 import os.path as osp
-import random
 import re
 import api
 import braille
@@ -253,7 +252,7 @@ def getTextInBraille(t = '', table = None):
 	nt = []
 	res = ''
 	t = t.split("\n")
-	for i, l in enumerate(t):
+	for l in t:
 		l = l.rstrip()
 		if not l: res = ''
 		elif charToDotsInLouis: res = louis.charToDots([table], l, louis.ucBrl)

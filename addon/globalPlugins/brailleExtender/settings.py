@@ -642,7 +642,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 	def captureNow(self):
 		def getCaptured(gesture):
 			script = scriptHandler.findScript(gesture)
-			if script and hasattr(script, "bypassInputHelp") and script.bypassInputHelp: 
+			if script and hasattr(script, "bypassInputHelp") and script.bypassInputHelp:
 				queueHandler.queueFunction(queueHandler.eventQueue, gesture.script, gesture)
 				return False
 			elif script is not None:
@@ -737,7 +737,8 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		dlg.Destroy()
 		return self.quickKeys.SetFocus()
 
-	def askCreateQuickLaunch(self):
+	@staticmethod
+	def askCreateQuickLaunch():
 		gui.messageBox(_("Please create or select a quick launch first"), '%s – %s' % (configBE._addonName, _("Error")), wx.OK|wx.ICON_ERROR)
 
 

@@ -461,7 +461,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.message(self.getCurrentSelectionRange())
 		return
 
-	def moveTo(self, direction, gesture = None):
+	@staticmethod
+	def moveTo(direction, gesture = None):
 		global rotorItem
 		obj = api.getFocusObject()
 		if obj.treeInterceptor is not None:
@@ -1022,7 +1023,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
 		self.clearModifiers()
 
-	def sendComb(self, sht, gesture):
+	def sendComb(self, sht, gesture = None):
 		if ((config.conf["brailleExtender"]["inputTableShortcuts"] != '?' and configBE.isContractedTable(config.conf["brailleExtender"]["inputTableShortcuts"]))
 			or (config.conf["brailleExtender"]["inputTableShortcuts"] == '?' and configBE.isContractedTable(brailleInput.handler.table.fileName))
 		):

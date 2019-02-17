@@ -342,7 +342,7 @@ def unicodeBrailleToDescription(t, sep = '-'):
 def descriptionToUnicodeBraille(t):
 	return re.sub('([0-8]+)', lambda m: cellDescToChar(m.group(0)), t)
 
-def beautifulSht(t, curBD=config.curBD, model = True, sep = ' / '):
+def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
 	if isinstance(t, list): t = ' '.join(t)
 	t = t.replace(',', ' ')
 	t = t.replace(';',' ')

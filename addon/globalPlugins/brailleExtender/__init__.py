@@ -634,7 +634,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")
 
 	def script_charsToCellDescriptions(self, gesture):
-		t = utils.getTextInBraille()
+		table = ''
+		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
+		t = utils.getTextInBraille('', table)
 		t = utils.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage(t, _("Braille Unicode to cell descriptions"))

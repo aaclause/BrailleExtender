@@ -23,6 +23,8 @@ import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
 
+charToDotsInLouis = hasattr(louis, "charToDots")
+
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -245,19 +247,21 @@ def getKeysTranslation(n):
 		return nk + n
 
 def getTextInBraille(t = '', table = None):
+	if not t: t = getTextSelection()
+	if not t.strip(): return ''
 	if not table: table = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-	nt = ""
-	if t == '': t = getTextSelection()
-	if t.strip() != '':
-		for i, l in enumerate(t):
-			if l not in ['\r','\n']:
-				nt += louis.translateString([table], l, None, louis.dotsIO)
-			else: nt += l
-		t = ""
-		for i, ch in enumerate(nt):
-			t += unichr(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch
-		return t
-	else: return ''
+	nt = []
+	res = ''
+	t = t.split("\n")
+	for i, l in enumerate(t):
+		l = l.rstrip()
+		if not l: res = ''
+		elif charToDotsInLouis: res = louis.charToDots([table], l, louis.ucBrl)
+		else: res = louis.translateString([table], l, None, louis.dotsIO)
+		nt.append(res)
+	nt = '\n'.join(nt)
+	if charToDotsInLouis: return nt
+	return ''.join([unichr(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch for ch in nt])
 
 def cellDescToChar(cell):
 	if not re.match("^[0-8]+$", cell): return '?'
@@ -330,14 +334,7 @@ def getTableOverview(tbl = ''):
 	return t
 
 def unicodeBrailleToDescription(t, sep = '-'):
-	nt = ""
-	for i, ch in enumerate(t):
-		if ch in ['\r', '\n']:
-			nt += ch
-			continue
-		nt += '%s%s' %(sep if i != 0 else '', charToCellDesc(ch))
-	nt = nt.replace('\n'+sep, '\n')
-	return nt
+	return ''.join([charToCellDesc(ch)+'-' if ch not in ['\n','\r'] else ch for ch in t])[:-1].replace("-\n",'\n')
 
 def descriptionToUnicodeBraille(t):
 	return re.sub('([0-8]+)', lambda m: cellDescToChar(m.group(0)), t)
@@ -362,7 +359,7 @@ def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
 	t = t.replace(';', ',')
 	out = []
 	for gesture in t.split(' '):
-		if gesture.strip() == '': continue
+		if not gesture.strip(): continue
 		mdl = ''
 		if re.match(patern, gesture): mdl = re.sub(patern, r'\1', gesture)
 		gesture = re.sub(r'.+:', '', gesture)
@@ -371,7 +368,7 @@ def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
 			gesture = re.sub("(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
 			gesture = re.sub("(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
 		out.append(_('{gesture} on {brailleDisplay}').format(gesture=gesture, brailleDisplay=mdl) if mdl != '' else gesture)
-	return out if sep == '' else sep.join(out)
+	return out if not sep else sep.join(out)
 
 def getText():
 	obj = api.getFocusObject()

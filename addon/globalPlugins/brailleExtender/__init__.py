@@ -626,27 +626,30 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_getTableOverview.__doc__ = _("Display an overview of current input braille table")
 
 	def script_translateInBRU(self, gesture):
+		tm = time.time()
 		table = ''
 		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
 		t = utils.getTextInBraille('', table)
 		if not t.strip(): return ui.message(_("No text selection"))
-		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion"), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion")+(" (%.2f s)" % (time.time()-tm)), True)
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")
 
 	def script_charsToCellDescriptions(self, gesture):
+		tm = time.time()
 		table = ''
 		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
 		t = utils.getTextInBraille('', table)
 		t = utils.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
-		ui.browseableMessage(t, _("Braille Unicode to cell descriptions"))
+		ui.browseableMessage(t, _("Braille Unicode to cell descriptions")+(" (%.2f s)" % (time.time()-tm)))
 	script_charsToCellDescriptions.__doc__ = _("Convert text selection in braille cell descriptions and display it in a browseable message")
 
 	def script_cellDescriptionsToChars(self, gesture):
+		tm = time.time()
 		t = utils.getTextSelection()
 		if not t.strip(): return ui.message(_("No text selection"))
 		t = utils.descriptionToUnicodeBraille(t)
-		ui.browseableMessage(t, _("Cell descriptions to braille Unicode"))
+		ui.browseableMessage(t, _("Cell descriptions to braille Unicode")+(" (%.2f s)" % (time.time()-tm)))
 	script_cellDescriptionsToChars.__doc__ = _("Braille cell description to Unicode Braille. E.g.: in a edit field type '125-24-0-1-123-123'. Then select this text and execute this command")
 
 	def script_position(self, gesture=None):

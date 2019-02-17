@@ -244,13 +244,14 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 
-def getTextInBraille(t = ''):
+def getTextInBraille(t = '', table = None):
+	if not table: table = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
 	nt = ""
 	if t == '': t = getTextSelection()
 	if t.strip() != '':
 		for i, l in enumerate(t):
 			if l not in ['\r','\n']:
-				nt += louis.translateString([os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])], l, None, louis.dotsIO)
+				nt += louis.translateString([table], l, None, louis.dotsIO)
 			else: nt += l
 		t = ""
 		for i, ch in enumerate(nt):

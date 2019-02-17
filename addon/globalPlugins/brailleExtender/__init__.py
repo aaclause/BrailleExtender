@@ -626,7 +626,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_getTableOverview.__doc__ = _("Display an overview of current input braille table")
 
 	def script_translateInBRU(self, gesture):
-		t = utils.getTextInBraille()
+		table = ''
+		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
+		t = utils.getTextInBraille('', table)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion"), True)
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")

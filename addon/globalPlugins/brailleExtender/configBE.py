@@ -356,7 +356,7 @@ def loadPostTable():
 	postTable = []
 	postTableValid = True if config.conf["brailleExtender"]["postTable"] in tablesFN else False
 	if postTableValid:
-		postTable.append(os.path.join(brailleTables.TABLES_DIR, config.conf["brailleExtender"]["postTable"]))
+		postTable.append(os.path.join(brailleTables.TABLES_DIR, config.conf["brailleExtender"]["postTable"]).encode("UTF-8"))
 		log.debug('Secondary table enabled: %s' % config.conf["brailleExtender"]["postTable"])
 	else:
 		if config.conf["brailleExtender"]["postTable"] != "None":
@@ -371,9 +371,9 @@ def loadPostTable():
 		if f.read() != defUndefinedChar:
 			log.debug("Difference, creating undefined char file...")
 			if createTableChangesFile(tableChangesFile, defUndefinedChar):
-				postTable.append(tableChangesFile)
+				postTable.append(tableChangesFile.encode("UTF-8"))
 		else:
-			postTable.append(tableChangesFile)
+			postTable.append(tableChangesFile.encode("UTF-8"))
 		f.close()
 
 
@@ -401,9 +401,9 @@ def loadPreTable():
 		if f.read() != defTab:
 			log.debug('Difference, creating tab file...')
 			if createTableChangesFile(tableChangesFile, defTab):
-				preTable.append(tableChangesFile)
+				preTable.append(tableChangesFile.encode("UTF-8"))
 		else:
-			preTable.append(tableChangesFile)
+			preTable.append(tableChangesFile.encode("UTF-8"))
 			log.debug('Tab as spaces enabled')
 		f.close()
 	else: log.debug('Tab as spaces disabled')

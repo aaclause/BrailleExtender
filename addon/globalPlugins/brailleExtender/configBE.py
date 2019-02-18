@@ -208,7 +208,8 @@ def getConfspec():
 			)
 		},
 		"quickLaunches": {},
-		"roleLabels": {}
+		"roleLabels": {},
+		"brailleTables": {},
 	}
 
 def loadPreferedTables():
@@ -384,7 +385,7 @@ def createTableChangesFile(f, c):
 		f.close()
 		return True
 	except BaseException as e:
-		log.error('Error while creating tab file (%s)' % e)
+		log.error("Error while creating tab file (%s)" % e)
 		return False
 
 def loadPreTable():
@@ -414,6 +415,8 @@ def getKeyboardLayout():
 		return iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % curBD])
 	else: return 0
 
+def getCustomBrailleTables():
+	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]
 
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"

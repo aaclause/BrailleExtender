@@ -5,6 +5,7 @@
 
 from __future__ import unicode_literals
 import glob
+import hashlib
 import os
 import gui
 import wx
@@ -533,6 +534,7 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	title = "Braille Extender - %s" % _("Custom braille tables")
 
 	def makeSettings(self, settingsSizer):
+		log.info(configBE.getCustomBrailleTables())
 		wx.CallAfter(notImplemented)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
@@ -560,6 +562,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		self.name = sHelper.addLabeledControl(_("Display name"), wx.TextCtrl)
 		self.path = sHelper.addLabeledControl(_("Path"), wx.TextCtrl)
 		self.browseBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Browse"), wx.DefaultPosition)
 		self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)
@@ -569,7 +572,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.inputOrOutput = sHelper.addLabeledControl(_("Available for"), wx.Choice, choices=[_("Input and output"), _("Input only"), _("Output only")])
 		self.inputOrOutput.SetSelection(0)
 
-	def postInit(self): self.path.SetFocus()
+	def postInit(self): self.name.SetFocus()
 
 	def onBrowseBtn(self, event):
 		dlg = wx.FileDialog(None, _("Choose a table file"), "%PROGRAMFILES%", "", "%s (*.ctb, *.cti, *.utb, *.uti)|*.ctb;*.cti;*.utb;*.uti" % _("Liblouis table files"), style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST)
@@ -581,6 +584,23 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.path.SetFocus()
 
 	def onOk(self, evt):
+		path = self.path.GetValue().strip().encode("UTF-8")
+		displayName = self.name.GetValue().strip()
+		if not displayName:
+			gui.messageBox(_("Please specify a display name."), _("Invalid display name"), wx.OK|wx.ICON_ERROR)
+			self.name.SetFocus()
+			return
+		if not os.path.exists(path.decode("UTF-8").encode("mbcs")):
+			gui.messageBox(_("The specified path is not valid (%s).") % path.decode("UTF-8"), _("Invalid path"), wx.OK|wx.ICON_ERROR)
+			self.path.SetFocus()
+			return
+		switch_possibleValues = ["both", "input", "output"]
+		v = "%s|%s|%s|%s" % (
+			switch_possibleValues[self.inputOrOutput.GetSelection()],
+			self.isContracted.IsChecked(), path.decode("UTF-8"), displayName
+		)
+		k = hashlib.md5(path).hexdigest()[:15]
+		config.conf["brailleExtender"]["brailleTables"][k] = v
 		super(AddBrailleTablesDlg, self).onOk(evt)
 
 	@staticmethod

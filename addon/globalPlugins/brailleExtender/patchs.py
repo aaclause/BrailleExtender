@@ -41,7 +41,55 @@ origFunc = {
 	"_createTablesString": louis._createTablesString
 }
 
+def sayCurrentLine():
+	global instanceGP
+	if not instanceGP.autoScrollRunning:
+		if braille.handler.tether == braille.handler.TETHER_REVIEW:
+			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
+				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
+			return
+		elif config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
+			obj = api.getFocusObject()
+			treeInterceptor = obj.treeInterceptor
+			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
+			try: info = obj.makeTextInfo(textInfos.POSITION_CARET)
+			except (NotImplementedError, RuntimeError):
+				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
+			info.expand(textInfos.UNIT_LINE)
+			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
 
+def getCurrentBrailleTables(input = False):
+	if input:
+		if instanceGP.BRFMode and not errorTable:
+			tables = [
+				os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
+				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+			]
+		else:
+			tables = [
+				os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName),
+				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+			]
+	else:
+		if errorTable:
+			if instanceGP.BRFMode: instanceGP.BRFMode = False
+			tables = [
+				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
+				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+			]
+		elif instanceGP.BRFMode:
+			tables = [
+				os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
+				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+			]
+		else:
+			tables = configBE.preTable + [
+				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
+				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+			] + configBE.postTable
+	return tables
+
+# globalCommands.GlobalCommands.script_braille_routeTo()
 def script_braille_routeTo(self, gesture):
 	obj = obj = api.getNavigatorObject()
 	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
@@ -64,27 +112,9 @@ def script_braille_routeTo(self, gesture):
 	braille.handler.routeTo(gesture.routingIndex)
 	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]['speakRoutingTo']:
 		ch = getCurrentChar()
-		if ch != "": speech.speakSpelling(ch)
-def getCurrentBrailleTables():
-	if errorTable:
-		if instanceGP.BRFMode: instanceGP.BRFMode = False
-		tables = [
-			os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
-	elif instanceGP.BRFMode:
-		tables = [
-			os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
-	else:
-		tables = configBE.preTable + [
-			os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		] + configBE.postTable
-	return tables
+		if ch: speech.speakSpelling(ch)
 
-# braille.Region.update
+# braille.Region.update()
 def update(self):
 	"""Update this region.
 	Subclasses should extend this to update L{rawText}, L{cursorPos}, L{selectionStart} and L{selectionEnd} if necessary.
@@ -159,25 +189,7 @@ def update(self):
 	except BaseException as e:
 		log.error("Error with update braille patch, disabling: %s" % e)
 
-
-def sayCurrentLine():
-	global instanceGP
-	if not instanceGP.autoScrollRunning:
-		if braille.handler.tether == braille.handler.TETHER_REVIEW:
-			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
-				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
-			return
-		elif config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
-			obj = api.getFocusObject()
-			treeInterceptor = obj.treeInterceptor
-			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
-			try: info = obj.makeTextInfo(textInfos.POSITION_CARET)
-			except (NotImplementedError, RuntimeError):
-				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
-			info.expand(textInfos.UNIT_LINE)
-			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
-
-# braille.TextInfoRegion.nextLine()
+#: braille.TextInfoRegion.nextLine()
 def nextLine(self):
 	try:
 		dest = self._readingInfo.copy()
@@ -194,7 +206,7 @@ def nextLine(self):
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 	except BaseException: pass
 
-# braille.TextInfoRegion.previousLine()
+#: braille.TextInfoRegion.previousLine()
 def previousLine(self, start=False):
 	try:
 		dest = self._readingInfo.copy()
@@ -216,6 +228,7 @@ def previousLine(self, start=False):
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 	except BaseException: pass
 
+#: inputCore.InputManager.executeGesture
 def executeGesture(self, gesture):
 		"""Perform the action associated with a gesture.
 		@param gesture: The gesture to execute.
@@ -299,7 +312,7 @@ def executeGesture(self, gesture):
 
 		raise NoInputGestureAction
 
-# reason for patching: possibility to repeat last shortcut performed quickly
+#: brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
 	"""Emulates a key using the keyboard emulation system.
 	If emulation fails (e.g. because of an unknown key), a debug warning is logged
@@ -322,6 +335,7 @@ def emulateKey(self, key, withModifiers=True):
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 
+#: brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input
 def _translate(self, endWord):
 	"""Translate buffered braille up to the cursor.
@@ -341,9 +355,7 @@ def _translate(self, endWord):
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans
-	self.bufferText = louis.backTranslate(
-		[os.path.join(brailleTables.TABLES_DIR, self._table.fileName),
-		"braille-patterns.cti"],
+	self.bufferText = louis.backTranslate(getCurrentBrailleTables(True),
 		data, mode=mode)[0]
 	newText = self.bufferText[oldTextLen:]
 	if newText:
@@ -385,20 +397,7 @@ def _translate(self, endWord):
 
 	return False
 
-configBE.loadPostTable()
-configBE.loadPreTable()
-
-# applying patches
-braille.TextInfoRegion.previousLine = previousLine
-braille.TextInfoRegion.nextLine = nextLine
-braille.Region.update = update
-script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
-globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
-inputCore.InputManager.executeGesture = executeGesture
-NoInputGestureAction = inputCore.NoInputGestureAction
-brailleInput.BrailleInputHandler.emulateKey = emulateKey
-brailleInput.BrailleInputHandler._translate = _translate
-
+#: louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	if sys.version_info.major == 2:
@@ -412,4 +411,17 @@ def _createTablesString(tablesList):
 		else:
 			return b",".join([x.encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
 
+configBE.loadPostTable()
+configBE.loadPreTable()
+
+# applying patches
+braille.Region.update = update
+braille.TextInfoRegion.previousLine = previousLine
+braille.TextInfoRegion.nextLine = nextLine
+inputCore.InputManager.executeGesture = executeGesture
+NoInputGestureAction = inputCore.NoInputGestureAction
+brailleInput.BrailleInputHandler.emulateKey = emulateKey
+brailleInput.BrailleInputHandler._translate = _translate
+globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
+script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

@@ -170,7 +170,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		backupInputTable = brailleInput.handler.table
 	backupMessageTimeout = None
 	backupShowCursor = False
-	backupTether = braille.handler.tether
+	backupTether = utils.getTether()
 	switchedMode = False
 
 	def __init__(self):
@@ -218,14 +218,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reviewModeTerminal"]:
 			if not self.switchedMode and obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
 				if not hasattr(braille.handler, "TETHER_AUTO"):
-					self.backupTether = braille.handler.tether
+					self.backupTether = utils.getTether()
 					braille.handler.tether = braille.handler.TETHER_REVIEW
 				else:
 					if config.conf["braille"]["autoTether"]:
 						self.backupTether = braille.handler.TETHER_AUTO
 						config.conf["braille"]["autoTether"] = False
 					else:
-						self.backupTether = braille.handler.tether
+						self.backupTether = utils.getTether()
 					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
 					braille.handler.handleReviewMove(shouldAutoTether=False)
 				self.switchedMode = True

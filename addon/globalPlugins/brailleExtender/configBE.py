@@ -76,6 +76,7 @@ sep = ' ' if 'fr' in lang else ''
 outputTables = inputTables = None
 preTable = []
 postTable = []
+configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
 baseDir = os.path.dirname(__file__).decode("mbcs")
 _addonDir = os.path.join(baseDir, "..", "..")
 _addonName = addonHandler.Addon(_addonDir).manifest["name"]
@@ -423,3 +424,4 @@ cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"
 cfgFileAttribra = globalVars.appArgs.configPath + r"\attribra-BE.ini"
 if os.path.exists(cfgFile): os.remove(cfgFile)
 if os.path.exists(cfgFileAttribra): os.remove(cfgFileAttribra)
+if not os.path.exists(configDir): os.mkdir(configDir)

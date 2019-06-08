@@ -476,3 +476,7 @@ def getSpeechSymbols(text = None):
 	locale = languageHandler.getLanguage()
 	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_MOST).strip()
 
+def getTether():
+	if hasattr(braille.handler, "getTether"):
+		return braille.handler.getTether()
+	else: return braille.handler.tether

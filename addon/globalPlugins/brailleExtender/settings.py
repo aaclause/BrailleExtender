@@ -7,6 +7,7 @@ from __future__ import unicode_literals
 import glob
 import hashlib
 import os
+import json
 import gui
 import wx
 import re
@@ -416,7 +417,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.undefinedCharRepr = sHelper.addLabeledControl(_("Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
 
-		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Custom braille tables"), wx.DefaultPosition)
+		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
 		sHelper.addItem(bHelper1)
 
@@ -532,9 +533,12 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
 	title = "Braille Extender - %s" % _("Custom braille tables")
+	providedTablesPath = "%s/res/brailleTables.json" % configBE.baseDir
+	userTablesPath = "%s/brailleTables.json" % configBE.configDir
 
 	def makeSettings(self, settingsSizer):
-		log.info(configBE.getCustomBrailleTables())
+		self.providedTables = self.getBrailleTablesFromJSON(self.providedTablesPath)
+		self.userTables = self.getBrailleTablesFromJSON(self.userTablesPath)
 		wx.CallAfter(notImplemented)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
@@ -543,6 +547,14 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.addBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Add a braille table"), wx.DefaultPosition)
 		self.addBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onAddBrailleTablesBtn)
 		sHelper.addItem(bHelper1)
+
+	@staticmethod
+	def getBrailleTablesFromJSON(path):
+		if not os.path.exists(path):
+			path = "%s/%s" % (configBE.baseDir, path)
+			if not os.path.exists(path): return {}
+		f = open(path, "r")
+		return json.load(f)
 
 	def onAddBrailleTablesBtn(self, evt):
 		addBrailleTablesDlg = AddBrailleTablesDlg(self, multiInstanceAllowed=True)
@@ -563,6 +575,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.name = sHelper.addLabeledControl(_("Display name"), wx.TextCtrl)
+		self.description = sHelper.addLabeledControl(_("Description"), wx.TextCtrl, style = wx.TE_MULTILINE|wx.TE_PROCESS_ENTER, size = (360, 90), pos=(-1,-1))
 		self.path = sHelper.addLabeledControl(_("Path"), wx.TextCtrl)
 		self.browseBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Browse"), wx.DefaultPosition)
 		self.browseBtn.Bind(wx.EVT_BUTTON, self.onBrowseBtn)

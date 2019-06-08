@@ -30,7 +30,7 @@ from logHandler import log
 import addonHandler
 
 addonHandler.initTranslation()
-from utils import getCurrentChar
+from utils import getCurrentChar, getTether
 instanceGP = None
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
@@ -44,7 +44,7 @@ origFunc = {
 def sayCurrentLine():
 	global instanceGP
 	if not instanceGP.autoScrollRunning:
-		if braille.handler.tether == braille.handler.TETHER_REVIEW:
+		if getTether() == braille.handler.TETHER_REVIEW:
 			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
 				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 			return
@@ -97,7 +97,7 @@ def script_braille_routeTo(self, gesture):
 			braille.handler._cursorPos and
 			(obj.role == controlTypes.ROLE_TERMINAL or
 			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
-			  braille.handler.tether == braille.handler.TETHER_REVIEW))):
+			 getTether() == braille.handler.TETHER_REVIEW))):
 		speechMode = speech.speechMode
 		speech.speechMode = 0
 		nb = braille.handler._cursorPos-gesture.routingIndex

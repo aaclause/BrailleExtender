@@ -14,7 +14,7 @@ import brailleInput
 import brailleTables
 import controlTypes
 import config
-import configBE
+from . import configBE
 import globalCommands
 import inputCore
 import keyboardHandler
@@ -30,7 +30,7 @@ from logHandler import log
 import addonHandler
 
 addonHandler.initTranslation()
-from utils import getCurrentChar, getTether
+from .utils import getCurrentChar, getTether
 instanceGP = None
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
@@ -415,13 +415,13 @@ configBE.loadPostTable()
 configBE.loadPreTable()
 
 # applying patches
-braille.Region.update = update
+#braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
-inputCore.InputManager.executeGesture = executeGesture
+#inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
-brailleInput.BrailleInputHandler.emulateKey = emulateKey
-brailleInput.BrailleInputHandler._translate = _translate
+#brailleInput.BrailleInputHandler.emulateKey = emulateKey
+#brailleInput.BrailleInputHandler._translate = _translate
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

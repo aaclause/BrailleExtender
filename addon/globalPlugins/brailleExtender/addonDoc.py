@@ -8,11 +8,11 @@ import re
 import addonHandler
 addonHandler.initTranslation()
 import braille
-import configBE
+from . import configBE
 from collections import OrderedDict
 import cursorManager
 import globalCommands
-import utils
+from . import utils
 import ui
 
 instanceGP = None

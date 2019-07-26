@@ -5,9 +5,8 @@
 
 from __future__ import unicode_literals
 import os
-from cStringIO import StringIO
+import sys
 import globalVars
-#from colors import RGB
 from collections import OrderedDict
 
 import addonHandler
@@ -21,6 +20,8 @@ else: from validate import Validator
 import inputCore
 import languageHandler
 from logHandler import log
+
+isPy3 = True if sys.version_info >= (3, 0) else False
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -77,7 +78,8 @@ outputTables = inputTables = None
 preTable = []
 postTable = []
 configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
-baseDir = os.path.dirname(__file__).decode("mbcs")
+baseDir = os.path.dirname(__file__)
+if not isPy3: baseDir = baseDir.decode("mbcs")
 _addonDir = os.path.join(baseDir, "..", "..")
 _addonName = addonHandler.Addon(_addonDir).manifest["name"]
 _addonVersion = addonHandler.Addon(_addonDir).manifest["version"]
@@ -278,7 +280,7 @@ def loadConf():
 	confGen = (r"%s\%s\%s\profile.ini" % (profilesDir, curBD, config.conf["brailleExtender"]["profile_%s" % curBD]))
 	if (curBD != "noBraille" and os.path.exists(confGen)):
 		profileFileExists = True
-		confspec = config.ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
+		confspec = config.ConfigObj("", encoding="UTF-8", list_values=False)
 		iniProfile = config.ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
 		result = iniProfile.validate(Validator())
 		if result is not True:
@@ -323,7 +325,7 @@ def initGestures():
 	if profileFileExists and gesturesBDPath() != '?':
 		log.debug('Main gestures map found')
 		confGen = gesturesBDPath()
-		confspec = config.ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
+		confspec = config.ConfigObj("", encoding="UTF-8", list_values=False)
 		iniGestures = config.ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
 		result = iniGestures.validate(Validator())
 		if result is not True:

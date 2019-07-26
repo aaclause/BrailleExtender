@@ -22,8 +22,8 @@ import scriptHandler
 import ui
 addonHandler.initTranslation()
 
-import configBE
-import utils
+from . import configBE
+from . import utils
 from logHandler import log
 
 instanceGP = None

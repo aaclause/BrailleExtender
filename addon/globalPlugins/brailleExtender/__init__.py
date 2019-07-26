@@ -21,7 +21,7 @@ import wx
 
 import addonHandler
 addonHandler.initTranslation()
-import settings
+from . import settings
 import api
 import appModuleHandler
 import braille
@@ -44,13 +44,13 @@ import tones
 import ui
 import versionInfo
 import virtualBuffers
-
-import configBE
+from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
-import utils
-from updateCheck import *
-import patchs
+from . import utils
+from .updateCheck import *
+from . import patchs
 
+isPy3 = True if sys.version_info >= (3, 0) else False
 instanceGP = None
 lang = configBE.lang
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
@@ -686,7 +686,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def showHourDate():
 		currentHourDate = time.strftime('%X %x (%a, %W/53, %b)', time.localtime())
-		return braille.handler.message(currentHourDate.decode('mbcs'))
+		if isPy3: return braille.handler.message(currentHourDate)
+		else: return braille.handler.message(currentHourDate.decode('mbcs'))
 
 	def script_autoScroll(self, gesture, sil=False):
 		if self.hourDatePlayed:
@@ -755,7 +756,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleVolume.__doc__ = _("Mute or unmute sound")
 
 	def script_getHelp(s, g):
-		import addonDoc
+		from . import addonDoc
 		addonDoc.AddonDoc(s)
 	script_getHelp.__doc__ = _(
 		'Show the %s documentation') % configBE._addonName

@@ -49,9 +49,9 @@ addon_info = {
 	# Documentation file name
 	"addon_docFileName" : None,
 	# Minimum NVDA version supported (e.g. "2018.3")
-	"addon_minimumNVDAVersion" : "2018.3.0",
+	"addon_minimumNVDAVersion" : "2018.3",
 	# Last NVDA version supported/tested (e.g. "2018.4", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion" : "2019.4.0",
+	"addon_lastTestedNVDAVersion" : "2019.2",
 	# Add-on update channel (default is stable or None)
 	"addon_updateChannel" : None,
 }

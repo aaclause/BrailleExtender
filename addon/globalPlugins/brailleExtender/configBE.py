@@ -39,32 +39,36 @@ CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
 NOVIEWSAVED = chr(4)
 
-outputMessage = OrderedDict([
+dict_ = dict if isPy3 else OrderedDict
+
+outputMessage = dict_([
 	(CHOICE_none,             _("none")),
 	(CHOICE_braille,          _("braille only")),
 	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
 
-attributeChoices = OrderedDict([
+attributeChoices = dict_([
 	(CHOICE_none,   _("none")),
 	(CHOICE_dots78, _("dots 7 and 8")),
 	(CHOICE_dot7,   _("dot 7")),
 	(CHOICE_dot8,   _("dot 8"))
 ])
+attributeChoicesKeys = list(attributeChoices)
+attributeChoicesValues = list(attributeChoices.values())
 
-updateChannels = OrderedDict([
+updateChannels = dict_([
 	(CHANNEL_stable,  _("stable")),
-	(CHANNEL_testing, _("testing")),
 	(CHANNEL_dev,     _("development"))
 ])
 
-focusOrReviewChoices = OrderedDict([
+focusOrReviewChoices = dict_([
 	(CHOICE_none,           _("none")),
 	(CHOICE_focus,          _("focus mode")),
 	(CHOICE_review,         _("review mode")),
 	(CHOICE_focusAndReview, _("both"))
 ])
+
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}

@@ -185,7 +185,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["lastNVDAVersion"] != updateCheck.versionInfo.version:
 			config.conf["brailleExtender"]["lastNVDAVersion"] = updateCheck.versionInfo.version
 			checkingForced = True
-		delayChecking = 86400 if config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
+		delayChecking = 86400 if isPy3 or config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
 		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and (checkingForced or (time.time() - config.conf["brailleExtender"]["lastCheckUpdate"]) > delayChecking):
 			checkUpdates(True)
 			config.conf["brailleExtender"]["lastCheckUpdate"] = time.time()

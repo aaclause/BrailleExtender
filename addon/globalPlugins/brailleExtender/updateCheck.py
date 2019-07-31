@@ -22,18 +22,20 @@ import core
 import config
 import globalVars
 import languageHandler
+import ui
 import versionInfo
 
 from . import configBE
 addonHandler.initTranslation()
 
 def paramsDL(): return {
-	"versionProtocole": "2.0",
+	"versionProtocole": "2.1",
 	"versionAddon": configBE._addonVersion,
 	"versionNVDA": versionInfo.version,
 	"language": languageHandler.getLanguage(),
 	"brailledisplay": braille.handler.display.name,
-	"channel": config.conf["brailleExtender"]["updateChannel"]
+	"channel": config.conf["brailleExtender"]["updateChannel"],
+	"py3": 1 if isPy3 else 0,
 }
 
 urlencode = urllib.parse.urlencode if isPy3 else urllib.urlencode

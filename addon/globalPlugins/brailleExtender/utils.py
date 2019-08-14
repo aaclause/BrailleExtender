@@ -22,6 +22,7 @@ from keyboardHandler import KeyboardInputGesture
 import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
+import unicodedata
 
 isPy3 = True if sys.version_info >= (3, 0) else False
 charToDotsInLouis = hasattr(louis, "charToDots")
@@ -195,17 +196,15 @@ def reload_brailledisplay(bd_name):
 
 def currentCharDesc():
 	ch = getCurrentChar()
+	if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
-	if c != '':
-		s = '%c: %s; %s; %s; %s'% (ch, hex(c), c, oct(c), bin(c))
+	if c:
+		s = '%c: %s; %s; %s; %s; %s [%s]' % (ch, hex(c), c, oct(c), bin(c), unicodedata.name(ch), unicodedata.category(ch))
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
-		elif (scriptHandler.getLastScriptRepeatCount() == 1):
+		elif scriptHandler.getLastScriptRepeatCount() == 1:
 			brch = getTextInBraille(ch)
-			ui.browseableMessage('%s\n%s (%s)' % (s, brch, unicodeBrailleToDescription(brch)), r'\x%d - Char info' % c)
-		else:
-			api.copyToClip(s)
-			ui.message('"{0}" copied to clipboard.'.format(s))
-	else: ui.message(_('Not a character.'))
+			ui.browseableMessage("%s\n%s (%s)" % (s, brch, unicodeBrailleToDescription(brch)), r'\x%d (%s) - Char info' % (c, ch))
+	else: ui.message(_("Not a character"))
 
 def getCurrentChar():
 	obj = api.getFocusObject()
@@ -217,8 +216,7 @@ def getCurrentChar():
 		info.expand(textInfos.UNIT_CHARACTER)
 		s = info.text
 		return s
-	except BaseException:
-		pass
+	except (TypeError, NotImplementedError): pass
 	return ''
 
 def getTextSelection():

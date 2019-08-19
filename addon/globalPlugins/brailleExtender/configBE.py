@@ -5,9 +5,8 @@
 
 from __future__ import unicode_literals
 import os
-from cStringIO import StringIO
+import sys
 import globalVars
-#from colors import RGB
 from collections import OrderedDict
 
 import addonHandler
@@ -21,6 +20,8 @@ else: from validate import Validator
 import inputCore
 import languageHandler
 from logHandler import log
+
+isPy3 = True if sys.version_info >= (3, 0) else False
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -38,32 +39,36 @@ CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
 NOVIEWSAVED = chr(4)
 
-outputMessage = OrderedDict([
+dict_ = dict if isPy3 else OrderedDict
+
+outputMessage = dict_([
 	(CHOICE_none,             _("none")),
 	(CHOICE_braille,          _("braille only")),
 	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
 
-attributeChoices = OrderedDict([
+attributeChoices = dict_([
 	(CHOICE_none,   _("none")),
 	(CHOICE_dots78, _("dots 7 and 8")),
 	(CHOICE_dot7,   _("dot 7")),
 	(CHOICE_dot8,   _("dot 8"))
 ])
+attributeChoicesKeys = list(attributeChoices)
+attributeChoicesValues = list(attributeChoices.values())
 
-updateChannels = OrderedDict([
+updateChannels = dict_([
 	(CHANNEL_stable,  _("stable")),
-	(CHANNEL_testing, _("testing")),
 	(CHANNEL_dev,     _("development"))
 ])
 
-focusOrReviewChoices = OrderedDict([
+focusOrReviewChoices = dict_([
 	(CHOICE_none,           _("none")),
 	(CHOICE_focus,          _("focus mode")),
 	(CHOICE_review,         _("review mode")),
 	(CHOICE_focusAndReview, _("both"))
 ])
+
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}
@@ -77,7 +82,8 @@ outputTables = inputTables = None
 preTable = []
 postTable = []
 configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
-baseDir = os.path.dirname(__file__).decode("mbcs")
+baseDir = os.path.dirname(__file__)
+if not isPy3: baseDir = baseDir.decode("mbcs")
 _addonDir = os.path.join(baseDir, "..", "..")
 _addonName = addonHandler.Addon(_addonDir).manifest["name"]
 _addonVersion = addonHandler.Addon(_addonDir).manifest["version"]
@@ -278,7 +284,7 @@ def loadConf():
 	confGen = (r"%s\%s\%s\profile.ini" % (profilesDir, curBD, config.conf["brailleExtender"]["profile_%s" % curBD]))
 	if (curBD != "noBraille" and os.path.exists(confGen)):
 		profileFileExists = True
-		confspec = config.ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
+		confspec = config.ConfigObj("", encoding="UTF-8", list_values=False)
 		iniProfile = config.ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
 		result = iniProfile.validate(Validator())
 		if result is not True:
@@ -323,7 +329,7 @@ def initGestures():
 	if profileFileExists and gesturesBDPath() != '?':
 		log.debug('Main gestures map found')
 		confGen = gesturesBDPath()
-		confspec = config.ConfigObj(StringIO(""""""), encoding="UTF-8", list_values=False)
+		confspec = config.ConfigObj("", encoding="UTF-8", list_values=False)
 		iniGestures = config.ConfigObj(confGen, configspec=confspec, indent_type="\t", encoding="UTF-8")
 		result = iniGestures.validate(Validator())
 		if result is not True:

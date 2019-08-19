@@ -7,6 +7,7 @@
 from __future__ import unicode_literals
 import os
 import sys
+isPy3 = True if sys.version_info >= (3, 0) else False
 import time
 import api
 import braille
@@ -14,11 +15,12 @@ import brailleInput
 import brailleTables
 import controlTypes
 import config
-import configBE
+from . import configBE
 import globalCommands
 import inputCore
 import keyboardHandler
 import louis
+if isPy3: import louisHelper
 import queueHandler
 import sayAllHandler
 import scriptHandler
@@ -29,9 +31,11 @@ import watchdog
 from logHandler import log
 import addonHandler
 
+
 addonHandler.initTranslation()
-from utils import getCurrentChar, getTether
+from .utils import getCurrentChar, getTether
 instanceGP = None
+chr_ = chr if isPy3 else unichr
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 errorTable = False
@@ -126,18 +130,28 @@ def update(self):
 	"""
 	try:
 		mode = louis.dotsIO
-		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
-			mode |= louis.compbrlAtCursor
+		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
 		try:
-			text = unicode(self.rawText).replace('\0', '')
-			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
-				text,
-				# liblouis mutates typeform if it is a list.
-				typeform=tuple(
-					self.rawTextTypeforms) if isinstance(
-					self.rawTextTypeforms,
-					list) else self.rawTextTypeforms,
-				mode=mode, cursorPos=self.cursorPos or 0)
+			if isPy3:
+				self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
+					getCurrentBrailleTables(),
+					self.rawText,
+					typeform=self.rawTextTypeforms,
+					mode=mode,
+					cursorPos=self.cursorPos
+				)
+			else:
+				text = unicode(self.rawText).replace('\0', '')
+				braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
+					text,
+					# liblouis mutates typeform if it is a list.
+					typeform=tuple(
+						self.rawTextTypeforms) if isinstance(
+						self.rawTextTypeforms,
+						list) else self.rawTextTypeforms,
+					mode=mode,
+					cursorPos=self.cursorPos or 0
+				)
 		except BaseException as e:
 			log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
 			global errorTable
@@ -145,31 +159,32 @@ def update(self):
 			if instanceGP.BRFMode: instanceGP.BRFMode = False
 			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
 			return
-		# liblouis gives us back a character string of cells, so convert it to a list of ints.
-		# For some reason, the highest bit is set, so only grab the lower 8
-		# bits.
-		self.brailleCells = [ord(cell) & 255 for cell in braille]
-		# #2466: HACK: liblouis incorrectly truncates trailing spaces from its output in some cases.
-		# Detect this and add the spaces to the end of the output.
-		if self.rawText and self.rawText[-1] == " ":
-			# rawToBraillePos isn't truncated, even though brailleCells is.
-			# Use this to figure out how long brailleCells should be and thus
-			# how many spaces to add.
-			correctCellsLen = self.rawToBraillePos[-1] + 1
-			currentCellsLen = len(self.brailleCells)
-			if correctCellsLen > currentCellsLen:
-				self.brailleCells.extend(
-					(0,) * (correctCellsLen - currentCellsLen))
-		if self.cursorPos is not None:
-			# HACK: The cursorPos returned by liblouis is notoriously buggy (#2947 among other issues).
-			# rawToBraillePos is usually accurate.
-			try:
-				brailleCursorPos = self.rawToBraillePos[self.cursorPos]
-			except IndexError:
-				pass
-		else:
-			brailleCursorPos = None
-		self.brailleCursorPos = brailleCursorPos
+		if not isPy3:
+			# liblouis gives us back a character string of cells, so convert it to a list of ints.
+			# For some reason, the highest bit is set, so only grab the lower 8
+			# bits.
+			self.brailleCells = [ord(cell) & 255 for cell in braille]
+			# #2466: HACK: liblouis incorrectly truncates trailing spaces from its output in some cases.
+			# Detect this and add the spaces to the end of the output.
+			if self.rawText and self.rawText[-1] == " ":
+				# rawToBraillePos isn't truncated, even though brailleCells is.
+				# Use this to figure out how long brailleCells should be and thus
+				# how many spaces to add.
+				correctCellsLen = self.rawToBraillePos[-1] + 1
+				currentCellsLen = len(self.brailleCells)
+				if correctCellsLen > currentCellsLen:
+					self.brailleCells.extend(
+						(0,) * (correctCellsLen - currentCellsLen))
+			if self.cursorPos is not None:
+				# HACK: The cursorPos returned by liblouis is notoriously buggy (#2947 among other issues).
+				# rawToBraillePos is usually accurate.
+				try:
+					brailleCursorPos = self.rawToBraillePos[self.cursorPos]
+				except IndexError:
+					pass
+			else:
+				brailleCursorPos = None
+			self.brailleCursorPos = brailleCursorPos
 		if self.selectionStart is not None and self.selectionEnd is not None:
 			try:
 				# Mark the selection.
@@ -178,9 +193,8 @@ def update(self):
 					self.brailleSelectionEnd = len(self.brailleCells)
 				else:
 					self.brailleSelectionEnd = self.rawToBraillePos[self.selectionEnd]
-				for pos in xrange(
-						self.brailleSelectionStart,
-						self.brailleSelectionEnd):
+				fn = range if isPy3 else xrange
+				for pos in fn(self.brailleSelectionStart, self.brailleSelectionEnd):
 					self.brailleCells[pos] |= SELECTION_SHAPE()
 			except IndexError: pass
 		else:
@@ -188,6 +202,7 @@ def update(self):
 				self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 	except BaseException as e:
 		log.error("Error with update braille patch, disabling: %s" % e)
+		errorTable = True
 
 #: braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -243,17 +258,17 @@ def executeGesture(self, gesture):
 
 		script = gesture.script
 		if "brailleDisplayDrivers" in str(type(gesture)):
-			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.func_name != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
+			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.__name__ != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
 			if not config.conf["brailleExtender"]['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
-			elif hasattr(script, "__func__") and (script.__func__.func_name in [
-			'script_braille_dots','script_braille_enter',
-			'script_volumePlus','script_volumeMinus','script_toggleVolume',
-			'script_hourDate',
-			'script_ctrl','script_alt','script_nvda','script_win',
-			'script_ctrlAlt','script_ctrlAltWin','script_ctrlAltWinShift','script_ctrlAltShift','script_ctrlWin','script_ctrlWinShift','script_ctrlShift','script_altWin','script_altWinShift','script_altShift','script_winShift']
+			elif hasattr(script, "__func__") and (script.__func__.__name__ in [
+			"script_braille_dots", "script_braille_enter",
+			"script_volumePlus", "script_volumeMinus", "script_toggleVolume",
+			"script_hourDate",
+			"script_ctrl", "script_alt", "script_nvda", "script_win",
+			"script_ctrlAlt", "script_ctrlAltWin", "script_ctrlAltWinShift", "script_ctrlAltShift","script_ctrlWin","script_ctrlWinShift","script_ctrlShift","script_altWin","script_altWinShift","script_altShift","script_winShift"]
 			or (
 				not config.conf["brailleExtender"]['stopSpeechScroll'] and
-			script.__func__.func_name in ['script_braille_scrollBack','script_braille_scrollForward'])):
+			script.__func__.__name__ in ["script_braille_scrollBack","script_braille_scrollForward"])):
 				stopSpeech = False
 			else: stopSpeech = True
 		else: stopSpeech = True
@@ -282,6 +297,7 @@ def executeGesture(self, gesture):
 			queueHandler.queueFunction(queueHandler.eventQueue, speech.pauseSpeech, speechEffect == gesture.SPEECHEFFECT_PAUSE)
 
 		if log.isEnabledFor(log.IO) and not gesture.isModifier:
+			self._lastInputTime = time.time()
 			log.io("Input: %s" % gesture.identifiers[0])
 
 		if self._captureFunc:
@@ -351,7 +367,7 @@ def _translate(self, endWord):
 		self.bufferText = u""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	data = u"".join([unichr(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
+	data = u"".join([chr_(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans

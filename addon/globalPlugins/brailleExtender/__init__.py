@@ -2,7 +2,7 @@
 # BrailleExtender Addon for NVDA
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
-# Copyright (C) 2017 André-Abush CLAUSE <dev@andreabc.net>
+# Copyright (C) 2016-2019 André-Abush CLAUSE <dev@andreabc.net>
 #
 # Additional third party copyrighted code is included:
 #  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
@@ -247,17 +247,30 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.brailleExtenderMenu = self.NVDAMenu.AppendSubMenu(menu, '%s (%s)' % (configBE._addonName, configBE._addonVersion), _('%s menu' % configBE._addonName))
 
 		item = menu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
+
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
+
+		settingsMenu = wx.Menu()
+		menu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille settings' menu"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onBrailleTablesSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onAttributesSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onQuickLaunchesSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onRoleLabelsSettings, item)
+
+		dictionariesMenu = wx.Menu()
+		menu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Default dictionary"), _("A dialog where you can set default dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
+		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the edit box."))
+
 		item = menu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
 		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
@@ -268,14 +281,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
-
-		dictionariesMenu = wx.Menu()
-		menu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
-		item = dictionariesMenu.Append(wx.ID_ANY, _("&Default dictionary"), _("A dialog where you can set default dictionary by adding dictionary entries to the list."))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
-		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
-		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the edit box."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 	def onDefaultDictionary(self, evt):

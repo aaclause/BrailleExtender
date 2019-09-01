@@ -1,4 +1,9 @@
 # coding: utf-8
+# brailleDictHandler.py
+# Part of BrailleExtender addon for NVDA
+# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
+
+from __future__ import unicode_literals
 from collections import namedtuple
 
 BrailleDictEntry = namedtuple("BrailleDictEntry", ["opcode", "textPattern", "braillePattern", "direction", "comment"], rename=False)

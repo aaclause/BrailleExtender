@@ -354,13 +354,13 @@ def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
 		"dot": _("dot")
 	}
 	mdl = ''
-	patern = r"^.+\.([^)]+)\).+$"
+	pattern = r"^.+\.([^)]+)\).+$"
 	t = t.replace(';', ',')
 	out = []
 	for gesture in t.split(' '):
 		if not gesture.strip(): continue
 		mdl = ''
-		if re.match(patern, gesture): mdl = re.sub(patern, r'\1', gesture)
+		if re.match(pattern, gesture): mdl = re.sub(pattern, r'\1', gesture)
 		gesture = re.sub(r'.+:', '', gesture)
 		gesture = '+'.join(sorted(gesture.split('+')))
 		for rep in reps:

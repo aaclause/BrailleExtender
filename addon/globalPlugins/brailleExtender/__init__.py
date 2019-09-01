@@ -246,7 +246,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		menu = wx.Menu()
 		self.brailleExtenderMenu = self.NVDAMenu.AppendSubMenu(menu, '%s (%s)' % (configBE._addonName, configBE._addonVersion), _('%s menu' % configBE._addonName))
 
-		item = menu.Append(wx.ID_ANY, _("Documentation"), _("Opens the addon's documentation."))
+		item = menu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
 		item = menu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
@@ -268,6 +268,25 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
+
+		dictionariesMenu = wx.Menu()
+		menu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Default dictionary"), _("A dialog where you can set default dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
+		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the edit box."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
+
+	def onDefaultDictionary(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Default dictionary"))
+
+	def onTableDictionary(self, evt):
+		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Table dictionary (%s)" % outTable))
+
+	def onTemporaryDictionary(self, evt):
+		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Temporary dictionary"))
 
 	def restorReviewCursorTethering(self):
 		if not self.switchedMode: return

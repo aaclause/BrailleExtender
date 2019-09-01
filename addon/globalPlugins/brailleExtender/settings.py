@@ -20,6 +20,7 @@ import keyLabels
 import queueHandler
 import scriptHandler
 import ui
+from . import brailleDictHandler
 addonHandler.initTranslation()
 
 from . import configBE
@@ -525,6 +526,162 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
+
+class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
+	tmpDict = brailleDictHandler.testBrailleDictionary
+
+	def __init__(self, parent, title, brailleDict={}):
+		self.title = title
+		self.brailleDict = brailleDict
+		super(DictionaryDlg, self).__init__(parent)
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		# Translators: The label for the combo box of dictionary entries in speech dictionary dialog.
+		entriesLabelText = _("&Dictionary entries")
+		self.dictList = sHelper.addLabeledControl(entriesLabelText, wx.ListCtrl, style=wx.LC_REPORT|wx.LC_SINGLE_SEL,size=(550,350))
+		# Translators: The label for a column in dictionary entries list used to identify comments for the entry.
+		self.dictList.InsertColumn(0, _("Comment"), width=150)
+		# Translators: The label for a column in dictionary entries list used to identify original character.
+		self.dictList.InsertColumn(1, _("Pattern"),width=150)
+		# Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
+		self.dictList.InsertColumn(2, _("Replacement"),width=150)
+		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
+		self.dictList.InsertColumn(4, _("Opcode"),width=50)
+		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
+		self.dictList.InsertColumn(5, _("Direction"),width=50)
+		for entry in self.tmpDict:
+			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry)>=4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
+			comment = entry[4] if len(entry)==5 else ''
+			self.dictList.Append(
+				(comment, entry[1], entry[2], entry[0], direction)
+			)
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		bHelper.addButton(
+			parent=self,
+			# Translators: The label for a button in speech dictionaries dialog to add new entries.
+			label=_("&Add")
+		).Bind(wx.EVT_BUTTON, self.OnAddClick)
+
+		bHelper.addButton(
+			parent=self,
+			# Translators: The label for a button in speech dictionaries dialog to edit existing entries.
+			label=_("&Edit")
+		).Bind(wx.EVT_BUTTON, self.OnEditClick)
+
+		bHelper.addButton(
+			parent=self,
+			# Translators: The label for a button in speech dictionaries dialog to remove existing entries.
+			label=_("&Remove")
+		).Bind(wx.EVT_BUTTON, self.OnRemoveClick)
+
+		sHelper.addItem(bHelper)
+
+	def OnAddClick(self, evt):
+		entryDialog = DictionaryEntryDlg(self,title=_("Add Dictionary Entry"))
+		if entryDialog.ShowModal() == wx.ID_OK:
+			entry = entryDialog.dictEntry
+			self.tmpDict.append(entry)
+			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry)>=4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
+			comment = entry[4] if len(entry)==5 else ''
+			self.dictList.Append((comment, entry[1], entry[2], entry[0], direction))
+			index = self.dictList.GetFirstSelected()
+			while index >= 0:
+				self.dictList.Select(index,on=0)
+				index=self.dictList.GetNextSelected(index)
+			addedIndex = self.dictList.GetItemCount()-1
+			self.dictList.Select(addedIndex)
+			self.dictList.Focus(addedIndex)
+			self.dictList.SetFocus()
+		entryDialog.Destroy()
+
+	def OnEditClick(self, evt):
+		if self.dictList.GetSelectedItemCount() != 1: return
+		editIndex = self.dictList.GetFirstSelected()
+		entryDialog = DictionaryEntryDlg(self)
+		entryDialog.textPatternTextCtrl.SetValue(self.tmpDict[editIndex].textPattern)
+		entryDialog.braillePatternTextCtrl.SetValue(self.tmpDict[editIndex].braillePattern)
+		entryDialog.commentTextCtrl.SetValue(self.tmpDict[editIndex].comment)
+		entryDialog.setOpcode(self.tmpDict[editIndex].opcode)
+		entryDialog.setDirection(self.tmpDict[editIndex].direction)
+		if entryDialog.ShowModal() == wx.ID_OK:
+			self.tmpDict[editIndex] = entryDialog.dictEntry
+			entry = entryDialog.dictEntry
+			log.info(entry)
+			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry)>=4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
+			comment = entry[4] if len(entry)==5 else ''
+			self.dictList.SetItem(editIndex, 0, comment)
+			self.dictList.SetItem(editIndex, 1, entry[1])
+			self.dictList.SetItem(editIndex, 2, entry[2])
+			self.dictList.SetItem(editIndex, 3, direction)
+			self.dictList.SetFocus()
+		entryDialog.Destroy()
+
+	def OnRemoveClick(self,evt):
+		index = self.dictList.GetFirstSelected()
+		while index>=0:
+			self.dictList.DeleteItem(index)
+			del self.tmpDict[index]
+			index = self.dictList.GetNextSelected(index)
+		self.dictList.SetFocus()
+
+class DictionaryEntryDlg(wx.Dialog):
+	# Translators: This is the label for the edit dictionary entry dialog.
+	def __init__(self, parent=None, title=_("Edit Dictionary Entry")):
+		super(DictionaryEntryDlg, self).__init__(parent, title=title)
+		mainSizer=wx.BoxSizer(wx.VERTICAL)
+		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
+
+		# Translators: This is a label for an edit field in add dictionary entry dialog.
+		patternLabelText = _("&Text pattern")
+		self.textPatternTextCtrl = sHelper.addLabeledControl(patternLabelText, wx.TextCtrl)
+
+		# Translators: This is a label for an edit field in add dictionary entry dialog and in punctuation/symbol pronunciation dialog.
+		braillePatternLabelText = _("&Braille pattern")
+		self.braillePatternTextCtrl = sHelper.addLabeledControl(braillePatternLabelText, wx.TextCtrl)
+
+		# Translators: This is a label for an edit field in add dictionary entry dialog.
+		commentLabelText = _("&Comment")
+		self.commentTextCtrl=sHelper.addLabeledControl(commentLabelText, wx.TextCtrl)
+
+		# Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
+		opcodeText = _("&Opcode")
+		opcodeChoices = [brailleDictHandler.OPCODE_LABELS[i] for i in brailleDictHandler.OPCODE_LABELS_ORDERING]
+		self.opcodeRadioBox = sHelper.addItem(wx.RadioBox(self, label=opcodeText, choices=opcodeChoices))
+
+		# Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
+		directionText = _("&Direction")
+		directionChoices = [brailleDictHandler.DIRECTION_LABELS[i] for i in brailleDictHandler.DIRECTION_LABELS_ORDERING]
+		self.directionRadioBox = sHelper.addItem(wx.RadioBox(self, label=directionText, choices=directionChoices))
+
+		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK|wx.CANCEL))
+
+		mainSizer.Add(sHelper.sizer,border=20,flag=wx.ALL)
+		mainSizer.Fit(self)
+		self.SetSizer(mainSizer)
+		self.setOpcode(brailleDictHandler.OPCODE_SIGN)
+		self.textPatternTextCtrl.SetFocus()
+		self.Bind(wx.EVT_BUTTON,self.onOk,id=wx.ID_OK)
+
+	def getOpcode(self):
+		opcodeRadioValue = self.opcodeRadioBox.GetSelection()
+		if opcodeRadioValue == wx.NOT_FOUND: return brailleDictHandler.OPCODE_SIGN
+		return brailleDictHandler.OPCODE_LABELS_ORDERING[opcodeRadioValue]
+
+	def getDirection(self):
+		directionRadioValue = self.directionRadioBox.GetSelection()
+		if directionRadioValue == wx.NOT_FOUND: return brailleDictHandler.DIRECTION_BOTH
+		return brailleDictHandler.DIRECTION_LABELS_ORDERING[directionRadioValue]
+
+	def onOk(self, evt):
+		self.dictEntry = brailleDictHandler.BrailleDictEntry(self.getOpcode(), self.textPatternTextCtrl.GetValue(), self.braillePatternTextCtrl.GetValue(), self.getDirection(), self.commentTextCtrl.GetValue())
+		evt.Skip()
+
+	def setOpcode(self, opcode):
+		self.opcodeRadioBox.SetSelection(brailleDictHandler.OPCODE_LABELS_ORDERING.index(opcode))
+
+	def setDirection(self, direction):
+		self.directionRadioBox.SetSelection(brailleDictHandler.DIRECTION_LABELS_ORDERING.index(direction))
 
 class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 

@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import os.path
 import sys
 import config
+import louis
 from logHandler import log
 from . import configBE
 from collections import namedtuple
@@ -36,19 +37,26 @@ DIRECTION_LABELS = {
 }
 DIRECTION_LABELS_ORDERING = (DIRECTION_BOTH, DIRECTION_FORWARD, DIRECTION_BACKWARD)
 
+dictTables = []
+
+def getValidPathsDict():
+	types = ["default", "table", "tmp"]
+	paths = [getPathDict(type) for type in types]
+	return [path for path in paths if os.path.exists(path)]
+
 def getPathDict(type):
 	if type == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
 	elif type == "tmp": path = os.path.join(configBE.configDir, "brailleDicts", "tmp")
 	else: path = os.path.join(configBE.configDir, "brailleDicts", "default")
-	return path
+	return "%s.cti" % path 
 
 def getDictionary(type):
 	path = getPathDict(type)
 	if not os.path.exists(path): return False, []
 	out = []
-	with open(path, "r") as f:
+	with open(path, "rb") as f:
 		for line in f:
-			if not isPy3: line = line.decode("UTF-8")
+			line = line.decode("UTF-8")
 			line = line.replace(" ", "	").replace("		", "	").replace("		", "	").strip().split("	", 4)
 			if line[0].lower().strip() not in [DIRECTION_BACKWARD, DIRECTION_FORWARD]: line.insert(0, DIRECTION_BOTH)
 			if len(line) < 4: continue
@@ -58,11 +66,20 @@ def getDictionary(type):
 
 def saveDict(type, dict_):
 	path = getPathDict(type)
-	f = open(path, "w")
+	f = open(path, "wb")
 	for entry in dict_:
 		direction = entry.direction if entry.direction != "both" else ''
 		line = ("%s	%s	%s	%s	%s" % (direction, entry.opcode, entry.textPattern, entry.braillePattern, entry.comment)).strip()+"\n"
-		f.write(line if isPy3 else line.encode("UTF-8"))
-	f.write('\n')
+		f.write(line.encode("UTF-8"))
+	f.write('\n'.encode("UTF-8"))
 	f.close()
 	return True
+
+def setDictTables():
+	global dictTables
+	dictTables = getValidPathsDict()
+	if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
+	else: return False
+	return True
+
+setDictTables()

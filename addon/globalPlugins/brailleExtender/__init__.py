@@ -193,6 +193,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields
 		self.backup__update = braille.TextInfoRegion.update
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
+		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
 		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
@@ -239,6 +240,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if braille.handler is not None and configBE.curBD != braille.handler.display.name:
 			configBE.curBD = braille.handler.display.name
 			self.onReload(None, 1)
+
+		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]:
+			self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
+			brailleDictHandler.setDictTables()
+
 		nextHandler()
 		return
 

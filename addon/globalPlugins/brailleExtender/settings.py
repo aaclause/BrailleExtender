@@ -28,8 +28,9 @@ from . import utils
 from logHandler import log
 
 instanceGP = None
-def notImplemented():
-	gui.messageBox(_("The feature implementation is in progress. Thanks for your patience."), _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
+def notImplemented(msg=''):
+	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience."), _("Braille Extender")
+	gui.messageBox(msg, wx.OK|wx.ICON_INFORMATION)
 
 if hasattr(gui.settingsDialogs, "SettingsPanel"):
 	class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
@@ -533,7 +534,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		self.title = title
 		self.type = type
 		self.tmpDict = brailleDictHandler.getDictionary(type)[1]
-		super(DictionaryDlg, self).__init__(parent)
+		super(DictionaryDlg, self).__init__(parent, hasApplyButton=True)
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -623,9 +624,17 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			index = self.dictList.GetNextSelected(index)
 		self.dictList.SetFocus()
 
+	def onApply(self, evt):
+		res = brailleDictHandler.saveDict(self.type, self.tmpDict)
+		if not brailleDictHandler.setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
+		if res: super(DictionaryDlg, self).onApply(evt)
+		else: notImplemented("Error during writing file, more info in log.")
+
 	def onOk(self, evt):
 		res = brailleDictHandler.saveDict(self.type, self.tmpDict)
+		if not brailleDictHandler.setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
 		if res: super(DictionaryDlg, self).onOk(evt)
+		else: notImplemented("Error during writing file, more info in log.")
 
 class DictionaryEntryDlg(wx.Dialog):
 	# Translators: This is the label for the edit dictionary entry dialog.

@@ -530,10 +530,10 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
-	def __init__(self, parent, title, type):
+	def __init__(self, parent, title, type_):
 		self.title = title
-		self.type = type
-		self.tmpDict = brailleDictHandler.getDictionary(type)[1]
+		self.type_ = type_
+		self.tmpDict = brailleDictHandler.getDictionary(type_)[1]
 		super(DictionaryDlg, self).__init__(parent, hasApplyButton=True)
 
 	def makeSettings(self, settingsSizer):
@@ -625,13 +625,13 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		self.dictList.SetFocus()
 
 	def onApply(self, evt):
-		res = brailleDictHandler.saveDict(self.type, self.tmpDict)
+		res = brailleDictHandler.saveDict(self.type_, self.tmpDict)
 		if not brailleDictHandler.setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
 		if res: super(DictionaryDlg, self).onApply(evt)
 		else: notImplemented("Error during writing file, more info in log.")
 
 	def onOk(self, evt):
-		res = brailleDictHandler.saveDict(self.type, self.tmpDict)
+		res = brailleDictHandler.saveDict(self.type_, self.tmpDict)
 		if not brailleDictHandler.setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
 		if res: super(DictionaryDlg, self).onOk(evt)
 		else: notImplemented("Error during writing file, more info in log.")

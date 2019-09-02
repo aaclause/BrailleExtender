@@ -290,14 +290,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
-	def onDefaultDictionary(self, evt):
+	@staticmethod
+	def onDefaultDictionary(evt):
 		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Default dictionary"), "default")
 
-	def onTableDictionary(self, evt):
+	@staticmethod
+	def onTableDictionary(evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
 		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Table dictionary (%s)" % outTable), "table")
 
-	def onTemporaryDictionary(self, evt):
+	@staticmethod
+	def onTemporaryDictionary(evt):
 		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Temporary dictionary"), "tmp")
 
 	def restorReviewCursorTethering(self):

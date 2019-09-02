@@ -7,7 +7,6 @@ import os.path
 import sys
 import config
 import louis
-from logHandler import log
 from . import configBE
 from collections import namedtuple
 
@@ -41,17 +40,17 @@ dictTables = []
 
 def getValidPathsDict():
 	types = ["default", "table", "tmp"]
-	paths = [getPathDict(type) for type in types]
+	paths = [getPathDict(type_) for type_ in types]
 	return [path for path in paths if os.path.exists(path)]
 
-def getPathDict(type):
-	if type == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
-	elif type == "tmp": path = os.path.join(configBE.configDir, "brailleDicts", "tmp")
+def getPathDict(type_):
+	if type_ == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
+	elif type_ == "tmp": path = os.path.join(configBE.configDir, "brailleDicts", "tmp")
 	else: path = os.path.join(configBE.configDir, "brailleDicts", "default")
-	return "%s.cti" % path 
+	return "%s.cti" % path
 
-def getDictionary(type):
-	path = getPathDict(type)
+def getDictionary(type_):
+	path = getPathDict(type_)
 	if not os.path.exists(path): return False, []
 	out = []
 	with open(path, "rb") as f:
@@ -64,8 +63,8 @@ def getDictionary(type):
 			out.append(BrailleDictEntry(line[1], line[2], line[3], line[0], ' '.join(line[4:]).replace("	", " ")))
 	return True, out
 
-def saveDict(type, dict_):
-	path = getPathDict(type)
+def saveDict(type_, dict_):
+	path = getPathDict(type_)
 	f = open(path, "wb")
 	for entry in dict_:
 		direction = entry.direction if entry.direction != "both" else ''

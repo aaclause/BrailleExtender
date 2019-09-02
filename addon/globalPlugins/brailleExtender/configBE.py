@@ -430,4 +430,6 @@ cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"
 cfgFileAttribra = globalVars.appArgs.configPath + r"\attribra-BE.ini"
 if os.path.exists(cfgFile): os.remove(cfgFile)
 if os.path.exists(cfgFileAttribra): os.remove(cfgFileAttribra)
+
 if not os.path.exists(configDir): os.mkdir(configDir)
+if not os.path.exists(os.path.join(configDir, "brailleDicts")): os.mkdir(os.path.join(configDir, "brailleDicts"))

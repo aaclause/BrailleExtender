@@ -528,11 +528,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		else: evt.Skip()
 
 class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
-	tmpDict = brailleDictHandler.testBrailleDictionary
 
-	def __init__(self, parent, title, brailleDict={}):
+	def __init__(self, parent, title, type):
 		self.title = title
-		self.brailleDict = brailleDict
+		self.type = type
+		self.tmpDict = brailleDictHandler.getDictionary(type)[1]
 		super(DictionaryDlg, self).__init__(parent)
 
 	def makeSettings(self, settingsSizer):
@@ -543,18 +543,17 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 		self.dictList.InsertColumn(0, _("Comment"), width=150)
 		# Translators: The label for a column in dictionary entries list used to identify original character.
-		self.dictList.InsertColumn(1, _("Pattern"),width=150)
+		self.dictList.InsertColumn(1, _("Text pattern"),width=150)
 		# Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
-		self.dictList.InsertColumn(2, _("Replacement"),width=150)
+		self.dictList.InsertColumn(2, _("Braille pattern"),width=150)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 		self.dictList.InsertColumn(4, _("Opcode"),width=50)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 		self.dictList.InsertColumn(5, _("Direction"),width=50)
 		for entry in self.tmpDict:
-			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry)>=4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
-			comment = entry[4] if len(entry)==5 else ''
+			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry) >= 4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
 			self.dictList.Append(
-				(comment, entry[1], entry[2], entry[0], direction)
+				(entry.comment, entry[1], entry[2], entry[0], direction)
 			)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
@@ -607,13 +606,12 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		if entryDialog.ShowModal() == wx.ID_OK:
 			self.tmpDict[editIndex] = entryDialog.dictEntry
 			entry = entryDialog.dictEntry
-			log.info(entry)
-			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry)>=4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
-			comment = entry[4] if len(entry)==5 else ''
-			self.dictList.SetItem(editIndex, 0, comment)
-			self.dictList.SetItem(editIndex, 1, entry[1])
-			self.dictList.SetItem(editIndex, 2, entry[2])
-			self.dictList.SetItem(editIndex, 3, direction)
+			direction = brailleDictHandler.DIRECTION_LABELS[entry.direction] if len(entry) >= 4 and entry.direction in brailleDictHandler.DIRECTION_LABELS else "both"
+			self.dictList.SetItem(editIndex, 0, entry.comment)
+			self.dictList.SetItem(editIndex, 1, entry.textPattern)
+			self.dictList.SetItem(editIndex, 2, entry.braillePattern)
+			self.dictList.SetItem(editIndex, 3, entry.opcode)
+			self.dictList.SetItem(editIndex, 4, direction)
 			self.dictList.SetFocus()
 		entryDialog.Destroy()
 
@@ -624,6 +622,10 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			del self.tmpDict[index]
 			index = self.dictList.GetNextSelected(index)
 		self.dictList.SetFocus()
+
+	def onOk(self, evt):
+		res = brailleDictHandler.saveDict(self.type, self.tmpDict)
+		if res: super(DictionaryDlg, self).onOk(evt)
 
 class DictionaryEntryDlg(wx.Dialog):
 	# Translators: This is the label for the edit dictionary entry dialog.

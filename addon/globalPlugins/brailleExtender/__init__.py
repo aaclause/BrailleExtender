@@ -47,6 +47,7 @@ import virtualBuffers
 from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
+from . import brailleDictHandler
 from .updateCheck import *
 from . import patchs
 
@@ -284,14 +285,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 	def onDefaultDictionary(self, evt):
-		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Default dictionary"))
+		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Default dictionary"), "default")
 
 	def onTableDictionary(self, evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Table dictionary (%s)" % outTable))
+		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Table dictionary (%s)" % outTable), "table")
 
 	def onTemporaryDictionary(self, evt):
-		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Temporary dictionary"))
+		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Temporary dictionary"), "tmp")
 
 	def restorReviewCursorTethering(self):
 		if not self.switchedMode: return
@@ -315,7 +316,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.switchedMode = False
 
 	def getGestureWithBrailleIdentifier(self, gesture = ''):
-		return ('br(%s):' % configBE.curBD if ':' not in gesture else '')+gesture
+		return ("br(%s):" % configBE.curBD if ':' not in gesture else '')+gesture
 
 	def gesturesInit(self):
 		# rotor gestures

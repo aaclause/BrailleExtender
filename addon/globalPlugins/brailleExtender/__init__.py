@@ -277,6 +277,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
 		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the edit box."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 		item = menu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
@@ -288,7 +289,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 	@staticmethod
 	def onDefaultDictionary(evt):
@@ -1519,6 +1519,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
+		brailleDictHandler.removeTmpDict()
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):

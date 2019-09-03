@@ -108,5 +108,9 @@ def notifyInvalidTables():
 		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded." % ", ".join([dicts[path] for path in invalidDictTables if path in dicts]))
 		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 
+def removeTmpDict():
+	path = getPathDict("tmp")
+	if os.path.exists(path): os.remove(path)
+
 setDictTables()
 notifyInvalidTables()

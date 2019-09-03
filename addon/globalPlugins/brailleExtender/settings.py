@@ -30,8 +30,8 @@ from logHandler import log
 
 instanceGP = None
 def notImplemented(msg=''):
-	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience."), _("Braille Extender")
-	gui.messageBox(msg, wx.OK|wx.ICON_INFORMATION)
+	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
+	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
 
 if hasattr(gui.settingsDialogs, "SettingsPanel"):
 	class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
@@ -655,12 +655,16 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		if not brailleDictHandler.setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
 		if res: super(DictionaryDlg, self).onApply(evt)
 		else: notImplemented("Error during writing file, more info in log.")
+		brailleDictHandler.notifyInvalidTables()
+		self.dictList.SetFocus()
 
 	def onOk(self, evt):
 		res = brailleDictHandler.saveDict(self.type_, self.tmpDict)
 		if not brailleDictHandler.setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
+		brailleDictHandler.notifyInvalidTables()
 		if res: super(DictionaryDlg, self).onOk(evt)
 		else: notImplemented("Error during writing file, more info in log.")
+		brailleDictHandler.notifyInvalidTables()
 
 class DictionaryEntryDlg(wx.Dialog):
 	# Translators: This is the label for the edit dictionary entry dialog.

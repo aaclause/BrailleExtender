@@ -3,8 +3,14 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
 from __future__ import unicode_literals
+import gui
+import wx
 import os.path
 import sys
+
+import addonHandler
+addonHandler.initTranslation()
+
 import config
 import louis
 from . import configBE
@@ -37,11 +43,21 @@ DIRECTION_LABELS = {
 DIRECTION_LABELS_ORDERING = (DIRECTION_BOTH, DIRECTION_FORWARD, DIRECTION_BACKWARD)
 
 dictTables = []
+invalidDictTables = set()
+
+def checkTable(path):
+	global invalidDictTables
+	try:
+		louis.checkTable([path])
+		return True
+	except RuntimeError: invalidDictTables.add(path)
+	return False
 
 def getValidPathsDict():
 	types = ["default", "table", "tmp"]
 	paths = [getPathDict(type_) for type_ in types]
-	return [path for path in paths if os.path.exists(path)]
+	valid = lambda path: os.path.exists(path) and os.path.isfile(path) and checkTable(path)
+	return [path for path in paths if valid(path)]
 
 def getPathDict(type_):
 	if type_ == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
@@ -76,9 +92,21 @@ def saveDict(type_, dict_):
 
 def setDictTables():
 	global dictTables
+	invalidDictTables.clear()
 	dictTables = getValidPathsDict()
 	if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
 	else: return False
 	return True
 
+def notifyInvalidTables():
+	if invalidDictTables:
+		dicts = {
+			getPathDict("default"): "default",
+			getPathDict("table"): "table",
+			getPathDict("tmp"): "tmp"
+		}
+		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded." % ", ".join([dicts[path] for path in invalidDictTables if path in dicts]))
+		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+
 setDictTables()
+notifyInvalidTables()

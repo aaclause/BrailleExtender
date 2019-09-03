@@ -22,6 +22,7 @@ import wx
 import addonHandler
 addonHandler.initTranslation()
 from . import settings
+from . import dictionaries
 import api
 import appModuleHandler
 import braille
@@ -47,7 +48,6 @@ import virtualBuffers
 from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
-from . import brailleDictHandler
 from .updateCheck import *
 from . import patchs
 
@@ -243,7 +243,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]:
 			self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
-			brailleDictHandler.setDictTables()
+			dictionaries.setDictTables()
 
 		nextHandler()
 		return
@@ -292,16 +292,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def onDefaultDictionary(evt):
-		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Default dictionary"), "default")
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Default dictionary"), "default")
 
 	@staticmethod
 	def onTableDictionary(evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Table dictionary (%s)" % outTable), "table")
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Table dictionary (%s)" % outTable), "table")
 
 	@staticmethod
 	def onTemporaryDictionary(evt):
-		gui.mainFrame._popupSettingsDialog(settings.DictionaryDlg, _("Temporary dictionary"), "tmp")
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Temporary dictionary"), "tmp")
 
 	def restorReviewCursorTethering(self):
 		if not self.switchedMode: return
@@ -1480,6 +1480,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_autoTest.__doc__ = _("Auto test")
 	# end of section autoTest
 
+	def script_addDictionaryEntry(self, gesture):
+		curChar = utils.getCurrentChar()
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryEntryDlg, title=_("Add Dictionary Entry"), textPattern=curChar, specifyDict=True)
+	script_addDictionaryEntry.__doc__ = _("Add a entry in braille dictionary")
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
@@ -1499,6 +1504,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
 	__gestures["kb:nvda+alt+y"] = "getTableOverview"
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
+	__gestures["kb:nvda+alt+j"] = "addDictionaryEntry"
 
 	def terminate(self):
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):
@@ -1519,7 +1525,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
-		brailleDictHandler.removeTmpDict()
+		dictionaries.removeTmpDict()
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):

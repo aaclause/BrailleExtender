@@ -31,7 +31,7 @@ import watchdog
 from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
-from . import brailleDictHandler
+from . import dictionaries
 from .utils import getCurrentChar, getTether
 instanceGP = None
 chr_ = chr if isPy3 else unichr
@@ -86,7 +86,7 @@ def getCurrentBrailleTables(input = False):
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]
 		else:
-			tables = brailleDictHandler.dictTables + configBE.preTable + [
+			tables = dictionaries.dictTables + configBE.preTable + [
 				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			] + configBE.postTable

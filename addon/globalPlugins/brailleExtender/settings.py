@@ -555,9 +555,13 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		self.dictList.InsertColumn(5, _("Direction"),width=50)
 		for entry in self.tmpDict:
 			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry) >= 4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
-			self.dictList.Append(
-				(entry.comment, entry[1], entry[2], entry[0], direction)
-			)
+			self.dictList.Append((
+				entry.comment,
+				self.getReprTextPattern(entry.textPattern),
+				self.getReprBraillePattern(entry.braillePattern),
+				entry.opcode,
+				direction
+			))
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
 			parent=self,
@@ -579,6 +583,20 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 		sHelper.addItem(bHelper)
 
+	@staticmethod
+	def getReprTextPattern(textPattern):
+		if re.match(r"^\\x[0-8a-f]+$", textPattern, re.IGNORECASE):
+			textPattern = textPattern.lower()
+			textPattern = chr(int(''.join([c for c in textPattern if c in "abcdef1234567890"]), 16))
+		if len(textPattern) == 1: return "%s (%s)" % (textPattern, hex(ord(textPattern)).replace("0x", r"\x"))
+		return textPattern
+
+	@staticmethod
+	def getReprBraillePattern(braillePattern):
+		if re.match("^[0-8\-]+$", braillePattern):
+			return "%s (%s)" % (utils.descriptionToUnicodeBraille(braillePattern), braillePattern)
+		return braillePattern
+
 	def OnAddClick(self, evt):
 		entryDialog = DictionaryEntryDlg(self,title=_("Add Dictionary Entry"))
 		if entryDialog.ShowModal() == wx.ID_OK:
@@ -586,7 +604,13 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			self.tmpDict.append(entry)
 			direction = brailleDictHandler.DIRECTION_LABELS[entry[3]] if len(entry)>=4 and entry[3] in brailleDictHandler.DIRECTION_LABELS else "both"
 			comment = entry[4] if len(entry)==5 else ''
-			self.dictList.Append((comment, entry[1], entry[2], entry[0], direction))
+			self.dictList.Append((
+				comment,
+				self.getReprTextPattern(entry.textPattern),
+				self.getReprBraillePattern(entry.braillePattern),
+				entry.opcode,
+				direction
+			))
 			index = self.dictList.GetFirstSelected()
 			while index >= 0:
 				self.dictList.Select(index,on=0)
@@ -611,8 +635,8 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			entry = entryDialog.dictEntry
 			direction = brailleDictHandler.DIRECTION_LABELS[entry.direction] if len(entry) >= 4 and entry.direction in brailleDictHandler.DIRECTION_LABELS else "both"
 			self.dictList.SetItem(editIndex, 0, entry.comment)
-			self.dictList.SetItem(editIndex, 1, entry.textPattern)
-			self.dictList.SetItem(editIndex, 2, entry.braillePattern)
+			self.dictList.SetItem(editIndex, 1, self.getReprTextPattern(entry.textPattern))
+			self.dictList.SetItem(editIndex, 2, self.getReprBraillePattern(entry.braillePattern))
 			self.dictList.SetItem(editIndex, 3, entry.opcode)
 			self.dictList.SetItem(editIndex, 4, direction)
 			self.dictList.SetFocus()

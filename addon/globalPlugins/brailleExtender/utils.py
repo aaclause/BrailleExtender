@@ -336,7 +336,7 @@ def unicodeBrailleToDescription(t, sep = '-'):
 	return ''.join([charToCellDesc(ch)+'-' if ch not in ['\n','\r'] else ch for ch in t])[:-1].replace("-\n",'\n')
 
 def descriptionToUnicodeBraille(t):
-	return re.sub('([0-8]+)', lambda m: cellDescToChar(m.group(0)), t)
+	return re.sub('([0-8]+)\-?', lambda m: cellDescToChar(m.group(1)), t)
 
 def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
 	if isinstance(t, list): t = ' '.join(t)

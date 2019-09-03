@@ -21,7 +21,6 @@ import louis
 import queueHandler
 import scriptHandler
 import ui
-from . import dictionaries
 addonHandler.initTranslation()
 
 from . import configBE
@@ -436,10 +435,10 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
 		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
-		repr = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
-		repr = re.sub('\-+','-', repr)
-		if not repr or repr.startswith('-') or repr.endswith('-'): repr = "0"
-		config.conf["brailleExtender"]["undefinedCharRepr"] = repr
+		repr_ = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
+		repr_ = re.sub('\-+','-', repr_)
+		if not repr_ or repr_.startswith('-') or repr_.endswith('-'): repr_ = "0"
+		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
 		configBE.loadPreTable()
 		configBE.loadPostTable()
 		super(BrailleTablesDlg, self).onOk(evt)
@@ -925,7 +924,6 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		return _("Undefined")
 
 	def onGesture(self, evt = None):
-		category = self.categories.GetSelection()
 		gesture = self.gestures.GetSelection()
 		gestureName = self.keyLabelsList[gesture][1]
 

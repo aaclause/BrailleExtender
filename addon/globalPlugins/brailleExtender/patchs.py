@@ -61,8 +61,8 @@ def sayCurrentLine():
 			info.expand(textInfos.UNIT_LINE)
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
 
-def getCurrentBrailleTables(input = False):
-	if input:
+def getCurrentBrailleTables(input_=False):
+	if input_:
 		if instanceGP.BRFMode and not errorTable:
 			tables = [
 				os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
@@ -346,7 +346,7 @@ def emulateKey(self, key, withModifiers=True):
 	try:
 		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(gesture))
 		instanceGP.lastShortcutPerformed = gesture
-	except:
+	except BaseException:
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 

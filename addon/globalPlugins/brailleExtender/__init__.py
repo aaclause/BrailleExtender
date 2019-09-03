@@ -443,7 +443,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_priorRotor(self, gesture):
 		global rotorItem
-		idRotorItem = rotorItems.index
 		if rotorItem > 0:
 			rotorItem -= 1
 		else:

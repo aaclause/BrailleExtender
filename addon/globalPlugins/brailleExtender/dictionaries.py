@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import gui
 import wx
 import os.path
-import sys
 import re
 
 import addonHandler

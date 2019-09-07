@@ -138,35 +138,61 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		self.dictList.InsertColumn(4, _("Opcode"),width=50)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 		self.dictList.InsertColumn(5, _("Direction"),width=50)
-		for entry in self.tmpDict:
-			direction = DIRECTION_LABELS[entry[3]] if len(entry) >= 4 and entry[3] in DIRECTION_LABELS else "both"
-			self.dictList.Append((
-				entry.comment,
-				self.getReprTextPattern(entry.textPattern),
-				self.getReprBraillePattern(entry.braillePattern),
-				entry.opcode,
-				direction
-			))
+		self.onSetEntries()
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
 			parent=self,
 			# Translators: The label for a button in speech dictionaries dialog to add new entries.
 			label=_("&Add")
-		).Bind(wx.EVT_BUTTON, self.OnAddClick)
+		).Bind(wx.EVT_BUTTON, self.onAddClick)
 
 		bHelper.addButton(
 			parent=self,
 			# Translators: The label for a button in speech dictionaries dialog to edit existing entries.
 			label=_("&Edit")
-		).Bind(wx.EVT_BUTTON, self.OnEditClick)
+		).Bind(wx.EVT_BUTTON, self.onEditClick)
 
 		bHelper.addButton(
 			parent=self,
 			# Translators: The label for a button in speech dictionaries dialog to remove existing entries.
-			label=_("&Remove")
-		).Bind(wx.EVT_BUTTON, self.OnRemoveClick)
+			label=_("Re&move")
+		).Bind(wx.EVT_BUTTON, self.onRemoveClick)
 
 		sHelper.addItem(bHelper)
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		bHelper.addButton(
+			parent=self,
+			# Translators: The label for a button in speech dictionaries dialog to open dictionary file in an editor.
+			label=_("&Open the current dictionary file in an editor")
+		).Bind(wx.EVT_BUTTON, self.onOpenFileClick)
+		bHelper.addButton(
+			parent=self,
+			# Translators: The label for a button in speech dictionaries dialog to reload dictionary.
+			label=_("&Reload the dictionary")
+		).Bind(wx.EVT_BUTTON, self.onReloadDictClick)
+		sHelper.addItem(bHelper)
+
+	def onSetEntries(self, evt=None):
+		self.dictList.DeleteAllItems()
+		for entry in self.tmpDict:
+				direction = DIRECTION_LABELS[entry[3]] if len(entry) >= 4 and entry[3] in DIRECTION_LABELS else "both"
+				self.dictList.Append((
+					entry.comment,
+					self.getReprTextPattern(entry.textPattern),
+					self.getReprBraillePattern(entry.braillePattern),
+					entry.opcode,
+					direction
+				))
+		self.dictList.SetFocus()
+
+	def onOpenFileClick(self, evt):
+		dictPath = getPathDict(self.type_)
+		try: os.startfile(dictPath)
+		except OSError: os.popen("notepad \"%s\"" % dictPath)
+
+	def onReloadDictClick(self, evt):
+		self.tmpDict = getDictionary(self.type_ )[1]
+		self.onSetEntries()
 
 	@staticmethod
 	def getReprTextPattern(textPattern):
@@ -182,7 +208,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			return "%s (%s)" % (utils.descriptionToUnicodeBraille(braillePattern), braillePattern)
 		return braillePattern
 
-	def OnAddClick(self, evt):
+	def onAddClick(self, evt):
 		entryDialog = DictionaryEntryDlg(self,title=_("Add Dictionary Entry"))
 		if entryDialog.ShowModal() == wx.ID_OK:
 			entry = entryDialog.dictEntry
@@ -206,7 +232,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			self.dictList.SetFocus()
 		entryDialog.Destroy()
 
-	def OnEditClick(self, evt):
+	def onEditClick(self, evt):
 		if self.dictList.GetSelectedItemCount() != 1: return
 		editIndex = self.dictList.GetFirstSelected()
 		entryDialog = DictionaryEntryDlg(self)
@@ -227,7 +253,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 			self.dictList.SetFocus()
 		entryDialog.Destroy()
 
-	def OnRemoveClick(self,evt):
+	def onRemoveClick(self,evt):
 		index = self.dictList.GetFirstSelected()
 		while index>=0:
 			self.dictList.DeleteItem(index)
@@ -264,6 +290,12 @@ class DictionaryEntryDlg(wx.Dialog):
 			dictChoices = ["Global", "Table (%s)" % outTable, "Temporary"]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
+			bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+			bHelper.addButton(
+				parent=self,
+				label=_("See &entries")
+			).Bind(wx.EVT_BUTTON, self.onSeeEntriesClick)
+			sHelper.addItem(bHelper)
 
 		# Translators: This is a label for an edit field in add dictionary entry dialog.
 		patternLabelText = _("&Text pattern")
@@ -298,6 +330,13 @@ class DictionaryEntryDlg(wx.Dialog):
 		toFocus.SetFocus()
 		self.Bind(wx.EVT_BUTTON,self.onOk,id=wx.ID_OK)
 
+	def onSeeEntriesClick(self, evt):
+		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		label = ["Global dictionary", "Table Dictionary (%s)" % outTable, "Temporary"][self.dictRadioBox.GetSelection()]
+		type_ = self.getType_()
+		self.Destroy()
+		gui.mainFrame._popupSettingsDialog(DictionaryDlg, label, type_)
+
 	def getOpcode(self):
 		opcodeRadioValue = self.opcodeRadioBox.GetSelection()
 		if opcodeRadioValue == wx.NOT_FOUND: return OPCODE_SIGN
@@ -308,14 +347,17 @@ class DictionaryEntryDlg(wx.Dialog):
 		if directionRadioValue == wx.NOT_FOUND: return DIRECTION_BOTH
 		return DIRECTION_LABELS_ORDERING[directionRadioValue]
 
+	def getType_(self):
+		dicts = ["default", "table", "tmp"]
+		return dicts[self.dictRadioBox.GetSelection()]
+
 	def onOk(self, evt):
 		textPattern = self.textPatternTextCtrl.GetValue()
 		textPattern = textPattern.replace("\t", r"\t").replace(" ", r"\s")
 		newEntry = BrailleDictEntry(self.getOpcode(), textPattern, self.braillePatternTextCtrl.GetValue(), self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False
 		if save:
-			dicts = ["default", "table", "tmp"]
-			type_ = dicts[self.dictRadioBox.GetSelection()]
+			type_ = getType_()
 			dict_ = getDictionary(type_)[1]
 			dict_.append(newEntry)
 			saveDict(type_, dict_)

@@ -272,7 +272,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		dictionariesMenu = wx.Menu()
 		menu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
-		item = dictionariesMenu.Append(wx.ID_ANY, _("&Default dictionary"), _("A dialog where you can set default dictionary by adding dictionary entries to the list."))
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
@@ -1481,7 +1481,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_addDictionaryEntry(self, gesture):
 		curChar = utils.getCurrentChar()
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryEntryDlg, title=_("Add Dictionary Entry"), textPattern=curChar, specifyDict=True)
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryEntryDlg, title=_("Add dictionary entry or see a dictionary"), textPattern=curChar, specifyDict=True)
 	script_addDictionaryEntry.__doc__ = _("Add a entry in braille dictionary")
 
 	__gestures = OrderedDict()

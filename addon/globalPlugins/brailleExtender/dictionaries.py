@@ -309,7 +309,9 @@ class DictionaryEntryDlg(wx.Dialog):
 		return DIRECTION_LABELS_ORDERING[directionRadioValue]
 
 	def onOk(self, evt):
-		newEntry = BrailleDictEntry(self.getOpcode(), self.textPatternTextCtrl.GetValue(), self.braillePatternTextCtrl.GetValue(), self.getDirection(), self.commentTextCtrl.GetValue())
+		textPattern = self.textPatternTextCtrl.GetValue()
+		textPattern = textPattern.replace("\t", r"\t").replace(" ", r"\s")
+		newEntry = BrailleDictEntry(self.getOpcode(), textPattern, self.braillePatternTextCtrl.GetValue(), self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False
 		if save:
 			dicts = ["default", "table", "tmp"]

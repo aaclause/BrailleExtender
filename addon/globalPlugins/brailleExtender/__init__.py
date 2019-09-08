@@ -46,10 +46,9 @@ from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
 from .updateCheck import *
+from . import dictionaries
 from . import patchs
 from .common import *
-from . import dictionaries
-
 
 instanceGP = None
 lang = configBE.lang

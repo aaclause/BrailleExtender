@@ -423,17 +423,11 @@ def _translate(self, endWord):
 #: louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
-	if sys.version_info.major == 2:
-		if sys.platform == "win32":
-			return b",".join([x.decode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
-		else:
-			return b",".join([x.decode("UTF-8").encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
-	else:
-		if sys.platform == "win32":
-			return b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in tablesList])
-		else:
-			return b",".join([x.encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
+	filesystemencoding = sys.getfilesystemencoding()
+	return b",".join([x.encode(filesystemencoding) if isinstance(x, str) else bytes(x) for x in tablesList])
 
+dictionaries.setDictTables()
+dictionaries.notifyInvalidTables()
 configBE.loadPostTable()
 configBE.loadPreTable()
 
@@ -448,3 +442,4 @@ brailleInput.BrailleInputHandler._translate = _translate
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
+

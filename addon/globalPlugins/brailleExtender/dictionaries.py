@@ -63,8 +63,8 @@ def getValidPathsDict():
 
 def getPathDict(type_):
 	if type_ == "emoji":
-		lang = config.conf["braille"]["translationTable"].split('-')[0]+".cti"
-		testPath = os.path.join(configBE.baseDir, "res", "emojis", lang)
+		lang = config.conf["braille"]["translationTable"].split('-')[0]
+		testPath = os.path.join(configBE.baseDir, "res", "emojis", lang+".cti")
 		if not os.path.exists(testPath):
 			log.warning("Using emoji braille table based on language interface. %s doesn't exist" % testPath)
 			lang = configBE.lang
@@ -125,9 +125,6 @@ def notifyInvalidTables():
 def removeTmpDict():
 	path = getPathDict("tmp")
 	if os.path.exists(path): os.remove(path)
-
-setDictTables()
-notifyInvalidTables()
 
 class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 

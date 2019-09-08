@@ -15,6 +15,7 @@ import config
 import louis
 
 from collections import namedtuple
+from logHandler import log
 from . import configBE
 from . import utils
 from .common import *
@@ -62,8 +63,15 @@ def getValidPathsDict():
 
 def getPathDict(type_):
 	if type_ == "emoji":
-		if config.conf["brailleExtender"]["showEmojiDescription"]: path = os.path.join(configBE.baseDir, "res", "emojis", configBE.lang)
-		else: path = None
+		lang = config.conf["braille"]["translationTable"].split('-')[0]+".cti"
+		testPath = os.path.join(configBE.baseDir, "res", "emojis", lang)
+		if not os.path.exists(testPath):
+			log.warning("Using emoji braille table based on language interface. %s doesn't exist" % testPath)
+			lang = configBE.lang
+		if config.conf["brailleExtender"]["showEmojiDescription"]: path = os.path.join(configBE.baseDir, "res", "emojis", lang)
+		else:
+			log.warning("No emoji braille table based on the current main braille table and the current language interface")
+			path = None
 	elif type_ == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
 	elif type_ == "tmp": path = os.path.join(configBE.configDir, "brailleDicts", "tmp")
 	else: path = os.path.join(configBE.configDir, "brailleDicts", "default")

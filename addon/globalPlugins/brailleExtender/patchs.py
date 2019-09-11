@@ -152,11 +152,12 @@ def update(self):
 					cursorPos=self.cursorPos or 0
 				)
 		except BaseException as e:
-			log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
 			global errorTable
-			errorTable = True
-			if instanceGP.BRFMode: instanceGP.BRFMode = False
-			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
+			if not errorTable:
+				log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
+				errorTable = True
+				if instanceGP.BRFMode: instanceGP.BRFMode = False
+				instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
 			return
 		if not isPy3:
 			# liblouis gives us back a character string of cells, so convert it to a list of ints.

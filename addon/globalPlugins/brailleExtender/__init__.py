@@ -1501,9 +1501,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
 	__gestures["kb:nvda+alt+i"] = "charsToCellDescriptions"
 	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
-	__gestures["kb:nvda+alt+y"] = "getTableOverview"
+	__gestures["kb:nvda+alt+y"] = "addDictionaryEntry"
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
-	__gestures["kb:nvda+alt+j"] = "addDictionaryEntry"
 
 	def terminate(self):
 		if hasattr(gui.settingsDialogs, "SettingsPanel"):

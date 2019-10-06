@@ -131,7 +131,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 		self.dictList.InsertColumn(0, _("Comment"), width=150)
 		# Translators: The label for a column in dictionary entries list used to identify original character.
-		self.dictList.InsertColumn(1, _("Text pattern"),width=150)
+		self.dictList.InsertColumn(1, _("Text pattern/sign"),width=150)
 		# Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
 		self.dictList.InsertColumn(2, _("Braille pattern"),width=150)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
@@ -298,7 +298,7 @@ class DictionaryEntryDlg(wx.Dialog):
 			sHelper.addItem(bHelper)
 
 		# Translators: This is a label for an edit field in add dictionary entry dialog.
-		patternLabelText = _("&Text pattern")
+		patternLabelText = _("&Text pattern/sign")
 		self.textPatternTextCtrl = sHelper.addLabeledControl(patternLabelText, wx.TextCtrl)
 		if textPattern: self.textPatternTextCtrl.SetValue(textPattern)
 
@@ -352,12 +352,27 @@ class DictionaryEntryDlg(wx.Dialog):
 		return dicts[self.dictRadioBox.GetSelection()]
 
 	def onOk(self, evt):
+		braillePattern = self.braillePatternTextCtrl.GetValue()
 		textPattern = self.textPatternTextCtrl.GetValue()
 		textPattern = textPattern.replace("\t", r"\t").replace(" ", r"\s")
-		newEntry = BrailleDictEntry(self.getOpcode(), textPattern, self.braillePatternTextCtrl.GetValue(), self.getDirection(), self.commentTextCtrl.GetValue())
+		opcode = self.getOpcode()
+		if not textPattern:
+			msg = _("Text pattern/sign field is empty.")
+			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+			return self.textPatternTextCtrl.SetFocus()
+		if not braillePattern:
+			msg = _("Braille pattern field is empty.")
+			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+			return self.braillePatternTextCtrl.SetFocus()
+		if opcode != OPCODE_REPLACE and not  re.match("^[0-8\-]+$", braillePattern):
+			msg = _("Invalid value for braille pattern field. With this opcode, you must enter dot patterns. E.g.: 12345678, 5-123456, 0-138.")
+			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+			self.braillePatternTextCtrl.SetFocus()
+			return
+		newEntry = BrailleDictEntry(opcode, textPattern, braillePattern, self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False
 		if save:
-			type_ = getType_()
+			type_ = self.getType_()
 			dict_ = getDictionary(type_)[1]
 			dict_.append(newEntry)
 			saveDict(type_, dict_)

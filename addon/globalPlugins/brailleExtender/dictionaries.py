@@ -128,14 +128,14 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		# Translators: The label for the combo box of dictionary entries in speech dictionary dialog.
-		entriesLabelText = _("&Dictionary entries")
+		entriesLabelText = _("Dictionary &entries")
 		self.dictList = sHelper.addLabeledControl(entriesLabelText, wx.ListCtrl, style=wx.LC_REPORT|wx.LC_SINGLE_SEL,size=(550,350))
 		# Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 		self.dictList.InsertColumn(0, _("Comment"), width=150)
 		# Translators: The label for a column in dictionary entries list used to identify original character.
 		self.dictList.InsertColumn(1, _("Text pattern/sign"),width=150)
 		# Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
-		self.dictList.InsertColumn(2, _("Braille pattern"),width=150)
+		self.dictList.InsertColumn(2, _("Braille representation"),width=150)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 		self.dictList.InsertColumn(4, _("Opcode"),width=50)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
@@ -307,7 +307,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		if textPattern: self.textPatternTextCtrl.SetValue(textPattern)
 
 		# Translators: This is a label for an edit field in add dictionary entry dialog and in punctuation/symbol pronunciation dialog.
-		braillePatternLabelText = _("&Braille pattern")
+		braillePatternLabelText = _("&Braille representation")
 		self.braillePatternTextCtrl = sHelper.addLabeledControl(braillePatternLabelText, wx.TextCtrl)
 
 		# Translators: This is a label for an edit field in add dictionary entry dialog.
@@ -365,11 +365,11 @@ class DictionaryEntryDlg(wx.Dialog):
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			return self.textPatternTextCtrl.SetFocus()
 		if not braillePattern and opcode != OPCODE_REPLACE:
-			msg = _("Braille pattern field is empty, with this opcode you must specify something.")
+			msg = _("Braille representation field is empty, with this opcode you must specify something.")
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			return self.braillePatternTextCtrl.SetFocus()
 		if opcode != OPCODE_REPLACE and not  re.match("^[0-8\-]+$", braillePattern):
-			msg = _("Invalid value for braille pattern field. With this opcode, you must enter dot patterns. E.g.: 12345678, 5-123456, 0-138.")
+			msg = _("Invalid value for braille representation field. With this opcode, you must enter dot patterns. E.g.: 12345678, 5-123456, 0-138.")
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			self.braillePatternTextCtrl.SetFocus()
 			return

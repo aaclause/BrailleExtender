@@ -258,7 +258,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
 
 		settingsMenu = wx.Menu()
-		menu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille settings' menu"))
+		menu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille Extender settings' menu"))
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
@@ -276,7 +276,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
-		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the edit box."))
+		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 		item = menu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))

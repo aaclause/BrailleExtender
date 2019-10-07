@@ -374,8 +374,8 @@ class DictionaryEntryDlg(wx.Dialog):
 			self.braillePatternTextCtrl.SetFocus()
 			return
 		if opcode == OPCODE_REPLACE: textPattern = textPattern.lower()
-		textPattern = textPattern.replace("\\", r"\\").replace("\t", r"\t").replace("\s", r"\s")
-		braillePattern = braillePattern.replace("\\", r"\\").replace("\t", r"\t").replace("\s", r"\s")
+		textPattern = textPattern.replace("\\", r"\\").replace("	", r"\t").replace(" ", r"\s")
+		braillePattern = braillePattern.replace("\\", r"\\").replace("	", r"\t").replace(" ", r"\s")
 		newEntry = BrailleDictEntry(opcode, textPattern, braillePattern, self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False
 		if save:

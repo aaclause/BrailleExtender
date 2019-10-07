@@ -207,7 +207,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	@staticmethod
 	def getReprBraillePattern(braillePattern, equiv=True):
-		if re.match("^[0-8\-]+$", braillePattern):
+		if equiv and re.match("^[0-8\-]+$", braillePattern):
 			return "%s (%s)" % (utils.descriptionToUnicodeBraille(braillePattern), braillePattern)
 		braillePattern = braillePattern.replace(r"\s", " ").replace(r"\t", "	")
 		return braillePattern

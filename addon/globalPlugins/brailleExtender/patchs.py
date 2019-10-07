@@ -88,7 +88,7 @@ def getCurrentBrailleTables(input_=False):
 			]
 		else:
 			tables = []
-			if appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject()).appName != 'nvda':
+			if appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject()).appName != "nvda":
 				tables += dictionaries.dictTables
 			tables += configBE.preTable + [
 				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),

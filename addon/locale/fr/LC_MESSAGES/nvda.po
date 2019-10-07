@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2019-10-07 17:51+0200\n"
-"PO-Revision-Date: 2019-10-07 17:59+0200\n"
+"POT-Creation-Date: 2019-10-07 19:47+0200\n"
+"PO-Revision-Date: 2019-10-07 19:48+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1103,13 +1103,13 @@ msgstr "Commentaire"
 
 #. Translators: The label for a column in dictionary entries list used to identify original character.
 #: addon\globalPlugins\brailleExtender\dictionaries.py:136
-msgid "Text pattern/sign"
-msgstr "Moddèle de texte/signe"
+msgid "Pattern"
+msgstr "Modèle"
 
 #. Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
 #: addon\globalPlugins\brailleExtender\dictionaries.py:138
-msgid "Braille representation"
-msgstr "Représentation braille"
+msgid "Representation"
+msgstr "Représentation"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon\globalPlugins\brailleExtender\dictionaries.py:140
@@ -1227,7 +1227,7 @@ msgstr ""
 "Valeur non valide pour le champ de représentation braille. Avec cet opcode, "
 "vous devez entrer des motifs de points. Exemple : 12345678, 5-123456, 0-138."
 
-#: addon\globalPlugins\brailleExtender\patchs.py:160
+#: addon\globalPlugins\brailleExtender\patchs.py:164
 msgid ""
 "An unexpected error was produced while using several braille tables. Using "
 "default settings to avoid other errors. More information in NVDA log. Thanks "
@@ -2005,6 +2005,9 @@ msgstr ""
 #: buildVars.py:42
 msgid "actions and quick navigation through a rotor"
 msgstr "actions et navigation rapide au travers d’un rotor"
+
+#~ msgid "Text pattern/sign"
+#~ msgstr "Moddèle de texte/signe"
 
 #~ msgid "Default dictionary"
 #~ msgstr "Dictionnaire par défaut"

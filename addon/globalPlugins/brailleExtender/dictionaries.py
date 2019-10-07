@@ -133,9 +133,9 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 		self.dictList.InsertColumn(0, _("Comment"), width=150)
 		# Translators: The label for a column in dictionary entries list used to identify original character.
-		self.dictList.InsertColumn(1, _("Text pattern/sign"),width=150)
+		self.dictList.InsertColumn(1, _("Pattern"),width=150)
 		# Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
-		self.dictList.InsertColumn(2, _("Braille representation"),width=150)
+		self.dictList.InsertColumn(2, _("Representation"),width=150)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 		self.dictList.InsertColumn(4, _("Opcode"),width=50)
 		# Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace

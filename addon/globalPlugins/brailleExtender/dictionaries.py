@@ -74,7 +74,9 @@ def getDictionary(type_):
 			line = line.decode("UTF-8")
 			line = line.replace(" ", "	").replace("		", "	").replace("		", "	").strip().split("	", 4)
 			if line[0].lower().strip() not in [DIRECTION_BACKWARD, DIRECTION_FORWARD]: line.insert(0, DIRECTION_BOTH)
-			if len(line) < 4: continue
+			if len(line) < 4:
+				if line[1] == "replace" and len(line) == 3: line.append("")
+				else: continue
 			if len(line) == 4: line.append("")
 			out.append(BrailleDictEntry(line[1], line[2], line[3], line[0], ' '.join(line[4:]).replace("	", " ")))
 	return True, out
@@ -195,17 +197,19 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		self.onSetEntries()
 
 	@staticmethod
-	def getReprTextPattern(textPattern):
+	def getReprTextPattern(textPattern, equiv=True):
 		if re.match(r"^\\x[0-8a-f]+$", textPattern, re.IGNORECASE):
 			textPattern = textPattern.lower()
 			textPattern = chr(int(''.join([c for c in textPattern if c in "abcdef1234567890"]), 16))
-		if len(textPattern) == 1: return "%s (%s)" % (textPattern, hex(ord(textPattern)).replace("0x", r"\x"))
+		if equiv and len(textPattern) == 1: return "%s (%s)" % (textPattern, hex(ord(textPattern)).replace("0x", r"\x"))
+		textPattern = textPattern.replace(r"\s", " ").replace(r"\t", "	").replace(r"\ ", r"\s").replace(r"\	", r"\t")
 		return textPattern
 
 	@staticmethod
-	def getReprBraillePattern(braillePattern):
+	def getReprBraillePattern(braillePattern, equiv=True):
 		if re.match("^[0-8\-]+$", braillePattern):
 			return "%s (%s)" % (utils.descriptionToUnicodeBraille(braillePattern), braillePattern)
+		braillePattern = braillePattern.replace(r"\s", " ").replace(r"\t", "	")
 		return braillePattern
 
 	def onAddClick(self, evt):
@@ -236,8 +240,8 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		if self.dictList.GetSelectedItemCount() != 1: return
 		editIndex = self.dictList.GetFirstSelected()
 		entryDialog = DictionaryEntryDlg(self)
-		entryDialog.textPatternTextCtrl.SetValue(self.tmpDict[editIndex].textPattern)
-		entryDialog.braillePatternTextCtrl.SetValue(self.tmpDict[editIndex].braillePattern)
+		entryDialog.textPatternTextCtrl.SetValue(self.getReprTextPattern(self.tmpDict[editIndex].textPattern, False))
+		entryDialog.braillePatternTextCtrl.SetValue(self.getReprBraillePattern(self.tmpDict[editIndex].braillePattern, False))
 		entryDialog.commentTextCtrl.SetValue(self.tmpDict[editIndex].comment)
 		entryDialog.setOpcode(self.tmpDict[editIndex].opcode)
 		entryDialog.setDirection(self.tmpDict[editIndex].direction)
@@ -330,6 +334,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		toFocus.SetFocus()
 		self.Bind(wx.EVT_BUTTON,self.onOk,id=wx.ID_OK)
 
+
 	def onSeeEntriesClick(self, evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
 		label = ["Global dictionary", "Table Dictionary (%s)" % outTable, "Temporary"][self.dictRadioBox.GetSelection()]
@@ -354,14 +359,13 @@ class DictionaryEntryDlg(wx.Dialog):
 	def onOk(self, evt):
 		braillePattern = self.braillePatternTextCtrl.GetValue()
 		textPattern = self.textPatternTextCtrl.GetValue()
-		textPattern = textPattern.replace("\t", r"\t").replace(" ", r"\s")
 		opcode = self.getOpcode()
 		if not textPattern:
 			msg = _("Text pattern/sign field is empty.")
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			return self.textPatternTextCtrl.SetFocus()
-		if not braillePattern:
-			msg = _("Braille pattern field is empty.")
+		if not braillePattern and opcode != OPCODE_REPLACE:
+			msg = _("Braille pattern field is empty, with this opcode you must specify something.")
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			return self.braillePatternTextCtrl.SetFocus()
 		if opcode != OPCODE_REPLACE and not  re.match("^[0-8\-]+$", braillePattern):
@@ -369,6 +373,9 @@ class DictionaryEntryDlg(wx.Dialog):
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			self.braillePatternTextCtrl.SetFocus()
 			return
+		if opcode == OPCODE_REPLACE: textPattern = textPattern.lower()
+		textPattern = textPattern.replace("\\", r"\\").replace("\t", r"\t").replace("\s", r"\s")
+		braillePattern = braillePattern.replace("\\", r"\\").replace("\t", r"\t").replace("\s", r"\s")
 		newEntry = BrailleDictEntry(opcode, textPattern, braillePattern, self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False
 		if save:

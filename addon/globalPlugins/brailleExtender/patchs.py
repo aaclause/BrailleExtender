@@ -10,6 +10,7 @@ import sys
 isPy3 = True if sys.version_info >= (3, 0) else False
 import time
 import api
+import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
@@ -86,7 +87,10 @@ def getCurrentBrailleTables(input_=False):
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]
 		else:
-			tables = dictionaries.dictTables + configBE.preTable + [
+			tables = []
+			if appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject()).appName != 'nvda':
+				tables += dictionaries.dictTables
+			tables += configBE.preTable + [
 				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			] + configBE.postTable

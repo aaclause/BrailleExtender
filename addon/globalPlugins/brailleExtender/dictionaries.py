@@ -337,7 +337,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 	def onSeeEntriesClick(self, evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		label = ["Global dictionary", "Table Dictionary (%s)" % outTable, "Temporary"][self.dictRadioBox.GetSelection()]
+		label = [_("Global"), _("Table")+(" (%s)" % outTable), _("Temporary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()
 		gui.mainFrame._popupSettingsDialog(DictionaryDlg, label, type_)

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2019-10-07 17:33+0200\n"
-"PO-Revision-Date: 2019-10-07 17:34+0200\n"
+"POT-Creation-Date: 2019-10-07 17:51+0200\n"
+"PO-Revision-Date: 2019-10-07 17:52+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -304,13 +304,12 @@ msgid "Open addon's website."
 msgstr "Ouvre le site web du module complémentaire."
 
 #: addon\globalPlugins\brailleExtender\__init__.py:295
-msgid "Default dictionary"
-msgstr "Dictionnaire par défaut"
+msgid "Global dictionary"
+msgstr "Dictionnaire global"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:300
-#, python-format
-msgid "Table dictionary (%s)"
-msgstr "Dictionnaire de la table (%s)"
+msgid "Table dictionary"
+msgstr "Dictionnaire de la table"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:304
 msgid "Temporary dictionary"
@@ -831,10 +830,8 @@ msgstr "Ajouter une entrée au dictionnaire braille"
 #: addon\globalPlugins\brailleExtender\dictionaries.py:369
 #: addon\globalPlugins\brailleExtender\dictionaries.py:373
 #: addon\globalPlugins\brailleExtender\settings.py:33 buildVars.py:18
-#, fuzzy
-#| msgid "BrailleExtender"
 msgid "Braille Extender"
-msgstr "BrailleExtender"
+msgstr "Braille Extender"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:33
 #, python-format
@@ -1168,6 +1165,21 @@ msgstr "Modifier une entrée de dictionnaire"
 msgid "Dictionary"
 msgstr "Dictionnaire"
 
+#: addon\globalPlugins\brailleExtender\dictionaries.py:294
+#: addon\globalPlugins\brailleExtender\dictionaries.py:340
+msgid "Global"
+msgstr "Global"
+
+#: addon\globalPlugins\brailleExtender\dictionaries.py:294
+#: addon\globalPlugins\brailleExtender\dictionaries.py:340
+msgid "Table"
+msgstr "Table"
+
+#: addon\globalPlugins\brailleExtender\dictionaries.py:294
+#: addon\globalPlugins\brailleExtender\dictionaries.py:340
+msgid "Temporary"
+msgstr "Temporaire"
+
 #: addon\globalPlugins\brailleExtender\dictionaries.py:300
 msgid "See &entries"
 msgstr "Consulter les &entrées"
@@ -1196,18 +1208,6 @@ msgstr ""
 #: addon\globalPlugins\brailleExtender\dictionaries.py:323
 msgid "&Direction"
 msgstr "&Sens"
-
-#: addon\globalPlugins\brailleExtender\dictionaries.py:340
-msgid "Global"
-msgstr "Global"
-
-#: addon\globalPlugins\brailleExtender\dictionaries.py:340
-msgid "Table"
-msgstr "Table"
-
-#: addon\globalPlugins\brailleExtender\dictionaries.py:340
-msgid "Temporary"
-msgstr "Temporaire"
 
 #: addon\globalPlugins\brailleExtender\dictionaries.py:364
 msgid "Text pattern/sign field is empty."
@@ -2005,6 +2005,12 @@ msgstr ""
 #: buildVars.py:42
 msgid "actions and quick navigation through a rotor"
 msgstr "actions et navigation rapide au travers d’un rotor"
+
+#~ msgid "Default dictionary"
+#~ msgstr "Dictionnaire par défaut"
+
+#~ msgid "Table dictionary (%s)"
+#~ msgstr "Dictionnaire de la table (%s)"
 
 #~ msgid "Location"
 #~ msgstr "Emplacement"

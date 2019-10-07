@@ -291,7 +291,7 @@ class DictionaryEntryDlg(wx.Dialog):
 			# Translators: This is a label for an edit field in add dictionary entry dialog.
 			dictText = _("Dictionary")
 			outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-			dictChoices = ["Global", "Table (%s)" % outTable, "Temporary"]
+			dictChoices = [_("Global"), _("Table")+(" (%s)" % outTable), _("Temporary")]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
 			bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)

@@ -292,12 +292,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def onDefaultDictionary(evt):
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Default dictionary"), "default")
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Global dictionary"), "default")
 
 	@staticmethod
 	def onTableDictionary(evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Table dictionary (%s)" % outTable), "table")
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Table dictionary")+(" (%s)" % outTable), "table")
 
 	@staticmethod
 	def onTemporaryDictionary(evt):

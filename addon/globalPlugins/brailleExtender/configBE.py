@@ -1,7 +1,7 @@
 # coding: utf-8
 # configBE.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import os
@@ -369,7 +369,7 @@ def loadPostTable():
 	else:
 		if config.conf["brailleExtender"]["postTable"] != "None":
 			log.error("Invalid secondary table")
-	tableChangesFile = os.path.join(baseDir, "res", "undefinedChar.cti")
+	tableChangesFile = os.path.join(configDir, "brailleDicts", "undefinedChar.cti")
 	defUndefinedChar = "undefined %s\n" % config.conf["brailleExtender"]["undefinedCharRepr"]
 	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and not os.path.exists(tableChangesFile):
 		log.debug("File not found, creating undefined char file")
@@ -398,7 +398,7 @@ def createTableChangesFile(f, c):
 def loadPreTable():
 	global preTable
 	preTable = []
-	tableChangesFile = os.path.join(baseDir, "res", "changes.cti")
+	tableChangesFile = os.path.join(configDir, "brailleDicts", "changes.cti")
 	defTab = 'space \\t ' + \
 		('0-' * int(config.conf["brailleExtender"]["tabSize_%s" % curBD]))[:-1] + '\n'
 	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tableChangesFile):
@@ -430,4 +430,6 @@ cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"
 cfgFileAttribra = globalVars.appArgs.configPath + r"\attribra-BE.ini"
 if os.path.exists(cfgFile): os.remove(cfgFile)
 if os.path.exists(cfgFileAttribra): os.remove(cfgFileAttribra)
+
 if not os.path.exists(configDir): os.mkdir(configDir)
+if not os.path.exists(os.path.join(configDir, "brailleDicts")): os.mkdir(os.path.join(configDir, "brailleDicts"))

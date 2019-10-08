@@ -2,7 +2,7 @@
 # BrailleExtender Addon for NVDA
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
-# Copyright (C) 2017 André-Abush CLAUSE <dev@andreabc.net>
+# Copyright (C) 2016-2019 André-Abush CLAUSE <dev@andreabc.net>
 #
 # Additional third party copyrighted code is included:
 #  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
@@ -22,6 +22,7 @@ import wx
 import addonHandler
 addonHandler.initTranslation()
 from . import settings
+from . import dictionaries
 import api
 import appModuleHandler
 import braille
@@ -192,6 +193,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields
 		self.backup__update = braille.TextInfoRegion.update
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
+		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
 		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
@@ -238,6 +240,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if braille.handler is not None and configBE.curBD != braille.handler.display.name:
 			configBE.curBD = braille.handler.display.name
 			self.onReload(None, 1)
+
+		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]:
+			self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
+			dictionaries.setDictTables()
+
 		nextHandler()
 		return
 
@@ -246,18 +253,32 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		menu = wx.Menu()
 		self.brailleExtenderMenu = self.NVDAMenu.AppendSubMenu(menu, '%s (%s)' % (configBE._addonName, configBE._addonVersion), _('%s menu' % configBE._addonName))
 
-		item = menu.Append(wx.ID_ANY, _("Documentation"), _("Opens the addon's documentation."))
+		item = menu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
+
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
+
+		settingsMenu = wx.Menu()
+		menu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille Extender settings' menu"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onBrailleTablesSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onAttributesSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onQuickLaunchesSettings, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
+		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onRoleLabelsSettings, item)
+
+		dictionariesMenu = wx.Menu()
+		menu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
+		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
+		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
+
 		item = menu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
 		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
@@ -268,6 +289,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
+
+	@staticmethod
+	def onDefaultDictionary(evt):
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Global dictionary"), "default")
+
+	@staticmethod
+	def onTableDictionary(evt):
+		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Table dictionary")+(" (%s)" % outTable), "table")
+
+	@staticmethod
+	def onTemporaryDictionary(evt):
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Temporary dictionary"), "tmp")
 
 	def restorReviewCursorTethering(self):
 		if not self.switchedMode: return
@@ -291,7 +325,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.switchedMode = False
 
 	def getGestureWithBrailleIdentifier(self, gesture = ''):
-		return ('br(%s):' % configBE.curBD if ':' not in gesture else '')+gesture
+		return ("br(%s):" % configBE.curBD if ':' not in gesture else '')+gesture
 
 	def gesturesInit(self):
 		# rotor gestures
@@ -409,7 +443,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_priorRotor(self, gesture):
 		global rotorItem
-		idRotorItem = rotorItems.index
 		if rotorItem > 0:
 			rotorItem -= 1
 		else:
@@ -1446,6 +1479,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_autoTest.__doc__ = _("Auto test")
 	# end of section autoTest
 
+	def script_addDictionaryEntry(self, gesture):
+		curChar = utils.getCurrentChar()
+		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryEntryDlg, title=_("Add dictionary entry or see a dictionary"), textPattern=curChar, specifyDict=True)
+	script_addDictionaryEntry.__doc__ = _("Add a entry in braille dictionary")
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
@@ -1463,7 +1501,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
 	__gestures["kb:nvda+alt+i"] = "charsToCellDescriptions"
 	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
-	__gestures["kb:nvda+alt+y"] = "getTableOverview"
+	__gestures["kb:nvda+alt+y"] = "addDictionaryEntry"
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 
 	def terminate(self):
@@ -1485,6 +1523,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
+		dictionaries.removeTmpDict()
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):

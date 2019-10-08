@@ -1,7 +1,7 @@
 # coding: utf-8
 # settings.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import glob
@@ -17,6 +17,7 @@ import config
 import controlTypes
 import inputCore
 import keyLabels
+import louis
 import queueHandler
 import scriptHandler
 import ui
@@ -27,8 +28,9 @@ from . import utils
 from logHandler import log
 
 instanceGP = None
-def notImplemented():
-	gui.messageBox(_("The feature implementation is in progress. Thanks for your patience."), _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
+def notImplemented(msg=''):
+	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
+	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
 
 if hasattr(gui.settingsDialogs, "SettingsPanel"):
 	class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
@@ -428,14 +430,15 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
+		if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
 		configBE.loadPostTable()
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
 		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
-		repr = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
-		repr = re.sub('\-+','-', repr)
-		if not repr or repr.startswith('-') or repr.endswith('-'): repr = "0"
-		config.conf["brailleExtender"]["undefinedCharRepr"] = repr
+		repr_ = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
+		repr_ = re.sub('\-+','-', repr_)
+		if not repr_ or repr_.startswith('-') or repr_.endswith('-'): repr_ = "0"
+		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
 		configBE.loadPreTable()
 		configBE.loadPostTable()
 		super(BrailleTablesDlg, self).onOk(evt)
@@ -525,7 +528,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
-
 class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
@@ -922,7 +924,6 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		return _("Undefined")
 
 	def onGesture(self, evt = None):
-		category = self.categories.GetSelection()
 		gesture = self.gestures.GetSelection()
 		gestureName = self.keyLabelsList[gesture][1]
 
@@ -938,3 +939,4 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 	def hideNewProfileSection(self, evt = None):
 		self.validNewProfileNameButton.Disable()
 		self.newProfileName.Disable()
+

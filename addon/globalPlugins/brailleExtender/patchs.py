@@ -1,7 +1,7 @@
 # coding: utf-8
 # patchs.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
 from __future__ import unicode_literals
@@ -10,6 +10,7 @@ import sys
 isPy3 = True if sys.version_info >= (3, 0) else False
 import time
 import api
+import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
@@ -30,9 +31,8 @@ import treeInterceptorHandler
 import watchdog
 from logHandler import log
 import addonHandler
-
-
 addonHandler.initTranslation()
+from . import dictionaries
 from .utils import getCurrentChar, getTether
 instanceGP = None
 chr_ = chr if isPy3 else unichr
@@ -62,8 +62,8 @@ def sayCurrentLine():
 			info.expand(textInfos.UNIT_LINE)
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
 
-def getCurrentBrailleTables(input = False):
-	if input:
+def getCurrentBrailleTables(input_=False):
+	if input_:
 		if instanceGP.BRFMode and not errorTable:
 			tables = [
 				os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
@@ -87,7 +87,10 @@ def getCurrentBrailleTables(input = False):
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]
 		else:
-			tables = configBE.preTable + [
+			tables = []
+			if appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject()).appName != "nvda":
+				tables += dictionaries.dictTables
+			tables += configBE.preTable + [
 				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			] + configBE.postTable
@@ -153,11 +156,12 @@ def update(self):
 					cursorPos=self.cursorPos or 0
 				)
 		except BaseException as e:
-			log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
 			global errorTable
-			errorTable = True
-			if instanceGP.BRFMode: instanceGP.BRFMode = False
-			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
+			if not errorTable:
+				log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
+				errorTable = True
+				if instanceGP.BRFMode: instanceGP.BRFMode = False
+				instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
 			return
 		if not isPy3:
 			# liblouis gives us back a character string of cells, so convert it to a list of ints.
@@ -347,7 +351,7 @@ def emulateKey(self, key, withModifiers=True):
 	try:
 		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(gesture))
 		instanceGP.lastShortcutPerformed = gesture
-	except:
+	except BaseException:
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 

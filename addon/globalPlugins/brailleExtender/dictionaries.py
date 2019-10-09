@@ -53,6 +53,7 @@ def checkTable(path):
 		louis.checkTable([path])
 		return True
 	except RuntimeError: invalidDictTables.add(path)
+	except UnicodeEncodeError: invalidDictTables.add(path)
 	return False
 
 def getValidPathsDict():
@@ -111,6 +112,11 @@ def setDictTables():
 	if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
 	else: return False
 	return True
+
+def getTypeBrailleDict(path, dicts):
+	if path in dicts: return dicts[path]
+	elif "\emojis\\" in path: return "emojis"
+	return path
 
 def notifyInvalidTables():
 	if invalidDictTables:

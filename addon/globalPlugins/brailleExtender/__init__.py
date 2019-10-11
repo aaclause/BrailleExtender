@@ -137,8 +137,12 @@ def decorator(fn, s):
 		DOT8 = 128
 		size = len(self.rawTextTypeforms)
 		for i, j in enumerate(self.rawTextTypeforms):
-			start = self.rawToBraillePos[i]
-			end = self.rawToBraillePos[i+1 if i+1 < size else i]
+			try:
+				start = self.rawToBraillePos[i]
+				end = self.rawToBraillePos[i+1 if i+1 < size else (i if i<size else size-1)]
+			except IndexError as e:
+				log.debug(e)
+				return
 			k = start
 			for k in range(start, end):
 				if j == 78: self.brailleCells[k] |= DOT7 | DOT8

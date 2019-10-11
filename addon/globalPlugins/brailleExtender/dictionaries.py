@@ -199,7 +199,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	@staticmethod
 	def getReprTextPattern(textPattern, equiv=True):
-		if re.match(r"^\\x[0-8a-f]+$", textPattern, re.IGNORECASE):
+		if re.match(r"^\\x[0-9a-f]+$", textPattern, re.IGNORECASE):
 			textPattern = textPattern.lower()
 			textPattern = chr(int(''.join([c for c in textPattern if c in "abcdef1234567890"]), 16))
 		if equiv and len(textPattern) == 1: return "%s (%s, %s)" % (textPattern, hex(ord(textPattern)).replace("0x", r"\x"), unicodedata.name(textPattern).lower())
@@ -338,7 +338,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 	def onSeeEntriesClick(self, evt):
 		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
-		label = [_("Global"), _("Table")+(" (%s)" % outTable), _("Temporary")][self.dictRadioBox.GetSelection()]
+		label = [_("Global dictionary"), _("Table dictionary")+(" (%s)" % outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()
 		gui.mainFrame._popupSettingsDialog(DictionaryDlg, label, type_)

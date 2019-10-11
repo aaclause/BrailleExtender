@@ -319,7 +319,7 @@ def getTableOverview(tbl = ''):
 		if not re.match(r'^\\.+/$', text[0]):
 			tmp['%s' % text[0] if text[0] != '' else '?'] = '%s       %-7s' % (
 			'%s (%s)' % (unichr_(i), combinationDesign(unicodeBrailleToDescription(unichr_(i)))),
-			'%s%-8s' % (text[0], '%s' % (' (%-10s)' % str(hex(ord(text[0]))) if len(text[0]) == 1 else '' if text[0] != '' else '#ERROR'))
+			'%s%-8s' % (text[0].rstrip('\x00'), '%s' % (' (%-10s)' % str(hex(ord(text[0]))) if len(text[0]) == 1 else '' if text[0] != '' else '#ERROR'))
 			)
 		else:
 			available += unichr_(i)

@@ -622,11 +622,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_toggleSpeechScrollFocusMode(self, gesture):
 		choices = configBE.focusOrReviewChoices
 		curChoice = config.conf["brailleExtender"]["speakScroll"]
-		curChoiceID = choices.keys().index(curChoice)
+		curChoiceID = list(choices.keys()).index(curChoice)
 		newChoiceID = (curChoiceID+1) % len(choices)
-		newChoice = choices.keys()[newChoiceID]
+		newChoice = list(choices.keys())[newChoiceID]
 		config.conf["brailleExtender"]["speakScroll"] = newChoice
-		ui.message(choices.values()[newChoiceID].capitalize())
+		ui.message(list(choices.values())[newChoiceID].capitalize())
 	script_toggleSpeechScrollFocusMode.__doc__ = _("Quick access to the \"say current line while scrolling in\" option")
 
 	def script_toggleSpeech(self, gesture):

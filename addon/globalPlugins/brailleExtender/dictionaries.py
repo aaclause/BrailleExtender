@@ -7,6 +7,7 @@ import gui
 import wx
 import os.path
 import re
+import unicodedata
 
 import addonHandler
 addonHandler.initTranslation()
@@ -201,7 +202,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		if re.match(r"^\\x[0-8a-f]+$", textPattern, re.IGNORECASE):
 			textPattern = textPattern.lower()
 			textPattern = chr(int(''.join([c for c in textPattern if c in "abcdef1234567890"]), 16))
-		if equiv and len(textPattern) == 1: return "%s (%s)" % (textPattern, hex(ord(textPattern)).replace("0x", r"\x"))
+		if equiv and len(textPattern) == 1: return "%s (%s, %s)" % (textPattern, hex(ord(textPattern)).replace("0x", r"\x"), unicodedata.name(textPattern).lower())
 		textPattern = textPattern.replace(r"\s", " ").replace(r"\t", "	").replace(r"\ ", r"\s").replace(r"\	", r"\t")
 		return textPattern
 
@@ -364,17 +365,23 @@ class DictionaryEntryDlg(wx.Dialog):
 			msg = _("Text pattern/sign field is empty.")
 			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 			return self.textPatternTextCtrl.SetFocus()
-		if not braillePattern and opcode != OPCODE_REPLACE:
-			msg = _("Braille representation field is empty, with this opcode you must specify something.")
-			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
-			return self.braillePatternTextCtrl.SetFocus()
-		if opcode != OPCODE_REPLACE and not  re.match("^[0-8\-]+$", braillePattern):
-			msg = _("Invalid value for braille representation field. With this opcode, you must enter dot patterns. E.g.: 12345678, 5-123456, 0-138.")
-			gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
-			self.braillePatternTextCtrl.SetFocus()
-			return
-		if opcode == OPCODE_REPLACE: textPattern = textPattern.lower()
-		textPattern = textPattern.replace("\\", r"\\").replace("	", r"\t").replace(" ", r"\s")
+		if opcode != OPCODE_REPLACE:
+			egBRLRepr = "12345678, 5-123456, 0-138."
+			egTextPattern = r"α, ∪, \x2019."
+			if len(textPattern) > 1 and not re.match(r"^\\x[0-9a-f]+$", textPattern):
+				msg = _("Invalid value for 'text pattern/sign' field. You must specify a character with this opcode. E.g.: %s" % egTextPattern)
+				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+				return self.textPatternTextCtrl.SetFocus()
+			if not braillePattern:
+				msg = _("'Braille representation' field is empty, you must specify something with this opcode. E.g.: %s" % egBRLRepr)
+				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+				return self.braillePatternTextCtrl.SetFocus()
+			if not  re.match("^[0-8\-]+$", braillePattern):
+				msg = _("Invalid value for 'braille representation' field. You must enter dot patterns with this opcode. E.g.: %s" % egBRLRepr)
+				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
+				return self.braillePatternTextCtrl.SetFocus()
+		else: textPattern = textPattern.lower().replace("\\", r"\\")
+		textPattern = textPattern.replace("	", r"\t").replace(" ", r"\s")
 		braillePattern = braillePattern.replace("\\", r"\\").replace("	", r"\t").replace(" ", r"\s")
 		newEntry = BrailleDictEntry(opcode, textPattern, braillePattern, self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False

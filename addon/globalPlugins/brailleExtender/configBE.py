@@ -268,7 +268,10 @@ def discardRoleLabels():
 def loadConf():
 	global curBD, gesturesFileExists, profileFileExists, iniProfile
 	curBD = braille.handler.display.name
-	brlextConf = config.conf["brailleExtender"].copy()
+	try: brlextConf = config.conf["brailleExtender"].copy()
+	except configobj.validate.VdtValueError:
+		config.conf["brailleExtender"]["updateChannel"] = "dev"
+		brlextConf = config.conf["brailleExtender"].copy()
 	if "profile_%s" % curBD not in brlextConf.keys():
 		config.conf["brailleExtender"]["profile_%s" % curBD] = "default"
 	if "tabSize_%s" % curBD not in brlextConf.keys():

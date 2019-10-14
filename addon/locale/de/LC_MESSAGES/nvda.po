@@ -3,14 +3,14 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2019-10-13 05:53+0200\n"
-"PO-Revision-Date: 2019-10-13 18:33+0200\n"
+"PO-Revision-Date: 2019-10-13 21:44+0200\n"
 "Last-Translator: Karl Eick <hozosch@web.de>\n"
 "Language-Team: b-a-c.at/YetiAnt\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-Basepath: ../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -1215,30 +1215,26 @@ msgid ""
 "Invalid value for 'text pattern/sign' field. You must specify a character "
 "with this opcode. E.g.: %s"
 msgstr ""
+"Ungültiger Wert für das Feld \"Textmuster / Zeichen\". Mit diesem Opcode "
+"müssen Sie ein Zeichen bestimmen, z.B.: %s"
 
 #: addon\globalPlugins\brailleExtender\dictionaries.py:390
-#, fuzzy, python-format
-#| msgid ""
-#| "Braille representation field is empty, with this opcode you must specify "
-#| "something."
+#, python-format
 msgid ""
 "'Braille representation' field is empty, you must specify something with "
 "this opcode. E.g.: %s"
 msgstr ""
-"Das Braille-Repräsentationsfeld ist leer, Sie müssen mit diesem Opcode etwas "
-"spezifizieren."
+"Das Braille-Repräsentationsfeld ist leer. Sie müssen mit diesem Opcode etwas "
+"spezifizieren, z.B.: %s"
 
 #: addon\globalPlugins\brailleExtender\dictionaries.py:394
-#, fuzzy, python-format
-#| msgid ""
-#| "Invalid value for braille representation field. With this opcode, you "
-#| "must enter dot patterns. E.g.: 12345678, 5-123456, 0-138."
+#, python-format
 msgid ""
 "Invalid value for 'braille representation' field. You must enter dot "
 "patterns with this opcode. E.g.: %s"
 msgstr ""
 "Ungültiger Wert für das Feld für die Braille-Repräsentation. Mit diesem "
-"Opcode müssen Sie Punktmuster eingeben, z.B.: 12345678, 5-123456, 0-138."
+"Opcode müssen Sie Punktmuster eingeben, z.B.: %s"
 
 #: addon\globalPlugins\brailleExtender\patchs.py:165
 msgid ""
@@ -1509,7 +1505,7 @@ msgstr ""
 #. Translators: label of a dialog.
 #: addon\globalPlugins\brailleExtender\settings.py:419
 msgid "Show emoji descriptions"
-msgstr ""
+msgstr "Emoji-Beschreibungen zeigen"
 
 #: addon\globalPlugins\brailleExtender\settings.py:422
 msgid "Alternative and &custom braille tables"
@@ -1917,7 +1913,7 @@ msgid ""
 "level. Currently, the following features are implemented"
 msgstr ""
 "BrailleExtender ist eine NVDA-Erweiterung, die verschiedene Braile-"
-"Funktionen in NVDA implementiert. Aktuell sind folgende Funktionen verfügbar:"
+"Funktionen in NVDA implementiert. Aktuell sind folgende Funktionen verfügbar"
 
 #: buildVars.py:23
 msgid "reload two favorite braille display with shortcuts"
@@ -1941,11 +1937,11 @@ msgstr "Automatisch scrollen"
 msgid "switch between several input/output braille tables"
 msgstr ""
 "Möglichkeit, zwischen verschiedenen Braille-Ein- und -Ausgabetabellen zu "
-"wechseln."
+"wechseln"
 
 #: buildVars.py:27
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
-msgstr "Speziell formatierter Text durch Punkte 7, 8 oder beide hervorheben."
+msgstr "Speziell formatierter Text durch Punkte 7, 8 oder beide hervorheben"
 
 #: buildVars.py:28
 msgid "use two output braille tables simultaneously"
@@ -1968,41 +1964,32 @@ msgstr ""
 "Fokusmodus oder beidem ansagen"
 
 #: buildVars.py:32
-#, fuzzy
-#| msgid "translate text easily in Unicode braille and vice versa"
 msgid "translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"
-msgstr "Text einfach in Unicode braille und umgekehrt übersetzen"
+msgstr ""
+"Text einfach in Unicode braille und umgekehrt übersetzen, z.B.: z <--> ⠵"
 
 #: buildVars.py:33
-#, fuzzy
-#| msgid ""
-#| "convert quickly cell description to Unicode braille and vice versa. E.g.: "
-#| "123 <--> ⠇"
 msgid ""
 "convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"
 msgstr ""
-"Konvertieren Sie die modulbeschreibung schnell in Unicode-Braille und "
-"umgekehrt. Zum Beispiel: 123 -"
+"Schnelle Konvertierung von Modulbeschreibungen in Unicode-Braille und "
+"umgekehrt. Zum Beispiel: 123 <--> ⠇"
 
 #: buildVars.py:34
 msgid "lock braille keyboard"
 msgstr "Braille-Tastatur sperren"
 
 #: buildVars.py:35
-#, fuzzy
-#| msgid "launch an application quickly"
 msgid "launch an application/URL with gesture"
-msgstr "Eine Anwendung schnell starten"
+msgstr "Eine Anwendung oder URL schnell mit Hilfe eines tastenbefehls starten"
 
 #: buildVars.py:36
-#, fuzzy
-#| msgid "Braille &dictionaries"
 msgid "braille dictionaries"
-msgstr "Braille-&Wörterbücher"
+msgstr "Braille-Wörterbücher"
 
 #: buildVars.py:37
 msgid "and much more!"
-msgstr "Und vieles mehr"
+msgstr "Und vieles mehr!"
 
 #: buildVars.py:38
 msgid ""
@@ -2035,277 +2022,3 @@ msgstr ""
 #: buildVars.py:42
 msgid "actions and quick navigation through a rotor"
 msgstr "Rotor-Aktionen und Rotor-Schnellnavigation"
-
-#~ msgid "testing"
-#~ msgstr "Testen"
-
-#~ msgid "Location"
-#~ msgstr "Lage"
-
-#~ msgid "Opens the addon's settings."
-#~ msgstr "Öffnet die Einstellungen der Erweiterung."
-
-#~| msgid "the use of locale gestures"
-#~ msgid "Edit the current profile gestures..."
-#~ msgstr "Tastenkombinationen für das aktuelle Profil bearbeiten"
-
-#~ msgid ""
-#~ "Edit the current profile gestures or create a new one (modifier keys, "
-#~ "etc.)."
-#~ msgstr ""
-#~ "Tastenkombinationen für das aktuelle Profil können bearbeitet bzw. neu "
-#~ "erstellt werden. (z.B. Umschalttasten etc.)."
-
-#~ msgid "Not implemented yet"
-#~ msgstr "Noch nicht implementiert"
-
-#~ msgid "uncontracted"
-#~ msgstr "Vollschrift"
-
-#~ msgid "contracted"
-#~ msgstr "Kurzschrift"
-
-#~ msgid "Turn on"
-#~ msgstr "Einschalten"
-
-#~ msgid "Turn off"
-#~ msgstr "Ausschalten"
-
-#~ msgid "Turn on/off the assistance shortcuts."
-#~ msgstr "Eingabehilfe ein- und ausschalten"
-
-#~ msgid "Please use the keyboard for this feature"
-#~ msgstr "für diese Funktion bitte die PC-Tastatur verwenden"
-
-#~ msgid ""
-#~ "Reload the driver of an favorite or last braille display. Practical if "
-#~ "the braille display is not plugged immediately or that the latter is "
-#~ "disconnected and then reconnected"
-#~ msgstr ""
-#~ "Möglichkeit, den Treiber für die zuletzt angeschlossene oder eine "
-#~ "bevorzugte Braillezeile neuzuladen. Dies ist nützlich, wenn die Zeile "
-#~ "nicht sofort angeschlossen wird oder wenn das Gerät später getrennt und "
-#~ "erneut angeschlossen wird."
-
-#~ msgid "Polish and Croatian translations"
-#~ msgstr "Polnische und kroatische Übersetzungen"
-
-#~ msgid "for his tests and suggestions with"
-#~ msgstr "für seine Tests und Vorschläge bezüglich"
-
-#~ msgid "Coming soon in the next versions"
-#~ msgstr "Geplant für die nächsten Versionen"
-
-#~ msgid ""
-#~ "gesture profiles, finalizing tabs in settings, some shortcuts revisions..."
-#~ msgstr ""
-#~ "Profile für Tastenkombinationen, Registerkarten der Einstellungen "
-#~ "vervollständigen, Verbesserungen bei den Tastenkürzeln, ..."
-
-#~ msgid "Change Log"
-#~ msgstr "Änderungsnotizen:"
-
-#~ msgid "New feature"
-#~ msgstr "Neue Funktionalität"
-
-#~ msgid "Fix a bug preventing"
-#~ msgstr "Vorbeugend wurde ein fehler behoben"
-
-#~ msgid "scroll with the usual gestures on Brailliant displays"
-#~ msgstr ""
-#~ "Möglichkeit, mit den üblichen Tastenbefehlen bei Brailliant-Zeilen zu "
-#~ "scrollen"
-
-#~ msgid "the use of locale gestures"
-#~ msgstr "Verwendung vordefinierter Tastenbefehle"
-
-#~ msgid ""
-#~ "keyboard shortcuts from working as expected when a table is specified"
-#~ msgstr ""
-#~ "Tastenkürzel funktionieren entsprechend, wenn eine Tabelle festgelegt wird"
-
-#~ msgid "Improvement concerning"
-#~ msgstr "Verbesserung bezüglich"
-
-#~ msgid "profiles"
-#~ msgstr "Profile"
-
-#~ msgid ""
-#~ "Profiles are now reloaded automatically if braille display changes during "
-#~ "execution"
-#~ msgstr ""
-#~ "Profile werden jetzt automatisch geladen, wenn die Braillezeile bei "
-#~ "laufendem NVDA gewächselt wird"
-
-#~ msgid "the rotor"
-#~ msgstr "der Rotor"
-
-#~ msgid "New modes"
-#~ msgstr "Neue Modi"
-
-#~ msgid "review"
-#~ msgstr "Darstellung"
-
-#~ msgid "and"
-#~ msgstr "und"
-
-#~ msgid "possibility to specify a secondary output braille table"
-#~ msgstr "Möglichkeit, eine zweite Braille-Ausgabetabelle festzulegen"
-
-#~ msgid "In review mode, say the current line during text scrolling"
-#~ msgstr "Aktuelle Textzeile beim Scrollen im Darstellungsmodus ansagen"
-
-#~ msgid "Routes the cursor to or activates the object under this braille cell"
-#~ msgstr ""
-#~ "Zieht den Cursor zur aktuellen Braille-Zelle oder aktiviert das Objekt in "
-#~ "der Zelle"
-
-#~ msgid "Reading and display"
-#~ msgstr "Lesen und anzeigen"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Appl&y"
-#~ msgstr "Anwen&den"
-
-#~ msgid "Close"
-#~ msgstr "Schließen"
-
-#~ msgid "You have made a change that requires you restart NVDA"
-#~ msgstr ""
-#~ "Es wurden Änderungen vorgenommen, die einen Neustart von NVDA erfordern"
-
-#~ msgid "Restart required"
-#~ msgstr "Neustart erforderlich"
-
-#~ msgid "Download development versions"
-#~ msgstr "Entwickler-Versionen herunterladen"
-
-#~ msgid "Detail the progress of a keyboard shortcut when it is typed"
-#~ msgstr "detailierte Darstellung eines Tastenkürzels während der Eingabe"
-
-#~ msgid "Report of the new volume in braille"
-#~ msgstr "neue Lautstärke in Braille anzeigen"
-
-#~ msgid "Report of the new volume in speech"
-#~ msgstr "neue Lautstärke ansagen"
-
-#~ msgid "&Limit number of cells to (0 for no limit)"
-#~ msgstr "&Begrenze die anzahl der Zellen auf (0 für unbegrenzt)"
-
-#~ msgid "Braille display to load on NVDA+&k"
-#~ msgstr "Braillezeile, die durch Drücken von NVDA+&K geladen werden soll"
-
-#~ msgid "Braille display to load on NVDA+Shift+k"
-#~ msgstr ""
-#~ "Braillezeile, die durch Drücken von NVDA+Umschalt+K geladen werden soll"
-
-#~ msgid "Output braille tables present in the switch"
-#~ msgstr "Braille-Ausgabetabellen im Umschalter"
-
-#~ msgid "Output tables not present in the switch"
-#~ msgstr "Zusätzliche Braille-Ausgabetabellen"
-
-#~ msgid "function disabled automatically due to a crash"
-#~ msgstr "Die Funktion wurde wegen eines Absturzes automatisch deaktiviert"
-
-#~| msgid "&Delay for scroll"
-#~ msgid "&Delay for autoscroll"
-#~ msgstr "&Verzögerung beim automatischen Scrollen"
-
-#~ msgid "Hide empty views during autoscroll"
-#~ msgstr "Leere Zeilen beim automatischen Scrollen ausblenden"
-
-#~ msgid "Adjust the delay autoscroll to the content"
-#~ msgstr ""
-#~ "Möglichkeit, die Geschwindigkeit beim automatischen Scrollen je nach "
-#~ "Inhalt anzupassen"
-
-#~ msgid "Category"
-#~ msgstr "Kategorie"
-
-#~ msgid "You have no output tables present in the switch"
-#~ msgstr "Es befinden sich keine Braille-Ausgabetabellen im Umschalter"
-
-#~ msgid "Profile"
-#~ msgstr "Profile"
-
-#~ msgid "Bold"
-#~ msgstr "Fett"
-
-#~ msgid "Italic"
-#~ msgstr "Kursiv"
-
-#~ msgid "Input braille tables present in the switch"
-#~ msgstr "Braille-Eingabetabellen im umschalter"
-
-#~ msgid "Input tables not present in the switch"
-#~ msgstr "Zusätzliche Braille Eingabetabellen"
-
-#~ msgid "You have no input tables present in the switch"
-#~ msgstr "Es befinden sich keine Braille-Eingabetabellen im Umschalter"
-
-#~| msgid "Edit this profile"
-#~ msgid "Editing gesture profiles"
-#~ msgstr "Profilbasierte Tastenkombinationen werden bearbeitet"
-
-#~ msgid "%s device reloaded"
-#~ msgstr "Braillezeile %s neu geladen"
-
-#~ msgid "No %s display found"
-#~ msgstr "Keine %s Braillezeile gefunden"
-
-#~ msgid ""
-#~ "define custom rules to mark text with special fields option with braille "
-#~ "dots 7 and 8"
-#~ msgstr ""
-#~ "Benutzerdefinierte Einstellungen für die Markierung von Text mit "
-#~ "Feldoptionen vornehmen (Punkte 7 und 8)"
-
-#~ msgid "Switch between different braille keyboard configurations."
-#~ msgstr "Zwischen Braille-Tastatureinstellungen umschalten."
-
-#~ msgid "Show the \"about\" window"
-#~ msgstr "Zeige das \"About-Fenster\" an"
-
-#~ msgid "{0} update"
-#~ msgstr "{0} Aktualisierung"
-
-#~ msgid "&Yes"
-#~ msgstr "&Ja"
-
-#~ msgid "&No"
-#~ msgstr "&Nein"
-
-#~ msgid "NVDARemote support"
-#~ msgstr "Unterstützung für NVDA-Fernzugriff"
-
-#~ msgid "Feature Not Implemented Yet"
-#~ msgstr "Funktion ist nocht nicht implementiert"
-
-#~ msgid "experimental, works poorly with Baum devices"
-#~ msgstr "experimentell, arbeitet gut mit BAUM-Geräten"
-
-#~ msgid "Advanced rules"
-#~ msgstr "Fortgeschrittene Regeln"
-
-#~ msgid "&Edit this rule"
-#~ msgstr "Diese Regel b&earbeiten"
-
-#~ msgid "&Add a rule"
-#~ msgstr "Regel hinzufügen"
-
-#~ msgid "This NVDA add-on adds some features at braille level"
-#~ msgstr ""
-#~ "Ce greffon NVDA se propose d’ajouter quelques fonctionnalités au niveau "
-#~ "braille"
-
-#~ msgid "It allows"
-#~ msgstr "Il permet en outre"
-
-#~ msgid "rotor (implementation in progress)"
-#~ msgstr "Rotor (implémentation en cours)"
-
-#~ msgid "Stopping %s"
-#~ msgstr "Arrêt de %s"

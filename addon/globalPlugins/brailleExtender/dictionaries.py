@@ -55,7 +55,7 @@ def checkTable(path):
 	return False
 
 def getValidPathsDict():
-	types = ["default", "table", "tmp"]
+	types = ["tmp", "table", "default"]
 	paths = [getPathDict(type_) for type_ in types]
 	valid = lambda path: os.path.exists(path) and os.path.isfile(path) and checkTable(path)
 	return [path for path in paths if valid(path)]

@@ -70,7 +70,9 @@ def getCurrentBrailleTables(input_=False):
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]
 		else:
-			tables = dictionaries.dictTables+[
+			tables = []
+			if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"]: tables += dictionaries.dictTables
+			tables += [
 				os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName),
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]

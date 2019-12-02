@@ -425,13 +425,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["outputTables"] = ','.join(self.oTables)
 		config.conf["brailleExtender"]["inputTables"] = ','.join(self.iTables)
-		configBE.loadPreferedTables()
 		config.conf["brailleExtender"]["inputTableShortcuts"] = configBE.tablesUFN[self.inputTableShortcuts.GetSelection()-1] if self.inputTableShortcuts.GetSelection()>0 else '?'
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
 		if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
-		configBE.loadPostTable()
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
 		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
@@ -439,8 +437,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		repr_ = re.sub('\-+','-', repr_)
 		if not repr_ or repr_.startswith('-') or repr_.endswith('-'): repr_ = "0"
 		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
-		configBE.loadPreTable()
-		configBE.loadPostTable()
 		super(BrailleTablesDlg, self).onOk(evt)
 
 	def getTablesWithSwitches(self):

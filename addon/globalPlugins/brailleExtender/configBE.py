@@ -347,63 +347,6 @@ def isContractedTable(table):
 	if brailleTables.listTables()[tablePos].contracted: return True
 	return False
 
-def loadPostTable():
-	global postTable
-	postTable = []
-	postTableValid = True if config.conf["brailleExtender"]["postTable"] in tablesFN else False
-	if postTableValid:
-		postTable.append(os.path.join(brailleTables.TABLES_DIR, config.conf["brailleExtender"]["postTable"]).encode("UTF-8"))
-		log.debug('Secondary table enabled: %s' % config.conf["brailleExtender"]["postTable"])
-	else:
-		if config.conf["brailleExtender"]["postTable"] != "None":
-			log.error("Invalid secondary table")
-	tableChangesFile = os.path.join(configDir, "brailleDicts", "undefinedChar.cti")
-	defUndefinedChar = "undefined %s\n" % config.conf["brailleExtender"]["undefinedCharRepr"]
-	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and not os.path.exists(tableChangesFile):
-		log.debug("File not found, creating undefined char file")
-		createTableChangesFile(tableChangesFile, defUndefinedChar)
-	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and os.path.exists(tableChangesFile):
-		f = open(tableChangesFile, "r")
-		if f.read() != defUndefinedChar:
-			log.debug("Difference, creating undefined char file...")
-			if createTableChangesFile(tableChangesFile, defUndefinedChar):
-				postTable.append(tableChangesFile.encode("UTF-8"))
-		else:
-			postTable.append(tableChangesFile.encode("UTF-8"))
-		f.close()
-
-
-def createTableChangesFile(f, c):
-	try:
-		f = open(f, "w")
-		f.write(c)
-		f.close()
-		return True
-	except BaseException as e:
-		log.error("Error while creating tab file (%s)" % e)
-		return False
-
-def loadPreTable():
-	global preTable
-	preTable = []
-	tableChangesFile = os.path.join(configDir, "brailleDicts", "changes.cti")
-	defTab = 'space \\t ' + \
-		('0-' * int(config.conf["brailleExtender"]["tabSize_%s" % curBD]))[:-1] + '\n'
-	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tableChangesFile):
-		log.debug("File not found, creating table changes file")
-		createTableChangesFile(tableChangesFile, defTab)
-	if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tableChangesFile):
-		f = open(tableChangesFile, "r")
-		if f.read() != defTab:
-			log.debug('Difference, creating tab file...')
-			if createTableChangesFile(tableChangesFile, defTab):
-				preTable.append(tableChangesFile.encode("UTF-8"))
-		else:
-			preTable.append(tableChangesFile.encode("UTF-8"))
-			log.debug('Tab as spaces enabled')
-		f.close()
-	else: log.debug('Tab as spaces disabled')
-
 def getKeyboardLayout():
 	if (config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] is not None
 	and config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] in iniProfile['keyboardLayouts'].keys()):

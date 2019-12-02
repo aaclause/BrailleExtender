@@ -262,36 +262,6 @@ def getTextInBraille(t = '', table = None):
 	if charToDotsInLouis: return nt
 	return ''.join([chr(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch for ch in nt])
 
-def cellDescToChar(cell):
-	if not re.match("^[0-8]+$", cell): return '?'
-	toAdd = 0
-	for dot in cell: toAdd += 1 << int(dot)-1 if int(dot) > 0 else 0
-	return chr(10240+toAdd)
-
-def charToCellDesc(ch):
-	"""
-	Return a description of an unicode braille char
-	@param ch: the unicode braille character to describe
-		must be between 0x2800 and 0x2999 included
-	@type ch: str
-	@return: the list of dots describing the braille cell
-	@rtype: str
-	@Example: "d" -> "145"
-	"""
-	res = ""
-	if len(ch) != 1: raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
-	p = ord(ch)
-	if p >= 0x2800 and p <= 0x2999: p -= 0x2800
-	if p > 255: raise ValueError(r"It is not an unicode braille (%d)" % p)
-	dots ={1:1, 2:2, 4:3, 8:4,16:5,32:6,64:7, 128:8}
-	i = 1
-	while p != 0:
-		if p - (128 / i) >= 0:
-			res += str(dots[(128/i)])
-			p -= (128 / i)
-		i *= 2
-	return res[::-1] if len(res) > 0 else '0'
-
 def combinationDesign(dots, noDot = '⠤'):
 	out = ""
 	i = 1
@@ -331,12 +301,6 @@ def getTableOverview(tbl = ''):
 	elif nbAvailable == 1:
 		t += '\n'+_("One combination available")+": %s" % available
 	return t
-
-def unicodeBrailleToDescription(t, sep = '-'):
-	return ''.join([charToCellDesc(ch)+'-' if ch not in ['\n','\r'] else ch for ch in t])[:-1].replace("-\n",'\n')
-
-def descriptionToUnicodeBraille(t):
-	return re.sub('([0-8]+)\-?', lambda m: cellDescToChar(m.group(1)), t)
 
 def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
 	if isinstance(t, list): t = ' '.join(t)

@@ -14,6 +14,8 @@ from logHandler import log
 import os
 import re
 import subprocess
+import sys
+isPy3 = True if sys.version_info >= (3, 0) else False
 import time
 import urllib
 import gui
@@ -50,6 +52,8 @@ from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
 from .updateCheck import *
+from . import dictionaries
+from . import huc
 from . import patchs
 from .common import *
 
@@ -131,8 +135,7 @@ def decorator(fn, s):
 		fn(self, info, conf, isSelection)
 
 	def update(self):
-		try: fn(self)
-		except BaseException as e: log.error("Fatal error: %s" % e)
+		fn(self)
 		if not attribraEnabled(): return
 		DOT7 = 64
 		DOT8 = 128
@@ -651,7 +654,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		table = ''
 		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
 		t = utils.getTextInBraille('', table)
-		t = utils.unicodeBrailleToDescription(t)
+		t = huc.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage(t, _("Braille Unicode to cell descriptions")+(" (%.2f s)" % (time.time()-tm)))
 	script_charsToCellDescriptions.__doc__ = _("Convert text selection in braille cell descriptions and display it in a browseable message")
@@ -660,7 +663,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		tm = time.time()
 		t = utils.getTextSelection()
 		if not t.strip(): return ui.message(_("No text selection"))
-		t = utils.descriptionToUnicodeBraille(t)
+		t = huc.cellDescriptionsToUnicodeBraille(t)
 		ui.browseableMessage(t, _("Cell descriptions to braille Unicode")+(" (%.2f s)" % (time.time()-tm)))
 	script_cellDescriptionsToChars.__doc__ = _("Braille cell description to Unicode Braille. E.g.: in a edit field type '125-24-0-1-123-123'. Then select this text and execute this command")
 

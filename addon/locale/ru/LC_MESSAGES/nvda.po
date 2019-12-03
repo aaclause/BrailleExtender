@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2019-10-26 13:27+0300\n"
-"PO-Revision-Date: 2019-10-27 12:43+0100\n"
+"PO-Revision-Date: 2019-12-03 13:58+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -165,23 +165,20 @@ msgid "%s menu"
 msgstr "%s меню"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:260
-#, fuzzy
 msgid "Docu&mentation"
-msgstr "справка"
+msgstr "&Справка"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:260
 msgid "Opens the addon's documentation."
 msgstr "Открывает руководство пользователя для дополнения."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:265
-#, fuzzy
 msgid "Settings"
-msgstr "для тестеровщиков"
+msgstr "Настройки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:265
-#, fuzzy
 msgid "'Braille Extender settings' menu"
-msgstr "Braille Extender"
+msgstr "Меню 'настроек Braille Extender'"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:266
 #: addon/globalPlugins/brailleExtender/settings.py:45
@@ -229,9 +226,8 @@ msgid "Role labels configuration"
 msgstr "Настройки сокращений элементов"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:278
-#, fuzzy
 msgid "Braille &dictionaries"
-msgstr "Брайлевские &Таблицы"
+msgstr "Брайлевские &словари"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:278
 msgid "'Braille dictionaries' menu"
@@ -828,9 +824,8 @@ msgid "Add dictionary entry or see a dictionary"
 msgstr "Добавьте словарьную статью или посмотрите словарь"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1489
-#, fuzzy
 msgid "Add a entry in braille dictionary"
-msgstr "добавление брайлевской таблицы"
+msgstr "Добавь статью в брайлевский словарь"
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
@@ -1085,19 +1080,16 @@ msgid "Replace"
 msgstr "Замена"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:40
-#, fuzzy
 msgid "Both (input and output)"
-msgstr "Ввод и вывод"
+msgstr "Ввод и вывод одновременно"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:41
-#, fuzzy
 msgid "Backward (input only)"
-msgstr "Только ввод"
+msgstr "назад, только ввод"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:42
-#, fuzzy
 msgid "Forward (output only)"
-msgstr "Только вывод"
+msgstr "вперёд, только вывод"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:111
 #, python-format
@@ -1115,9 +1107,8 @@ msgstr "Словарные &статьи"
 
 #. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:135
-#, fuzzy
 msgid "Comment"
-msgstr "Документ"
+msgstr "комментарий"
 
 #. Translators: The label for a column in dictionary entries list used to identify original character.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:137
@@ -1126,9 +1117,8 @@ msgstr "Образец"
 
 #. Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
 #: addon/globalPlugins/brailleExtender/dictionaries.py:139
-#, fuzzy
 msgid "Representation"
-msgstr "перевод на персидский "
+msgstr "отображение"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon/globalPlugins/brailleExtender/dictionaries.py:141
@@ -1137,9 +1127,8 @@ msgstr "Оператор"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon/globalPlugins/brailleExtender/dictionaries.py:143
-#, fuzzy
 msgid "Direction"
-msgstr "Описание"
+msgstr "смер"
 
 #. Translators: The label for a button in speech dictionaries dialog to add new entries.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:149
@@ -1163,9 +1152,8 @@ msgstr "&Отрыть актуалный файл словаря в редакт
 
 #. Translators: The label for a button in speech dictionaries dialog to reload dictionary.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:174
-#, fuzzy
 msgid "&Reload the dictionary"
-msgstr "Перезагружает дополнение."
+msgstr "&Перезагрузить словарь"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:217
 msgid "Add Dictionary Entry"
@@ -1191,9 +1179,8 @@ msgid "Global"
 msgstr "Глобальный"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:295
-#, fuzzy
 msgid "Table"
-msgstr "таблицы"
+msgstr "таблица"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:295
 msgid "Temporary"
@@ -1210,15 +1197,13 @@ msgstr "&Образец текста/знак"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog and in punctuation/symbol pronunciation dialog.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:311
-#, fuzzy
 msgid "&Braille representation"
-msgstr "Настройки брайлевских таблиц"
+msgstr "&Брайлевское отображение"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:315
-#, fuzzy
 msgid "&Comment"
-msgstr "Документ"
+msgstr "&Комментарий"
 
 #. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:319
@@ -1227,9 +1212,8 @@ msgstr "&Оператор"
 
 #. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/dictionaries.py:324
-#, fuzzy
 msgid "&Direction"
-msgstr "Описание"
+msgstr "&Смер"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:365
 msgid "Text pattern/sign field is empty."
@@ -1241,6 +1225,8 @@ msgid ""
 "Invalid value for 'text pattern/sign' field. You must specify a character "
 "with this opcode. E.g.: %s"
 msgstr ""
+"Неправильный внос для поля 'образец текста/знак'. Надо определить знак с "
+"оператором. Напр: %s"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:376
 #, python-format
@@ -1248,6 +1234,8 @@ msgid ""
 "'Braille representation' field is empty, you must specify something with "
 "this opcode. E.g.: %s"
 msgstr ""
+"Поле 'представление брайля' пусто, Надо что-нибудь определить с этим "
+"оператором. Напр: %s"
 
 #: addon/globalPlugins/brailleExtender/dictionaries.py:380
 #, python-format
@@ -1255,6 +1243,8 @@ msgid ""
 "Invalid value for 'braille representation' field. You must enter dot "
 "patterns with this opcode. E.g.: %s"
 msgstr ""
+"неправильный внос для поля 'отображение брайля'. Тут надо вписывать точки. "
+"напр.: %s"
 
 #: addon/globalPlugins/brailleExtender/patchs.py:165
 msgid ""
@@ -1970,31 +1960,27 @@ msgid ""
 msgstr "Проговаривание актуальной строки в режиме просмотра или обзора"
 
 #: buildVars.py:32
-#, fuzzy
 msgid "translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"
-msgstr "Легкий перевод в юникодовый брайль и так далее"
+msgstr "Переведите текст из з уникодового брайля и обратно. напр.: z <--> ⠵"
 
 #: buildVars.py:33
-#, fuzzy
 msgid ""
 "convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"
 msgstr ""
-"Быстрая конвертация описания брайлевских клеток на юникод и на описания. "
-"нпр: 123 <--> ⠇"
+"Переконвертируйте брайлевские клетки в брайлевский юникод и наоборот: 123 <--"
+"> ⠇"
 
 #: buildVars.py:34
 msgid "lock braille keyboard"
 msgstr "Заблокировать брайлевскую клавиатуру"
 
 #: buildVars.py:35
-#, fuzzy
 msgid "launch an application/URL with gesture"
-msgstr "запускайте программы быстро"
+msgstr "Запустите приложение/URL с помощью жеста"
 
 #: buildVars.py:36
-#, fuzzy
 msgid "braille dictionaries"
-msgstr "Брайлевские таблицы"
+msgstr "Брайлевские словари"
 
 #: buildVars.py:37
 msgid "and much more!"

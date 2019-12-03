@@ -22,10 +22,6 @@ import gui
 import wx
 
 from . import settings
-from . import dictionaries
-
-import addonHandler
-addonHandler.initTranslation()
 import api
 import appModuleHandler
 import braille
@@ -252,7 +248,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]:
 			self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
 			dictionaries.setDictTables()
-
 		nextHandler()
 		return
 

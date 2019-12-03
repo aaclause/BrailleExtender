@@ -167,6 +167,7 @@ def update(self):
 			if instanceGP.BRFMode: instanceGP.BRFMode = False
 			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
 		return
+	HUCProcess(self)
 	if not isPy3:
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.
 		# For some reason, the highest bit is set, so only grab the lower 8
@@ -208,23 +209,42 @@ def update(self):
 	else:
 		if instanceGP and instanceGP.hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
-	HUCProcess(self)
 
 def HUCProcess(self):
 	unicodeBrailleRepr = ''.join([chr_(10240+cell) for cell in self.brailleCells])
-	AllBraillePos = [m.start() for m in re.finditer("⣿⣥⣿", unicodeBrailleRepr)]
-	if not AllBraillePos: return
-	replacements = {braillePos: huc.convert(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in AllBraillePos}
+	allBraillePos = [m.start() for m in re.finditer(HUCUnicodePattern, unicodeBrailleRepr)]
+	allBraillePosDelimiters = [(pos, pos+3) for pos in allBraillePos]
+	if not allBraillePos: return
+	replacements = {braillePos: huc.convert(self.rawText[self.brailleToRawPos[braillePos]], HUC6=True) for braillePos in allBraillePos}
 	newBrailleCells = []
+	newBrailleToRawPos = []
+	newRawToBraillePos = []
+	lenBrailleToRawPos = len(self.brailleToRawPos)
 	alreadyDone = []
+	i = 0
 	for iBrailleCells, brailleCells in enumerate(self.brailleCells):
 		brailleToRawPos = self.brailleToRawPos[iBrailleCells]
-		if brailleToRawPos in alreadyDone: continue
-		if iBrailleCells in replacements:
-			newBrailleCells += [ord(c)-10240 for c in replacements[iBrailleCells]]
-			alreadyDone.append(brailleToRawPos)
-		else: newBrailleCells.append(self.brailleCells[iBrailleCells])
+		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(HUCUnicodePattern[0]):
+			toAdd = [ord(c)-10240 for c in replacements[iBrailleCells]]
+			newBrailleCells += toAdd
+			newBrailleToRawPos += [i] * len(toAdd)
+			alreadyDone += list(range(iBrailleCells, iBrailleCells+3))
+			i += 1
+		else:
+			if iBrailleCells in alreadyDone: continue
+			newBrailleCells.append(self.brailleCells[iBrailleCells])
+			newBrailleToRawPos += [i]
+			if (iBrailleCells + 1) < lenBrailleToRawPos and self.brailleToRawPos[iBrailleCells+1] != brailleToRawPos:
+				i += 1
+	pos = -42
+	for i, brailleToRawPos in enumerate(newBrailleToRawPos):
+		if brailleToRawPos != pos:
+			pos = brailleToRawPos
+			newRawToBraillePos.append(i)
 	self.brailleCells = newBrailleCells
+	self.brailleToRawPos = newBrailleToRawPos
+	self.rawToBraillePos = newRawToBraillePos
+	if self.cursorPos: self.brailleCursorPos = self.rawToBraillePos[self.cursorPos]
 
 #: braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -463,4 +483,6 @@ globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 
-louis.compileString(getCurrentBrailleTables(), b"undefined 12345678-13678-12345678")
+HUCDotPattern = "12345678-78-12345678"
+louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % HUCDotPattern, "ASCII"))
+HUCUnicodePattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)

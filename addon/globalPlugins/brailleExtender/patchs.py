@@ -224,7 +224,10 @@ def setUndefinedChar(t=None):
 		if v == "questionMark": s = '?'
 		else: s = config.conf["brailleExtender"]["undefinedCharRepr"]
 		v = huc.unicodeBrailleToDescription(getTextInBraille(s, getCurrentBrailleTables()))
-	louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
+	if isPy3:
+		louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
+	else: louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v))
+
 
 def getDescChar(c):
 	n = ''
@@ -239,6 +242,7 @@ def getHexLiblouisStyle(s):
 	return s
 
 def HUCProcess(self):
+	if not isPy3: return
 	unicodeBrailleRepr = ''.join([chr_(10240+cell) for cell in self.brailleCells])
 	allBraillePos = [m.start() for m in re.finditer(HUCUnicodePattern, unicodeBrailleRepr)]
 	allBraillePosDelimiters = [(pos, pos+3) for pos in allBraillePos]

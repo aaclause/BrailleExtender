@@ -298,7 +298,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		dictionaries.notifyInvalidTables()
 		if config.conf["brailleExtender"]["tabSpace"]:
 			liblouisDef = r"always \t " + ("0-" * configBE.getTabSize()).strip('-')
-			patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
+			if isPy3:
+				patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
+			else: patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef))
 		patchs.setUndefinedChar()
 
 	@staticmethod

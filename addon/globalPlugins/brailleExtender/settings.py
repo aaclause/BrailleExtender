@@ -15,6 +15,7 @@ import addonHandler
 import braille
 import config
 import controlTypes
+import core
 import inputCore
 import keyLabels
 import louis
@@ -28,7 +29,7 @@ from . import utils
 from .common import *
 
 instanceGP = None
-def notImplemented(msg=''):
+def notImplemented(msg='', style=wx.OK|wx.ICON_INFORMATION):
 	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
 	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
 
@@ -405,16 +406,33 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.postTable.SetSelection(configBE.tablesFN.index(config.conf["brailleExtender"]["postTable"]) if config.conf["brailleExtender"]["postTable"] in configBE.tablesFN else 0)
 
 		# Translators: label of a dialog.
-		self.tabSpace = sHelper.addItem(wx.CheckBox(self, label=_("Display tab signs as spaces")))
+		self.tabSpace = sHelper.addItem(wx.CheckBox(self, label=_("Display &tab signs as spaces")))
 		self.tabSpace.SetValue(config.conf["brailleExtender"]["tabSpace"])
 
 		# Translators: label of a dialog.
-		self.tabSize = sHelper.addLabeledControl(_("Number of space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
+		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
 		# Translators: label of a dialog.
-		self.preventUndefinedCharHex = sHelper.addItem(wx.CheckBox(self, label=_("Prevent undefined characters with Hexadecimal Unicode value")))
-		self.preventUndefinedCharHex.SetValue(config.conf["brailleExtender"]["preventUndefinedCharHex"])
+		label = _("Representation of undefined characters")
+		choices = [
+			_("Use braille table behavior"),
+			_("Dots 1-8 (⣿)"),
+			_("Dots 1-6 (⠿)"),
+			_("Empty cell (⠀)"),
+			_("Other dot patterns (e.g.: 6-123456)"),
+			_("Question mark (depending output table)"),
+			_("Other sign/pattern (e.g.: \, ??)"),
+			_("Hexadecimal, Liblouis style"),
+			_("Hexadecimal, HUC8"),
+			_("Hexadecimal, HUC6")
+		]
+		self.undefinedCharReprList = sHelper.addLabeledControl(label, wx.Choice, choices=choices)
+		self.undefinedCharReprList.Bind(wx.EVT_CHOICE, self.onUndefinedCharReprList)
+		self.undefinedCharReprList.SetSelection(config.conf["brailleExtender"]["undefinedCharReprType"])
+		self.showNameUndefinedChar = sHelper.addItem(wx.CheckBox(self, label=_("Show the name assigned to the character if possible (english only)")))
+		self.showNameUndefinedChar.SetValue(config.conf["brailleExtender"]["showNameUndefinedChar"])
 		# Translators: label of a dialog.
-		self.undefinedCharRepr = sHelper.addLabeledControl(_("Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
+		self.undefinedCharReprEdit = sHelper.addLabeledControl(_("Specify another pattern"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
+		self.onUndefinedCharReprList()
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
@@ -429,15 +447,28 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
-		if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
+		if ((self.tabSpace.IsChecked() and config.conf["brailleExtender"]["tabSpace"] != self.tabSpace.IsChecked())
+			or (self.undefinedCharReprList.GetSelection() != 0 and config.conf["brailleExtender"]["undefinedCharReprType"] != self.undefinedCharReprList.GetSelection())):
+			restartRequired = True
+		else: restartRequired = False
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
-		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
-		repr_ = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
-		repr_ = re.sub('\-+','-', repr_)
-		if not repr_ or repr_.startswith('-') or repr_.endswith('-'): repr_ = "0"
+		config.conf["brailleExtender"]["undefinedCharReprType"] = self.undefinedCharReprList.GetSelection()
+		repr_ = self.undefinedCharReprEdit.Value
+		if self.undefinedCharReprList.GetSelection() == configBE.CHOICE_otherDots:
+			repr_ = re.sub("[^0-8\-]", "", repr_).strip('-')
+			repr_ = re.sub('\-+','-', repr_)
 		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
+		config.conf["brailleExtender"]["showNameUndefinedChar"] = self.showNameUndefinedChar.IsChecked()
+		instanceGP.reloadBrailleTables()
 		super(BrailleTablesDlg, self).onOk(evt)
+		if restartRequired:
+			res = gui.messageBox(
+				_("NVDA must be restarted for some new options to take effect. Do you want restart now?"),
+				_("Braille Extender"),
+				style=wx.YES_NO|wx.ICON_INFORMATION
+			)
+			if res == wx.YES: core.restart()
 
 	def getTablesWithSwitches(self):
 		out = []
@@ -492,6 +523,14 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		elif iCurDir > 0 and iCurDir < len(dirs) and direction == 0: newDir = dirs[iCurDir-1]
 		else: return
 		self.setCurrentSelection(tbl, newDir)
+
+	def onUndefinedCharReprList(self, evt=None):
+		selected = self.undefinedCharReprList.GetSelection()
+		if selected in [configBE.CHOICE_otherDots, configBE.CHOICE_otherSign]: self.undefinedCharReprEdit.Enable()
+		else: self.undefinedCharReprEdit.Disable()
+		if selected in [configBE.CHOICE_liblouis]:
+			self.showNameUndefinedChar.Enable()
+		else: self.showNameUndefinedChar.Disable()
 
 	def onCustomBrailleTablesBtn(self, evt):
 		customBrailleTablesDlg = CustomBrailleTablesDlg(self, multiInstanceAllowed=True)

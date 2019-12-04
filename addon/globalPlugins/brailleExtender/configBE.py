@@ -36,6 +36,18 @@ CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
 NOVIEWSAVED = chr(4)
 
+# undefined char representations
+CHOICE_tableBehaviour = 0
+CHOICE_allDots8 = 1
+CHOICE_allDots6 = 2
+CHOICE_emptyCell = 3
+CHOICE_otherDots = 4
+CHOICE_questionMark = 5
+CHOICE_otherSign = 6
+CHOICE_liblouis = 7
+CHOICE_HUC8 = 8
+CHOICE_HUC6 = 9
+
 dict_ = dict if isPy3 else OrderedDict
 
 outputMessage = dict_([
@@ -146,8 +158,9 @@ def getConfspec():
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
 		"tabSpace": "boolean(default=False)",
 		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
-		"preventUndefinedCharHex":  "boolean(default=False)",
+		"undefinedCharReprType": "integer(min=0, default=0, max=9)",
 		"undefinedCharRepr": "string(default=0)",
+		"showNameUndefinedChar": "boolean(default=False)",
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
@@ -355,6 +368,11 @@ def getKeyboardLayout():
 
 def getCustomBrailleTables():
 	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]
+
+def getTabSize():
+	size = config.conf["brailleExtender"]["tabSize_%s" % curBD]
+	if size < 0: size = 2
+	return size
 
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"

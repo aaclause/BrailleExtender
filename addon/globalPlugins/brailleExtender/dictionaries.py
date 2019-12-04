@@ -18,6 +18,7 @@ from collections import namedtuple
 from . import configBE
 from . import utils
 from .common import *
+from . import huc
 
 BrailleDictEntry = namedtuple("BrailleDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
 OPCODE_SIGN = "sign"
@@ -95,8 +96,8 @@ def saveDict(type_, dict_):
 
 def setDictTables():
 	global dictTables
-	invalidDictTables.clear()
 	dictTables = getValidPathsDict()
+	invalidDictTables.clear()
 	if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
 	else: return False
 	return True
@@ -209,7 +210,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 	@staticmethod
 	def getReprBraillePattern(braillePattern, equiv=True):
 		if equiv and re.match("^[0-8\-]+$", braillePattern):
-			return "%s (%s)" % (utils.descriptionToUnicodeBraille(braillePattern), braillePattern)
+			return "%s (%s)" % (huc.cellDescriptionsToUnicodeBraille(braillePattern), braillePattern)
 		braillePattern = braillePattern.replace(r"\s", " ").replace(r"\t", "	")
 		return braillePattern
 

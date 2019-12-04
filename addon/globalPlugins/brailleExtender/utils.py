@@ -248,15 +248,15 @@ def getKeysTranslation(n):
 def getTextInBraille(t = '', table = None):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
-	if not table: table = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+	if not table: table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
 	nt = []
 	res = ''
 	t = t.split("\n")
 	for l in t:
 		l = l.rstrip()
 		if not l: res = ''
-		elif charToDotsInLouis: res = louis.charToDots([table], l, louis.ucBrl)
-		else: res = louis.translateString([table], l, None, louis.dotsIO)
+		elif charToDotsInLouis: res = louis.charToDots(table, l, louis.ucBrl)
+		else: res = louis.translateString(table, l, None, louis.dotsIO)
 		nt.append(res)
 	nt = '\n'.join(nt)
 	if charToDotsInLouis: return nt

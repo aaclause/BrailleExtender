@@ -9,6 +9,8 @@ import os
 import re
 import sys
 import time
+import unicodedata
+
 import api
 import appModuleHandler
 import braille
@@ -33,11 +35,14 @@ import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
 from . import huc
-from .utils import getCurrentChar, getTether
+from .utils import getCurrentChar, getTether, getTextInBraille
 from .common import *
 if isPy3: import louisHelper
 
 instanceGP = None
+chr_ = chr if isPy3 else unichr
+HUCDotPattern = "12345678-78-12345678"
+HUCUnicodePattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 errorTable = False
@@ -167,7 +172,7 @@ def update(self):
 			if instanceGP.BRFMode: instanceGP.BRFMode = False
 			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
 		return
-	HUCProcess(self)
+	if config.conf["brailleExtender"]["undefinedCharReprType"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6]: HUCProcess(self)
 	if not isPy3:
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.
 		# For some reason, the highest bit is set, so only grab the lower 8
@@ -210,12 +215,39 @@ def update(self):
 		if instanceGP and instanceGP.hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 
+def setUndefinedChar(t=None):
+	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharReprType"]
+	if t == 0: return
+	c = ["default", "12345678", "123456", '0', config.conf["brailleExtender"]["undefinedCharRepr"], "questionMark", "sign"] + [HUCDotPattern]*3
+	v = c[t]
+	if v in ["questionMark", "sign"]:
+		if v == "questionMark": s = '?'
+		else: s = config.conf["brailleExtender"]["undefinedCharRepr"]
+		v = huc.unicodeBrailleToDescription(getTextInBraille(s, getCurrentBrailleTables()))
+	louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
+
+def getDescChar(c):
+	n = ''
+	try: n = "'%s'" % unicodedata.name(c)
+	except ValueError: n = r"'\x%.4x'" % ord(c)
+	return n
+
+def getHexLiblouisStyle(s):
+	if config.conf["brailleExtender"]["showNameUndefinedChar"]:
+		s = getTextInBraille(''.join([getDescChar(c) for c in s]))
+	else: s = getTextInBraille(''.join([r"'\x%.4x'" % ord(c) for c in s]))
+	return s
+
 def HUCProcess(self):
 	unicodeBrailleRepr = ''.join([chr_(10240+cell) for cell in self.brailleCells])
 	allBraillePos = [m.start() for m in re.finditer(HUCUnicodePattern, unicodeBrailleRepr)]
 	allBraillePosDelimiters = [(pos, pos+3) for pos in allBraillePos]
 	if not allBraillePos: return
-	replacements = {braillePos: huc.convert(self.rawText[self.brailleToRawPos[braillePos]], HUC6=True) for braillePos in allBraillePos}
+	if config.conf["brailleExtender"]["undefinedCharReprType"] == configBE.CHOICE_liblouis:
+		replacements = {braillePos: getHexLiblouisStyle(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in allBraillePos}
+	else:
+		HUC6 = True if config.conf["brailleExtender"]["undefinedCharReprType"] == configBE.CHOICE_HUC6 else False
+		replacements = {braillePos: huc.convert(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6) for braillePos in allBraillePos}
 	newBrailleCells = []
 	newBrailleToRawPos = []
 	newRawToBraillePos = []
@@ -469,8 +501,6 @@ def _createTablesString(tablesList):
 		else:
 			return b",".join([x.encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
 
-dictionaries.setDictTables()
-dictionaries.notifyInvalidTables()
 # applying patches
 #braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
@@ -483,6 +513,3 @@ globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 
-HUCDotPattern = "12345678-78-12345678"
-louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % HUCDotPattern, "ASCII"))
-HUCUnicodePattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)

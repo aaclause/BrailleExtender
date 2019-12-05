@@ -108,7 +108,7 @@ def notifyInvalidTables():
 			getPathDict("table"): "table",
 			getPathDict("tmp"): "tmp"
 		}
-		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded." % ", ".join([dicts[path] for path in invalidDictTables if path in dicts]))
+		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded.") % ", ".join([dicts[path] for path in invalidDictTables if path in dicts])
 		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 
 def removeTmpDict():
@@ -369,15 +369,15 @@ class DictionaryEntryDlg(wx.Dialog):
 			egBRLRepr = "12345678, 5-123456, 0-138."
 			egTextPattern = r"α, ∪, \x2019."
 			if len(textPattern) > 1 and not re.match(r"^\\x[0-9a-f]+$", textPattern):
-				msg = _("Invalid value for 'text pattern/sign' field. You must specify a character with this opcode. E.g.: %s" % egTextPattern)
+				msg = _("Invalid value for 'text pattern/sign' field. You must specify a character with this opcode. E.g.: %s") % egTextPattern
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.textPatternTextCtrl.SetFocus()
 			if not braillePattern:
-				msg = _("'Braille representation' field is empty, you must specify something with this opcode. E.g.: %s" % egBRLRepr)
+				msg = _("'Braille representation' field is empty, you must specify something with this opcode. E.g.: %s") % egBRLRepr
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.braillePatternTextCtrl.SetFocus()
 			if not  re.match("^[0-8\-]+$", braillePattern):
-				msg = _("Invalid value for 'braille representation' field. You must enter dot patterns with this opcode. E.g.: %s" % egBRLRepr)
+				msg = _("Invalid value for 'braille representation' field. You must enter dot patterns with this opcode. E.g.: %s") % egBRLRepr
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.braillePatternTextCtrl.SetFocus()
 		else: textPattern = textPattern.lower().replace("\\", r"\\")

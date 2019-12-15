@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2019-10-26 13:27+0300\n"
-"PO-Revision-Date: 2019-10-27 08:17+0100\n"
+"POT-Creation-Date: 2019-12-15 15:23+0100\n"
+"PO-Revision-Date: 2019-12-15 15:33+0100\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -1239,7 +1239,7 @@ msgstr ""
 "Nieprawidłowa wartość dla pola 'wyświetlanie znaku'. Musisz napisać wzorce "
 "punktów z tym operatorem. NP: %s"
 
-#: addon/globalPlugins/brailleExtender/patchs.py:165
+#: addon/globalPlugins/brailleExtender/patchs.py:167
 msgid ""
 "An unexpected error was produced while using several braille tables. Using "
 "default settings to avoid other errors. More information in NVDA log. Thanks "
@@ -1806,35 +1806,35 @@ msgstr "Nie można załadować tego profilu. Uszkodzony lub niedostępny plik"
 msgid "Undefined"
 msgstr "Nieokreślone"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:51
+#: addon/globalPlugins/brailleExtender/updateCheck.py:61
 #, python-format
-msgid "New version available, version %s. Do you want download it now?"
-msgstr "Dostępna jest nowa wersja, wersja: %s. Czy chcesz ją pobrać?"
+msgid "New version available, version %s. Do you want to download it now?"
+msgstr "Nowa wersja jest dostępna, wersja %s. Czy chcesz pobrać ją teraz?"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:58
+#: addon/globalPlugins/brailleExtender/updateCheck.py:72
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
 msgstr "Używasz najnowszej wersji dodatku. %s jest najnowszą wersją."
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:64
+#: addon/globalPlugins/brailleExtender/updateCheck.py:81
 #, python-format
 msgid ""
-"Oops! There was a problem checking for updates. Please retry later or "
-"download and install manually via %s. Do you want open this URL in your "
+"Oops! There was a problem downloading for update. Please retry later or "
+"download and install manually via %s. Do you want to open this URL in your "
 "browser now?"
 msgstr ""
 "Kurcze! Wystąpił problem podczas sprawdzania aktualizacji. Spróbuj ponownie "
 "później lub pobierz ręcznie za pomocą %s. Czy otworzyć ten adres URL w "
 "przeglądarce?"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:93
-msgid "Unable to save or download update file. Opening your browser"
-msgstr ""
-"Nie można zachować, lub pobrać pliku aktualizacji. Otwieram przeglądarkę"
+#: addon/globalPlugins/brailleExtender/updateCheck.py:115
+msgid "An update check dialog is already running!"
+msgstr "Okno dialogowe aktualizacji jest już uruchomione!"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:97
-msgid "BrailleExtender's Update"
-msgstr "Aktualizacja BrailleExtendera"
+#: addon/globalPlugins/brailleExtender/updateCheck.py:116
+#, python-brace-format
+msgid "{addonName}'s update"
+msgstr "Aktualizacja {addonName}-a"
 
 #: addon/globalPlugins/brailleExtender/utils.py:191
 msgid "Reload successful"
@@ -2014,6 +2014,13 @@ msgstr ""
 #: buildVars.py:42
 msgid "actions and quick navigation through a rotor"
 msgstr "akcje i szybka nawigacja za pomocą rotora"
+
+#~ msgid "Unable to save or download update file. Opening your browser"
+#~ msgstr ""
+#~ "Nie można zachować, lub pobrać pliku aktualizacji. Otwieram przeglądarkę"
+
+#~ msgid "BrailleExtender's Update"
+#~ msgstr "Aktualizacja BrailleExtendera"
 
 #~ msgid "testing"
 #~ msgstr "Szybki pierścień"
@@ -2341,9 +2348,6 @@ msgstr "akcje i szybka nawigacja za pomocą rotora"
 #~ msgid "Switch between different braille keyboard configurations."
 #~ msgstr ""
 #~ "Przełącza się pomiędzy różnymi konfiguracjami klawiatury brajlowskiej."
-
-#~ msgid "{0} update"
-#~ msgstr "Aktualizacja {0}"
 
 #~ msgid "This NVDA add-on adds some features at braille level"
 #~ msgstr "Ta wtyczka dla NVDA dodaje nowe funkcje na poziomie brajla"

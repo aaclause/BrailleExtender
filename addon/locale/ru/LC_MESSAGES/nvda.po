@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2019-10-26 13:27+0300\n"
-"PO-Revision-Date: 2019-12-03 13:58+0100\n"
+"POT-Creation-Date: 2019-12-15 15:23+0100\n"
+"PO-Revision-Date: 2019-12-15 15:36+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -1246,7 +1246,7 @@ msgstr ""
 "неправильный внос для поля 'отображение брайля'. Тут надо вписывать точки. "
 "напр.: %s"
 
-#: addon/globalPlugins/brailleExtender/patchs.py:165
+#: addon/globalPlugins/brailleExtender/patchs.py:167
 msgid ""
 "An unexpected error was produced while using several braille tables. Using "
 "default settings to avoid other errors. More information in NVDA log. Thanks "
@@ -1813,35 +1813,36 @@ msgstr "невозможно загрузить данный профиль. ф�
 msgid "Undefined"
 msgstr "Неопределено"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:51
+#: addon/globalPlugins/brailleExtender/updateCheck.py:61
 #, python-format
-msgid "New version available, version %s. Do you want download it now?"
-msgstr "Доступна новая  версия , версия %s. Хотите скачать её сейчас?"
+msgid "New version available, version %s. Do you want to download it now?"
+msgstr "Доступна новая  версия , версия %s. Вы хотите скачать её сейчас?"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:58
+#: addon/globalPlugins/brailleExtender/updateCheck.py:72
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
 msgstr ""
 "У вас установлена самая свежая версия. %s является самой свежой версией."
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:64
+#: addon/globalPlugins/brailleExtender/updateCheck.py:81
 #, python-format
 msgid ""
-"Oops! There was a problem checking for updates. Please retry later or "
-"download and install manually via %s. Do you want open this URL in your "
+"Oops! There was a problem downloading for update. Please retry later or "
+"download and install manually via %s. Do you want to open this URL in your "
 "browser now?"
 msgstr ""
-"произошла ошибка проверки обновления. Пожалуйста, попробуйте позже или "
+"произошла ошибка при проверки обновления. Пожалуйста, попробуйте позже или "
 "скачайте обновлиние через %s. Вы действительно хотите откруть этот адрес в "
 "браузере сейчас?"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:93
-msgid "Unable to save or download update file. Opening your browser"
-msgstr "Невозможно скачать файл  обновления. будет открыт веббраузер"
+#: addon/globalPlugins/brailleExtender/updateCheck.py:115
+msgid "An update check dialog is already running!"
+msgstr "Диалоговое окно обновления уже открыто!"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:97
-msgid "BrailleExtender's Update"
-msgstr "Обновление BrailleExtender"
+#: addon/globalPlugins/brailleExtender/updateCheck.py:116
+#, python-brace-format
+msgid "{addonName}'s update"
+msgstr "Обновление {addonName}"
 
 #: addon/globalPlugins/brailleExtender/utils.py:191
 msgid "Reload successful"
@@ -2019,6 +2020,12 @@ msgstr ""
 msgid "actions and quick navigation through a rotor"
 msgstr ""
 "выполнение некоторых действий и функций быстрой навигации посредством ротора."
+
+#~ msgid "Unable to save or download update file. Opening your browser"
+#~ msgstr "Невозможно скачать файл  обновления. будет открыт веббраузер"
+
+#~ msgid "BrailleExtender's Update"
+#~ msgstr "Обновление BrailleExtender"
 
 #~ msgid "Location"
 #~ msgstr "местоположение"

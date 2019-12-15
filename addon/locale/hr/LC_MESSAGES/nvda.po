@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2019-10-26 13:27+0300\n"
-"PO-Revision-Date: 2019-10-26 14:25+0300\n"
+"POT-Creation-Date: 2019-12-15 15:23+0100\n"
+"PO-Revision-Date: 2019-12-15 15:30+0100\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -1231,7 +1231,7 @@ msgstr ""
 "Neispravna vrijednost za polje 'brajični prikaz'. Morate upisati uzorak "
 "točkica za ovaj operand. Na primjer: %s"
 
-#: addon/globalPlugins/brailleExtender/patchs.py:165
+#: addon/globalPlugins/brailleExtender/patchs.py:167
 msgid ""
 "An unexpected error was produced while using several braille tables. Using "
 "default settings to avoid other errors. More information in NVDA log. Thanks "
@@ -1797,35 +1797,35 @@ msgstr "Ne mogu učitati ovaj profil. Izobličena ili nedostupna datoteka"
 msgid "Undefined"
 msgstr "Nedefinirano"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:51
+#: addon/globalPlugins/brailleExtender/updateCheck.py:61
 #, python-format
-msgid "New version available, version %s. Do you want download it now?"
-msgstr "Nova inačica je dostupna, inačica %s. Želite li ju ponovvno preuzeti?"
+msgid "New version available, version %s. Do you want to download it now?"
+msgstr "Nova inačica je dostupna, inačica %s. Želite li ju sada preuzeti?"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:58
+#: addon/globalPlugins/brailleExtender/updateCheck.py:72
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
 msgstr "Koristite posljednju inačicu. %s je posljednja inačica."
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:64
+#: addon/globalPlugins/brailleExtender/updateCheck.py:81
 #, python-format
 msgid ""
-"Oops! There was a problem checking for updates. Please retry later or "
-"download and install manually via %s. Do you want open this URL in your "
+"Oops! There was a problem downloading for update. Please retry later or "
+"download and install manually via %s. Do you want to open this URL in your "
 "browser now?"
 msgstr ""
-"Ups! Postoji problem pri provjeri nadogradnje. Molimo pokušajte ponovo ili "
-"preuzmite i instalirajte putem %s. Želite li sada otvoriti ovu adresu?"
+"Ups! Dogodila se pogreška prilikom preuzimanja nadogradnje. Molimo pokušajte "
+"kasnije ili je preuzmite putem %s. Želite li sada otvoriti tu adresu u vašem "
+"internetskom pregledniku?"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:93
-msgid "Unable to save or download update file. Opening your browser"
-msgstr ""
-"Nije moguče otvoriti ili spremiti datoteku. Otvaram vaš internetski "
-"preglednik"
+#: addon/globalPlugins/brailleExtender/updateCheck.py:115
+msgid "An update check dialog is already running!"
+msgstr "Dijaloški okvir za provjeru nadogradnje već je pokrenut!"
 
-#: addon/globalPlugins/brailleExtender/updateCheck.py:97
-msgid "BrailleExtender's Update"
-msgstr "Nadogradnja BrailleExtendera"
+#: addon/globalPlugins/brailleExtender/updateCheck.py:116
+#, python-brace-format
+msgid "{addonName}'s update"
+msgstr "Nadogradnja {addonName}-a"
 
 #: addon/globalPlugins/brailleExtender/utils.py:191
 msgid "Reload successful"
@@ -1998,6 +1998,14 @@ msgstr ""
 #: buildVars.py:42
 msgid "actions and quick navigation through a rotor"
 msgstr "Brzo kretanje i navigacija putem rotora"
+
+#~ msgid "Unable to save or download update file. Opening your browser"
+#~ msgstr ""
+#~ "Nije moguče otvoriti ili spremiti datoteku. Otvaram vaš internetski "
+#~ "preglednik"
+
+#~ msgid "BrailleExtender's Update"
+#~ msgstr "Nadogradnja BrailleExtendera"
 
 #~ msgid "testing"
 #~ msgstr "brzi prsten"
@@ -2313,9 +2321,6 @@ msgstr "Brzo kretanje i navigacija putem rotora"
 
 #~ msgid "experimental, works poorly with Baum devices"
 #~ msgstr "ksperimentalno, radi slabo sa Baumovim uređajima"
-
-#~ msgid "{0} update"
-#~ msgstr "{0} nadogradnja"
 
 #~ msgid "This NVDA add-on adds some features at braille level"
 #~ msgstr "Ovaj NVDA dodatak dodaje neke funkcije na nivou brajice"

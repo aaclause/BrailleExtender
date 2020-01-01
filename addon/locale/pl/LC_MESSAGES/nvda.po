@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2019-12-15 15:23+0100\n"
-"PO-Revision-Date: 2019-12-15 15:33+0100\n"
+"PO-Revision-Date: 2020-01-01 19:21+0100\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -350,7 +350,7 @@ msgstr "Niedostępne tutaj"
 #: addon/globalPlugins/brailleExtender/__init__.py:527
 #: addon/globalPlugins/brailleExtender/__init__.py:550
 msgid "Not supported here or browse mode not enabled"
-msgstr "Nie wspierane tutaj, lub nie włączony tryb przeglądu"
+msgstr "Nie wspierane tutaj lub nie włączony tryb przeglądu"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:529
 msgid "Select previous rotor setting"
@@ -701,16 +701,16 @@ msgstr "Ponownie wczytuje %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:986
 msgid "Reload the first braille display defined in settings"
-msgstr "Wczytuję pierwszą ustawioną linijkę brajlowską "
+msgstr "Wczytuję pierwszy ustawiony monitor brajlowski "
 
 #: addon/globalPlugins/brailleExtender/__init__.py:989
 msgid "Reload the second braille display defined in settings"
-msgstr "Wczytuje drugą ustawioną linijkę brajlowską"
+msgstr "Wczytuje drugi ustawiony monitor brajlowski"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:995
 msgid "No braille display specified. No reload to do"
 msgstr ""
-"Brak określonej linijki brajlowskiej. Nie można niczego ponownie wczytać."
+"Brak określonego monitora brajlowskiego. Nie można niczego ponownie wczytać."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1068
 msgid ""
@@ -772,7 +772,7 @@ msgstr "bufor wyczyszczony"
 msgid "Save the current braille view. Press twice quickly to clean the buffer"
 msgstr ""
 "Zapisuje aktualny brajlowski przegląd. Proszę nacisnąć dwa razy, aby "
-"wyczyszcić bufor"
+"wyczyszczyć bufor"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1376
 msgid "View saved"
@@ -842,7 +842,7 @@ msgstr "Braille Extender"
 #: addon/globalPlugins/brailleExtender/addonDoc.py:33
 #, python-format
 msgid "%s braille display"
-msgstr "Linijka brajlowska %s"
+msgstr "Monitor brajlowski %s"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:34
 #, python-format
@@ -973,7 +973,8 @@ msgstr "Uwaga:"
 #: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "BrailleExtender has no gesture map yet for your braille display."
 msgstr ""
-"Braille extender jeszcze nie ma mapy gestów do twojej linijki brajlowskiej."
+"Braille extender jeszcze nie ma mapy gestów do twojego monitora "
+"brajlowskiego."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:132
 msgid ""
@@ -1333,7 +1334,7 @@ msgstr "Prawy margines na komórkach brajlowskich"
 #: addon/globalPlugins/brailleExtender/settings.py:166
 #: addon/globalPlugins/brailleExtender/settings.py:412
 msgid "for the currrent braille display"
-msgstr "dla aktualnej linijki brajlowskiej"
+msgstr "dla aktualnego monitora brajlowskiego"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:158
@@ -1352,11 +1353,11 @@ msgstr "czekanie na automatyczne czytanie w milisekundach"
 
 #: addon/globalPlugins/brailleExtender/settings.py:167
 msgid "First braille display preferred"
-msgstr "Pierwsza preferowana linijka brajlowska"
+msgstr "Pierwszy preferowany monitor brajlowski"
 
 #: addon/globalPlugins/brailleExtender/settings.py:169
 msgid "Second braille display preferred"
-msgstr "Druga preferowana linijka brajlowska"
+msgstr "Drugi preferowany monitor brajlowski"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:203
@@ -1548,7 +1549,7 @@ msgid ""
 "In this combo box, all tables are present. Press space bar, left or right "
 "arrow keys to include (or not) the selected table in switches"
 msgstr ""
-"W tym polu kombi, dostępne są wszystkie tablice brajlowskie. Naciśnij "
+"W tej liście rozwijanej, dostępne są wszystkie tablice brajlowskie. Naciśnij "
 "spację, a następnie strzałkę w lewo lub w prawo, aby usunąć wybraną tablice "
 "brajlowską lub dodać ją do rotorów"
 
@@ -1909,8 +1910,8 @@ msgstr ""
 #: buildVars.py:23
 msgid "reload two favorite braille display with shortcuts"
 msgstr ""
-"Ponowne wczytywanie dwóch ulubionych linijek brajlowskich za pomocą skrótów "
-"klawiszowych"
+"Ponowne wczytywanie dwóch ulubionych monitorów brajlowskich za pomocą "
+"skrótów klawiszowych"
 
 #: buildVars.py:24
 msgid ""

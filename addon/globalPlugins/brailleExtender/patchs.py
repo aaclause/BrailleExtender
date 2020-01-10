@@ -495,7 +495,11 @@ def _translate(self, endWord):
 		self.bufferText = u""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	if instanceGP.HUCInput and self.bufferBraille:
+	ok = False
+	if instanceGP.HUCInput:
+		focusObj = api.getFocusObject()
+		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
+	if instanceGP.HUCInput and ok and self.bufferBraille:
 		HUCInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
 		if HUCInputStr:
 			res = huc.isValidHUCInput(HUCInputStr)

@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
+# coding: UTF-8
+from __future__ import print_function, unicode_literals
 import re
+import sys
+
+isPy3 = True if sys.version_info >= (3, 0) else False
+if not isPy3: chr = unichr
 
 HUC6_patterns = {
 	"⠿":   (0x000000, 0x00FFFF),

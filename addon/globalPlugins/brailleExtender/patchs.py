@@ -410,7 +410,7 @@ def executeGesture(self, gesture):
 
 		raise NoInputGestureAction
 #: brailleInput.BrailleInputHandler.sendChars()
-def sendChars(self, chars: str):
+def sendChars(self, chars):
 	"""Sends the provided unicode characters to the system.
 	@param chars: The characters to send to the system.
 	"""

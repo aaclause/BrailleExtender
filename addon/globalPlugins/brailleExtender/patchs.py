@@ -10,6 +10,9 @@ import re
 import sys
 import time
 import unicodedata
+import struct
+import winUser
+import nvwave
 
 import api
 import appModuleHandler
@@ -18,6 +21,7 @@ import brailleInput
 import brailleTables
 import controlTypes
 import config
+import core
 from . import configBE
 import globalCommands
 import inputCore
@@ -251,7 +255,7 @@ def HUCProcess(self):
 		replacements = {braillePos: getHexLiblouisStyle(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in allBraillePos}
 	else:
 		HUC6 = True if config.conf["brailleExtender"]["undefinedCharReprType"] == configBE.CHOICE_HUC6 else False
-		replacements = {braillePos: huc.convert(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6) for braillePos in allBraillePos}
+		replacements = {braillePos: huc.translate(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6) for braillePos in allBraillePos}
 	newBrailleCells = []
 	newBrailleToRawPos = []
 	newRawToBraillePos = []
@@ -405,6 +409,52 @@ def executeGesture(self, gesture):
 			return
 
 		raise NoInputGestureAction
+#: brailleInput.BrailleInputHandler.sendChars()
+def sendChars(self, chars: str):
+	"""Sends the provided unicode characters to the system.
+	@param chars: The characters to send to the system.
+	"""
+	inputs = []
+	chars = ''.join(c if ord(c) <= 0xffff else ''.join(chr(x) for x in struct.unpack('>2H', c.encode("utf-16be"))) for c in chars)
+	for ch in chars:
+		for direction in (0,winUser.KEYEVENTF_KEYUP): 
+			input = winUser.Input()
+			input.type = winUser.INPUT_KEYBOARD
+			input.ii.ki = winUser.KeyBdInput()
+			input.ii.ki.wScan = ord(ch)
+			input.ii.ki.dwFlags = winUser.KEYEVENTF_UNICODE|direction
+			inputs.append(input)
+	winUser.SendInput(inputs)
+	focusObj = api.getFocusObject()
+	if keyboardHandler.shouldUseToUnicodeEx(focusObj):
+		# #10569: When we use ToUnicodeEx to detect typed characters,
+		# emulated keypresses aren't detected.
+		# Send TypedCharacter events manually.
+		for ch in chars:
+			focusObj.event_typedCharacter(ch=ch)
+
+#: brailleInput.BrailleInputHandler.emulateKey()
+def emulateKey(self, key, withModifiers=True):
+	"""Emulates a key using the keyboard emulation system.
+	If emulation fails (e.g. because of an unknown key), a debug warning is logged
+	and the system falls back to sending unicode characters.
+	@param withModifiers: Whether this key emulation should include the modifiers that are held virtually.
+		Note that this method does not take care of clearing L{self.currentModifiers}.
+	@type withModifiers: bool
+	"""
+	if withModifiers:
+		# The emulated key should be the last item in the identifier string.
+		keys = list(self.currentModifiers)
+		keys.append(key)
+		gesture = "+".join(keys)
+	else:
+		gesture = key
+	try:
+		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(gesture))
+		instanceGP.lastShortcutPerformed = gesture
+	except BaseException:
+		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
+		self.sendChars(key)
 
 #: brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
@@ -430,7 +480,7 @@ def emulateKey(self, key, withModifiers=True):
 		self.sendChars(key)
 
 #: brailleInput.BrailleInputHandler._translate()
-# reason for patching: possibility to lock modifiers, display modifiers in braille during input
+# reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
 def _translate(self, endWord):
 	"""Translate buffered braille up to the cursor.
 	Any text produced is sent to the system.
@@ -445,7 +495,24 @@ def _translate(self, endWord):
 		self.bufferText = u""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	data = u"".join([chr(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
+	if instanceGP.HUCInput and self.bufferBraille:
+		HUCInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
+		if HUCInputStr:
+			res = huc.isValidHUCInput(HUCInputStr)
+			if res == huc.HUC_INPUT_INCOMPLETE: return
+			elif res == huc.HUC_INPUT_INVALID:
+				nvwave.playWaveFile("waves/textError.wav")
+				self.flushBuffer()
+				return
+			try:
+				res = huc.backTranslate(HUCInputStr)
+				speech.speakMessage(res)
+				core.callLater(0, brailleInput.handler.sendChars, res)
+				nvwave.playWaveFile(os.path.join(configBE.baseDir, "res/sounds/keyPress.wav"))
+				core.callLater(0, speech.speakMessage, res)
+			finally: instanceGP.HUCInputStr = ""
+		return
+	data = u"".join([chr_(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans
@@ -511,8 +578,9 @@ braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
-brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
+brailleInput.BrailleInputHandler.emulateKey = emulateKey
+brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

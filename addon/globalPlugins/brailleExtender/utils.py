@@ -23,6 +23,7 @@ addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
 from .common import *
+from . import huc
 
 charToDotsInLouis = hasattr(louis, "charToDots")
 # -----------------------------------------------------------------------------
@@ -444,3 +445,13 @@ def getTether():
 	if hasattr(braille.handler, "getTether"):
 		return braille.handler.getTether()
 	else: return braille.handler.tether
+
+def getCharFromValue(s):
+	if not isinstance(s, str): raise TypeError("Wrong type")
+	if not s or len(s) < 2: raise ValueError("Wrong value")
+	supportedBases = {'b': 2, 'd': 10, 'h': 16, 'o': 8, 'x': 16}
+	base, n = s[0].lower(), s[1:]
+	if base not in supportedBases.keys(): raise ValueError("Wrong base")
+	b = supportedBases[base]
+	n = int(n, b)
+	return chr(n)

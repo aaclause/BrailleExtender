@@ -418,7 +418,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			_("Dots 1-8 (⣿)"),
 			_("Dots 1-6 (⠿)"),
 			_("Empty cell (⠀)"),
-			_("Other dot patterns (e.g.: 6-123456)"),
+			_("Other dot pattern (e.g.: 6-123456)"),
 			_("Question mark (depending output table)"),
 			_("Other sign/pattern (e.g.: \, ??)"),
 			_("Hexadecimal, Liblouis style"),

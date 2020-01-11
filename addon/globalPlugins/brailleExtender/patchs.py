@@ -39,7 +39,7 @@ import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
 from . import huc
-from .utils import getCurrentChar, getTether, getTextInBraille
+from .utils import getCurrentChar, getTether, getTextInBraille, getCharFromValue
 from .common import *
 if isPy3: import louisHelper
 
@@ -481,6 +481,16 @@ def emulateKey(self, key, withModifiers=True):
 
 #: brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
+
+def sendChar(char):
+	nvwave.playWaveFile(os.path.join(configBE.baseDir, "res/sounds/keyPress.wav"))
+	core.callLater(0, brailleInput.handler.sendChars, char)
+	core.callLater(100, speech.speakSpelling, char)
+
+def badInput(self):
+	nvwave.playWaveFile("waves/textError.wav")
+	self.flushBuffer()
+
 def _translate(self, endWord):
 	"""Translate buffered braille up to the cursor.
 	Any text produced is sent to the system.
@@ -496,25 +506,27 @@ def _translate(self, endWord):
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
 	ok = False
-	if instanceGP.HUCInput:
+	if instanceGP.advancedInput:
 		focusObj = api.getFocusObject()
 		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
-	if instanceGP.HUCInput and ok and self.bufferBraille:
-		HUCInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
-		if HUCInputStr:
-			res = huc.isValidHUCInput(HUCInputStr)
-			if res == huc.HUC_INPUT_INCOMPLETE: return
-			elif res == huc.HUC_INPUT_INVALID:
-				nvwave.playWaveFile("waves/textError.wav")
-				self.flushBuffer()
+	if instanceGP.advancedInput and ok and self.bufferBraille:
+		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
+		if advancedInputStr:
+			if advancedInputStr[0] in getTextInBraille("bdhoxBDHOX"):
+				if advancedInputStr[-1] == '⠀':
+					text = louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr)[0]
+					try:
+						char = getCharFromValue(text)
+						sendChar(char)
+					except BaseException: badInput(self)
 				return
-			try:
-				res = huc.backTranslate(HUCInputStr)
-				speech.speakMessage(res)
-				core.callLater(0, brailleInput.handler.sendChars, res)
-				nvwave.playWaveFile(os.path.join(configBE.baseDir, "res/sounds/keyPress.wav"))
-				core.callLater(0, speech.speakMessage, res)
-			finally: instanceGP.HUCInputStr = ""
+			else:
+				res = huc.isValidHUCInput(advancedInputStr)
+				if res == huc.HUC_INPUT_INCOMPLETE: return
+				elif res == huc.HUC_INPUT_INVALID: badInput(self)
+				else:
+					res = huc.backTranslate(advancedInputStr)
+					sendChar(res)
 		return
 	data = u"".join([chr_(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots

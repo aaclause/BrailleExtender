@@ -161,7 +161,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	lastShortcutPerformed = None
 	hideDots78 = False
 	BRFMode = False
-	HUCInput = False
+	advancedInput = False
 	modifiersLocked = False
 	hourDatePlayed = False
 	hourDateTimer = None
@@ -673,10 +673,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.browseableMessage(t, _("Cell descriptions to braille Unicode")+(" (%.2f s)" % (time.time()-tm)))
 	script_cellDescriptionsToChars.__doc__ = _("Braille cell description to Unicode Braille. E.g.: in a edit field type '125-24-0-1-123-123'. Then select this text and execute this command")
 
-	def script_HUCInput(self, gesture):
-		self.HUCInput = not self.HUCInput
+	def script_advancedInput(self, gesture):
+		self.advancedInput = not self.advancedInput
 		states = [_("disabled"), _("enabled")]
-		speech.speakMessage("HUC Braille input %s" % states[int(self.HUCInput)])
+		speech.speakMessage("Advanced braille input mode %s" % states[int(self.advancedInput)])
+	script_advancedInput.__doc__ = _("Enable/disable the advanced input mode")
 
 	def script_position(self, gesture=None):
 		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
@@ -1484,7 +1485,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay2"
 	__gestures["kb:nvda+alt+h"] = "toggleDots78"
 	__gestures["kb:nvda+alt+f"] = "toggleBRFMode"
-	__gestures["kb:nvda+windows+h"] = "HUCInput"
+	__gestures["kb:nvda+windows+i"] = "advancedInput"
 	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"

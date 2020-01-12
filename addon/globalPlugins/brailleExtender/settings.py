@@ -168,6 +168,12 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=self.bds_v)
 		self.brailleDisplay2.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
+		self.oneHandMode = sHelper.addItem(wx.CheckBox(self, label=_("One hand mode")))
+		self.oneHandMode.SetValue(config.conf["brailleExtender"]["oneHandMode"])
+		choices = list(configBE.CHOICE_oneHandMethods.values())
+		itemToSelect = list(configBE.CHOICE_oneHandMethods.keys()).index(config.conf["brailleExtender"]["oneHandMethod"])
+		self.oneHandMethod = sHelper.addLabeledControl(_("One hand mode method"), wx.Choice, choices=choices)
+		self.oneHandMethod.SetSelection(itemToSelect)
 
 	def postInit(self): self.autoCheckUpdate.SetFocus()
 
@@ -195,6 +201,10 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = list(configBE.outputMessage.keys())[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = list(configBE.outputMessage.keys())[self.modifierKeysFeedback.GetSelection()]
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
+
+		config.conf["brailleExtender"]["oneHandMode"] = self.oneHandMode.IsChecked()
+		config.conf["brailleExtender"]["oneHandMethod"] = list(configBE.CHOICE_oneHandMethods.keys())[self.oneHandMethod.GetSelection()]
+
 		super(GeneralDlg, self).onOk(evt)
 
 class AttribraDlg(gui.settingsDialogs.SettingsDialog):

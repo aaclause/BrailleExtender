@@ -66,6 +66,13 @@ focusOrReviewChoices = dict_([
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+CHOICE_oneHandMethodSides = 0
+CHOICE_oneHandMethodDots = 1
+
+CHOICE_oneHandMethods = dict_([
+	(CHOICE_oneHandMethodSides, _("Left dots then right dots")),
+	(CHOICE_oneHandMethodDots,  _("Dots by dots (toggle) then press space"))
+])
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}
@@ -151,6 +158,8 @@ def getConfspec():
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
+		"oneHandMode": "boolean(default=False)",
+		"oneHandMethod": "integer(min=0, max=1, default=%d)" % CHOICE_oneHandMethodSides,
 		"features": {
 			"attributes": "boolean(default=True)",
 			"roleLabels": "boolean(default=True)"

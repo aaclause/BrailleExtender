@@ -451,7 +451,7 @@ def getCharFromValue(s):
 	if not s or len(s) < 2: raise ValueError("Wrong value")
 	supportedBases = {'b': 2, 'd': 10, 'h': 16, 'o': 8, 'x': 16}
 	base, n = s[0].lower(), s[1:]
-	if base not in supportedBases.keys(): raise ValueError("Wrong base")
+	if base not in supportedBases.keys(): raise ValueError("Wrong base (%s)" % base)
 	b = supportedBases[base]
 	n = int(n, b)
 	return chr(n)

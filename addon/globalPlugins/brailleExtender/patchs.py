@@ -425,13 +425,14 @@ def sendChars(self, chars):
 			input.ii.ki.dwFlags = winUser.KEYEVENTF_UNICODE|direction
 			inputs.append(input)
 	winUser.SendInput(inputs)
-	focusObj = api.getFocusObject()
-	if keyboardHandler.shouldUseToUnicodeEx(focusObj):
-		# #10569: When we use ToUnicodeEx to detect typed characters,
-		# emulated keypresses aren't detected.
-		# Send TypedCharacter events manually.
-		for ch in chars:
-			focusObj.event_typedCharacter(ch=ch)
+	if isPy3:
+		focusObj = api.getFocusObject()
+		if keyboardHandler.shouldUseToUnicodeEx(focusObj):
+			# #10569: When we use ToUnicodeEx to detect typed characters,
+			# emulated keypresses aren't detected.
+			# Send TypedCharacter events manually.
+			for ch in chars:
+				focusObj.event_typedCharacter(ch=ch)
 
 #: brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
@@ -478,6 +479,64 @@ def emulateKey(self, key, withModifiers=True):
 	except BaseException:
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
+
+#: brailleInput.BrailleInputHandler.input()
+def input(self, dots: int):
+	"""Handle one cell of braille input.
+	"""
+	# Insert the newly entered cell into the buffer at the cursor position.
+	pos = self.untranslatedStart + self.untranslatedCursorPos
+	self.bufferBraille.insert(pos, dots)
+	self.untranslatedCursorPos += 1
+	# Space ends the word.
+	endWord = dots == 0
+	if instanceGP.advancedInput:
+		pos = self.untranslatedStart + self.untranslatedCursorPos
+		ok = False
+		focusObj = api.getFocusObject()
+		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
+		if ok:
+			advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
+			if advancedInputStr:
+				if advancedInputStr[0] in "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭":
+					equiv = {'⠃': 'b', '⠙': 'd', '⠓': 'h', '⠕': 'o', '⠭': 'x', '⡃': 'B', '⡙': 'D', '⡓': 'H', '⡕': 'O', '⡭': 'X'}
+					if advancedInputStr[-1] == '⠀':
+						text = equiv[advancedInputStr[0]]+louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr[1:-1])[0]
+						try:
+							char = getCharFromValue(text)
+							sendChar(char)
+						except BaseException as err:
+								speech.speakMessage(repr(err))
+								badInput(self)
+					else: self._reportUntranslated(pos)
+					return
+				else:
+					res = huc.isValidHUCInput(advancedInputStr)
+					if res == huc.HUC_INPUT_INCOMPLETE: return self._reportUntranslated(pos)
+					elif res == huc.HUC_INPUT_INVALID: badInput(self)
+					else:
+						res = huc.backTranslate(advancedInputStr)
+						sendChar(res)
+		return
+	# For uncontracted braille, translate the buffer for each cell added.
+	# Any new characters produced are then sent immediately.
+	# For contracted braille, translate the buffer only when a word is ended (i.e. a space is typed).
+	# This is because later cells can change characters produced by previous cells.
+	# For example, in English grade 2, "tg" produces just "tg",
+	# but "tgr" produces "together".
+	if not self.useContractedForCurrentFocus or endWord:
+		if self._translate(endWord):
+			if not endWord:
+				self.cellsWithText.add(pos)
+		elif self.bufferText and not self.useContractedForCurrentFocus:
+			# Translators: Reported when translation didn't succeed due to unsupported input.
+			speech.speakMessage(_("Unsupported input"))
+			self.flushBuffer()
+		else:
+			# This cell didn't produce any text; e.g. number sign.
+			self._reportUntranslated(pos)
+	else:
+		self._reportUntranslated(pos)
 
 #: brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
@@ -490,6 +549,8 @@ def sendChar(char):
 def badInput(self):
 	nvwave.playWaveFile("waves/textError.wav")
 	self.flushBuffer()
+	pos = self.untranslatedStart + self.untranslatedCursorPos
+	self._reportUntranslated(pos)
 
 def _translate(self, endWord):
 	"""Translate buffered braille up to the cursor.
@@ -505,29 +566,6 @@ def _translate(self, endWord):
 		self.bufferText = u""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	ok = False
-	if instanceGP.advancedInput:
-		focusObj = api.getFocusObject()
-		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
-	if instanceGP.advancedInput and ok and self.bufferBraille:
-		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
-		if advancedInputStr:
-			if advancedInputStr[0] in getTextInBraille("bdhoxBDHOX"):
-				if advancedInputStr[-1] == '⠀':
-					text = louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr)[0]
-					try:
-						char = getCharFromValue(text)
-						sendChar(char)
-					except BaseException: badInput(self)
-				return
-			else:
-				res = huc.isValidHUCInput(advancedInputStr)
-				if res == huc.HUC_INPUT_INCOMPLETE: return
-				elif res == huc.HUC_INPUT_INVALID: badInput(self)
-				else:
-					res = huc.backTranslate(advancedInputStr)
-					sendChar(res)
-		return
 	data = u"".join([chr_(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
@@ -596,6 +634,7 @@ inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
 brailleInput.BrailleInputHandler._translate = _translate
 brailleInput.BrailleInputHandler.emulateKey = emulateKey
+brailleInput.BrailleInputHandler.input = input
 brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString

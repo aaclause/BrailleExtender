@@ -3,9 +3,13 @@
 from __future__ import print_function, unicode_literals
 import re
 import sys
+import struct
 
 isPy3 = True if sys.version_info >= (3, 0) else False
-if not isPy3: chr = unichr
+def chrPy2(i):
+	try: return unichr(i)
+	except ValueError: return struct.pack('i', i).decode('utf-32')
+if not isPy3: chr = chrPy2
 
 HUC6_patterns = {
 	"⠿":   (0x000000, 0x00FFFF),
@@ -226,7 +230,7 @@ def backTranslateHUC8(s, debug=False):
 	s = unicodeBrailleToDescription(s)
 	for c in s.split('-'):
 		out += splitInTwoCells(c)
-	return chr(HUC8_patterns[prefix][0]+int(''.join(["%x" % hexVals.index(out) for out in out]), 16))
+	return chr(HUC8_patterns[prefix][0] + int(''.join(["%x" % hexVals.index(out) for out in out]), 16))
 
 def backTranslateHUC6(s, debug=False):
 	return '⠃'

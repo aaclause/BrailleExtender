@@ -44,7 +44,7 @@ from .common import *
 if isPy3: import louisHelper
 
 instanceGP = None
-chr_ = chr if isPy3 else unichr
+if not isPy3: chr = chrPy2
 HUCDotPattern = "12345678-78-12345678"
 HUCUnicodePattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
@@ -247,7 +247,7 @@ def getHexLiblouisStyle(s):
 
 def HUCProcess(self):
 	if not isPy3: return
-	unicodeBrailleRepr = ''.join([chr_(10240+cell) for cell in self.brailleCells])
+	unicodeBrailleRepr = ''.join([chr(10240+cell) for cell in self.brailleCells])
 	allBraillePos = [m.start() for m in re.finditer(HUCUnicodePattern, unicodeBrailleRepr)]
 	allBraillePosDelimiters = [(pos, pos+3) for pos in allBraillePos]
 	if not allBraillePos: return
@@ -567,7 +567,7 @@ def _translate(self, endWord):
 		self.bufferText = u""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	data = u"".join([chr_(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
+	data = u"".join([chr(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans

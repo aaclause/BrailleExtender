@@ -26,6 +26,7 @@ from .common import *
 from . import huc
 
 charToDotsInLouis = hasattr(louis, "charToDots")
+
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -446,8 +447,9 @@ def getTether():
 		return braille.handler.getTether()
 	else: return braille.handler.tether
 
+
 def getCharFromValue(s):
-	if not isinstance(s, str): raise TypeError("Wrong type")
+	if not isinstance(s, (unicode, str)): raise TypeError("Wrong type")
 	if not s or len(s) < 2: raise ValueError("Wrong value")
 	supportedBases = {'b': 2, 'd': 10, 'h': 16, 'o': 8, 'x': 16}
 	base, n = s[0].lower(), s[1:]

@@ -481,7 +481,7 @@ def emulateKey(self, key, withModifiers=True):
 		self.sendChars(key)
 
 #: brailleInput.BrailleInputHandler.input()
-def input(self, dots: int):
+def input(self, dots):
 	"""Handle one cell of braille input.
 	"""
 	# Insert the newly entered cell into the buffer at the cursor position.

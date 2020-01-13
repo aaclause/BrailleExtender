@@ -168,7 +168,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Second braille display preferred"), wx.Choice, choices=self.bds_v)
 		self.brailleDisplay2.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
-		self.oneHandMode = sHelper.addItem(wx.CheckBox(self, label=_("One hand mode")))
+		self.oneHandMode = sHelper.addItem(wx.CheckBox(self, label=_("One-handed mode")))
 		self.oneHandMode.SetValue(config.conf["brailleExtender"]["oneHandMode"])
 		choices = list(configBE.CHOICE_oneHandMethods.values())
 		itemToSelect = list(configBE.CHOICE_oneHandMethods.keys()).index(config.conf["brailleExtender"]["oneHandMethod"])

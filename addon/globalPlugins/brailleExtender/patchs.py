@@ -31,7 +31,7 @@ from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
-from .utils import getCurrentChar, getTether
+from .utils import getCurrentChar, getTether, unicodeBrailleToDescription
 from .common import *
 if isPy3: import louisHelper
 
@@ -358,6 +358,74 @@ def emulateKey(self, key, withModifiers=True):
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 
+#: brailleInput.BrailleInputHandler.input()
+endChar = True
+def processOneHandMode(self, dots):
+	global endChar
+	addSpace = False
+	method = config.conf["brailleExtender"]["oneHandMethod"]
+	pos = self.untranslatedStart + self.untranslatedCursorPos
+	continue_ = True
+	endWord = False
+	if method == configBE.CHOICE_oneHandMethodSides:
+		endChar = not endChar
+		if dots == 0:
+			endChar = endWord = True
+			addSpace = True
+	#elif method == configBE.CHOICE_oneHandMethodSide: pass
+	#elif method == configBE.CHOICE_oneHandMethodDots: pass
+	else:
+		speech.speakMessage(_("Unsupported input method"))
+		self.flushBuffer()
+		return False, False
+	if endChar:
+		if not self.bufferBraille: self.bufferBraille.insert(pos, 0)
+		self.bufferBraille[-1] |= dots
+		self.untranslatedCursorPos += 1
+		if not endWord: endWord = self.bufferBraille[-1] == 0
+		if addSpace:
+			self.bufferBraille.append(0)
+			self.untranslatedCursorPos += 1
+	else:
+		continue_ = False
+		self.bufferBraille.insert(pos, dots)
+		self._reportUntranslated(pos)
+	return continue_, endWord
+
+def input(self, dots):
+		"""Handle one cell of braille input.
+		"""
+		# Insert the newly entered cell into the buffer at the cursor position.
+		pos = self.untranslatedStart + self.untranslatedCursorPos
+		# Space ends the word.
+		endWord = dots == 0
+		continue_ = True
+		if config.conf["brailleExtender"]["oneHandMode"]:
+			continue_, endWord = processOneHandMode(self, dots)
+			if not continue_: return
+		else:
+			self.bufferBraille.insert(pos, dots)
+			self.untranslatedCursorPos += 1
+		# For uncontracted braille, translate the buffer for each cell added.
+		# Any new characters produced are then sent immediately.
+		# For contracted braille, translate the buffer only when a word is ended (i.e. a space is typed).
+		# This is because later cells can change characters produced by previous cells.
+		# For example, in English grade 2, "tg" produces just "tg",
+		# but "tgr" produces "together".
+		if not self.useContractedForCurrentFocus or endWord:
+			if self._translate(endWord):
+				if not endWord:
+					self.cellsWithText.add(pos)
+			elif self.bufferText and not self.useContractedForCurrentFocus:
+				# Translators: Reported when translation didn't succeed due to unsupported input.
+				speech.speakMessage(_("Unsupported input"))
+				self.flushBuffer()
+			else:
+				# This cell didn't produce any text; e.g. number sign.
+				self._reportUntranslated(pos)
+		else:
+			self._reportUntranslated(pos)
+
 #: brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input
 def _translate(self, endWord):
@@ -443,8 +511,9 @@ braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
-brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
+brailleInput.BrailleInputHandler.emulateKey = emulateKey
+brailleInput.BrailleInputHandler.input = input
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

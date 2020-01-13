@@ -31,7 +31,7 @@ from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
-from .utils import getCurrentChar, getTether, unicodeBrailleToDescription
+from .utils import getCurrentChar, getTether, unicodeBrailleToDescription, descriptionToUnicodeBraille
 from .common import *
 if isPy3: import louisHelper
 
@@ -372,7 +372,28 @@ def processOneHandMode(self, dots):
 		if dots == 0:
 			endChar = endWord = True
 			addSpace = True
-	#elif method == configBE.CHOICE_oneHandMethodSide: pass
+	elif method == configBE.CHOICE_oneHandMethodSide:
+		endChar = not endChar
+		if endChar: equiv = "045645688"
+		else:
+			equiv = "012312377"
+			if dots == 0:
+				endChar = endWord = True
+				addSpace = True
+		if dots != 0:
+			translatedBufferBrailleDots = 0
+			if self.bufferBraille:
+				translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
+				translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
+			translatedDots = chr(dots | 0x2800)
+			translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
+			newDots = ""
+			for dot in translatedDotsBrailleDots:
+				dot = int(dot)
+				if dots >= 0 and dot < 9: newDots += equiv[dot]
+			newDots = ''.join(sorted(set(newDots)))
+			if not newDots: newDots = "0"
+			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
 	#elif method == configBE.CHOICE_oneHandMethodDots: pass
 	else:
 		speech.speakMessage(_("Unsupported input method"))

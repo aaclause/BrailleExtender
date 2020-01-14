@@ -438,7 +438,7 @@ configBE.loadPostTable()
 configBE.loadPreTable()
 
 # applying patches
-braille.Region.update = update
+#braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 inputCore.InputManager.executeGesture = executeGesture

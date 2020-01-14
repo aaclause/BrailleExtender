@@ -628,7 +628,7 @@ def _createTablesString(tablesList):
 			return b",".join([x.encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
 
 # applying patches
-#braille.Region.update = update
+braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 inputCore.InputManager.executeGesture = executeGesture

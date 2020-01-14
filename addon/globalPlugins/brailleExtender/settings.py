@@ -1,7 +1,7 @@
 # coding: utf-8
 # settings.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import glob
@@ -25,7 +25,7 @@ addonHandler.initTranslation()
 
 from . import configBE
 from . import utils
-from logHandler import log
+from .common import *
 
 instanceGP = None
 def notImplemented(msg=''):
@@ -286,7 +286,7 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 			idLabel = self.getIDFromIndexes(idCategory, iLabel)
 			actualLabel = self.getLabelFromID(idCategory, idLabel)
 			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-			labels[iLabel] += "%s: %s" % (configBE.sep, actualLabel)
+			labels[iLabel] += "%s: %s" % (punctuationSeparator, actualLabel)
 			if actualLabel != originalLabel: labels[iLabel] += " (%s)" % originalLabel
 		self.labels.SetItems(labels)
 		if idCategory > -1 and idCategory < 4: self.labels.SetSelection(0)
@@ -446,7 +446,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	def getTablesWithSwitches(self):
 		out = []
 		for i, tbl in enumerate(configBE.tablesTR):
-			out.append("%s%s: %s" % (tbl, configBE.sep, self.getInSwitchesText(configBE.tablesFN[i])))
+			out.append("%s%s: %s" % (tbl, punctuationSeparator, self.getInSwitchesText(configBE.tablesFN[i])))
 		return out
 
 	def getCurrentSelection(self):
@@ -524,7 +524,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			elif keycode == wx.WXK_RIGHT: self.changeSwitch(tbl, 1, False)
 			elif keycode == wx.WXK_SPACE: self.changeSwitch(tbl, 1, True)
 			newSwitch = self.getInSwitchesText(tbl)
-			self.tables.SetString(self.tables.GetSelection(), "%s%s: %s" % (configBE.tablesTR[idx], configBE.sep, newSwitch))
+			self.tables.SetString(self.tables.GetSelection(), "%s%s: %s" % (configBE.tablesTR[idx], punctuationSeparator, newSwitch))
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
@@ -703,14 +703,14 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 
 	def getQuickLaunchList(s):
 		quickLaunchGesturesKeys = list(s.quickLaunchGestures)
-		return ['%s%s: %s' % (utils.beautifulSht(quickLaunchGesturesKeys[i]), configBE.sep, v) for i, v in enumerate(s.quickLaunchLocations)]
+		return ['%s%s: %s' % (utils.beautifulSht(quickLaunchGesturesKeys[i]), punctuationSeparator, v) for i, v in enumerate(s.quickLaunchLocations)]
 
 	def onRemoveGestureBtn(self, event):
 		if self.quickKeys.GetSelection() < 0:
 			self.askCreateQuickLaunch()
 			return
 		def askConfirmation():
-			choice = gui.messageBox(_("Are you sure to want to delete this shorcut?"), '%s – %s' % (configBE._addonName, _("Confirmation")), wx.YES_NO|wx.ICON_QUESTION)
+			choice = gui.messageBox(_("Are you sure to want to delete this shorcut?"), '%s – %s' % (addonName, _("Confirmation")), wx.YES_NO|wx.ICON_QUESTION)
 			if choice == wx.YES: confirmed()
 		def confirmed():
 			i = self.quickKeys.GetSelection()
@@ -772,7 +772,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 
 	@staticmethod
 	def askCreateQuickLaunch():
-		gui.messageBox(_("Please create or select a quick launch first"), '%s – %s' % (configBE._addonName, _("Error")), wx.OK|wx.ICON_ERROR)
+		gui.messageBox(_("Please create or select a quick launch first"), '%s – %s' % (addonName, _("Error")), wx.OK|wx.ICON_ERROR)
 
 
 class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
@@ -788,7 +788,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			self.Destroy()
 			wx.CallAfter(gui.messageBox, _("You must have a braille display to editing a profile"), self.title, wx.OK|wx.ICON_ERROR)
 
-		if not os.path.exists(configBE.profilesDir):
+		if not os.path.exists(profilesDir):
 			self.Destroy()
 			wx.CallAfter(gui.messageBox, _("Profiles directory is not present or accessible. Unable to edit profiles"), self.title, wx.OK|wx.ICON_ERROR)
 
@@ -864,7 +864,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		CTRL = keyLabels.localizedKeyLabels['control'].capitalize()
 		SHIFT = keyLabels.localizedKeyLabels['shift'].capitalize()
 		WIN = keyLabels.localizedKeyLabels['windows'].capitalize()
-		if category == 0: items = ["%s%s: %s" % (k[0].capitalize(), configBE.sep, self.getBrailleGesture(k[1])) for k in self.keyLabelsList]
+		if category == 0: items = ["%s%s: %s" % (k[0].capitalize(), punctuationSeparator, self.getBrailleGesture(k[1])) for k in self.keyLabelsList]
 		elif category == 1:
 			items = [ALT, CTRL, SHIFT, WIN, "NVDA",
 			'%s+%s' % (ALT, CTRL),
@@ -884,7 +884,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 				'%s+Tab' % ALT,
 				'%s+Tab' % SHIFT,
 			])
-		self.gestures.SetItems(["%s%s: %s" % (item, configBE.sep, self.getBrailleGesture("kb:%s" % item)) for item in items])
+		self.gestures.SetItems(["%s%s: %s" % (item, punctuationSeparator, self.getBrailleGesture("kb:%s" % item)) for item in items])
 		self.gestures.SetSelection(0)
 		self.gestures.SetSelection(0)
 		if category<2:
@@ -900,14 +900,14 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			return
 		curProfile = self.profilesList[self.profiles.GetSelection()]
 		log.info("Loading %s profile" % curProfile)
-		self.addonGesturesPrfofile = config.ConfigObj('%s/%s/%s/profile.ini' % (configBE.profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
-		self.generalGesturesProfile = config.ConfigObj('%s/%s/%s/gestures.ini' % (configBE.profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
+		self.addonGesturesPrfofile = config.ConfigObj('%s/%s/%s/profile.ini' % (profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
+		self.generalGesturesProfile = config.ConfigObj('%s/%s/%s/gestures.ini' % (profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
 		if self.addonGesturesPrfofile == {}:
 			wx.CallAfter(gui.messageBox, _("Unable to load this profile. Malformed or inaccessible file"), self.title, wx.OK|wx.ICON_ERROR)
 
 	@staticmethod
 	def getListProfiles():
-		profilesDir = '%s\%s' %(configBE.profilesDir, configBE.curBD)
+		profilesDir = '%s\%s' %(profilesDir, configBE.curBD)
 		res = []
 		ls = glob.glob(profilesDir+'\\*')
 		for e in ls:

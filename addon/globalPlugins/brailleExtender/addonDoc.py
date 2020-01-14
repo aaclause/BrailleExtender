@@ -1,7 +1,7 @@
 # coding: utf-8
 # addonDoc.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import re
@@ -12,57 +12,28 @@ from . import configBE
 from collections import OrderedDict
 import cursorManager
 import globalCommands
-from . import utils
 import ui
+from . import utils
+from .common import *
 
-instanceGP = None
+class AddonDoc:
 
-class AddonDoc():
-	def __init__(self, instanceGp):
-		global instanceGP
-		instanceGP = instanceGp
+	instanceGP = None
+
+	def __init__(self, instanceGP):
+		if not instanceGP: return
+		self.instanceGP = instanceGP
 		gestures = instanceGP.getGestures()
 		doc = """
 		<h1>{NAME}{DISPLAY}{PROFILE}</h1>
 		<p>Version {VERSION}<br />
-		{AUTHOR}<br />
-		{URL}</p>
 		<p>{DESC}</p>
 		""".format(
-			NAME=configBE._addonName,
-			DISPLAY=configBE.sep + ': ' + _('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '',
+			NAME=addonName,
+			DISPLAY=punctuationSeparator + ': ' + _('%s braille display') % configBE.curBD.capitalize() if configBE.gesturesFileExists else '',
 			PROFILE = ", "+_("profile loaded: %s") % "default",
-			VERSION=configBE._addonVersion,
-			AUTHOR=configBE._addonAuthor.replace(
-				'<',
-				'&lt;').replace(
-				'>',
-				'&gt;'),
-			URL='<a href="%s">%s</a>' % (configBE._addonURL, configBE._addonURL),
-			DESC=self.getDescFormated(configBE._addonDesc)
-		)
-		doc += "<p>" + _("You can find some ideas of features for BrailleExtender that might be implemented here") + configBE.sep + """:<br /> <a href="https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list">https://github.com/Andre9642/BrailleExtender/blob/master/TODO.md#user-content-to-do-list</a></p>
-		"""
-		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>" + (''.join([
-			"<p>",
-			_("Copyright (C) 2017-2019 André-Abush Clause, and other contributors:"), "</p>",
-			"<h3>"+_("Translators")+"""</h3>
-			<ul>""",
-				"<li>", _("Arabic"), configBE.sep, ": Ikrami Ahmad",
-				"</li><li>", _("Croatian"), configBE.sep, ": Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;",
-				"</li><li>", _("German"), configBE.sep, ": Adriani Botez &lt;adriani.botez@gmail.com&gt;, Karl Eick, Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;",
-				"</li><li>", _("Hebrew"), configBE.sep, ": Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer, David Rechtman, Pavel Kaplan",
-				"</li><li>", _("Persian"), configBE.sep, ": Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;",
-				"</li><li>", _("Polish"), configBE.sep, ": Zvonimir Stanečić, Dorota Krać",
-				"</li><li>", _("Russian"), configBE.sep, ": Zvonimir Stanečić, Pavel Kaplan &lt;pavel46@gmail.com&gt;",
-			"</li></ul>",
-			"<h3>"+_("Code contributions and other")+"</h3><p>" + _("Additional third party copyrighted code is included:") + "</p>",
-			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
-		""".format(SEP=configBE.sep), "</ul>",
-			"<p>" + _("Thanks also to") + configBE.sep +": ",
-			"Daniel Cotto, Corentin, Louis.</p>",
-			"<p>" + _("And thank you very much for all your feedback and comments.") + " ☺</p>"
-			])
+			VERSION=addonVersion,
+			DESC=self.getDescFormated(addonDesc)
 		)
 		if configBE.gesturesFileExists:
 			mKB = OrderedDict()
@@ -105,14 +76,14 @@ class AddonDoc():
 			for g in braille.handler.display.gestureMap._map:
 				doc += ('<li>{0}{1}: {2}{3};</li>').format(
 					utils.beautifulSht(g),
-					configBE.sep,
+					punctuationSeparator,
 					utils.uncapitalize(
 						re.sub(
 							'^([A-Z])',
 							lambda m: m.group(1).lower(),
 							self.getDocScript(
 								braille.handler.display.gestureMap._map[g]))),
-					configBE.sep)
+					punctuationSeparator)
 			doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
 			doc += '</ul>'
 
@@ -122,7 +93,7 @@ class AddonDoc():
 				doc += '<h2>{}</h2>'.format(
 					_('Keyboard configurations provided'))
 				doc += '<p>{}{}:</p><ol>'.format(
-					_('Keyboard configurations are'), configBE.sep)
+					_('Keyboard configurations are'), punctuationSeparator)
 				for l in lb:
 					doc += '<li>{}.</li>'.format(l)
 				doc += '</ol>'
@@ -136,21 +107,45 @@ class AddonDoc():
 		doc += '<ul>'
 		for g in [k for k in gestures if k.lower().startswith('kb:')]:
 			if g.lower() not in [
-				'kb:volumeup',
-				'kb:volumedown',
-					'kb:volumemute'] and gestures[g] not in ['logFieldsAtCursor']:
-				doc += ('<li>{0}{1}: {2}{3};</li>').format(
+				"kb:volumeup",
+				"kb:volumedown",
+					"kb:volumemute"] and gestures[g] not in ["logFieldsAtCursor"]:
+				doc += ("<li>{0}{1}: {2}{3};</li>").format(
 					utils.getKeysTranslation(g),
-					configBE.sep,
+					punctuationSeparator,
 					re.sub(
-						'^([A-Z])',
+						"^([A-Z])",
 						lambda m: m.group(1).lower(),
-						self.getDocScript(
-							gestures[g])),
-					configBE.sep)
+						self.getDocScript(gestures[g])
+					),
+					punctuationSeparator
+				)
 		doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
 		doc += '</ul>'
-		ui.browseableMessage(doc, _('%s\'s documentation') % configBE._addonName, True)
+		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>" + (''.join([
+			"<p>",
+			_("Copyright (C) 2016-2020 André-Abush Clause and other contributors:"),
+			"<br />",
+			"<pre>%s\n%s</pre>" % (addonURL, addonGitHubURL),
+			"</p>",
+			"<h3>" + _("Translators") + "</h3><ul>",
+				"<li>", _("Arabic"), punctuationSeparator, ": Ikrami Ahmad",
+				"</li><li>", _("Croatian"), punctuationSeparator, ": Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;",
+				"</li><li>", _("German"), punctuationSeparator, ": Adriani Botez &lt;adriani.botez@gmail.com&gt;, Karl Eick, Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;",
+				"</li><li>", _("Hebrew"), punctuationSeparator, ": Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer, David Rechtman, Pavel Kaplan",
+				"</li><li>", _("Persian"), punctuationSeparator, ": Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;",
+				"</li><li>", _("Polish"), punctuationSeparator, ": Zvonimir Stanečić, Dorota Krać",
+				"</li><li>", _("Russian"), punctuationSeparator, ": Zvonimir Stanečić, Pavel Kaplan &lt;pavel46@gmail.com&gt;",
+			"</li></ul>",
+			"<h3>"+_("Code contributions and other")+"</h3><p>" + _("Additional third party copyrighted code is included:") + "</p>",
+			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
+		""".format(SEP=punctuationSeparator), "</ul>",
+			"<p>" + _("Thanks also to") + punctuationSeparator +": ",
+			"Daniel Cotto, Corentin, Louis.</p>",
+			"<p>" + _("And thank you very much for all your feedback and comments.") + " ☺</p>"
+			])
+		)
+		ui.browseableMessage(doc, _("%s\'s documentation") % addonName, True)
 
 	@staticmethod
 	def getDescFormated(txt):
@@ -161,22 +156,19 @@ class AddonDoc():
 		txt = re.sub(r'</li>$', r'</li></ul>', txt)
 		return txt
 
-	@staticmethod
-	def getDocScript(n):
+	def getDocScript(self, n):
 		if n == "defaultQuickLaunches": n = "quickLaunch"
 		doc = None
 		if isinstance(n, list):
 			n = str(n[-1][-1])
-		if n.startswith('kb:'):
-			return _(
-				'Emulates pressing %s on the system keyboard') % utils.getKeysTranslation(n)
-		places = [globalCommands.commands, instanceGP, cursorManager.CursorManager]
+		if n.startswith('kb:'): return _("Emulates pressing %s on the system keyboard") % utils.getKeysTranslation(n)
+		places = [globalCommands.commands, self.instanceGP, cursorManager.CursorManager]
 		for place in places:
 			func = getattr(place, ('script_%s' % n), None)
 			if func:
 				doc = func.__doc__
 				break
-		return doc if doc is not None else _('description currently unavailable for this shortcut')
+		return doc if doc is not None else _("description currently unavailable for this shortcut")
 
 
 	def translateLst(self, lst):
@@ -187,37 +179,37 @@ class AddonDoc():
 					doc += '<li>{0}{2}: {1}{2};</li>'.format(
 						utils.getKeysTranslation(g),
 						utils.beautifulSht(lst[g]),
-						configBE.sep)
+						punctuationSeparator)
 				else:
 					doc += '<li>{0}{2}: {1}{2};</li>'.format(
 						utils.getKeysTranslation(g),
 						utils.beautifulSht(lst[g]),
-						configBE.sep)
+						punctuationSeparator)
 			elif 'kb:' in g:
 				gt = _('caps lock') if 'capsLock' in g else g
 				doc += '<li>{0}{2}: {1}{2};</li>'.format(
 					gt.replace(
-						'kb:', ''), utils.beautifulSht(lst[g]), configBE.sep)
+						'kb:', ''), utils.beautifulSht(lst[g]), punctuationSeparator)
 			else:
 				if isinstance(lst[g], list):
 					doc += '<li>{0}{1}: {2}{3};</li>'.format(utils.beautifulSht(lst[g]),
-						configBE.sep,
+						punctuationSeparator,
 						re.sub(
 							'^([A-Z])',
 							lambda m: m.group(1).lower(),
 							utils.uncapitalize(
 								self.getDocScript(g))),
-						configBE.sep)
+						punctuationSeparator)
 				else:
 					doc += '<li>{0}{1}: {2}{3};</li>'.format(
 						utils.beautifulSht(
-							lst[g]), configBE.sep,
+							lst[g]), punctuationSeparator,
 						re.sub(
 							'^([A-Z])',
 							lambda m: m.group(1).lower(),
 							utils.uncapitalize(
 								self.getDocScript(g))),
-						configBE.sep)
+						punctuationSeparator)
 		doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
 		doc += '</ul>'
 		return doc

@@ -7,7 +7,6 @@
 from __future__ import unicode_literals
 import os
 import sys
-isPy3 = True if sys.version_info >= (3, 0) else False
 import time
 import api
 import appModuleHandler
@@ -21,7 +20,6 @@ import globalCommands
 import inputCore
 import keyboardHandler
 import louis
-if isPy3: import louisHelper
 import queueHandler
 import sayAllHandler
 import scriptHandler
@@ -34,8 +32,10 @@ import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
 from .utils import getCurrentChar, getTether
+from .common import *
+if isPy3: import louisHelper
+
 instanceGP = None
-chr_ = chr if isPy3 else unichr
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 errorTable = False
@@ -66,7 +66,7 @@ def getCurrentBrailleTables(input_=False):
 	if input_:
 		if instanceGP.BRFMode and not errorTable:
 			tables = [
-				os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
+				os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]
 		else:
@@ -85,7 +85,7 @@ def getCurrentBrailleTables(input_=False):
 			]
 		elif instanceGP.BRFMode:
 			tables = [
-				os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8"),
+				os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
 				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 			]
 		else:
@@ -374,7 +374,7 @@ def _translate(self, endWord):
 		self.bufferText = u""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	data = u"".join([chr_(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
+	data = u"".join([chr(cell | brailleInput.LOUIS_DOTS_IO_START) for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans

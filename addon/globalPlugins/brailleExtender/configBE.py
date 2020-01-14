@@ -5,7 +5,6 @@
 
 from __future__ import unicode_literals
 import os
-import sys
 import globalVars
 from collections import OrderedDict
 
@@ -19,9 +18,7 @@ if hasattr(configobj, "validate"):
 else: from validate import Validator
 import inputCore
 import languageHandler
-from logHandler import log
-
-isPy3 = True if sys.version_info >= (3, 0) else False
+from .common import *
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -75,23 +72,11 @@ backupRoleLabels = {}
 iniGestures = {}
 iniProfile = {}
 profileFileExists = gesturesFileExists = False
-lang = languageHandler.getLanguage().split('_')[-1].lower()
+
 noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
-sep = ' ' if 'fr' in lang else ''
 outputTables = inputTables = None
 preTable = []
 postTable = []
-configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
-baseDir = os.path.dirname(__file__)
-if not isPy3: baseDir = baseDir.decode("mbcs")
-_addonDir = os.path.join(baseDir, "..", "..")
-_addonName = addonHandler.Addon(_addonDir).manifest["name"]
-_addonVersion = addonHandler.Addon(_addonDir).manifest["version"]
-_addonURL = addonHandler.Addon(_addonDir).manifest["url"]
-_addonAuthor = addonHandler.Addon(_addonDir).manifest["author"]
-_addonDesc = addonHandler.Addon(_addonDir).manifest["description"]
-
-profilesDir = os.path.join(baseDir, "Profiles")
 if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
 try:
@@ -322,7 +307,7 @@ def loadGestures():
 def gesturesBDPath(a = False):
 	l = ['\\'.join([profilesDir, curBD, config.conf["brailleExtender"]["profile_%s" % curBD], "gestures.ini"]),
 	'\\'.join([profilesDir, curBD, "default", "gestures.ini"])]
-	if a: return '; '.join(l)
+	if a: return "; ".join(l)
 	for p in l:
 		if os.path.exists(p): return p
 	return '?'

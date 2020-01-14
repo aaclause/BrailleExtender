@@ -17,7 +17,7 @@ import louis
 from collections import namedtuple
 from . import configBE
 from . import utils
-
+from .common import *
 
 BrailleDictEntry = namedtuple("BrailleDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
 OPCODE_SIGN = "sign"
@@ -61,9 +61,9 @@ def getValidPathsDict():
 	return [path for path in paths if valid(path)]
 
 def getPathDict(type_):
-	if type_ == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
-	elif type_ == "tmp": path = os.path.join(configBE.configDir, "brailleDicts", "tmp")
-	else: path = os.path.join(configBE.configDir, "brailleDicts", "default")
+	if type_ == "table": path = os.path.join(configDir, "brailleDicts", config.conf["braille"]["translationTable"])
+	elif type_ == "tmp": path = os.path.join(configDir, "brailleDicts", "tmp")
+	else: path = os.path.join(configDir, "brailleDicts", "default")
 	return "%s.cti" % path
 
 def getDictionary(type_):

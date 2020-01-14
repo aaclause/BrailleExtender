@@ -1,11 +1,10 @@
 # coding: utf-8
 # utils.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import os.path as osp
-import sys
 import re
 import api
 import braille
@@ -23,10 +22,9 @@ import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
+from .common import *
 
-isPy3 = True if sys.version_info >= (3, 0) else False
 charToDotsInLouis = hasattr(louis, "charToDots")
-unichr_ = chr if isPy3 else unichr
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -174,7 +172,7 @@ def getVolume():
 
 def bkToChar(dots, inTable=-1):
 	if inTable == -1: inTable = config.conf["braille"]["inputTable"]
-	char = unichr_(dots | 0x8000)
+	char = chr(dots | 0x8000)
 	text = louis.backTranslate(
 		[osp.join(r"louis\tables", inTable),
 		 "braille-patterns.cti"],
@@ -199,11 +197,13 @@ def currentCharDesc():
 	if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
 	if c:
-		s = '%c: %s; %s; %s; %s; %s [%s]' % (ch, hex(c), c, oct(c), bin(c), unicodedata.name(ch), unicodedata.category(ch))
+		try: descChar = unicodedata.name(ch)
+		except ValueError: descChar = _("unknown")
+		s = '%c: %s; %s; %s; %s; %s [%s]' % (ch, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch))
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
 			brch = getTextInBraille(ch)
-			ui.browseableMessage("%s\n%s (%s)" % (s, brch, unicodeBrailleToDescription(brch)), r'\x%d (%s) - Char info' % (c, ch))
+			ui.browseableMessage("%s\n%s (%s)" % (s, brch, huc.unicodeBrailleToDescription(brch)), r'\x%d (%s) - Char info' % (c, ch))
 	else: ui.message(_("Not a character"))
 
 def getCurrentChar():
@@ -260,13 +260,13 @@ def getTextInBraille(t = '', table = None):
 		nt.append(res)
 	nt = '\n'.join(nt)
 	if charToDotsInLouis: return nt
-	return ''.join([unichr_(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch for ch in nt])
+	return ''.join([chr(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch for ch in nt])
 
 def cellDescToChar(cell):
 	if not re.match("^[0-8]+$", cell): return '?'
 	toAdd = 0
 	for dot in cell: toAdd += 1 << int(dot)-1 if int(dot) > 0 else 0
-	return unichr_(10240+toAdd)
+	return chr(10240+toAdd)
 
 def charToCellDesc(ch):
 	"""
@@ -313,16 +313,16 @@ def getTableOverview(tbl = ''):
 	available = ""
 	i = 0x2800
 	while i<0x2800+256:
-		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], unichr_(i), mode=louis.ucBrl)
+		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], chr(i), mode=louis.ucBrl)
 		if i != 0x2800:
 			t = 'Input              Output\n'
 		if not re.match(r'^\\.+/$', text[0]):
 			tmp['%s' % text[0] if text[0] != '' else '?'] = '%s       %-7s' % (
-			'%s (%s)' % (unichr_(i), combinationDesign(unicodeBrailleToDescription(unichr_(i)))),
+			'%s (%s)' % (chr(i), combinationDesign(unicodeBrailleToDescription(chr(i)))),
 			'%s%-8s' % (text[0].rstrip('\x00'), '%s' % (' (%-10s)' % str(hex(ord(text[0]))) if len(text[0]) == 1 else '' if text[0] != '' else '#ERROR'))
 			)
 		else:
-			available += unichr_(i)
+			available += chr(i)
 		i += 1
 	t += '\n'.join(tmp[k] for k in sorted(tmp))
 	nbAvailable = len(available)

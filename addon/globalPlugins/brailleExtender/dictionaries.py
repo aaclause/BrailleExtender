@@ -1,7 +1,7 @@
 # coding: utf-8
 # dictionaries.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 from __future__ import unicode_literals
 import gui
 import wx

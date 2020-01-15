@@ -247,7 +247,7 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 
-def getTextInBraille(t = '', table = None):
+def getTextInBraille(t=None, table=None):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
 	if not table: table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
@@ -304,7 +304,7 @@ def getTableOverview(tbl = ''):
 		t += '\n'+_("One combination available")+": %s" % available
 	return t
 
-def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
+def beautifulSht(t, curBD="noBraille", model=True, sep=" / "):
 	if isinstance(t, list): t = ' '.join(t)
 	t = t.replace(',', ' ')
 	t = t.replace(';',' ')

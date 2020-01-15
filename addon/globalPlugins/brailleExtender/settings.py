@@ -496,8 +496,8 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			self.oTables.discard(tbl)
 
 	def inSwitches(self, tbl):
-		inp = True if tbl in self.iTables else False
-		out = True if tbl in self.oTables else False
+		inp = tbl in self.iTables
+		out = tbl in self.oTables
 		return [inp, out]
 
 	def getInSwitchesText(self, tbl):
@@ -508,7 +508,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		elif inS[1]: inSt = _("output only")
 		return inSt
 
-	def changeSwitch(self, tbl, direction = 1, loop = True):
+	def changeSwitch(self, tbl, direction=1, loop=True):
 		dirs = ['n', 'i', 'o', "io"]
 		iCurDir = 0
 		inS = self.inSwitches(tbl)
@@ -766,7 +766,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 			return
 		self.captureNow()
 		queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Please enter the desired gesture for the new quick launch. Press \"space bar\" to cancel"))
-		self.captureEnabled = True
+		self.captureEnabled=True
 		self.captureLabelBtn = self.addGestureBtn.GetLabel()
 		self.addGestureBtn.SetLabel(_("Don't add a quick launch"))
 		return

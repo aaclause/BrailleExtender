@@ -97,7 +97,7 @@ rotorItem = 0
 rotorRange = 0
 lastRotorItemInVD = 0
 lastRotorItemInVDSaved = True
-nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else False
+nativeModifiers = hasattr(brailleInput.handler, "toggleModifier")
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
 
 # ***** Attribra code *****
@@ -639,18 +639,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_translateInBRU(self, gesture):
 		tm = time.time()
-		table = ''
-		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
-		t = utils.getTextInBraille('', table)
+		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
 		if not t.strip(): return ui.message(_("No text selection"))
-		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion")+(" (%.2f s)" % (time.time()-tm)), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion") + (" (%.2f s)" % (time.time()-tm)), True)
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")
 
 	def script_charsToCellDescriptions(self, gesture):
 		tm = time.time()
-		table = ''
-		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
-		t = utils.getTextInBraille('', table)
+		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
 		t = utils.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage(t, _("Braille Unicode to cell descriptions")+(" (%.2f s)" % (time.time()-tm)))
@@ -1335,7 +1331,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:
-			config.conf["brailleExtender"]["viewSaved"] = braille.handler.mainBuffer.rawText
+			config.conf["brailleExtender"]["viewSaved"] = ''.join(chr((c | 0x2800)) for c in braille.handler.mainBuffer.brailleCells)
 			ui.message(_("Current braille view saved"))
 		else:
 			config.conf["brailleExtender"]["viewSaved"] = configBE.NOVIEWSAVED
@@ -1345,7 +1341,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_showBrailleViewSaved(self, gesture):
 		if config.conf["brailleExtender"]["viewSaved"] != configBE.NOVIEWSAVED:
 			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % config.conf["brailleExtender"]["viewSaved"])
-			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(config.conf["brailleExtender"]["viewSaved"]), config.conf["brailleExtender"]["viewSaved"]), _("View saved"), True)
+			else: ui.browseableMessage(config.conf["brailleExtender"]["viewSaved"], _("View saved"), True)
 		else: ui.message(_("Buffer empty"))
 	script_showBrailleViewSaved.__doc__ = _("Show the saved braille view through a flash message.")+HLP_browseModeInfo
 

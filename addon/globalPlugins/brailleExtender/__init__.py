@@ -97,7 +97,7 @@ rotorItem = 0
 rotorRange = 0
 lastRotorItemInVD = 0
 lastRotorItemInVDSaved = True
-nativeModifiers = True if hasattr(brailleInput.handler, "toggleModifier") else False
+nativeModifiers = hasattr(brailleInput.handler, "toggleModifier")
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
 
 # ***** Attribra code *****
@@ -639,18 +639,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_translateInBRU(self, gesture):
 		tm = time.time()
-		table = ''
-		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
-		t = utils.getTextInBraille('', table)
+		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
 		if not t.strip(): return ui.message(_("No text selection"))
-		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion")+(" (%.2f s)" % (time.time()-tm)), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion") + (" (%.2f s)" % (time.time()-tm)), True)
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")
 
 	def script_charsToCellDescriptions(self, gesture):
 		tm = time.time()
-		table = ''
-		if self.BRFMode: table = os.path.join(configBE.baseDir, "res", "brf.ctb").encode("UTF-8")
-		t = utils.getTextInBraille('', table)
+		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
 		t = utils.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage(t, _("Braille Unicode to cell descriptions")+(" (%.2f s)" % (time.time()-tm)))

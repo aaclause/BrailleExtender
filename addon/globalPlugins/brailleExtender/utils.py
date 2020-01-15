@@ -245,18 +245,18 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 
-def getTextInBraille(t = '', table = None):
+def getTextInBraille(t=None, table=None):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
-	if not table: table = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+	if not table: table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
 	nt = []
 	res = ''
 	t = t.split("\n")
 	for l in t:
 		l = l.rstrip()
 		if not l: res = ''
-		elif charToDotsInLouis: res = louis.charToDots([table], l, louis.ucBrl)
-		else: res = louis.translateString([table], l, None, louis.dotsIO)
+		elif charToDotsInLouis: res = louis.charToDots(table, l, louis.ucBrl)
+		else: res = louis.translateString(table, l, None, louis.dotsIO)
 		nt.append(res)
 	nt = '\n'.join(nt)
 	if charToDotsInLouis: return nt
@@ -338,7 +338,7 @@ def unicodeBrailleToDescription(t, sep = '-'):
 def descriptionToUnicodeBraille(t):
 	return re.sub('([0-8]+)\-?', lambda m: cellDescToChar(m.group(1)), t)
 
-def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
+def beautifulSht(t, curBD="noBraille", model=True, sep=" / "):
 	if isinstance(t, list): t = ' '.join(t)
 	t = t.replace(',', ' ')
 	t = t.replace(';',' ')

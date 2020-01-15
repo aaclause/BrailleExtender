@@ -1353,7 +1353,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:
-			config.conf["brailleExtender"]["viewSaved"] = braille.handler.mainBuffer.rawText
+			config.conf["brailleExtender"]["viewSaved"] = ''.join(chr((c | 0x2800)) for c in braille.handler.mainBuffer.brailleCells)
 			ui.message(_("Current braille view saved"))
 		else:
 			config.conf["brailleExtender"]["viewSaved"] = configBE.NOVIEWSAVED
@@ -1363,7 +1363,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_showBrailleViewSaved(self, gesture):
 		if config.conf["brailleExtender"]["viewSaved"] != configBE.NOVIEWSAVED:
 			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % config.conf["brailleExtender"]["viewSaved"])
-			else: ui.browseableMessage("<pre>%s\n=======\n%s" % (utils.getTextInBraille(config.conf["brailleExtender"]["viewSaved"]), config.conf["brailleExtender"]["viewSaved"]), _("View saved"), True)
+			else: ui.browseableMessage(config.conf["brailleExtender"]["viewSaved"], _("View saved"), True)
 		else: ui.message(_("Buffer empty"))
 	script_showBrailleViewSaved.__doc__ = _("Show the saved braille view through a flash message.")+HLP_browseModeInfo
 

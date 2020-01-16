@@ -793,6 +793,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 	keyLabelsList = sorted([(t[1], t[0]) for t in keyLabels.localizedKeyLabels.items()])+[('f%d' %i, 'f%d' %i) for i in range(1, 13)]
 
 	def makeSettings(self, settingsSizer):
+		global profilesDir
 		wx.CallAfter(notImplemented)
 		if configBE.curBD == 'noBraille':
 			self.Destroy()
@@ -867,7 +868,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		self.refreshGestures()
 		self.profiles.SetFocus()
 
-	def refreshGestures(self, evt = None):
+	def refreshGestures(self, evt=None):
 		category = self.categories.GetSelection()
 		items = []
 		ALT = keyLabels.localizedKeyLabels['alt'].capitalize()
@@ -904,27 +905,31 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			self.addGestureButton.Enable()
 			self.removeGestureButton.Enable()
 
-	def onProfiles(self, evt = None):
+	def onProfiles(self, evt=None):
+		global profilesDir
 		if len(self.profilesList) == 0:
 			log.info("No profile found for this braille display")
 			return
 		curProfile = self.profilesList[self.profiles.GetSelection()]
-		log.info("Loading %s profile" % curProfile)
-		self.addonGesturesPrfofile = config.ConfigObj('%s/%s/%s/profile.ini' % (profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
-		self.generalGesturesProfile = config.ConfigObj('%s/%s/%s/gestures.ini' % (profilesDir, configBE.curBD, curProfile), encoding="UTF-8")
+		log.info("Loading %s profile (%s)" % (curProfile, profilesDir))
+		gestureProfileDir = os.path.join(profilesDir, curProfile, "profile.ini")
+		self.addonGesturesPrfofile = config.ConfigObj(gestureProfileDir, encoding="UTF-8")
+		self.generalGesturesProfile = config.ConfigObj(os.path.join(profilesDir, configBE.curBD, curProfile, "gestures.ini"), encoding="UTF-8")
 		if self.addonGesturesPrfofile == {}:
+			log.info(gestureProfileDir)
 			wx.CallAfter(gui.messageBox, _("Unable to load this profile. Malformed or inaccessible file"), self.title, wx.OK|wx.ICON_ERROR)
 
 	@staticmethod
 	def getListProfiles():
-		profilesDir = '%s\%s' %(profilesDir, configBE.curBD)
+		global profilesDir
+		profilesDir = os.path.join(profilesDir, configBE.curBD)
 		res = []
 		ls = glob.glob(profilesDir+'\\*')
 		for e in ls:
-			if os.path.isdir(e) and os.path.exists('%s\%s' %(e, 'profile.ini')): res.append(e.split('\\')[-1])
+			if os.path.isdir(e) and os.path.exists(os.path.join(e, "profile.ini")): res.append(e.split('\\')[-1])
 		return res
 
-	def switchProfile(self, evt = None):
+	def switchProfile(self, evt=None):
 		self.refreshGestures()
 
 	def getBrailleGesture(self, KBGesture):
@@ -933,11 +938,11 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			return utils.beautifulSht(self.generalGesturesProfile["globalCommands.GlobalCommands"]["kb:%s" % KBGesture])
 		return _("Undefined")
 
-	def onGesture(self, evt = None):
+	def onGesture(self, evt=None):
 		gesture = self.gestures.GetSelection()
 		gestureName = self.keyLabelsList[gesture][1]
 
-	def onAddProfileButton(self, evt = None):
+	def onAddProfileButton(self, evt=None):
 		if not self.addProfileButton.IsEnabled():
 			self.hideNewProfileSection()
 			self.addProfileButton.Enable()
@@ -946,7 +951,7 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 			self.validNewProfileNameButton.Enable()
 			self.addProfileButton.Disable()
 
-	def hideNewProfileSection(self, evt = None):
+	def hideNewProfileSection(self, evt=None):
 		self.validNewProfileNameButton.Disable()
 		self.newProfileName.Disable()
 

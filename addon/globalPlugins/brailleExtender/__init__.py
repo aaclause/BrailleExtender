@@ -255,14 +255,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def createMenu(self):
-		self.NVDAMenu = gui.mainFrame.sysTrayIcon.preferencesMenu
-		menu = wx.Menu()
-		self.brailleExtenderMenu = self.NVDAMenu.AppendSubMenu(menu, '%s (%s)' % (addonName, addonVersion), _('%s menu' % addonName))
-
+		self.brailleExtenderMenu = wx.Menu()
+		menu = self.brailleExtenderMenu
 		item = menu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
 
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
-
 		settingsMenu = wx.Menu()
 		menu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille Extender settings' menu"))
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
@@ -295,6 +292,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
+		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (addonName, addonVersion), menu)
 
 	def reloadBrailleTables(self):
 		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
@@ -1518,7 +1516,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):
-		if hasattr(self, "brailleExtenderMenu"): self.NVDAMenu.Remove(self.brailleExtenderMenu)
+		if hasattr(self, "brailleExtenderMenu"): gui.mainFrame.sysTrayIcon.menu.Remove(self.submenu_item)
 
 	@staticmethod
 	def errorMessage(msg):

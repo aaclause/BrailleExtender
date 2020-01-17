@@ -55,15 +55,18 @@ def checkTable(path):
 	return False
 
 def getValidPathsDict():
-	types = ["tmp", "table", "default"]
+	types = ["tmp", "table", "default", "emoji"]
 	paths = [getPathDict(type_) for type_ in types]
 	valid = lambda path: os.path.exists(path) and os.path.isfile(path) and checkTable(path)
 	return [path for path in paths if valid(path)]
 
 def getPathDict(type_):
-	if type_ == "table": path = os.path.join(configDir, "brailleDicts", config.conf["braille"]["translationTable"])
-	elif type_ == "tmp": path = os.path.join(configDir, "brailleDicts", "tmp")
-	else: path = os.path.join(configDir, "brailleDicts", "default")
+	if type_ == "emoji":
+		if config.conf["brailleExtender"]["showEmojiDescription"]: path = os.path.join(configBE.baseDir, "res", "emojis", configBE.lang)
+		else: path = None
+	elif type_ == "table": path = os.path.join(configBE.configDir, "brailleDicts", config.conf["braille"]["translationTable"])
+	elif type_ == "tmp": path = os.path.join(configBE.configDir, "brailleDicts", "tmp")
+	else: path = os.path.join(configBE.configDir, "brailleDicts", "default")
 	return "%s.cti" % path
 
 def getDictionary(type_):

@@ -147,6 +147,7 @@ def getConfspec():
 		"tabSpace": "boolean(default=False)",
 		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
 		"preventUndefinedCharHex":  "boolean(default=False)",
+		"showEmojiDescription":  "boolean(default=True)",
 		"undefinedCharRepr": "string(default=0)",
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
@@ -371,6 +372,7 @@ def loadPostTable():
 		else:
 			postTable.append(tableChangesFile.encode("UTF-8"))
 		f.close()
+	
 
 
 def createTableChangesFile(f, c):

@@ -20,10 +20,6 @@ import gui
 import wx
 
 from . import settings
-from . import dictionaries
-
-import addonHandler
-addonHandler.initTranslation()
 import api
 import appModuleHandler
 import braille
@@ -52,6 +48,8 @@ from . import utils
 from .updateCheck import *
 from . import patchs
 from .common import *
+from . import dictionaries
+
 
 instanceGP = None
 lang = configBE.lang

@@ -415,6 +415,9 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.preventUndefinedCharHex.SetValue(config.conf["brailleExtender"]["preventUndefinedCharHex"])
 		# Translators: label of a dialog.
 		self.undefinedCharRepr = sHelper.addLabeledControl(_("Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
+		# Translators: label of a dialog.
+		self.showEmojiDescription = sHelper.addItem(wx.CheckBox(self, label=_("Show emoji descriptions")))
+		self.showEmojiDescription.SetValue(config.conf["brailleExtender"]["showEmojiDescription"])
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
@@ -435,6 +438,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
 		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
+		config.conf["brailleExtender"]["showEmojiDescription"] = self.showEmojiDescription.IsChecked()
 		repr_ = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
 		repr_ = re.sub('\-+','-', repr_)
 		if not repr_ or repr_.startswith('-') or repr_.endswith('-'): repr_ = "0"

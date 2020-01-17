@@ -15,7 +15,6 @@ import os
 import re
 import subprocess
 import sys
-isPy3 = True if sys.version_info >= (3, 0) else False
 import time
 import urllib
 import gui

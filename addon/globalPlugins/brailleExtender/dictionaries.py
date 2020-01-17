@@ -16,7 +16,6 @@ import louis
 
 from collections import namedtuple
 from . import configBE
-from . import utils
 from .common import *
 from . import huc
 

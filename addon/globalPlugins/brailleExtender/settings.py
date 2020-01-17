@@ -18,7 +18,6 @@ import controlTypes
 import core
 import inputCore
 import keyLabels
-import louis
 import queueHandler
 import scriptHandler
 import ui

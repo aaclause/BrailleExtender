@@ -5,15 +5,14 @@ import re
 import sys
 import struct
 
-isPy3 = True if sys.version_info >= (3, 0) else False
+isPy3 = sys.version_info >= (3, 0)
 def chrPy2(i):
 	try: return unichr(i)
 	except ValueError: return struct.pack('i', i).decode('utf-32')
 if not isPy3: chr = chrPy2
 
 HUC6_patterns = {
-	"⠿":   (0x000000, 0x00FFFF),
-	"⠿":   (0x010000, 0x01FFFF),
+	"⠿":   (0x000000, 0x1FFFF),
 	"⠿…⠇": (0x020000, 0x02FFFF),
 	"⠿…⠍": (0x030000, 0x03FFFF),
 	"⠿…⠝": (0x040000, 0x04FFFF),

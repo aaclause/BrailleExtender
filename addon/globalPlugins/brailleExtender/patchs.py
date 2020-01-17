@@ -249,7 +249,6 @@ def HUCProcess(self):
 	if not isPy3: return
 	unicodeBrailleRepr = ''.join([chr(10240+cell) for cell in self.brailleCells])
 	allBraillePos = [m.start() for m in re.finditer(HUCUnicodePattern, unicodeBrailleRepr)]
-	allBraillePosDelimiters = [(pos, pos+3) for pos in allBraillePos]
 	if not allBraillePos: return
 	if config.conf["brailleExtender"]["undefinedCharReprType"] == configBE.CHOICE_liblouis:
 		replacements = {braillePos: getHexLiblouisStyle(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in allBraillePos}
@@ -417,7 +416,7 @@ def sendChars(self, chars):
 	inputs = []
 	chars = ''.join(c if ord(c) <= 0xffff else ''.join(chr(x) for x in struct.unpack('>2H', c.encode("utf-16be"))) for c in chars)
 	for ch in chars:
-		for direction in (0,winUser.KEYEVENTF_KEYUP): 
+		for direction in (0,winUser.KEYEVENTF_KEYUP):
 			input = winUser.Input()
 			input.type = winUser.INPUT_KEYBOARD
 			input.ii.ki = winUser.KeyBdInput()
@@ -457,31 +456,8 @@ def emulateKey(self, key, withModifiers=True):
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 
-#: brailleInput.BrailleInputHandler.emulateKey()
-def emulateKey(self, key, withModifiers=True):
-	"""Emulates a key using the keyboard emulation system.
-	If emulation fails (e.g. because of an unknown key), a debug warning is logged
-	and the system falls back to sending unicode characters.
-	@param withModifiers: Whether this key emulation should include the modifiers that are held virtually.
-		Note that this method does not take care of clearing L{self.currentModifiers}.
-	@type withModifiers: bool
-	"""
-	if withModifiers:
-		# The emulated key should be the last item in the identifier string.
-		keys = list(self.currentModifiers)
-		keys.append(key)
-		gesture = "+".join(keys)
-	else:
-		gesture = key
-	try:
-		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(gesture))
-		instanceGP.lastShortcutPerformed = gesture
-	except BaseException:
-		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
-		self.sendChars(key)
-
 #: brailleInput.BrailleInputHandler.input()
-def input(self, dots):
+def input_(self, dots):
 	"""Handle one cell of braille input.
 	"""
 	# Insert the newly entered cell into the buffer at the cursor position.
@@ -635,7 +611,7 @@ inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
 brailleInput.BrailleInputHandler._translate = _translate
 brailleInput.BrailleInputHandler.emulateKey = emulateKey
-brailleInput.BrailleInputHandler.input = input
+brailleInput.BrailleInputHandler.input = input_
 brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString

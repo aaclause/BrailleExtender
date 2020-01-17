@@ -20,6 +20,9 @@ import gui
 import wx
 
 from . import settings
+
+import addonHandler
+addonHandler.initTranslation()
 import api
 import appModuleHandler
 import braille

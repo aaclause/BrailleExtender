@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import subprocess
 import time
-import subprocess
+
 hashCommit = "unknown"
 out = subprocess.check_output(["git", "status", "--porcelain"]).strip().decode()
 if not out.strip():

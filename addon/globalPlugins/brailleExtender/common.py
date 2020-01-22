@@ -19,6 +19,7 @@ baseDir = os.path.dirname(__file__)
 if not isPy3: baseDir = baseDir.decode("mbcs")
 addonDir = os.path.join(baseDir, "..", "..")
 addonName = addonHandler.Addon(addonDir).manifest["name"]
+addonSummary = addonHandler.Addon(addonDir).manifest["summary"]
 addonVersion = addonHandler.Addon(addonDir).manifest["version"]
 addonURL = addonHandler.Addon(addonDir).manifest["url"]
 addonGitHubURL = "https://github.com/Andre9642/BrailleExtender/"

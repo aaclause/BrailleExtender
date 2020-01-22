@@ -1,6 +1,12 @@
 # -*- coding: UTF-8 -*-
+import subprocess
 import time
-
+import subprocess
+hashCommit = "unknown"
+out = subprocess.check_output(["git", "status", "--porcelain"]).strip().decode()
+if not out.strip():
+	label = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).strip().decode()
+	if len(hashCommit) == 7: hashCommit = label
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
 
@@ -42,7 +48,7 @@ addon_info = {
 	"\n* ", _("actions and quick navigation through a rotor"), "."
 	],
 	# version
-	"addon_version": time.strftime("%y.%m.%d-%H%M%S"),
+	"addon_version": time.strftime("%y.%m.%d-") + hashCommit,
 	# Author(s)
 	"addon_author": "André-Abush Clause <dev@andreabc.net>",
 	# URL for the add-on documentation support

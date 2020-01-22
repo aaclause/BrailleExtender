@@ -631,7 +631,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message((punctuationSeparator+": ").join(msg))
 		else: ui.browseableMessage(('\n').join(msg))
 	# Translators: Input help mode message for report extra infos command.
-	script_reportExtraInfos.__doc__ = _("Reports some extra infos for the current element. For example, the URL on a link")+HLP_browseModeInfo
+	script_reportExtraInfos.__doc__ = _("Reports some extra infos for the current element. For example, the URL on a link") + HLP_browseModeInfo
 
 	def script_getTableOverview(self, gesture):
 		inTable = brailleInput.handler.table.displayName
@@ -911,7 +911,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		out = utils.getSpeechSymbols()
 		if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message(out)
 		else: ui.browseableMessage(out)
-	script_getSpeechOutput.__doc__ = _("Show the output speech for selected text in braille. Useful for emojis for example" + HLP_browseModeInfo)
+	script_getSpeechOutput.__doc__ = _("Show the output speech for selected text in braille. Useful for emojis for example") + HLP_browseModeInfo
 
 	def script_repeatLastShortcut(self, gesture):
 		if not self.lastShortcutPerformed:
@@ -1347,7 +1347,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if scriptHandler.getLastScriptRepeatCount() == 0: braille.handler.message("⣇ %s ⣸" % config.conf["brailleExtender"]["viewSaved"])
 			else: ui.browseableMessage(config.conf["brailleExtender"]["viewSaved"], _("View saved"), True)
 		else: ui.message(_("Buffer empty"))
-	script_showBrailleViewSaved.__doc__ = _("Show the saved braille view through a flash message.")+HLP_browseModeInfo
+	script_showBrailleViewSaved.__doc__ = _("Show the saved braille view through a flash message") + HLP_browseModeInfo
 
 	# section autoTest
 	autoTestPlayed = False

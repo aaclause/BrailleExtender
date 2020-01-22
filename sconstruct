@@ -69,7 +69,7 @@ elif env["version"] is not None:
 if "channel" in env and env["channel"] is not None:
 	env["addon_updateChannel"] = env["channel"]
 
-addonFile = env.File("${addon_name}-${addon_version}.nvda-addon")
+addonFile = env.File("${addon_name}-${addon_version.replace(':','-').strip()}.nvda-addon")
 
 def addonGenerator(target, source, env, for_signature):
 	action = env.Action(lambda target, source, env : createAddonBundleFromPath(source[0].abspath, target[0].abspath) and None,

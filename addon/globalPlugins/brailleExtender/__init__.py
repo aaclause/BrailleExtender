@@ -286,7 +286,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = self.submenu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
-		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (addonName, addonVersion), self.submenu)
+		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
 
 	def reloadBrailleTables(self):
 		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
@@ -347,7 +347,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					self.rotorGES[self.getGestureWithBrailleIdentifier(configBE.iniProfile["rotor"][k])] = k
 			log.debug(self.rotorGES)
 		else:
-			log.debug('No rotor gestures for this profile')
+			log.debug("No rotor gestures for this profile")
 
 		# keyboard layout gestures
 		gK = OrderedDict()
@@ -371,9 +371,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					gK[k] = cK[k]
 			inputCore.manager.localeGestureMap.update({'globalCommands.GlobalCommands': gK})
 			self.noKC = False
-			log.debug('Keyboard conf found, loading layout `%s`' %config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD])
+			log.debug("Keyboard conf found, loading layout `%s`" % config.conf["brailleExtender"]["keyboardLayout_%s" % configBE.curBD])
 		except BaseException:
-			log.debug('No keyboard conf found')
+			log.debug("No keyboard conf found")
 			self.noKC = True
 		# Hack for NVDARemote
 		if 'fr' in lang:
@@ -401,7 +401,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				if isinstance(configBE.iniGestures['globalCommands.GlobalCommands'][g], list):
 					for h in range(len(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
 						self._tGestures[inputCore.normalizeGestureIdentifier(configBE.iniGestures['globalCommands.GlobalCommands'][g][h])] = "end_combKeys"
-				elif ('kb:' in g and g.lower() not in ["kb:alt", "kb:control", "kb:windows", "kb:control", "kb:applications"]):
+				elif ("kb:" in g and g.lower() not in ["kb:alt", "kb:control", "kb:windows", "kb:control", "kb:applications"]):
 					self._tGestures[inputCore.normalizeGestureIdentifier(configBE.iniGestures['globalCommands.GlobalCommands'][g])] = "end_combKeys"
 			self._pGestures = OrderedDict()
 			for k, v in (configBE.iniProfile["modifierKeys"].items() + [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'defaultQuickLaunches']):
@@ -775,8 +775,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_getHelp(self, g):
 		from . import addonDoc
 		addonDoc.AddonDoc(self)
-	script_getHelp.__doc__ = _(
-		'Show the %s documentation') % addonName
+	script_getHelp.__doc__ = _("Show the %s documentation") % addonName
 
 	def noKeyboarLayout(self):
 		return self.noKC
@@ -823,8 +822,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			checkUpdates()
 		return
 
-	script_checkUpdate.__doc__ = _(
-		'Check for %s updates, and starts the download if there is one') % addonName
+	script_checkUpdate.__doc__ = _("Check for %s updates, and starts the download if there is one") % addonName
 
 	@staticmethod
 	def increaseDelayAutoScroll():
@@ -1029,7 +1027,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_end_combKeysChar(self, gesture):
 		self.clearMessageFlash()
-		if not hasattr(gesture, 'id'):
+		if not hasattr(gesture, "id"):
 			ch = gesture.normalizedIdentifiers[0].split(':')[1]
 			self.sendComb(self.getActualModifiers(False) + ch, gesture)
 		else:
@@ -1263,22 +1261,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	# /* docstrings for modifier keys */
 	def docModKeys(k): return _("Emulate pressing down ") + '+'.join(
 		[utils.getKeysTranslation(l) for l in k.split('+')]) + _(" on the system keyboard")
-	script_ctrl.__doc__ = docModKeys('control')
-	script_alt.__doc__ = docModKeys('ALT')
-	script_win.__doc__ = docModKeys('windows')
-	script_shift.__doc__ = docModKeys('SHIFT')
-	script_nvda.__doc__ = docModKeys('NVDA')
-	script_altShift.__doc__ = docModKeys('ALT+SHIFT')
-	script_ctrlShift.__doc__ = docModKeys('control+SHIFT')
-	script_ctrlAlt.__doc__ = docModKeys('control+ALT')
-	script_ctrlAltShift.__doc__ = docModKeys('control+ALT+SHIFT')
-	script_ctrlWin.__doc__ = docModKeys('control+windows')
-	script_altWin.__doc__ = docModKeys('ALT+windows')
-	script_winShift.__doc__ = docModKeys('Windows+Shift')
-	script_altWinShift.__doc__ = docModKeys('ALT+Windows+Shift')
-	script_ctrlWinShift.__doc__ = docModKeys('control+Windows+SHIFT')
-	script_ctrlAltWin.__doc__ = docModKeys('control+ALT+Windows')
-	script_ctrlAltWinShift.__doc__ = docModKeys('control+ALT+Windows+SHIFT')
+	script_ctrl.__doc__ = docModKeys("control")
+	script_alt.__doc__ = docModKeys("ALT")
+	script_win.__doc__ = docModKeys("windows")
+	script_shift.__doc__ = docModKeys("SHIFT")
+	script_nvda.__doc__ = docModKeys("NVDA")
+	script_altShift.__doc__ = docModKeys("ALT+SHIFT")
+	script_ctrlShift.__doc__ = docModKeys("control+SHIFT")
+	script_ctrlAlt.__doc__ = docModKeys("control+ALT")
+	script_ctrlAltShift.__doc__ = docModKeys("control+ALT+SHIFT")
+	script_ctrlWin.__doc__ = docModKeys("control+windows")
+	script_altWin.__doc__ = docModKeys("ALT+windows")
+	script_winShift.__doc__ = docModKeys("Windows+Shift")
+	script_altWinShift.__doc__ = docModKeys("ALT+Windows+Shift")
+	script_ctrlWinShift.__doc__ = docModKeys("control+Windows+SHIFT")
+	script_ctrlAltWin.__doc__ = docModKeys("control+ALT+Windows")
+	script_ctrlAltWinShift.__doc__ = docModKeys("control+ALT+Windows+SHIFT")
 
 	def script_braille_scrollBack(self, gesture):
 		braille.handler.scrollBack()
@@ -1392,9 +1390,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def showAutoTest(self):
 		if self.autoTest_type == 1:
-			braille.handler.message('%s' % (self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]*braille.handler.displaySize))
+			braille.handler.message("%s" % (self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]*braille.handler.displaySize))
 		else:
-			braille.handler.message('%s%s' % (' '*self.autoTest_cellPtr, self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]))
+			braille.handler.message("%s%s" % (' '*self.autoTest_cellPtr, self.autoTest_tests[self.autoTest_type][self.autoTest_charPtr]))
 		if self.autoTest_pause: return
 		if self.autoTest_RTL:
 			if self.autoTest_charPtr == 0:
@@ -1415,28 +1413,28 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.autoTestInterval += 125
 		self.autoTestTimer.Stop()
 		self.autoTestTimer.Start(self.autoTestInterval)
-		speech.speakMessage('%d ms' % self.autoTestInterval)
+		speech.speakMessage("%d ms" % self.autoTestInterval)
 
 	def script_autoTestIncrease(self, gesture):
 		if self.autoTestInterval-125 < 125: return
 		self.autoTestInterval -= 125
 		self.autoTestTimer.Stop()
 		self.autoTestTimer.Start(self.autoTestInterval)
-		speech.speakMessage('%d ms' % self.autoTestInterval)
+		speech.speakMessage("%d ms" % self.autoTestInterval)
 
 	def script_autoTestPrior(self, gesture):
 		if self.autoTest_type > 0: self.autoTest_type -= 1
 		else: self.autoTest_type = len(self.autoTest_tests)-1
 		self.autoTest_charPtr = self.autoTest_cellPtr = 0
 		self.showAutoTest()
-		speech.speakMessage(_('Auto test type %d' % self.autoTest_type))
+		speech.speakMessage(_("Auto test type %d" % self.autoTest_type))
 
 	def script_autoTestNext(self, gesture):
 		if self.autoTest_type+1 < len(self.autoTest_tests): self.autoTest_type += 1
 		else: self.autoTest_type = 0
 		self.autoTest_charPtr = self.autoTest_cellPtr = 0
 		self.showAutoTest()
-		speech.speakMessage(_('Auto test type %d' % self.autoTest_type))
+		speech.speakMessage(_("Auto test type %d" % self.autoTest_type))
 
 	def script_autoTest(self, gesture):
 		if self.autoTestPlayed:

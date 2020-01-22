@@ -48,7 +48,7 @@ addon_info = {
 	"\n* ", _("actions and quick navigation through a rotor"), "."
 	],
 	# version
-	"addon_version": time.strftime("%y.%m.%d-") + hashCommit,
+	"addon_version": time.strftime("%y.%m.%d:") + hashCommit,
 	# Author(s)
 	"addon_author": "André-Abush Clause <dev@andreabc.net>",
 	# URL for the add-on documentation support

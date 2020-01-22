@@ -202,10 +202,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
-		if config.conf["brailleExtender"]["reverseScrollBtns"]:
-			self.reverseScrollBtns()
-		if hasattr(gui.settingsDialogs, "SettingsPanel"):
-			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.append(settings.AddonSettingsPanel)
+		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		log.info("%s %s loaded" % (addonName, addonVersion))
 
@@ -254,26 +251,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def createMenu(self):
-		self.brailleExtenderMenu = wx.Menu()
-		menu = self.brailleExtenderMenu
-		item = menu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
-
+		self.submenu = wx.Menu()
+		item = self.submenu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
 		settingsMenu = wx.Menu()
-		menu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille Extender settings' menu"))
+		self.submenu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille Extender settings' menu"))
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onBrailleTablesSettings, item)
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onAttributesSettings, item)
-		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onQuickLaunchesSettings, item)
 		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onRoleLabelsSettings, item)
 
 		dictionariesMenu = wx.Menu()
-		menu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
+		self.submenu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
@@ -281,17 +274,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
-		item = menu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
+		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onQuickLaunchesSettings, item)
+		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
-		item = menu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
+		item = self.submenu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, item)
-		item = menu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
+		item = self.submenu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, item)
-		item = menu.Append(wx.ID_ANY, "%s..." % _("&Check for update"), _("Checks if update is available"))
+		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Check for update"), _("Checks if update is available"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
-		item = menu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
+		item = self.submenu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
-		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (addonName, addonVersion), menu)
+		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (addonName, addonVersion), self.submenu)
 
 	@staticmethod
 	def onDefaultDictionary(evt):
@@ -1475,8 +1470,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 
 	def terminate(self):
-		if hasattr(gui.settingsDialogs, "SettingsPanel"):
-			gui.settingsDialogs.NVDASettingsDialog.categoryClasses.remove(settings.AddonSettingsPanel)
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
@@ -1497,7 +1490,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):
-		if hasattr(self, "brailleExtenderMenu"): gui.mainFrame.sysTrayIcon.menu.Remove(self.submenu_item)
+		gui.mainFrame.sysTrayIcon.menu.DestroyItem(self.submenu_item)
 
 	@staticmethod
 	def errorMessage(msg):

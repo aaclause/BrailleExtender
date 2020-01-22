@@ -32,59 +32,6 @@ def notImplemented(msg=''):
 	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
 	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
 
-if hasattr(gui.settingsDialogs, "SettingsPanel"):
-	class AddonSettingsPanel(gui.settingsDialogs.SettingsPanel):
-
-		# Translators: title of a dialog.
-		title = "Braille Extender"
-
-		def makeSettings(self, settingsSizer):
-			sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-			bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-			bHelper2 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-			self.generalBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&General"), wx.DefaultPosition)
-			self.generalBtn.Bind(wx.EVT_BUTTON, self.onGeneralBtn)
-			self.brailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Braille &tables"), wx.DefaultPosition)
-			self.brailleTablesBtn.Bind(wx.EVT_BUTTON, self.onBrailleTablesBtn)
-			self.attributesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Text &attributes"), wx.DefaultPosition)
-			self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
-			self.quickLaunchesBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("&Quick launches"), wx.DefaultPosition)
-			self.quickLaunchesBtn.Bind(wx.EVT_BUTTON, self.onQuickLaunchesBtn)
-			self.roleLabelsBtn = bHelper2.addButton(self, wx.NewId(), "%s..." % _("Role &labels"), wx.DefaultPosition)
-			self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
-			self.profileEditorBtn = bHelper2.addButton(self, wx.NewId(), "%s... (%s)" % (_("&Profile editor"), _("feature in process")), wx.DefaultPosition)
-			self.profileEditorBtn.Bind(wx.EVT_BUTTON, self.onProfileEditorBtn)
-			sHelper.addItem(bHelper1)
-			sHelper.addItem(bHelper2)
-
-		def postInit(self): self.General.SetFocus()
-
-		def onSave(self): pass
-
-		def onGeneralBtn(self, evt):
-			generalDlg = GeneralDlg(self, multiInstanceAllowed=True)
-			generalDlg.ShowModal()
-
-		def onBrailleTablesBtn(self, evt):
-			brailleTablesDlg = BrailleTablesDlg(self, multiInstanceAllowed=True)
-			brailleTablesDlg.ShowModal()
-
-		def onAttributesBtn(self, evt):
-			attribraDlg = AttribraDlg(self, multiInstanceAllowed=True)
-			attribraDlg.ShowModal()
-
-		def onQuickLaunchesBtn(self, evt):
-			quickLaunchesDlg = QuickLaunchesDlg(self, multiInstanceAllowed=True)
-			quickLaunchesDlg.ShowModal()
-
-		def onRoleLabelsBtn(self, evt):
-			roleLabelsDlg = RoleLabelsDlg(self, multiInstanceAllowed=True)
-			roleLabelsDlg.ShowModal()
-
-		def onProfileEditorBtn(self, evt):
-			profileEditorDlg = ProfileEditorDlg(self, multiInstanceAllowed=True)
-			profileEditorDlg.ShowModal()
-
 class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.

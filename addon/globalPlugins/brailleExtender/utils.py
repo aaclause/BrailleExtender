@@ -201,7 +201,8 @@ def currentCharDesc():
 	if c:
 		try: descChar = unicodedata.name(ch)
 		except ValueError: descChar = _("unknown")
-		s = '%c: %s; %s; %s; %s; %s [%s]' % (ch, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch))
+		HUCrepr = " (%s, %s)" % (huc.translate(ch, False), huc.translate(ch, True))
+		s = '%c%s: %s; %s; %s; %s; %s [%s]' % (ch, HUCrepr, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch))
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
 			brch = getTextInBraille(ch)

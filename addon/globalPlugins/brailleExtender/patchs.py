@@ -49,7 +49,6 @@ HUCDotPattern = "12345678-78-12345678"
 HUCUnicodePattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
-errorTable = False
 origFunc = {
 	"script_braille_routeTo": globalCommands.GlobalCommands.script_braille_routeTo,
 	"update": braille.Region.update,
@@ -74,40 +73,21 @@ def sayCurrentLine():
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
 
 def getCurrentBrailleTables(input_=False):
-	if input_:
-		if instanceGP and instanceGP.BRFMode and not errorTable:
-			tables = [
-				os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
-				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-			]
-		else:
-			tables = []
-			if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"]: tables += dictionaries.dictTables
-			tables += [
-				os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName),
-				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-			]
+	if instanceGP.BRFMode:
+		tables = [
+			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
 	else:
-		if errorTable:
-			if instanceGP and instanceGP.BRFMode: instanceGP.BRFMode = False
-			tables = [
-				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-			]
-		elif instanceGP and instanceGP.BRFMode:
-			tables = [
-				os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
-				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-			]
-		else:
-			tables = []
-			app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-			if app and app.appName != "nvda":
-				tables += dictionaries.dictTables
-			tables += [
-				os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"]),
-				os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-			]
+		tables = []
+		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
+		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
+		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
+		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+		tables += [
+			mainTable,
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
 	return tables
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
@@ -145,37 +125,28 @@ def update(self):
 	L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are similarly updated based on L{cursorPos}, L{selectionStart} and L{selectionEnd}, respectively.
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
-	try:
-		mode = louis.dotsIO
-		if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
-		if isPy3:
-			self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-				getCurrentBrailleTables(),
-				self.rawText,
-				typeform=self.rawTextTypeforms,
-				mode=mode,
-				cursorPos=self.cursorPos
-			)
-		else:
-			text = unicode(self.rawText).replace('\0', '')
-			self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
-				text,
-				# liblouis mutates typeform if it is a list.
-				typeform=tuple(
-					self.rawTextTypeforms) if isinstance(
-					self.rawTextTypeforms,
-					list) else self.rawTextTypeforms,
-				mode=mode,
-				cursorPos=self.cursorPos or 0
-			)
-	except BaseException as e:
-		global errorTable
-		if not errorTable:
-			log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
-			errorTable = True
-			if instanceGP.BRFMode: instanceGP.BRFMode = False
-			instanceGP.errorMessage(_("An unexpected error was produced while using several braille tables. Using default settings to avoid other errors. More information in NVDA log. Thanks to report it."))
-		return
+	mode = louis.dotsIO
+	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
+	if isPy3:
+		self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
+			getCurrentBrailleTables(),
+			self.rawText,
+			typeform=self.rawTextTypeforms,
+			mode=mode,
+			cursorPos=self.cursorPos
+		)
+	else:
+		text = unicode(self.rawText).replace('\0', '')
+		self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
+			text,
+			# liblouis mutates typeform if it is a list.
+			typeform=tuple(
+				self.rawTextTypeforms) if isinstance(
+				self.rawTextTypeforms,
+				list) else self.rawTextTypeforms,
+			mode=mode,
+			cursorPos=self.cursorPos or 0
+		)
 	if config.conf["brailleExtender"]["undefinedCharReprType"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6]: HUCProcess(self)
 	if not isPy3:
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.

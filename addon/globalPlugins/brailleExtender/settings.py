@@ -377,7 +377,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
-		if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
 		configBE.loadPostTable()
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value

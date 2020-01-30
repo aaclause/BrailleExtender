@@ -246,7 +246,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]:
 			self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
 			dictionaries.setDictTables()
-
 		nextHandler()
 		return
 
@@ -868,6 +867,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		nID = tid + 1 if tid + 1 < len(configBE.outputTables) else 0
 		config.conf["braille"]["translationTable"] = configBE.outputTables[nID]
 		utils.refreshBD()
+		dictionaries.setDictTables()
 		ui.message(_("Output: %s") % configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])])
 		return
 

@@ -42,6 +42,7 @@ addonHandler.initTranslation()
 from . import dictionaries
 from . import huc
 from .utils import getCurrentChar, getTether, getTextInBraille, getCharFromValue
+
 from .common import *
 if isPy3: import louisHelper
 
@@ -517,6 +518,60 @@ def input_(self, dots):
 			self._reportUntranslated(pos)
 	else:
 		self._reportUntranslated(pos)
+
+endChar = True
+def processOneHandMode(self, dots):
+	global endChar
+	addSpace = False
+	method = config.conf["brailleExtender"]["oneHandMethod"]
+	pos = self.untranslatedStart + self.untranslatedCursorPos
+	continue_ = True
+	endWord = False
+	if method == configBE.CHOICE_oneHandMethodSides:
+		endChar = not endChar
+		if dots == 0:
+			endChar = endWord = True
+			addSpace = True
+	elif method == configBE.CHOICE_oneHandMethodSide:
+		endChar = not endChar
+		if endChar: equiv = "045645688"
+		else:
+			equiv = "012312377"
+			if dots == 0:
+				endChar = endWord = True
+				addSpace = True
+		if dots != 0:
+			translatedBufferBrailleDots = 0
+			if self.bufferBraille:
+				translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
+				translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
+			translatedDots = chr(dots | 0x2800)
+			translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
+			newDots = ""
+			for dot in translatedDotsBrailleDots:
+				dot = int(dot)
+				if dots >= 0 and dot < 9: newDots += equiv[dot]
+			newDots = ''.join(sorted(set(newDots)))
+			if not newDots: newDots = "0"
+			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
+	#elif method == configBE.CHOICE_oneHandMethodDots: pass
+	else:
+		speech.speakMessage(_("Unsupported input method"))
+		self.flushBuffer()
+		return False, False
+	if endChar:
+		if not self.bufferBraille: self.bufferBraille.insert(pos, 0)
+		self.bufferBraille[-1] |= dots
+		self.untranslatedCursorPos += 1
+		if not endWord: endWord = self.bufferBraille[-1] == 0
+		if addSpace:
+			self.bufferBraille.append(0)
+			self.untranslatedCursorPos += 1
+	else:
+		continue_ = False
+		self.bufferBraille.insert(pos, dots)
+		self._reportUntranslated(pos)
+	return continue_, endWord
 
 #: brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input

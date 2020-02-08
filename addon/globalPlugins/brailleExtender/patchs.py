@@ -364,22 +364,41 @@ def processOneHandMode(self, dots):
 			newDots = ''.join(sorted(set(newDots)))
 			if not newDots: newDots = "0"
 			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
-	#elif method == configBE.CHOICE_oneHandMethodDots: pass
+	elif method == configBE.CHOICE_oneHandMethodDots:
+		endChar = dots == 0
+		translatedBufferBrailleDots = "0"
+		if self.bufferBraille:
+			translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
+			translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
+		translatedDots = chr(dots | 0x2800)
+		translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
+		for dot in translatedDotsBrailleDots:
+			if dot not in translatedBufferBrailleDots: translatedBufferBrailleDots += dot
+			else: translatedBufferBrailleDots = translatedBufferBrailleDots.replace(dot, '')
+		if not translatedBufferBrailleDots: translatedBufferBrailleDots = "0"
+		newDots = ''.join(sorted(set(translatedBufferBrailleDots)))
+		log.info("===> " + newDots)
+		dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
 	else:
 		speech.speakMessage(_("Unsupported input method"))
 		self.flushBuffer()
 		return False, False
 	if endChar:
 		if not self.bufferBraille: self.bufferBraille.insert(pos, 0)
-		self.bufferBraille[-1] |= dots
-		self.untranslatedCursorPos += 1
+		if method == configBE.CHOICE_oneHandMethodDots:
+			self.bufferBraille[-1] = dots
+		else: self.bufferBraille[-1] |= dots
 		if not endWord: endWord = self.bufferBraille[-1] == 0
+		if method == configBE.CHOICE_oneHandMethodDots:
+			self.bufferBraille.append(0)
+		self.untranslatedCursorPos += 1
 		if addSpace:
 			self.bufferBraille.append(0)
 			self.untranslatedCursorPos += 1
 	else:
 		continue_ = False
-		self.bufferBraille.insert(pos, dots)
+		if self.bufferBraille and method == configBE.CHOICE_oneHandMethodDots: self.bufferBraille[-1] = dots
+		else: self.bufferBraille.insert(pos, dots)
 		self._reportUntranslated(pos)
 	return continue_, endWord
 

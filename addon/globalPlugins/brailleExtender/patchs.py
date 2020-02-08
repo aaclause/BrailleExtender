@@ -33,7 +33,7 @@ addonHandler.initTranslation()
 from . import dictionaries
 from .utils import getCurrentChar, getTether
 from .common import *
-if isPy3: import louisHelper
+import louisHelper
 
 instanceGP = None
 

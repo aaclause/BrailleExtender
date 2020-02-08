@@ -47,7 +47,6 @@ from .common import *
 import louisHelper
 
 instanceGP = None
-if not isPy3: chr = chrPy2
 HUCDotPattern = "12345678-78-12345678"
 undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
@@ -130,53 +129,14 @@ def update(self):
 	"""
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
-	if isPy3:
-		self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-			getCurrentBrailleTables(),
-			self.rawText,
-			typeform=self.rawTextTypeforms,
-			mode=mode,
-			cursorPos=self.cursorPos
-		)
-	else:
-		text = unicode(self.rawText).replace('\0', '')
-		self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
-			text,
-			# liblouis mutates typeform if it is a list.
-			typeform=tuple(
-				self.rawTextTypeforms) if isinstance(
-				self.rawTextTypeforms,
-				list) else self.rawTextTypeforms,
-			mode=mode,
-			cursorPos=self.cursorPos or 0
-		)
+	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
+		getCurrentBrailleTables(),
+		self.rawText,
+		typeform=self.rawTextTypeforms,
+		mode=mode,
+		cursorPos=self.cursorPos
+	)
 	if config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6, configBE.CHOICE_hex, configBE.CHOICE_dec, configBE.CHOICE_oct, configBE.CHOICE_bin]: undefinedCharProcess(self)
-	if not isPy3:
-		# liblouis gives us back a character string of cells, so convert it to a list of ints.
-		# For some reason, the highest bit is set, so only grab the lower 8
-		# bits.
-		self.brailleCells = [ord(cell) & 255 for cell in self.brailleCells]
-		# #2466: HACK: liblouis incorrectly truncates trailing spaces from its output in some cases.
-		# Detect this and add the spaces to the end of the output.
-		if self.rawText and self.rawText[-1] == " ":
-			# rawToBraillePos isn't truncated, even though brailleCells is.
-			# Use this to figure out how long brailleCells should be and thus
-			# how many spaces to add.
-			correctCellsLen = self.rawToBraillePos[-1] + 1
-			currentCellsLen = len(self.brailleCells)
-			if correctCellsLen > currentCellsLen:
-				self.brailleCells.extend(
-					(0,) * (correctCellsLen - currentCellsLen))
-		if self.cursorPos is not None:
-			# HACK: The cursorPos returned by liblouis is notoriously buggy (#2947 among other issues).
-			# rawToBraillePos is usually accurate.
-			try:
-				brailleCursorPos = self.rawToBraillePos[self.cursorPos]
-			except IndexError:
-				pass
-		else:
-			brailleCursorPos = None
-		self.brailleCursorPos = brailleCursorPos
 	if self.selectionStart is not None and self.selectionEnd is not None:
 		try:
 			# Mark the selection.
@@ -185,8 +145,7 @@ def update(self):
 				self.brailleSelectionEnd = len(self.brailleCells)
 			else:
 				self.brailleSelectionEnd = self.rawToBraillePos[self.selectionEnd]
-			fn = range if isPy3 else xrange
-			for pos in fn(self.brailleSelectionStart, self.brailleSelectionEnd):
+			for pos in range(self.brailleSelectionStart, self.brailleSelectionEnd):
 				self.brailleCells[pos] |= SELECTION_SHAPE()
 		except IndexError: pass
 	else:
@@ -202,8 +161,7 @@ def setUndefinedChar(t=None):
 		if v == "questionMark": s = '?'
 		else: s = config.conf["brailleExtender"]["undefinedCharRepr"]
 		v = huc.unicodeBrailleToDescription(getTextInBraille(s, getCurrentBrailleTables()))
-	if isPy3: louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
-	else: louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v))
+	louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
 
 
 def getDescChar(c, lang="Windows", start='', end=''):
@@ -235,7 +193,6 @@ def getNotationOrd(s, notation=None):
 	return s
 
 def undefinedCharProcess(self):
-	if not isPy3: return
 	unicodeBrailleRepr = ''.join([chr(10240 + cell) for cell in self.brailleCells])
 	allBraillePos = [m.start() for m in re.finditer(undefinedCharPattern, unicodeBrailleRepr)]
 	if not allBraillePos: return
@@ -428,14 +385,13 @@ def sendChars(self, chars):
 			input.ii.ki.dwFlags = winUser.KEYEVENTF_UNICODE|direction
 			inputs.append(input)
 	winUser.SendInput(inputs)
-	if isPy3:
-		focusObj = api.getFocusObject()
-		if keyboardHandler.shouldUseToUnicodeEx(focusObj):
-			# #10569: When we use ToUnicodeEx to detect typed characters,
-			# emulated keypresses aren't detected.
-			# Send TypedCharacter events manually.
-			for ch in chars:
-				focusObj.event_typedCharacter(ch=ch)
+	focusObj = api.getFocusObject()
+	if keyboardHandler.shouldUseToUnicodeEx(focusObj):
+		# #10569: When we use ToUnicodeEx to detect typed characters,
+		# emulated keypresses aren't detected.
+		# Send TypedCharacter events manually.
+		for ch in chars:
+			focusObj.event_typedCharacter(ch=ch)
 
 #: brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):

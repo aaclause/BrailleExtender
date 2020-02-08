@@ -504,31 +504,31 @@ def processOneHandMode(self, dots):
 			translatedBufferBrailleDots = 0
 			if self.bufferBraille:
 				translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
-				translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
+				translatedBufferBrailleDots = huc.unicodeBrailleToDescription(translatedBufferBraille)
 			translatedDots = chr(dots | 0x2800)
-			translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
+			translatedDotsBrailleDots = huc.unicodeBrailleToDescription(translatedDots)
 			newDots = ""
 			for dot in translatedDotsBrailleDots:
 				dot = int(dot)
 				if dots >= 0 and dot < 9: newDots += equiv[dot]
 			newDots = ''.join(sorted(set(newDots)))
 			if not newDots: newDots = "0"
-			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
+			dots = ord(huc.cellDescriptionsToUnicodeBraille(newDots))-0x2800
 	elif method == configBE.CHOICE_oneHandMethodDots:
 		endChar = dots == 0
 		translatedBufferBrailleDots = "0"
 		if self.bufferBraille:
 			translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
-			translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
+			translatedBufferBrailleDots = huc.unicodeBrailleToDescription(translatedBufferBraille)
 		translatedDots = chr(dots | 0x2800)
-		translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
+		translatedDotsBrailleDots = huc.unicodeBrailleToDescription(translatedDots)
 		for dot in translatedDotsBrailleDots:
 			if dot not in translatedBufferBrailleDots: translatedBufferBrailleDots += dot
 			else: translatedBufferBrailleDots = translatedBufferBrailleDots.replace(dot, '')
 		if not translatedBufferBrailleDots: translatedBufferBrailleDots = "0"
 		newDots = ''.join(sorted(set(translatedBufferBrailleDots)))
 		log.info("===> " + newDots)
-		dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
+		dots = ord(huc.cellDescriptionsToUnicodeBraille(newDots))-0x2800
 	else:
 		speech.speakMessage(_("Unsupported input method"))
 		self.flushBuffer()

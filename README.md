@@ -4,7 +4,7 @@ Braille Extender
 * Authors: André-Abush CLAUSE and contributors
 * License: GNU General Public License, version 2
 * Download [stable version](https://andreabc.net/projects/NVDA_addons/BrailleExtender/latest)
-* Download [development versions](https://andreabc.net/projects/NVDA_addons/BrailleExtender/latest?channel=dev)
+* Download [development version](https://andreabc.net/projects/NVDA_addons/BrailleExtender/latest?channel=dev)
 
 BrailleExtender is an [NVDA](http://nvda-project.org/) add-on that provides various features at braille level. Currently, the following features are implemented:
 

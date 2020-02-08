@@ -11,6 +11,7 @@ import unicodedata
 
 import addonHandler
 addonHandler.initTranslation()
+import braille
 import config
 import louis
 
@@ -97,8 +98,6 @@ def setDictTables():
 	global dictTables
 	invalidDictTables.clear()
 	dictTables = getValidPathsDict()
-	if hasattr(louis.liblouis, "lou_free"): louis.liblouis.lou_free()
-	else: return False
 	return True
 
 def notifyInvalidTables():
@@ -268,7 +267,8 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onApply(self, evt):
 		res = saveDict(self.type_, self.tmpDict)
-		if not setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
+		setDictTables()
+		braille.handler.setDisplayByName(braille.handler.display.name)
 		if res: super(DictionaryDlg, self).onApply(evt)
 		else: notImplemented("Error during writing file, more info in log.")
 		notifyInvalidTables()
@@ -276,7 +276,8 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onOk(self, evt):
 		res = saveDict(self.type_, self.tmpDict)
-		if not setDictTables(): notImplemented(_("Please restart NVDA to apply these changes"))
+		setDictTables()
+		braille.handler.setDisplayByName(braille.handler.display.name)
 		notifyInvalidTables()
 		if res: super(DictionaryDlg, self).onOk(evt)
 		else: notImplemented("Error during writing file, more info in log.")
@@ -392,6 +393,7 @@ class DictionaryEntryDlg(wx.Dialog):
 			saveDict(type_, dict_)
 			self.Destroy()
 			setDictTables()
+			braille.handler.setDisplayByName(braille.handler.display.name)
 			notifyInvalidTables()
 		else: self.dictEntry = newEntry
 		evt.Skip()

@@ -381,7 +381,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(_("Specify another pattern"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
 		self.onUndefinedCharReprList()
-		self.undefinedCharsBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Undefined characters descriptions"), wx.DefaultPosition)
+		self.undefinedCharsBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Description of undefined characters"), wx.DefaultPosition)
 		self.undefinedCharsBtn.Bind(wx.EVT_BUTTON, self.onUndefinedCharsBtn)
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
@@ -518,7 +518,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 class UndefinedCharsDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("Undefined characters descriptions")
+	title = "Braille Extender - %s" % _("Description of undefined characters")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)

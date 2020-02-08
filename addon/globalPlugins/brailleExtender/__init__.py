@@ -668,8 +668,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_advancedInput(self, gesture):
 		self.advancedInput = not self.advancedInput
 		states = [_("disabled"), _("enabled")]
-		speech.speakMessage("Advanced braille input mode %s" % states[int(self.advancedInput)])
+		speech.speakMessage(_("Advanced braille input mode %s") % states[int(self.advancedInput)])
 	script_advancedInput.__doc__ = _("Enable/disable the advanced input mode")
+
+	def script_undefinedCharsDesc(self, gesture):
+		config.conf["brailleExtender"]["undefinedCharDesc"] = not config.conf["brailleExtender"]["undefinedCharDesc"]
+		states = [_("disabled"), _("enabled")]
+		speech.speakMessage(_("Description of undefined characters %s") % states[int(config.conf["brailleExtender"]["undefinedCharDesc"])])
+		utils.refreshBD()
+	script_undefinedCharsDesc.__doc__ = _("Enable/disable description of undefined characters")
 
 	def script_position(self, gesture=None):
 		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
@@ -1477,6 +1484,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+h"] = "toggleDots78"
 	__gestures["kb:nvda+alt+f"] = "toggleBRFMode"
 	__gestures["kb:nvda+windows+i"] = "advancedInput"
+	__gestures["kb:nvda+windows+u"] = "undefinedCharsDesc"
 	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"

@@ -99,7 +99,6 @@ rotorItem = 0
 rotorRange = 0
 lastRotorItemInVD = 0
 lastRotorItemInVDSaved = True
-nativeModifiers = hasattr(brailleInput.handler, "toggleModifier")
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
 
 # ***** Attribra code *****
@@ -170,7 +169,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	autoScrollRunning = False
 	autoScrollTimer = None
 	modifiers = set()
-	_tGestures = OrderedDict()
 	_pGestures = OrderedDict()
 	rotorGES = {}
 	noKC = None
@@ -254,18 +252,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def createMenu(self):
 		self.submenu = wx.Menu()
 		item = self.submenu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDoc, item)
-		settingsMenu = wx.Menu()
-		self.submenu.AppendSubMenu(settingsMenu, _("Settings"), _("'Braille Extender settings' menu"))
-		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("&General"), _("General configuration"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGeneralSettings, item)
-		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Braille &tables"), _("Braille tables configuration"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onBrailleTablesSettings, item)
-		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Text &attributes"), _("Text attributes configuration"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onAttributesSettings, item)
-		item = settingsMenu.Append(wx.ID_ANY, "%s..." % _("Role &labels"),_("Role labels configuration"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onRoleLabelsSettings, item)
-
+		gui.mainFrame.sysTrayIcon.Bind(
+			wx.EVT_MENU,
+			lambda event: self.script_getHelp(None),
+			item
+		)
+		item = self.submenu.Append(wx.ID_ANY, _("&Settings"), _("Opens the addons' settings."))
+		gui.mainFrame.sysTrayIcon.Bind(
+			wx.EVT_MENU,
+			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.AddonSettingsDialog),
+			item
+		)
 		dictionariesMenu = wx.Menu()
 		self.submenu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
@@ -276,11 +273,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onQuickLaunchesSettings, item)
+		gui.mainFrame.sysTrayIcon.Bind(
+			wx.EVT_MENU, 
+			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.QuickLaunchesDlg),
+			item
+		)
 		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onProfilesEditor, item)
+		gui.mainFrame.sysTrayIcon.Bind(
+			wx.EVT_MENU,
+			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.ProfileEditorDlg),
+			item
+		)
 		item = self.submenu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
-		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onGetTableOverview, item)
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.script_getTableOverview(None), item)
 		item = self.submenu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, item)
 		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Check for update"), _("Checks if update is available"))
@@ -376,40 +381,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		except BaseException:
 			log.debug("No keyboard conf found")
 			self.noKC = True
-		# Hack for NVDARemote
-		if 'fr' in lang:
-			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789²)=^$ù*<,;:!"
-		else:
-			nvdaremote_gestures = u"abcdefghijklmnopqrstuvwxyz0123456789`-=[];'\\,./"
-		nvdaremote_gestures2 = ["escape","home","end","pageup","pagedown","backspace","leftarrow","rightarrow","uparrow","downarrow","enter","delete","space","ACCENT CIRCONFLEXE"]
-		self._tGestures = {
-			"bk:dots": "end_combKeysChar",
-			"br(%s):routing" % configBE.curBD: "cancelShortcut",
-			#: arrow keys
-			"br(%s):up" % configBE.curBD: "end_combKeys",
-			"br(%s):down" % configBE.curBD: "end_combKeys",
-			"br(%s):left" % configBE.curBD: "end_combKeys",
-			"br(%s):right" % configBE.curBD: "end_combKeys",
-		}
-		for k in nvdaremote_gestures:
-			self._tGestures['kb:%s' % k] = "end_combKeysChar"
-		for k in range(0, 13):
-			self._tGestures['kb:f%s' % k] = "end_combKeysChar"
-		for k in nvdaremote_gestures2:
-			self._tGestures['kb:%s' % k] = "end_combKeysChar"
 		if configBE.gesturesFileExists:
-			for g in configBE.iniGestures['globalCommands.GlobalCommands']:
-				if isinstance(configBE.iniGestures['globalCommands.GlobalCommands'][g], list):
-					for h in range(len(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
-						self._tGestures[inputCore.normalizeGestureIdentifier(configBE.iniGestures['globalCommands.GlobalCommands'][g][h])] = "end_combKeys"
-				elif ("kb:" in g and g.lower() not in ["kb:alt", "kb:control", "kb:windows", "kb:control", "kb:applications"]):
-					self._tGestures[inputCore.normalizeGestureIdentifier(configBE.iniGestures['globalCommands.GlobalCommands'][g])] = "end_combKeys"
 			self._pGestures = OrderedDict()
 			for k, v in (configBE.iniProfile["modifierKeys"].items() + [k for k in configBE.iniProfile["miscs"].items() if k[0] != 'defaultQuickLaunches']):
 				if isinstance(v, list):
 					for i, gesture in enumerate(v):
-						if k != 'shortcutsOn':
-							self._pGestures[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(gesture))] = k
+						self._pGestures[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(gesture))] = k
 				else:
 					self._pGestures[inputCore.normalizeGestureIdentifier(self.getGestureWithBrailleIdentifier(v))] = k
 		self.bindGestures(self._pGestures)
@@ -717,8 +694,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def showHourDate():
 		currentHourDate = time.strftime('%X %x (%a, %W/53, %b)', time.localtime())
-		if isPy3: return braille.handler.message(currentHourDate)
-		else: return braille.handler.message(currentHourDate.decode('mbcs'))
+		return braille.handler.message(currentHourDate)
 
 	def script_autoScroll(self, gesture, sil=False):
 		if self.hourDatePlayed:
@@ -937,13 +913,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("No shortcut performed from a braille display"))
 			return
 		sht =  self.lastShortcutPerformed
-		if nativeModifiers:
-			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
-		else: self.sendComb(sht)
+		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
 	script_repeatLastShortcut.__doc__ = _("Repeat the last shortcut performed from a braille display")
-
-	def onDoc(self, evt):
-		return self.script_getHelp(None)
 
 	def onReload(self, evt=None, sil=False, sv=False):
 		self.clearGestureBindings()
@@ -963,9 +934,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def onUpdate(evt):
 		return checkUpdates()
-
-	def onGetTableOverview(self, evt):
-		self.script_getTableOverview(None)
 
 	@staticmethod
 	def onWebsite(evt):
@@ -998,144 +966,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def clearModifiers(self, forced = False):
 		if self.modifiersLocked and not forced: return
-		if nativeModifiers: modifiers = brailleInput.handler.currentModifiers
-		else: modifiers = self.modifiers
-		modifiers.clear()
-		if not nativeModifiers:
-			self.clearGestureBindings()
-			self.bindGestures(self.__gestures)
-			self.bindGestures(self._pGestures)
-			self.gesturesInit()
+		brailleInput.handler.currentModifiers.clear()
 
-	@staticmethod
-	def sendCombKeys(sendKS, send=True):
-		if send:
-			log.debug("Sending " + sendKS)
-			if sendKS:
-				inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sendKS))
-		return
-
-	def script_end_combKeys(self, gesture):
-		_tmpGesture = {
-			'up": "uparrow',
-			'down": "downarrow',
-			'left": "leftarrow',
-			'right": "rightarrow',
-		}
-		for g in configBE.iniGestures['globalCommands.GlobalCommands']:
-			if isinstance(
-					configBE.iniGestures['globalCommands.GlobalCommands'][g],
-					list):
-				for h in range(
-						len(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
-					_tmpGesture[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g][h])).replace("br(%s):" % configBE.curBD, '')] = g.replace('kb:', '')
-			elif ('kb:' in g and g not in ['kb:alt', 'kb:ctrl', 'kb:windows', 'kb:control', 'kb:applications'] and 'br(' + configBE.curBD + '):' in str(configBE.iniGestures['globalCommands.GlobalCommands'][g])):
-				_tmpGesture[inputCore.normalizeGestureIdentifier(str(configBE.iniGestures['globalCommands.GlobalCommands'][g])).replace('br(' + configBE.curBD + '):', '')] = g.replace('kb:', '')
-			gId = inputCore.normalizeGestureIdentifier(
-				'br(' + configBE.curBD + '):' + str(gesture.id)).replace('br(' + configBE.curBD + '):', '')
-		sht = self.getActualModifiers(False) + _tmpGesture[gId]
-		if gId not in _tmpGesture:
-			return ui.message("Unknown " + gId)
-		self.clearModifiers()
-		self.clearMessageFlash()
-		return self.sendComb(sht, gesture)
-
-	def script_end_combKeysChar(self, gesture):
-		self.clearMessageFlash()
-		if not hasattr(gesture, "id"):
-			ch = gesture.normalizedIdentifiers[0].split(':')[1]
-			self.sendComb(self.getActualModifiers(False) + ch, gesture)
-		else:
-			if config.conf["brailleExtender"]["inputTableShortcuts"] != '?':
-				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots, config.conf["brailleExtender"]["inputTableShortcuts"]), gesture)
-			else:
-				self.sendComb(self.getActualModifiers(False) + utils.bkToChar(gesture.dots), gesture)
-		self.clearModifiers()
 
 	def sendComb(self, sht, gesture = None):
-		if ((config.conf["brailleExtender"]["inputTableShortcuts"] != '?' and configBE.isContractedTable(config.conf["brailleExtender"]["inputTableShortcuts"]))
-			or (config.conf["brailleExtender"]["inputTableShortcuts"] == '?' and configBE.isContractedTable(brailleInput.handler.table.fileName))
-		):
-			ui.message(_("You should specify a braille table for shortcuts when you work with a contracted input. Please go in the settings"))
-			return
-		NVDASht = self.sendCombKeysNVDA(sht, gesture)
-		if not NVDASht and 'nvda' not in sht.lower():
-			try:
-				return self.sendCombKeys(sht, gesture)
-			except BaseException as e:
-					log.error(e)
-					return ui.message(_("Unable to send %s") % sht)
-		elif not NVDASht:  # and 'nvda' in sht.lower()
-			return ui.message(_("%s is not part of a NVDA commands") % sht)
-
-	@staticmethod
-	def sendCombKeysNVDA(sht, gesture):
-		if nativeModifiers:
-			inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
-			return True
-		focus = api.getFocusObject()
-		obj = api.getNavigatorObject()
-		sht = '+'.join(sorted(sht.split('+')))
-		shts = ['kb:%s' % sht, 'kb(%s):%s' % (config.conf["keyboard"]["keyboardLayout"], sht)]
-		# Global gplugin level
-		for p in globalPluginHandler.runningPlugins:
-			for g in p._gestureMap:
-				if inputCore.normalizeGestureIdentifier(g).lower() in shts:
-					scriptName = p._gestureMap[g].__func__.func_name
-					func = getattr(p, scriptName, None)
-					if func:
-						func(gesture)
-						return True
-
-		# App module level.
-		for g in focus.appModule._gestureMap:
-			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
-				scriptName = p._gestureMap[g].__func__.func_name
-				func = getattr(p, scriptName, None)
-				if func:
-					func(gesture)
-					return True
-
-		# Tree interceptor level.
-		if focus.treeInterceptor is not None and focus.treeInterceptor.isReady and not focus.treeInterceptor.passThrough:
-			treeInterceptor = focus.treeInterceptor
-			for k in treeInterceptor._gestureMap:
-				if k.lower() in shts:
-					scriptName = treeInterceptor._gestureMap[k].__func__.func_name
-					func = getattr(treeInterceptor, scriptName, None)
-					if func:
-						func(gesture)
-						return True
-
-		# NVDAObject level
-		for g in obj._gestureMap:
-			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
-				scriptName = obj._gestureMap[g].__func__.func_name
-				func = getattr(obj, scriptName, None)
-				if func:
-					try:
-						func(gesture)
-						return True
-					except BaseException:
-						CursorManager = cursorManager.CursorManager()
-						CursorManager.makeTextInfo = obj.makeTextInfo
-						for g in CursorManager._CursorManager__gestures:
-							if inputCore.normalizeGestureIdentifier(g).lower() in shts:
-								scriptName = 'script_%s' % CursorManager._CursorManager__gestures[g]
-								func = getattr(CursorManager, scriptName, None)
-								if func:
-									func(gesture)
-									return True
-
-		# Global Commands level.
-		for g in globalCommands.commands._gestureMap:
-			if inputCore.normalizeGestureIdentifier(g).lower() in shts:
-				scriptName = globalCommands.commands._gestureMap[g].__func__.func_name
-				func = getattr(globalCommands.commands, scriptName, None)
-				if func:
-					func(gesture)
-					return True
-		return False
+		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
 
 	@staticmethod
 	def callScript(cls, f, gesture):
@@ -1148,12 +983,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				else:
 					return false
 
-	def initCombKeys(self):
-		if not nativeModifiers and len(self.modifiers) == 1: self.bindGestures(self._tGestures)
-
 	def getActualModifiers(self, short=True):
-		if nativeModifiers: modifiers = brailleInput.handler.currentModifiers
-		else: modifiers = self.modifiers
+		modifiers = brailleInput.handler.currentModifiers
 		if len(modifiers) == 0:
 			return self.script_cancelShortcut(None)
 		s = ""
@@ -1175,8 +1006,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def toggleModifier(self, modifier, beep = True):
 		if modifier.lower() not in ["alt","control","nvda","shift","windows"]:
 			return
-		if nativeModifiers: modifiers = brailleInput.handler.currentModifiers
-		else: modifiers = self.modifiers
+		modifiers = brailleInput.handler.currentModifiers
 		if modifier not in modifiers:
 			modifiers.add(modifier)
 			if beep and config.conf["brailleExtender"]["beepsModifiers"]: tones.beep(275, 50)
@@ -1188,27 +1018,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_ctrl(self, gesture=None, sil=True):
 		self.toggleModifier("control", sil)
 		if sil: self.getActualModifiers()
-		return self.initCombKeys()
+		return
 
 	def script_nvda(self, gesture=None):
 		self.toggleModifier("nvda")
 		self.getActualModifiers()
-		return self.initCombKeys()
+		return
 
 	def script_alt(self, gesture=None, sil=True):
 		self.toggleModifier("alt", sil)
 		if sil: self.getActualModifiers()
-		return self.initCombKeys()
+		return
 
 	def script_win(self, gesture=None, sil=True):
 		self.toggleModifier("windows", sil)
 		if sil: self.getActualModifiers()
-		return self.initCombKeys()
+		return
 
 	def script_shift(self, gesture=None, sil=True):
 		self.toggleModifier("shift", sil)
 		if sil: self.getActualModifiers()
-		return self.initCombKeys()
+		return
 
 	def script_ctrlWin(self, gesture):
 		self.script_ctrl(None, False)
@@ -1270,8 +1100,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_alt.bypassInputHelp = True
 	script_ctrl.bypassInputHelp = True
 	script_cancelShortcut.bypassInputHelp = True
-	script_end_combKeys.bypassInputHelp = True
-	script_end_combKeysChar.bypassInputHelp = True
 
 	# /* docstrings for modifier keys */
 	def docModKeys(k): return _("Emulate pressing down ") + '+'.join(
@@ -1321,30 +1149,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.__gestures[k] = "braille_scrollBack"
 		self.bindGestures(self.__gestures)
 		return
-
-	@staticmethod
-	def onGeneralSettings(evt):
-		gui.mainFrame._popupSettingsDialog(settings.GeneralDlg)
-
-	@staticmethod
-	def onBrailleTablesSettings(evt):
-		gui.mainFrame._popupSettingsDialog(settings.BrailleTablesDlg)
-
-	@staticmethod
-	def onAttributesSettings(evt):
-		gui.mainFrame._popupSettingsDialog(settings.AttribraDlg)
-
-	@staticmethod
-	def onQuickLaunchesSettings(evt):
-		gui.mainFrame._popupSettingsDialog(settings.QuickLaunchesDlg)
-
-	@staticmethod
-	def onRoleLabelsSettings(evt):
-		gui.mainFrame._popupSettingsDialog(settings.RoleLabelsDlg)
-
-	@staticmethod
-	def onProfilesEditor(evt):
-		gui.mainFrame._popupSettingsDialog(settings.ProfileEditorDlg)
 
 	def script_logFieldsAtCursor(self, gesture):
 		global logTextInfo

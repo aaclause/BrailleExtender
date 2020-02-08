@@ -466,11 +466,15 @@ def input_(self, dots):
 	"""
 	# Insert the newly entered cell into the buffer at the cursor position.
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	self.bufferBraille.insert(pos, dots)
-	self.untranslatedCursorPos += 1
 	# Space ends the word.
 	endWord = dots == 0
-
+	continue_ = True
+	if config.conf["brailleExtender"]["oneHandMode"]:
+		continue_, endWord = processOneHandMode(self, dots)
+		if not continue_: return
+	else:
+		self.bufferBraille.insert(pos, dots)
+		self.untranslatedCursorPos += 1
 	ok = False
 	if instanceGP:
 		focusObj = api.getFocusObject()

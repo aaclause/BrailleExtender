@@ -355,7 +355,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		# Translators: label of a dialog.
 		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
 		# Translators: label of a dialog.
-		label = _("Representation of undefined characters")
+		label = _("Representation of &undefined characters")
 		choices = [
 			_("Use braille table behavior"),
 			_("Dots 1-8 (⣿)"),
@@ -378,7 +378,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(_("Specify another pattern"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
 		self.onUndefinedCharReprList()
-		self.undefinedCharsBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Description of undefined characters"), wx.DefaultPosition)
+		self.undefinedCharsBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Description of undefined characters"), wx.DefaultPosition)
 		self.undefinedCharsBtn.Bind(wx.EVT_BUTTON, self.onUndefinedCharsBtn)
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)

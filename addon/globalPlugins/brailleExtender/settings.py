@@ -390,26 +390,9 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		self.undefinedCharReprList.SetSelection(config.conf["brailleExtender"]["undefinedCharReprMethod"])
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(_("Specify another pattern"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
-		self.undefinedCharDesc = sHelper.addItem(wx.CheckBox(self, label=_("Describe undefined characters if possible")))
-		self.undefinedCharDesc.SetValue(config.conf["brailleExtender"]["undefinedCharDesc"])
-		self.undefinedCharStart = sHelper.addLabeledControl(_("Start tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharStart"])
-		self.undefinedCharEnd = sHelper.addLabeledControl(_("End tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharEnd"])
-		values = [lang[1] for lang in languageHandler.getAvailableLanguages()]
-		keys = [lang[0] for lang in languageHandler.getAvailableLanguages()]
-		undefinedCharLang = config.conf["brailleExtender"]["undefinedCharLang"]
-		if not undefinedCharLang in keys: undefinedCharLang = keys[-1]
-		undefinedCharLangID = keys.index(undefinedCharLang)
-		self.undefinedCharLang = sHelper.addLabeledControl(_("Description language"), wx.Choice, choices=values)
-		self.undefinedCharLang.SetSelection(undefinedCharLangID)
-		values = [_("Use the current output table")] + [table.displayName for table in configBE.tables if table.output]
-		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
-		undefinedCharBrailleTable = config.conf["brailleExtender"]["undefinedCharBrailleTable"]
-		if undefinedCharBrailleTable not in configBE.tablesFN + ["current"]: undefinedCharBrailleTable = "current"
-		undefinedCharBrailleTableID = keys.index(undefinedCharBrailleTable)
-		self.undefinedCharBrailleTable = sHelper.addLabeledControl(_("Description braille table"), wx.Choice, choices=values)
-		self.undefinedCharBrailleTable.SetSelection(undefinedCharBrailleTableID)
-
 		self.onUndefinedCharReprList()
+		self.undefinedCharsBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Undefined characters descriptions"), wx.DefaultPosition)
+		self.undefinedCharsBtn.Bind(wx.EVT_BUTTON, self.onUndefinedCharsBtn)
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
@@ -436,13 +419,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			repr_ = re.sub("[^0-8\-]", "", repr_).strip('-')
 			repr_ = re.sub('\-+','-', repr_)
 		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
-		config.conf["brailleExtender"]["undefinedCharDesc"] = self.undefinedCharDesc.IsChecked()
-		config.conf["brailleExtender"]["undefinedCharStart"] = self.undefinedCharStart.Value
-		config.conf["brailleExtender"]["undefinedCharEnd"] = self.undefinedCharEnd.Value
-		config.conf["brailleExtender"]["undefinedCharLang"] = languageHandler.getAvailableLanguages()[self.undefinedCharLang.GetSelection()][0]
-		undefinedCharBrailleTable = self.undefinedCharBrailleTable.GetSelection()
-		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
-		config.conf["brailleExtender"]["undefinedCharBrailleTable"] = keys[undefinedCharBrailleTable]
 		instanceGP.reloadBrailleTables()
 		super(BrailleTablesDlg, self).onOk(evt)
 		if restartRequired:
@@ -512,6 +488,10 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		if selected in [configBE.CHOICE_otherDots, configBE.CHOICE_otherSign]: self.undefinedCharReprEdit.Enable()
 		else: self.undefinedCharReprEdit.Disable()
 
+	def onUndefinedCharsBtn(self, evt):
+		undefinedCharsDlg = UndefinedCharsDlg(self, multiInstanceAllowed=True)
+		undefinedCharsDlg.ShowModal()
+
 	def onCustomBrailleTablesBtn(self, evt):
 		customBrailleTablesDlg = CustomBrailleTablesDlg(self, multiInstanceAllowed=True)
 		customBrailleTablesDlg.ShowModal()
@@ -543,6 +523,48 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
+
+
+class UndefinedCharsDlg(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = "Braille Extender - %s" % _("Undefined characters descriptions")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		self.undefinedCharDesc = sHelper.addItem(wx.CheckBox(self, label=_("Describe undefined characters if possible")))
+		self.undefinedCharDesc.SetValue(config.conf["brailleExtender"]["undefinedCharDesc"])
+		self.undefinedCharStart = sHelper.addLabeledControl(_("Start tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharStart"])
+		self.undefinedCharEnd = sHelper.addLabeledControl(_("End tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharEnd"])
+		values = [lang[1] for lang in languageHandler.getAvailableLanguages()]
+		keys = [lang[0] for lang in languageHandler.getAvailableLanguages()]
+		undefinedCharLang = config.conf["brailleExtender"]["undefinedCharLang"]
+		if not undefinedCharLang in keys: undefinedCharLang = keys[-1]
+		undefinedCharLangID = keys.index(undefinedCharLang)
+		self.undefinedCharLang = sHelper.addLabeledControl(_("Language"), wx.Choice, choices=values)
+		self.undefinedCharLang.SetSelection(undefinedCharLangID)
+		values = [_("Use the current output table")] + [table.displayName for table in configBE.tables if table.output]
+		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
+		undefinedCharBrailleTable = config.conf["brailleExtender"]["undefinedCharBrailleTable"]
+		if undefinedCharBrailleTable not in configBE.tablesFN + ["current"]: undefinedCharBrailleTable = "current"
+		undefinedCharBrailleTableID = keys.index(undefinedCharBrailleTable)
+		self.undefinedCharBrailleTable = sHelper.addLabeledControl(_("Braille table"), wx.Choice, choices=values)
+		self.undefinedCharBrailleTable.SetSelection(undefinedCharBrailleTableID)
+
+
+	def postInit(self): self.undefinedCharDesc.SetFocus()
+
+	def onOk(self, evt):
+		config.conf["brailleExtender"]["undefinedCharDesc"] = self.undefinedCharDesc.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharStart"] = self.undefinedCharStart.Value
+		config.conf["brailleExtender"]["undefinedCharEnd"] = self.undefinedCharEnd.Value
+		config.conf["brailleExtender"]["undefinedCharLang"] = languageHandler.getAvailableLanguages()[self.undefinedCharLang.GetSelection()][0]
+		undefinedCharBrailleTable = self.undefinedCharBrailleTable.GetSelection()
+		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
+		config.conf["brailleExtender"]["undefinedCharBrailleTable"] = keys[undefinedCharBrailleTable]
+		super(UndefinedCharsDlg, self).onOk(evt)
+
+
 class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.

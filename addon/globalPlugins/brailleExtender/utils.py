@@ -251,19 +251,17 @@ def getKeysTranslation(n):
 def getTextInBraille(t=None, table=None):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
-	if not table: table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
+	if not table or table == "current": table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
+	else: table = [os.path.join(brailleTables.TABLES_DIR, table)]
 	nt = []
 	res = ''
 	t = t.split("\n")
 	for l in t:
 		l = l.rstrip()
 		if not l: res = ''
-		elif charToDotsInLouis: res = louis.charToDots(table, l, louis.ucBrl)
-		else: res = louis.translateString(table, l, None, louis.dotsIO)
+		else: res = ''.join([chr(ord(ch)-0x8000+0x2800) for ch in louis.translateString(table, l, mode=louis.dotsIO)])
 		nt.append(res)
-	nt = '\n'.join(nt)
-	if charToDotsInLouis: return nt
-	return ''.join([chr(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch for ch in nt])
+	return '\n'.join(nt)
 
 def combinationDesign(dots, noDot = '⠤'):
 	out = ""

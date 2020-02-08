@@ -330,7 +330,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	def makeSettings(self, settingsSizer):
 		self.oTables = set(configBE.outputTables)
 		self.iTables = set(configBE.inputTables)
-		lt = [_('Use the current input table')]
+		lt = [_("Use the current input table")]
 		for table in configBE.tables:
 			if table.output and not table.contracted: lt.append(table[1])
 			if config.conf["brailleExtender"]["inputTableShortcuts"] in configBE.tablesUFN:
@@ -369,15 +369,36 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			_("Other sign/pattern (e.g.: \, ??)"),
 			_("Hexadecimal, Liblouis style"),
 			_("Hexadecimal, HUC8"),
-			_("Hexadecimal, HUC6")
+			_("Hexadecimal, HUC6"),
+			_("Hexadecimal"),
+			_("Decimal"),
+			_("Octal"),
+			_("Binary")
 		]
 		self.undefinedCharReprList = sHelper.addLabeledControl(label, wx.Choice, choices=choices)
 		self.undefinedCharReprList.Bind(wx.EVT_CHOICE, self.onUndefinedCharReprList)
-		self.undefinedCharReprList.SetSelection(config.conf["brailleExtender"]["undefinedCharReprType"])
-		self.showNameUndefinedChar = sHelper.addItem(wx.CheckBox(self, label=_("Show the name assigned to the character if possible (english only)")))
-		self.showNameUndefinedChar.SetValue(config.conf["brailleExtender"]["showNameUndefinedChar"])
+		self.undefinedCharReprList.SetSelection(config.conf["brailleExtender"]["undefinedCharReprMethod"])
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(_("Specify another pattern"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
+		self.undefinedCharDesc = sHelper.addItem(wx.CheckBox(self, label=_("Describe undefined characters if possible")))
+		self.undefinedCharDesc.SetValue(config.conf["brailleExtender"]["undefinedCharDesc"])
+		self.undefinedCharStart = sHelper.addLabeledControl(_("Start tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharStart"])
+		self.undefinedCharEnd = sHelper.addLabeledControl(_("End tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharEnd"])
+		values = [lang[1] for lang in languageHandler.getAvailableLanguages()]
+		keys = [lang[0] for lang in languageHandler.getAvailableLanguages()]
+		undefinedCharLang = config.conf["brailleExtender"]["undefinedCharLang"]
+		if not undefinedCharLang in keys: undefinedCharLang = keys[-1]
+		undefinedCharLangID = keys.index(undefinedCharLang)
+		self.undefinedCharLang = sHelper.addLabeledControl(_("Description language"), wx.Choice, choices=values)
+		self.undefinedCharLang.SetSelection(undefinedCharLangID)
+		values = [_("Use the current output table")] + [table.displayName for table in configBE.tables if table.output]
+		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
+		undefinedCharBrailleTable = config.conf["brailleExtender"]["undefinedCharBrailleTable"]
+		if undefinedCharBrailleTable not in configBE.tablesFN + ["current"]: undefinedCharBrailleTable = "current"
+		undefinedCharBrailleTableID = keys.index(undefinedCharBrailleTable)
+		self.undefinedCharBrailleTable = sHelper.addLabeledControl(_("Description braille table"), wx.Choice, choices=values)
+		self.undefinedCharBrailleTable.SetSelection(undefinedCharBrailleTableID)
+
 		self.onUndefinedCharReprList()
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
@@ -394,18 +415,24 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
 		if ((self.tabSpace.IsChecked() and config.conf["brailleExtender"]["tabSpace"] != self.tabSpace.IsChecked())
-			or (self.undefinedCharReprList.GetSelection() != 0 and config.conf["brailleExtender"]["undefinedCharReprType"] != self.undefinedCharReprList.GetSelection())):
+			or (self.undefinedCharReprList.GetSelection() != 0 and config.conf["brailleExtender"]["undefinedCharReprMethod"] != self.undefinedCharReprList.GetSelection())):
 			restartRequired = True
 		else: restartRequired = False
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
-		config.conf["brailleExtender"]["undefinedCharReprType"] = self.undefinedCharReprList.GetSelection()
+		config.conf["brailleExtender"]["undefinedCharReprMethod"] = self.undefinedCharReprList.GetSelection()
 		repr_ = self.undefinedCharReprEdit.Value
 		if self.undefinedCharReprList.GetSelection() == configBE.CHOICE_otherDots:
 			repr_ = re.sub("[^0-8\-]", "", repr_).strip('-')
 			repr_ = re.sub('\-+','-', repr_)
 		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
-		config.conf["brailleExtender"]["showNameUndefinedChar"] = self.showNameUndefinedChar.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharDesc"] = self.undefinedCharDesc.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharStart"] = self.undefinedCharStart.Value
+		config.conf["brailleExtender"]["undefinedCharEnd"] = self.undefinedCharEnd.Value
+		config.conf["brailleExtender"]["undefinedCharLang"] = languageHandler.getAvailableLanguages()[self.undefinedCharLang.GetSelection()][0]
+		undefinedCharBrailleTable = self.undefinedCharBrailleTable.GetSelection()
+		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
+		config.conf["brailleExtender"]["undefinedCharBrailleTable"] = keys[undefinedCharBrailleTable]
 		instanceGP.reloadBrailleTables()
 		super(BrailleTablesDlg, self).onOk(evt)
 		if restartRequired:
@@ -474,9 +501,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		selected = self.undefinedCharReprList.GetSelection()
 		if selected in [configBE.CHOICE_otherDots, configBE.CHOICE_otherSign]: self.undefinedCharReprEdit.Enable()
 		else: self.undefinedCharReprEdit.Disable()
-		if selected in [configBE.CHOICE_liblouis]:
-			self.showNameUndefinedChar.Enable()
-		else: self.showNameUndefinedChar.Disable()
 
 	def onCustomBrailleTablesBtn(self, evt):
 		customBrailleTablesDlg = CustomBrailleTablesDlg(self, multiInstanceAllowed=True)

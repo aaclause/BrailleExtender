@@ -19,6 +19,7 @@ import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
+import characterProcessing
 import controlTypes
 import config
 import core
@@ -26,6 +27,7 @@ from . import configBE
 import globalCommands
 import inputCore
 import keyboardHandler
+import languageHandler
 import louis
 import queueHandler
 import sayAllHandler
@@ -46,7 +48,7 @@ if isPy3: import louisHelper
 instanceGP = None
 if not isPy3: chr = chrPy2
 HUCDotPattern = "12345678-78-12345678"
-HUCUnicodePattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
+undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 origFunc = {
@@ -147,7 +149,7 @@ def update(self):
 			mode=mode,
 			cursorPos=self.cursorPos or 0
 		)
-	if config.conf["brailleExtender"]["undefinedCharReprType"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6]: HUCProcess(self)
+	if config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6, configBE.CHOICE_hex, configBE.CHOICE_dec, configBE.CHOICE_oct, configBE.CHOICE_bin]: undefinedCharProcess(self)
 	if not isPy3:
 		# liblouis gives us back a character string of cells, so convert it to a list of ints.
 		# For some reason, the highest bit is set, so only grab the lower 8
@@ -191,41 +193,71 @@ def update(self):
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 
 def setUndefinedChar(t=None):
-	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharReprType"]
+	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharReprMethod"]
 	if t == 0: return
-	c = ["default", "12345678", "123456", '0', config.conf["brailleExtender"]["undefinedCharRepr"], "questionMark", "sign"] + [HUCDotPattern]*3
+	c = ["default", "12345678", "123456", '0', config.conf["brailleExtender"]["undefinedCharRepr"], "questionMark", "sign"] + [HUCDotPattern]*7
 	v = c[t]
 	if v in ["questionMark", "sign"]:
 		if v == "questionMark": s = '?'
 		else: s = config.conf["brailleExtender"]["undefinedCharRepr"]
 		v = huc.unicodeBrailleToDescription(getTextInBraille(s, getCurrentBrailleTables()))
-	if isPy3:
-		louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
+	if isPy3: louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
 	else: louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v))
 
 
-def getDescChar(c):
-	n = ''
-	try: n = "'%s'" % unicodedata.name(c)
-	except ValueError: n = r"'\x%.4x'" % ord(c)
-	return n
+def getDescChar(c, lang="Windows", start='', end=''):
+	if lang == "Windows": lang = languageHandler.getLanguage()
+	desc = characterProcessing.processSpeechSymbols(lang, c, characterProcessing.SYMLVL_CHAR).strip()
+	if not desc or desc == c:
+		if config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
+			HUC6 = config.conf["brailleExtender"]["undefinedCharReprMethod"] == configBE.CHOICE_HUC6
+			return huc.translate(c, HUC6=HUC6)
+		else: return getTextInBraille(''.join(getNotationOrd(c)))
+	return start + desc + end
 
-def getHexLiblouisStyle(s):
-	if config.conf["brailleExtender"]["showNameUndefinedChar"]:
-		s = getTextInBraille(''.join([getDescChar(c) for c in s]))
-	else: s = getTextInBraille(''.join([r"'\x%.4x'" % ord(c) for c in s]))
+def getLiblouisStyle(c):
+	if c < 0x10000: return r"\x%.4x" % c
+	elif c <= 0x100000: return r"\y%.5x" % c
+	else: return r"\z%.6x" % c
+
+def getNotationOrd(s, notation=None):
+	if not notation: notation = config.conf["brailleExtender"]["undefinedCharReprMethod"]
+	matches = {
+		configBE.CHOICE_bin: bin,
+		configBE.CHOICE_oct: oct,
+		configBE.CHOICE_dec: lambda s: s,
+		configBE.CHOICE_hex: hex,
+		configBE.CHOICE_liblouis: getLiblouisStyle,
+	}
+	fn = matches[notation]
+	s = getTextInBraille(''.join(["'%s'" % fn(ord(c)) for c in s]))
 	return s
 
-def HUCProcess(self):
+def undefinedCharProcess(self):
 	if not isPy3: return
-	unicodeBrailleRepr = ''.join([chr(10240+cell) for cell in self.brailleCells])
-	allBraillePos = [m.start() for m in re.finditer(HUCUnicodePattern, unicodeBrailleRepr)]
+	unicodeBrailleRepr = ''.join([chr(10240 + cell) for cell in self.brailleCells])
+	allBraillePos = [m.start() for m in re.finditer(undefinedCharPattern, unicodeBrailleRepr)]
 	if not allBraillePos: return
-	if config.conf["brailleExtender"]["undefinedCharReprType"] == configBE.CHOICE_liblouis:
-		replacements = {braillePos: getHexLiblouisStyle(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in allBraillePos}
-	else:
-		HUC6 = True if config.conf["brailleExtender"]["undefinedCharReprType"] == configBE.CHOICE_HUC6 else False
+	if config.conf["brailleExtender"]["undefinedCharDesc"]:
+		start = config.conf["brailleExtender"]["undefinedCharStart"]
+		end = config.conf["brailleExtender"]["undefinedCharEnd"]
+		if start: start = getTextInBraille(start)
+		if end: end = getTextInBraille(end)
+		replacements = {braillePos:
+			getTextInBraille(
+				getDescChar(
+					self.rawText[self.brailleToRawPos[braillePos]],
+					lang=config.conf["brailleExtender"]["undefinedCharLang"],
+					start=start,
+					end=end,
+				),
+				table=config.conf["brailleExtender"]["undefinedCharBrailleTable"]
+			) for braillePos in allBraillePos}
+	elif config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
+		HUC6 = config.conf["brailleExtender"]["undefinedCharReprMethod"] == configBE.CHOICE_HUC6
 		replacements = {braillePos: huc.translate(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6) for braillePos in allBraillePos}
+	else:
+		replacements = {braillePos: getNotationOrd(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in allBraillePos}
 	newBrailleCells = []
 	newBrailleToRawPos = []
 	newRawToBraillePos = []
@@ -234,7 +266,7 @@ def HUCProcess(self):
 	i = 0
 	for iBrailleCells, brailleCells in enumerate(self.brailleCells):
 		brailleToRawPos = self.brailleToRawPos[iBrailleCells]
-		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(HUCUnicodePattern[0]):
+		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(undefinedCharPattern[0]):
 			toAdd = [ord(c)-10240 for c in replacements[iBrailleCells]]
 			newBrailleCells += toAdd
 			newBrailleToRawPos += [i] * len(toAdd)

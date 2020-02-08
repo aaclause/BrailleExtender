@@ -47,6 +47,10 @@ CHOICE_otherSign = 6
 CHOICE_liblouis = 7
 CHOICE_HUC8 = 8
 CHOICE_HUC6 = 9
+CHOICE_hex = 10
+CHOICE_dec = 11
+CHOICE_oct = 12
+CHOICE_bin = 13
 
 dict_ = dict if isPy3 else OrderedDict
 
@@ -158,9 +162,13 @@ def getConfspec():
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
 		"tabSpace": "boolean(default=False)",
 		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
-		"undefinedCharReprType": "integer(min=0, default=0, max=9)",
+		"undefinedCharReprMethod": "integer(min=0, default=%s, max=%s)" % (CHOICE_HUC8, CHOICE_bin),
 		"undefinedCharRepr": "string(default=0)",
-		"showNameUndefinedChar": "boolean(default=False)",
+		"undefinedCharDesc": "boolean(default=True)",
+		"undefinedCharStart": "string(default=[)",
+		"undefinedCharEnd": "string(default=])",
+		"undefinedCharLang": "string(default=Windows)",
+		"undefinedCharBrailleTable": "string(default=current)",
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",

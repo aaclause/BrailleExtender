@@ -289,7 +289,7 @@ def getTableOverview(tbl = ''):
 			t = 'Input              Output\n'
 		if not re.match(r'^\\.+/$', text[0]):
 			tmp['%s' % text[0] if text[0] != '' else '?'] = '%s       %-7s' % (
-			'%s (%s)' % (chr(i), combinationDesign(unicodeBrailleToDescription(chr(i)))),
+			'%s (%s)' % (chr(i), combinationDesign(huc.unicodeBrailleToDescription(chr(i)))),
 			'%s%-8s' % (text[0].rstrip('\x00'), '%s' % (' (%-10s)' % str(hex(ord(text[0]))) if len(text[0]) == 1 else '' if text[0] != '' else '#ERROR'))
 			)
 		else:

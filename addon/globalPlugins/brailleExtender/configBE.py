@@ -84,7 +84,7 @@ CHOICE_oneHandMethodSides = 0
 CHOICE_oneHandMethodSide = 1
 CHOICE_oneHandMethodDots = 2
 
-CHOICE_oneHandMethods = dict_([
+CHOICE_oneHandMethods = dict([
 	(CHOICE_oneHandMethodSides, _("Fill a cell in two stages on both sides")),
 	(CHOICE_oneHandMethodSide, _("Fill a cell in two stages on one side (space = empty side)")),
 	(CHOICE_oneHandMethodDots,  _("Fill a cell dots by dots (each dot is a toggle, press space to validate the character)"))

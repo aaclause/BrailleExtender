@@ -152,7 +152,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["oneHandMethod"] = list(configBE.CHOICE_oneHandMethods.keys())[self.oneHandMethod.GetSelection()]
 		super(GeneralDlg, self).onOk(evt)
 
-
 class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.

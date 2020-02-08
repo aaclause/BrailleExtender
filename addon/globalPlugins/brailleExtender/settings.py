@@ -150,7 +150,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
 		config.conf["brailleExtender"]["oneHandMode"] = self.oneHandMode.IsChecked()
 		config.conf["brailleExtender"]["oneHandMethod"] = list(configBE.CHOICE_oneHandMethods.keys())[self.oneHandMethod.GetSelection()]
-		super(GeneralDlg, self).onOk(evt)
 
 class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 
@@ -416,7 +415,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 			repr_ = re.sub('\-+','-', repr_)
 		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
 		instanceGP.reloadBrailleTables()
-		super(BrailleTablesDlg, self).onOk(evt)
 		if restartRequired:
 			res = gui.messageBox(
 				_("NVDA must be restarted for some new options to take effect. Do you want restart now?"),

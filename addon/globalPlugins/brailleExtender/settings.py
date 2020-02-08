@@ -32,10 +32,10 @@ def notImplemented(msg='', style=wx.OK|wx.ICON_INFORMATION):
 	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
 	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
 
-class GeneralDlg(gui.settingsDialogs.SettingsDialog):
+class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("General")
+	title = _("General")
 	bds_k = [k for k, v in configBE.getValidBrailleDisplayPrefered()]
 	bds_v = [v for k, v in configBE.getValidBrailleDisplayPrefered()]
 
@@ -118,7 +118,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 
 	def postInit(self): self.autoCheckUpdate.SetFocus()
 
-	def onOk(self, evt):
+	def onSave(self):
 		config.conf["brailleExtender"]["autoCheckUpdate"] = self.autoCheckUpdate.IsChecked()
 		config.conf["brailleExtender"]["hourDynamic"] = self.hourDynamic.IsChecked()
 		config.conf["brailleExtender"]["reviewModeTerminal"] = self.reviewModeTerminal.IsChecked()
@@ -142,16 +142,15 @@ class GeneralDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = list(configBE.outputMessage.keys())[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = list(configBE.outputMessage.keys())[self.modifierKeysFeedback.GetSelection()]
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
-		super(GeneralDlg, self).onOk(evt)
 
-class AttribraDlg(gui.settingsDialogs.SettingsDialog):
+class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("Attribra")
+	title = _("Text attributes")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("Enable Attribra")))
+		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
 		self.toggleAttribra.SetValue(config.conf["brailleExtender"]["features"]["attributes"])
 		self.spellingErrorsAttribute = sHelper.addLabeledControl(_("Show spelling errors with"), wx.Choice, choices=configBE.attributeChoicesValues)
 		self.spellingErrorsAttribute.SetSelection(self.getItemToSelect("invalid-spelling"))
@@ -170,7 +169,7 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 
 	def postInit(self): self.toggleAttribra.SetFocus()
 
-	def onOk(self, evt):
+	def onSave(self):
 		config.conf["brailleExtender"]["features"]["attributes"] = self.toggleAttribra.IsChecked()
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoicesKeys[self.spellingErrorsAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["bold"] = configBE.attributeChoicesKeys[self.boldAttribute.GetSelection()]
@@ -179,7 +178,6 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 		config.conf["brailleExtender"]["attributes"]["strikethrough"] = configBE.attributeChoicesKeys[self.strikethroughAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = configBE.attributeChoicesKeys[self.subAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["text-position:super"] = configBE.attributeChoicesKeys[self.superAttribute.GetSelection()]
-		super(AttribraDlg, self).onOk(evt)
 
 	@staticmethod
 	def getItemToSelect(attribute):
@@ -189,10 +187,10 @@ class AttribraDlg(gui.settingsDialogs.SettingsDialog):
 			idx = 0
 		return idx
 
-class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
+class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("Role labels")
+	title = _("Role labels")
 
 	roleLabels  = {}
 
@@ -314,18 +312,17 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsDialog):
 
 	def postInit(self): self.toggleRoleLabels.SetFocus()
 
-	def onOk(self, evt):
+	def onSave(self):
 		config.conf["brailleExtender"]["features"]["roleLabels"] = self.toggleRoleLabels.IsChecked()
 		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
 		configBE.discardRoleLabels()
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
 			configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
-		super(RoleLabelsDlg, self).onOk(evt)
 
-class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
+class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("braille tables")
+	title = _("Braille tables")
 
 	def makeSettings(self, settingsSizer):
 		self.oTables = set(configBE.outputTables)
@@ -390,7 +387,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	def postInit(self): self.tables.SetFocus()
 
-	def onOk(self, evt):
+	def onSave(self):
 		config.conf["brailleExtender"]["outputTables"] = ','.join(self.oTables)
 		config.conf["brailleExtender"]["inputTables"] = ','.join(self.iTables)
 		config.conf["brailleExtender"]["inputTableShortcuts"] = configBE.tablesUFN[self.inputTableShortcuts.GetSelection()-1] if self.inputTableShortcuts.GetSelection()>0 else '?'
@@ -588,7 +585,7 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	def postInit(self): self.inTable.SetFocus()
 
-	def onOk(self, evt):
+	def onOk(self, event):
 		super(CustomBrailleTablesDlg, self).onOk(evt)
 
 
@@ -622,7 +619,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		dlg.Destroy()
 		self.path.SetFocus()
 
-	def onOk(self, evt):
+	def onOk(self, event):
 		path = self.path.GetValue().strip().encode("UTF-8")
 		displayName = self.name.GetValue().strip()
 		if not displayName:
@@ -720,11 +717,11 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 				self.quickKeys.SetItems(self.getQuickLaunchList())
 				self.quickKeys.SetSelection(len(self.quickLaunchGestures)-1)
 				self.onQuickKeys(None)
-				self.quickKeys.SetFocus()
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("OK. The gesture captured is %s") % utils.beautifulSht(gesture.normalizedIdentifiers[0]))
 				inputCore.manager._captureFunc = None
 				self.captureEnabled = False
 				self.addGestureBtn.SetLabel(self.captureLabelBtn)
+				self.target.SetFocus()
 			return True
 		inputCore.manager._captureFunc = getCaptured
 
@@ -972,3 +969,16 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		self.validNewProfileNameButton.Disable()
 		self.newProfileName.Disable()
 
+class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
+	categoryClasses=[
+		GeneralDlg,
+		AttribraDlg,
+		BrailleTablesDlg,
+		RoleLabelsDlg,
+	]
+
+	def __init__(self, parent, initialCategory=None):
+		# Translators: title of add-on parameters dialog.
+		dialogTitle = _("Settings")
+		self.title = "%s - %s" % (addonSummary, dialogTitle)
+		super(AddonSettingsDialog,self).__init__(parent, initialCategory)

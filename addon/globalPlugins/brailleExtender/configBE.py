@@ -52,16 +52,14 @@ CHOICE_dec = 11
 CHOICE_oct = 12
 CHOICE_bin = 13
 
-dict_ = dict if isPy3 else OrderedDict
-
-outputMessage = dict_([
+outputMessage = dict([
 	(CHOICE_none,             _("none")),
 	(CHOICE_braille,          _("braille only")),
 	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
 
-attributeChoices = dict_([
+attributeChoices = dict([
 	(CHOICE_none,   _("none")),
 	(CHOICE_dots78, _("dots 7 and 8")),
 	(CHOICE_dot7,   _("dot 7")),
@@ -70,12 +68,12 @@ attributeChoices = dict_([
 attributeChoicesKeys = list(attributeChoices)
 attributeChoicesValues = list(attributeChoices.values())
 
-updateChannels = dict_([
+updateChannels = dict([
 	(CHANNEL_stable,  _("stable")),
 	(CHANNEL_dev,     _("development"))
 ])
 
-focusOrReviewChoices = dict_([
+focusOrReviewChoices = dict([
 	(CHOICE_none,           _("none")),
 	(CHOICE_focus,          _("focus mode")),
 	(CHOICE_review,         _("review mode")),

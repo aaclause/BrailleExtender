@@ -43,7 +43,7 @@ from . import dictionaries
 from . import huc
 from .utils import getCurrentChar, getTether, getTextInBraille, getCharFromValue
 from .common import *
-if isPy3: import louisHelper
+import louisHelper
 
 instanceGP = None
 if not isPy3: chr = chrPy2

@@ -257,7 +257,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lambda event: self.script_getHelp(None),
 			item
 		)
-		item = self.submenu.Append(wx.ID_ANY, _("&Settings"), _("Opens the addons' settings."))
+		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Settings"), _("Opens the addons' settings."))
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU,
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.AddonSettingsDialog),

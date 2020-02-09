@@ -48,33 +48,24 @@ class AddonDoc:
 						mKB[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
 				else:
 					mNV[g] = configBE.iniGestures['globalCommands.GlobalCommands'][g]
-			doc += ('<h2>' + _('Simple keys') + ' (%s)</h2>') % str(len(mKB))
+			doc += ("<h2>" + _("Simple keys") + " (%d)</h2>") % len(mKB)
 			doc += self.translateLst(mKB)
-			doc += ('<h2>' + _('Usual shortcuts') +
-					' (%s)</h2>') % str(len(mW))
+			doc += ("<h2>" + _("Usual shortcuts") + " (%d)</h2>") % len(mW)
 			doc += self.translateLst(mW)
-			doc += ('<h2>' + _('Standard NVDA commands') +
-					' (%s)</h2>') % str(len(mNV))
+			doc += ("<h2>" + _("Standard NVDA commands") + " (%d)</h2>") % len(mNV)
 			doc += self.translateLst(mNV)
-			doc += '<h2>{0} ({1})</h2>'.format(_('Modifier keys'),
-												len(configBE.iniProfile["modifierKeys"]))
+			doc += "<h2>{0} ({1})</h2>".format(_("Modifier keys"), len(configBE.iniProfile["modifierKeys"]))
 			doc += self.translateLst(configBE.iniProfile["modifierKeys"])
-			doc += '<h2>' + _('Quick navigation keys') + '</h2>'
-			doc += "<p>" + _('In virtual documents (HTML/PDF/…) you can navigate element type by element type using keyboard. These navigation keys should work with your braille terminal equally.</p><p>In addition to these, there are some specific shortcuts:') + "</p>"
-			doc += self.translateLst(
-				configBE.iniGestures['cursorManager.CursorManager'])
-			doc += '<h2>' + _('Rotor feature') + '</h2>'
-			doc += self.translateLst({k: configBE.iniProfile["miscs"][k] for k in configBE.iniProfile["miscs"]
-								   if 'rotor' in k.lower()}) + self.translateLst(configBE.iniProfile["rotor"])
-			doc += ('<h2>' + _('Gadget commands') +
-					' (%s)</h2>') % str(len(configBE.iniProfile["miscs"]) - 2)
-			doc += self.translateLst(OrderedDict([(k, configBE.iniProfile["miscs"][k])
-											   for k in configBE.iniProfile["miscs"] if k not in ['nextRotor', 'priorRotor']]))
-			doc += '<h2>{0} ({1})</h2>'.format(_('Shortcuts defined outside add-on'),
-												len(braille.handler.display.gestureMap._map))
-			doc += '<ul>'
+			doc += "<h2>" + _("Quick navigation keys") + "</h2>"
+			doc += self.translateLst(configBE.iniGestures['cursorManager.CursorManager'])
+			doc += "<h2>" + _("Rotor feature") + "</h2>"
+			doc += self.translateLst({k: configBE.iniProfile["miscs"][k] for k in configBE.iniProfile["miscs"] if "rotor" in k.lower()}) + self.translateLst(configBE.iniProfile["rotor"])
+			doc += ("<h2>" + _("Gadget commands") + " (%d)</h2>") % (len(configBE.iniProfile["miscs"]) - 2)
+			doc += self.translateLst(OrderedDict([(k, configBE.iniProfile["miscs"][k]) for k in configBE.iniProfile["miscs"] if k not in ['nextRotor', 'priorRotor']]))
+			doc += "<h2>{0} ({1})</h2>".format(_("Shortcuts defined outside add-on"), len(braille.handler.display.gestureMap._map))
+			doc += "<ul>"
 			for g in braille.handler.display.gestureMap._map:
-				doc += ('<li>{0}{1}: {2}{3};</li>').format(
+				doc += ("<li>{0}{1}: {2}{3};</li>").format(
 					utils.beautifulSht(g),
 					punctuationSeparator,
 					utils.uncapitalize(
@@ -85,7 +76,7 @@ class AddonDoc:
 								braille.handler.display.gestureMap._map[g]))),
 					punctuationSeparator)
 			doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
-			doc += '</ul>'
+			doc += "</ul>"
 
 			# list keyboard layouts
 			if not instanceGP.noKeyboarLayout() and 'keyboardLayouts' in configBE.iniProfile:
@@ -98,13 +89,14 @@ class AddonDoc:
 					doc += '<li>{}.</li>'.format(l)
 				doc += '</ol>'
 		else:
-			doc += ("<h2>" + _("Warning:") + "</h2><p>" +
-					_("BrailleExtender has no gesture map yet for your braille display.") + "<br />" +
-					_("However, you can still assign your own gestures in the \"Input Gestures\" dialog (under Preferences menu).") + "</p>"
-					)
-		doc += ("<h2>" + _("Shortcuts on system keyboard specific to the add-on") +
-				" (%s)</h2>") % str(len(gestures) - 4)
-		doc += '<ul>'
+			doc += (
+				"<h2>" + _("Warning:") + "</h2><p>" +
+				_("BrailleExtender has no gesture map yet for your braille display.") + "<br />" +
+				_("However, you can still assign your own gestures in the \"Input Gestures\" dialog (under Preferences menu).") + "</p>"
+			)
+		doc += ("<h2>" + _("Add-on gestures on the system keyboard") +
+				" (%s)</h2>") % (len(gestures) - 4)
+		doc += "<ul>"
 		for g in [k for k in gestures if k.lower().startswith('kb:')]:
 			if g.lower() not in [
 				"kb:volumeup",
@@ -121,30 +113,35 @@ class AddonDoc:
 					punctuationSeparator
 				)
 		doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
-		doc += '</ul>'
+		doc += "</ul>"
+		translators = {
+			_("Arabic"): "Ikrami Ahmad",
+			_("Croatian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>",
+			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
+			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
+			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
+			_("Polish"): "Zvonimir Stanečić, Dorota Krać",
+			_("Russian"): "Zvonimir Stanečić, Pavel Kaplan <pavel46@gmail.com>",
+		}
 		doc += "<h2>" + _("Copyrights and acknowledgements") + "</h2>" + (''.join([
 			"<p>",
-			_("Copyright (C) 2016-2020 André-Abush Clause and other contributors:"),
-			"<br />",
+			"Copyright (C) 2016-2020 André-Abush Clause ", _("and other contributors"),
+			":<br />",
 			"<pre>%s\n%s</pre>" % (addonURL, addonGitHubURL),
 			"</p>",
-			"<h3>" + _("Translators") + "</h3><ul>",
-				"<li>", _("Arabic"), punctuationSeparator, ": Ikrami Ahmad",
-				"</li><li>", _("Croatian"), punctuationSeparator, ": Zvonimir Stanečić &lt;zvonimirek222@yandex.com&gt;",
-				"</li><li>", _("German"), punctuationSeparator, ": Adriani Botez &lt;adriani.botez@gmail.com&gt;, Karl Eick, Jürgen Schwingshandl &lt;jbs@b-a-c.at&gt;",
-				"</li><li>", _("Hebrew"), punctuationSeparator, ": Shmuel Naaman &lt;shmuel_naaman@yahoo.com&gt;, Afik Sofer, David Rechtman, Pavel Kaplan",
-				"</li><li>", _("Persian"), punctuationSeparator, ": Mohammadreza Rashad &lt;mohammadreza5712@gmail.com&gt;",
-				"</li><li>", _("Polish"), punctuationSeparator, ": Zvonimir Stanečić, Dorota Krać",
-				"</li><li>", _("Russian"), punctuationSeparator, ": Zvonimir Stanečić, Pavel Kaplan &lt;pavel46@gmail.com&gt;",
-			"</li></ul>",
-			"<h3>"+_("Code contributions and other")+"</h3><p>" + _("Additional third party copyrighted code is included:") + "</p>",
+			"<h3>" + _("Translators") + "</h3><ul>"
+		]))
+		for language, authors in translators.items():
+			doc += f"<li>{language}{punctuationSeparator}: {authors}</li>"
+		doc += ''.join([
+			"</ul>",
+			"<h3>" + _("Code contributions and other")+"</h3><p>" + _("Additional third party copyrighted code is included:") + "</p>",
 			"""<ul><li><em>Attribra</em>{SEP}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → <a href="https://github.com/albzan/attribra/">https://github.com/albzan/attribra/</a></li>
 		""".format(SEP=punctuationSeparator), "</ul>",
 			"<p>" + _("Thanks also to") + punctuationSeparator +": ",
 			"Daniel Cotto, Corentin, Louis.</p>",
 			"<p>" + _("And thank you very much for all your feedback and comments.") + " ☺</p>"
-			])
-		)
+		])
 		ui.browseableMessage(doc, _("%s\'s documentation") % addonName, True)
 
 	@staticmethod
@@ -211,5 +208,5 @@ class AddonDoc:
 								self.getDocScript(g))),
 						punctuationSeparator)
 		doc = re.sub(r'[  ]?;(</li>)$', r'.\1', doc)
-		doc += '</ul>'
+		doc += "</ul>"
 		return doc

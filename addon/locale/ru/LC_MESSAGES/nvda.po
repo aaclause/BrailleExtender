@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-02-08 14:56+0100\n"
-"PO-Revision-Date: 2020-02-08 15:02+0100\n"
+"POT-Creation-Date: 2020-02-10 10:47+0100\n"
+"PO-Revision-Date: 2020-02-10 10:51+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -798,60 +798,48 @@ msgstr "Простые сочетания клавиш"
 msgid "Usual shortcuts"
 msgstr "стандартные сочитания клавиш"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+#: addon/globalPlugins/brailleExtender/addonDoc.py:55
 msgid "Standard NVDA commands"
 msgstr "Стандартные команды NVDA"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
 #: addon/globalPlugins/brailleExtender/settings.py:751
 msgid "Modifier keys"
 msgstr "Модификаторы"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Quick navigation keys"
 msgstr "Клавиши быстрой навигации"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:63
-msgid ""
-"In virtual documents (HTML/PDF/…) you can navigate element type by element "
-"type using keyboard. These navigation keys should work with your braille "
-"terminal equally.</p><p>In addition to these, there are some specific "
-"shortcuts:"
-msgstr ""
-"в виртуальных документах, таких как  (HTML/PDF/…) вы имеете возможность "
-"осуществлять быструю навигацию по различным типам элементов с помощью "
-"клавиатуры брайлевского ввода вашего дисплея. кроме этого имеются также "
-"несколько дополнительных специфических команд."
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:66
+#: addon/globalPlugins/brailleExtender/addonDoc.py:61
 msgid "Rotor feature"
 msgstr "Функция ротора"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:69
+#: addon/globalPlugins/brailleExtender/addonDoc.py:63
 msgid "Gadget commands"
 msgstr "специальные команды дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:73
+#: addon/globalPlugins/brailleExtender/addonDoc.py:65
 msgid "Shortcuts defined outside add-on"
 msgstr "Сочетания клавиш назначенные вне дополнения"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:94
+#: addon/globalPlugins/brailleExtender/addonDoc.py:85
 msgid "Keyboard configurations provided"
 msgstr "установленные профили клавиатуры брайлевского ввода"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:96
+#: addon/globalPlugins/brailleExtender/addonDoc.py:87
 msgid "Keyboard configurations are"
 msgstr "доступны следующие профили конфигурации брайлевской клавиатуры:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:101
+#: addon/globalPlugins/brailleExtender/addonDoc.py:93
 msgid "Warning:"
 msgstr "предупреждение"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:102
+#: addon/globalPlugins/brailleExtender/addonDoc.py:94
 msgid "BrailleExtender has no gesture map yet for your braille display."
 msgstr "У Braille extender ещё нет жестов для вашего брайдевского дисплея."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:103
+#: addon/globalPlugins/brailleExtender/addonDoc.py:95
 msgid ""
 "However, you can still assign your own gestures in the \"Input Gestures\" "
 "dialog (under Preferences menu)."
@@ -859,87 +847,85 @@ msgstr ""
 "однако вы можете самостоятельно назначить сочетания горячих клавиш для "
 "большинства функций Braille Extender в настройках жестов ввода NVDA."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:105
-msgid "Shortcuts on system keyboard specific to the add-on"
-msgstr ""
-"сочитания горячих клавиш системной клавиатуры для специфических функций "
-"дополнения"
+#: addon/globalPlugins/brailleExtender/addonDoc.py:97
+msgid "Add-on gestures on the system keyboard"
+msgstr "Жесты дополнения на системной клавиатуре"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:125
-msgid "Copyrights and acknowledgements"
-msgstr "Авторские права и благодарность"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:127
-msgid "Copyright (C) 2016-2020 André-Abush Clause and other contributors:"
-msgstr "Авторские права (C) 2016-2020 André-Abush Clause и другие сотрудники:"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:131
-msgid "Translators"
-msgstr "переводчики"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:118
 msgid "Arabic"
 msgstr "Арабский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:133
+#: addon/globalPlugins/brailleExtender/addonDoc.py:119
 msgid "Croatian"
 msgstr "хорватский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:134
+#: addon/globalPlugins/brailleExtender/addonDoc.py:120
 msgid "German"
 msgstr "немецкий"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:135
+#: addon/globalPlugins/brailleExtender/addonDoc.py:121
 msgid "Hebrew"
 msgstr "Иврит"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:136
+#: addon/globalPlugins/brailleExtender/addonDoc.py:122
 msgid "Persian"
 msgstr "персидский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:137
+#: addon/globalPlugins/brailleExtender/addonDoc.py:123
 msgid "Polish"
 msgstr "Польский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:138
+#: addon/globalPlugins/brailleExtender/addonDoc.py:124
 msgid "Russian"
 msgstr "русский"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:140
+#: addon/globalPlugins/brailleExtender/addonDoc.py:126
+msgid "Copyrights and acknowledgements"
+msgstr "Авторские права и благодарность"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:128
+msgid "and other contributors"
+msgstr "и другие сотрудники"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+msgid "Translators"
+msgstr "переводчики"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:138
 msgid "Code contributions and other"
 msgstr "Внесение в код и другие"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:140
+#: addon/globalPlugins/brailleExtender/addonDoc.py:138
 msgid "Additional third party copyrighted code is included:"
 msgstr ""
 "содержит Дополнительные фрагменты кода от третьих лиц, защищенные авторским "
 "правом.  "
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:143
+#: addon/globalPlugins/brailleExtender/addonDoc.py:141
 msgid "Thanks also to"
 msgstr "спасибо также"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:145
+#: addon/globalPlugins/brailleExtender/addonDoc.py:143
 msgid "And thank you very much for all your feedback and comments."
 msgstr ""
 "а Также, спасибо всем вам за ваши коментарии пересланные по электронной "
 "почте."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:148
+#: addon/globalPlugins/brailleExtender/addonDoc.py:145
 #, python-format
 msgid "%s's documentation"
 msgstr "помощь для %s"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:164
+#: addon/globalPlugins/brailleExtender/addonDoc.py:161
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "эмулирует нажатие %s на системной клавиатуре."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:171
+#: addon/globalPlugins/brailleExtender/addonDoc.py:168
 msgid "description currently unavailable for this shortcut"
 msgstr "описание функции данного сочитания клавиш пока недоступно."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:189
+#: addon/globalPlugins/brailleExtender/addonDoc.py:186
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1937,6 +1923,26 @@ msgstr ""
 msgid "actions and quick navigation through a rotor"
 msgstr ""
 "выполнение некоторых действий и функций быстрой навигации посредством ротора."
+
+#~ msgid ""
+#~ "In virtual documents (HTML/PDF/…) you can navigate element type by "
+#~ "element type using keyboard. These navigation keys should work with your "
+#~ "braille terminal equally.</p><p>In addition to these, there are some "
+#~ "specific shortcuts:"
+#~ msgstr ""
+#~ "в виртуальных документах, таких как  (HTML/PDF/…) вы имеете возможность "
+#~ "осуществлять быструю навигацию по различным типам элементов с помощью "
+#~ "клавиатуры брайлевского ввода вашего дисплея. кроме этого имеются также "
+#~ "несколько дополнительных специфических команд."
+
+#~ msgid "Shortcuts on system keyboard specific to the add-on"
+#~ msgstr ""
+#~ "сочитания горячих клавиш системной клавиатуры для специфических функций "
+#~ "дополнения"
+
+#~ msgid "Copyright (C) 2016-2020 André-Abush Clause and other contributors:"
+#~ msgstr ""
+#~ "Авторские права (C) 2016-2020 André-Abush Clause и другие сотрудники:"
 
 #~ msgid "%s menu"
 #~ msgstr "%s меню"

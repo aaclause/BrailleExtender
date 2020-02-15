@@ -46,13 +46,13 @@ import tones
 import ui
 import versionInfo
 import virtualBuffers
+from . import patchs
 from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
 from .updateCheck import *
 from . import dictionaries
 from . import huc
-from . import patchs
 from .common import *
 
 instanceGP = None

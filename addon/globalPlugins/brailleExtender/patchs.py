@@ -629,7 +629,7 @@ def _translate(self, endWord):
 #: louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
-	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
+	return b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in tablesList])
 
 # applying patches
 braille.Region.update = update

@@ -19,6 +19,7 @@ from collections import namedtuple
 from . import configBE
 from .common import *
 from . import huc
+from logHandler import log
 
 BrailleDictEntry = namedtuple("BrailleDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
 OPCODE_SIGN = "sign"
@@ -49,11 +50,12 @@ invalidDictTables = set()
 
 def checkTable(path):
 	global invalidDictTables
-	try:
-		louis.checkTable([path])
-		return True
-	except RuntimeError: invalidDictTables.add(path)
-	return False
+	tablesString = b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in [path]])
+	if not louis.liblouis.lou_checkTable(tablesString):
+		log.error("Can't compile: tables %s" % path)
+		invalidDictTables.add(path)
+		return False
+	return True
 
 def getValidPathsDict():
 	types = ["tmp", "table", "default"]

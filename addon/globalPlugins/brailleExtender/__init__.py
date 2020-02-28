@@ -46,6 +46,7 @@ import tones
 import ui
 import versionInfo
 import virtualBuffers
+from . import converter
 from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
@@ -1140,6 +1141,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else: ui.message(_("Buffer empty"))
 	script_showBrailleViewSaved.__doc__ = _("Show the saved braille view through a flash message") + HLP_browseModeInfo
 
+	def script_converter(self, gesture):
+		gui.mainFrame._popupSettingsDialog(converter.Converter)
+	script_converter.__doc__ = _("Start braille converter")
+
 	# section autoTest
 	autoTestPlayed = False
 	autoTestTimer = None
@@ -1268,6 +1273,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+u"] = "translateInBRU"
 	__gestures["kb:nvda+alt+i"] = "charsToCellDescriptions"
 	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
+	__gestures["kb:nvda+alt+p"] = "converter"
 	__gestures["kb:nvda+alt+y"] = "addDictionaryEntry"
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 

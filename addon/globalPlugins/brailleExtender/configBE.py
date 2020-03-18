@@ -51,7 +51,22 @@ CHOICE_hex = 10
 CHOICE_dec = 11
 CHOICE_oct = 12
 CHOICE_bin = 13
-
+CHOICES_undefinedCharRepr = [
+	_("Use braille table behavior"),
+	_("Dots 1-8 (⣿)"),
+	_("Dots 1-6 (⠿)"),
+	_("Empty cell (⠀)"),
+	_("Other dot pattern (e.g.: 6-123456)"),
+	_("Question mark (depending output table)"),
+	_("Other sign/pattern (e.g.: \, ??)"),
+	_("Hexadecimal, Liblouis style"),
+	_("Hexadecimal, HUC8"),
+	_("Hexadecimal, HUC6"),
+	_("Hexadecimal"),
+	_("Decimal"),
+	_("Octal"),
+	_("Binary")
+]
 outputMessage = dict([
 	(CHOICE_none,             _("none")),
 	(CHOICE_braille,          _("braille only")),

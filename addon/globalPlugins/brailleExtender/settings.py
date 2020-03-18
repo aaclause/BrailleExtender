@@ -364,22 +364,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
 		# Translators: label of a dialog.
 		label = _("Representation of &undefined characters")
-		choices = [
-			_("Use braille table behavior"),
-			_("Dots 1-8 (⣿)"),
-			_("Dots 1-6 (⠿)"),
-			_("Empty cell (⠀)"),
-			_("Other dot pattern (e.g.: 6-123456)"),
-			_("Question mark (depending output table)"),
-			_("Other sign/pattern (e.g.: \, ??)"),
-			_("Hexadecimal, Liblouis style"),
-			_("Hexadecimal, HUC8"),
-			_("Hexadecimal, HUC6"),
-			_("Hexadecimal"),
-			_("Decimal"),
-			_("Octal"),
-			_("Binary")
-		]
+		choices = configBE.CHOICES_undefinedCharRepr
 		self.undefinedCharReprList = sHelper.addLabeledControl(label, wx.Choice, choices=choices)
 		self.undefinedCharReprList.Bind(wx.EVT_CHOICE, self.onUndefinedCharReprList)
 		self.undefinedCharReprList.SetSelection(config.conf["brailleExtender"]["undefinedCharReprMethod"])

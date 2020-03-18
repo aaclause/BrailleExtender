@@ -194,19 +194,24 @@ def reload_brailledisplay(bd_name):
 	ui.message(_("Reload failed"))
 	return False
 
-def currentCharDesc():
-	ch = getCurrentChar()
-	if not ch: return ui.message(_("Not a character"))
+def currentCharDesc(ch=None, display=True):
+	if not ch:
+		ch = getCurrentChar()
+		if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
 	if c:
-		try: descChar = unicodedata.name(ch)
-		except ValueError: descChar = _("unknown")
+		charDescCurLang = getSpeechSymbols(ch)
+		try: charDesc = unicodedata.name(ch)
+		except ValueError: charDesc = _("N/A")
 		HUCrepr = " (%s, %s)" % (huc.translate(ch, False), huc.translate(ch, True))
-		s = '%c%s: %s; %s; %s; %s; %s [%s]' % (ch, HUCrepr, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch))
+		brch = getTextInBraille(ch)
+		brchDesc = huc.unicodeBrailleToDescription(brch)
+		charCategory = unicodedata.category(ch)
+		s = f"{ch}{HUCrepr}: {hex(c)}, {c}, {oct(c)}, {bin(c)}, {charDescCurLang} / {charDesc} [{charCategory}]. {brch} {brchDesc}"
+		if not display: return s
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
-			brch = getTextInBraille(ch)
-			ui.browseableMessage("%s\n%s (%s)" % (s, brch, huc.unicodeBrailleToDescription(brch)), r'\x%d (%s) - Char info' % (c, ch))
+			ui.browseableMessage(s, r'\x%d (%s) - Char info' % (c, ch))
 	else: ui.message(_("Not a character"))
 
 def getCurrentChar():

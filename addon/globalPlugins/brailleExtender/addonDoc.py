@@ -77,12 +77,13 @@ def getFeaturesDoc():
 			"</p><p>",
 			"If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 cells, the interpretation will be performed each time 3 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:",
 			"</p><ol>",
-			"First specify the basis as follows:<ul>",
-			f"<li>⠭ or ⠓{punctuationSeparator}:" + _("for a hexadecimal value") + "</li>",
-			f"⠙{punctuationSeparator}: " + _("for a decimal value") + "</li>",
-			f"⠕{punctuationSeparator}: " + _("for an octal value") + "</li>",
-			f"⠃{punctuationSeparator}: " + ("for a binary value") + "</li>",
-			"</ul>",
+			"<li>" + _("Specify the basis as follows") + f"{punctuationSeparator}:",
+			"<ul><li>",
+			_("⠭ or ⠓") + f"{punctuationSeparator}: " + _("for a hexadecimal value") + "</li>",
+			f"<li>⠙{punctuationSeparator}: " + _("for a decimal value") + "</li>",
+			f"<li>⠕{punctuationSeparator}: " + _("for an octal value") + "</li>",
+			f"<li>⠃{punctuationSeparator}: " + ("for a binary value") + "</li>",
+			"</ul></li>",
 			"<li>" + _("Enter the value of the character according to the previously selected basis.") + "</li>",
 			"<li>" + _("Press Space to validate.") + "</li>",
 			"</ol>",
@@ -104,7 +105,7 @@ def getFeaturesDoc():
 			_("With this method, type the left side dots, then the right side dots. If one side is empty, type the dots correspondig to the opposite side twice, or type the dots corresponding to the non-empty side in 2 steps."),
 			"<br />", _("For example:"),
 			"</p><ul>",
-			"<li>" + _("For ⠛: press Dots 1-2 then dots 4-5.") + "</li>",
+			"<li>" + _("For ⠛: press dots 1-2 then dots 4-5.") + "</li>",
 			"<li>" + _("For ⠃: press dots 1-2 then dots 1-2, or dot 1 then dot 2.") + "</li>",
 			"<li>" + _("For ⠘: press 4-5 then 4-5, or dot 4 then dot 5.") + "</li>",
 			"</ul>",
@@ -127,7 +128,7 @@ def getFeaturesDoc():
 			"<li>" + _("Dot 1, then dots 2-4-5, then space.") + "</li>",
 			"<li>" + _("Dots 1-2-4, then dot 5, then space.") + "</li>",
 			"<li>" + _("Dot 2, then dot 1, then dot 5, then dot 4, and then space.") + "</li>",
-			"<li>" + _("Etcc.") + "</li>",
+			"<li>" + _("Etc.") + "</li>",
 			"</ul>"
 		]
 	}
@@ -280,15 +281,9 @@ class AddonDoc:
 		translators = {
 			_("Arabic"): "Ikrami Ahmad",
 			_("Croatian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>",
-			_(
-				"French"
-			): "Sof <hellosof@gmail.com>, André-Abush Clause <dev@andreabc.net>",
-			_(
-				"German"
-			): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
-			_(
-				"Hebrew"
-			): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
+			_("French"): "Sof <hellosof@gmail.com>, André-Abush Clause <dev@andreabc.net>",
+			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
+			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
 			_("Polish"): "Zvonimir Stanečić, Dorota Krać",
 			_("Russian"): "Zvonimir Stanečić, Pavel Kaplan <pavel46@gmail.com>",

@@ -257,7 +257,6 @@ def getTextInBraille(t=None, table=None):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
 	if not table or table == "current": table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
-	else: table = [os.path.join(brailleTables.TABLES_DIR, table)]
 	nt = []
 	res = ''
 	t = t.split("\n")

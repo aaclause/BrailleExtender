@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-02-08 14:56+0100\n"
-"PO-Revision-Date: 2020-02-08 15:07+0100\n"
+"POT-Creation-Date: 2020-03-16 17:38+0100\n"
+"PO-Revision-Date: 2020-03-16 17:41+0100\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -791,61 +791,50 @@ msgstr "jednostavne tipke"
 msgid "Usual shortcuts"
 msgstr "uobičajeni prečaci"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+#: addon/globalPlugins/brailleExtender/addonDoc.py:55
 msgid "Standard NVDA commands"
 msgstr "standardni NVDA prečaci"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
 #: addon/globalPlugins/brailleExtender/settings.py:751
 msgid "Modifier keys"
 msgstr "Modifikacijske tipke"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Quick navigation keys"
 msgstr "Tipke za brzu navigaciju"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:63
-msgid ""
-"In virtual documents (HTML/PDF/…) you can navigate element type by element "
-"type using keyboard. These navigation keys should work with your braille "
-"terminal equally.</p><p>In addition to these, there are some specific "
-"shortcuts:"
-msgstr ""
-"U virtualnim dokumentima (HTML/PDF/…) možete se kretati po tipovima "
-"elemenata koristeći tipkovnicu. ovi tipkovnički prečaci bi trebali raditi sa "
-"vašim brajičnim retkom podjednako.</p><p>Postoje također i dodatni prečaci:"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:66
+#: addon/globalPlugins/brailleExtender/addonDoc.py:61
 msgid "Rotor feature"
 msgstr "značajka rotora"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:69
+#: addon/globalPlugins/brailleExtender/addonDoc.py:63
 msgid "Gadget commands"
 msgstr "komande gadgeti"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:73
+#: addon/globalPlugins/brailleExtender/addonDoc.py:65
 msgid "Shortcuts defined outside add-on"
 msgstr "Prečaci definirani izvan dodatka"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:94
+#: addon/globalPlugins/brailleExtender/addonDoc.py:85
 msgid "Keyboard configurations provided"
 msgstr "Omogućene konfiguracije tipkovnice"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:96
+#: addon/globalPlugins/brailleExtender/addonDoc.py:87
 msgid "Keyboard configurations are"
 msgstr "tipkovničke konfiguracije su"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:101
+#: addon/globalPlugins/brailleExtender/addonDoc.py:93
 msgid "Warning:"
 msgstr "Upozorenje:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:102
+#: addon/globalPlugins/brailleExtender/addonDoc.py:94
 msgid "BrailleExtender has no gesture map yet for your braille display."
 msgstr ""
 "BrailleExtender još uvijek nema profil tipkovničkih prečaca za vaš brajični "
 "redak."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:103
+#: addon/globalPlugins/brailleExtender/addonDoc.py:95
 msgid ""
 "However, you can still assign your own gestures in the \"Input Gestures\" "
 "dialog (under Preferences menu)."
@@ -853,82 +842,81 @@ msgstr ""
 "Međutim, još uvijek možete odrediti nove prečace u NVDA izborniku>ulazne "
 "geste."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:105
-msgid "Shortcuts on system keyboard specific to the add-on"
-msgstr ""
-"Tipkovnički prečaci na tipkovnici sustava specifični samo za ovaj dodatak"
+#: addon/globalPlugins/brailleExtender/addonDoc.py:97
+msgid "Add-on gestures on the system keyboard"
+msgstr "Prečaci dodatka na tipkovnici sustava"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:125
-msgid "Copyrights and acknowledgements"
-msgstr "Autorska prava i zahvale"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:127
-msgid "Copyright (C) 2016-2020 André-Abush Clause and other contributors:"
-msgstr "Copyright (C) 2016-2020 André-Abush Clause i drugi doprinositelji:"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:131
-msgid "Translators"
-msgstr "Prevoditelji"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:118
 msgid "Arabic"
 msgstr "Arapski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:133
+#: addon/globalPlugins/brailleExtender/addonDoc.py:119
 msgid "Croatian"
 msgstr "Hrvatski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:134
+#: addon/globalPlugins/brailleExtender/addonDoc.py:120
 msgid "German"
 msgstr "njemački"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:135
+#: addon/globalPlugins/brailleExtender/addonDoc.py:121
 msgid "Hebrew"
 msgstr "hebrejski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:136
+#: addon/globalPlugins/brailleExtender/addonDoc.py:122
 msgid "Persian"
 msgstr "Perzijski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:137
+#: addon/globalPlugins/brailleExtender/addonDoc.py:123
 msgid "Polish"
 msgstr "Poljski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:138
+#: addon/globalPlugins/brailleExtender/addonDoc.py:124
 msgid "Russian"
 msgstr "Ruski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:140
+#: addon/globalPlugins/brailleExtender/addonDoc.py:126
+msgid "Copyrights and acknowledgements"
+msgstr "Autorska prava i zahvale"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:128
+msgid "and other contributors"
+msgstr "I drugi suradnici"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+msgid "Translators"
+msgstr "Prevoditelji"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:138
 msgid "Code contributions and other"
 msgstr "doprinosi u kodu i ostalo"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:140
+#: addon/globalPlugins/brailleExtender/addonDoc.py:138
 msgid "Additional third party copyrighted code is included:"
 msgstr "Dodan je kod treće strane, zaštićen autorskim pravima:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:143
+#: addon/globalPlugins/brailleExtender/addonDoc.py:141
 msgid "Thanks also to"
 msgstr "također zahvaljujem"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:145
+#: addon/globalPlugins/brailleExtender/addonDoc.py:143
 msgid "And thank you very much for all your feedback and comments."
 msgstr "i hvala vam za sve vaše povratne informacije i e-mail komentare"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:148
+#: addon/globalPlugins/brailleExtender/addonDoc.py:145
 #, python-format
 msgid "%s's documentation"
 msgstr "%s's pomoć"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:164
+#: addon/globalPlugins/brailleExtender/addonDoc.py:161
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "Oponaša pritisak %s na tipkovnici sustava"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:171
+#: addon/globalPlugins/brailleExtender/addonDoc.py:168
 msgid "description currently unavailable for this shortcut"
 msgstr "Opis je trenutno nedostupan za ovaj prečac"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:189
+#: addon/globalPlugins/brailleExtender/addonDoc.py:186
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1920,6 +1908,24 @@ msgstr ""
 #: buildVars.py:48
 msgid "actions and quick navigation through a rotor"
 msgstr "Brzo kretanje i navigacija putem rotora"
+
+#~ msgid ""
+#~ "In virtual documents (HTML/PDF/…) you can navigate element type by "
+#~ "element type using keyboard. These navigation keys should work with your "
+#~ "braille terminal equally.</p><p>In addition to these, there are some "
+#~ "specific shortcuts:"
+#~ msgstr ""
+#~ "U virtualnim dokumentima (HTML/PDF/…) možete se kretati po tipovima "
+#~ "elemenata koristeći tipkovnicu. ovi tipkovnički prečaci bi trebali raditi "
+#~ "sa vašim brajičnim retkom podjednako.</p><p>Postoje također i dodatni "
+#~ "prečaci:"
+
+#~ msgid "Shortcuts on system keyboard specific to the add-on"
+#~ msgstr ""
+#~ "Tipkovnički prečaci na tipkovnici sustava specifični samo za ovaj dodatak"
+
+#~ msgid "Copyright (C) 2016-2020 André-Abush Clause and other contributors:"
+#~ msgstr "Copyright (C) 2016-2020 André-Abush Clause i drugi doprinositelji:"
 
 #~ msgid "%s menu"
 #~ msgstr "%s izbornik"

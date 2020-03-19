@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-02-08 14:56+0100\n"
-"PO-Revision-Date: 2020-02-08 14:59+0100\n"
+"POT-Creation-Date: 2020-03-16 17:38+0100\n"
+"PO-Revision-Date: 2020-03-16 17:41+0100\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: pl\n"
@@ -798,62 +798,50 @@ msgstr "Klawisze podstawowe"
 msgid "Usual shortcuts"
 msgstr "Klawisze zwyczajne"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:56
+#: addon/globalPlugins/brailleExtender/addonDoc.py:55
 msgid "Standard NVDA commands"
 msgstr "Standardowe skróty NVDA"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:59
+#: addon/globalPlugins/brailleExtender/addonDoc.py:57
 #: addon/globalPlugins/brailleExtender/settings.py:751
 msgid "Modifier keys"
 msgstr "modyfikatory"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:62
+#: addon/globalPlugins/brailleExtender/addonDoc.py:59
 msgid "Quick navigation keys"
 msgstr "polecenia szybkiej nawigacji"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:63
-msgid ""
-"In virtual documents (HTML/PDF/…) you can navigate element type by element "
-"type using keyboard. These navigation keys should work with your braille "
-"terminal equally.</p><p>In addition to these, there are some specific "
-"shortcuts:"
-msgstr ""
-"W dokumentach wirtualnych (HTML/PDF/…) można nawigować według typów "
-"elementów używając klawiatury. Klawisze szybkiej nawigacji powinny wtedy "
-"działać bez zmian z monitorem brajlowskim.</p><p>Dodatkowo, polecenia "
-"szybkiej nawigacji można wywoływać z poziomu linijki brajlowskiej.:"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:66
+#: addon/globalPlugins/brailleExtender/addonDoc.py:61
 msgid "Rotor feature"
 msgstr "Funkcje rotora"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:69
+#: addon/globalPlugins/brailleExtender/addonDoc.py:63
 msgid "Gadget commands"
 msgstr "Polecenia gadżetowe"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:73
+#: addon/globalPlugins/brailleExtender/addonDoc.py:65
 msgid "Shortcuts defined outside add-on"
 msgstr "Skróty zdefiniowane poza dodatkiem"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:94
+#: addon/globalPlugins/brailleExtender/addonDoc.py:85
 msgid "Keyboard configurations provided"
 msgstr "domyślne konfiguracje klawiatury"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:96
+#: addon/globalPlugins/brailleExtender/addonDoc.py:87
 msgid "Keyboard configurations are"
 msgstr "Konfiguracje klawiatury to"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:101
+#: addon/globalPlugins/brailleExtender/addonDoc.py:93
 msgid "Warning:"
 msgstr "Uwaga:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:102
+#: addon/globalPlugins/brailleExtender/addonDoc.py:94
 msgid "BrailleExtender has no gesture map yet for your braille display."
 msgstr ""
 "Braille extender jeszcze nie ma mapy gestów do twojego monitora "
 "brajlowskiego."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:103
+#: addon/globalPlugins/brailleExtender/addonDoc.py:95
 msgid ""
 "However, you can still assign your own gestures in the \"Input Gestures\" "
 "dialog (under Preferences menu)."
@@ -861,82 +849,82 @@ msgstr ""
 "można jednak przydzielić swoje własne gesty w \"dialogu zdarzeń wejścia\" w "
 "\"ustawieniach\" NVDA."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:105
-msgid "Shortcuts on system keyboard specific to the add-on"
-msgstr "skróty na systemowej klawiaturze określone dla dodatku"
+#: addon/globalPlugins/brailleExtender/addonDoc.py:97
+msgid "Add-on gestures on the system keyboard"
+msgstr "Polecenia dodatku na klawiaturze systemowej"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:125
-msgid "Copyrights and acknowledgements"
-msgstr "Prawa autorskie i podziękowania"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:127
-msgid "Copyright (C) 2016-2020 André-Abush Clause and other contributors:"
-msgstr "Prawa autorskie (C) 2016-2020 André-Abush Clause i inni współtwórcy:"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:131
-msgid "Translators"
-msgstr "tłumacze"
-
-#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+#: addon/globalPlugins/brailleExtender/addonDoc.py:118
 msgid "Arabic"
 msgstr "arabski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:133
+#: addon/globalPlugins/brailleExtender/addonDoc.py:119
 msgid "Croatian"
 msgstr "Chorwacki"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:134
+#: addon/globalPlugins/brailleExtender/addonDoc.py:120
 msgid "German"
 msgstr "niemiecki"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:135
+#: addon/globalPlugins/brailleExtender/addonDoc.py:121
 msgid "Hebrew"
 msgstr "hebrajski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:136
+#: addon/globalPlugins/brailleExtender/addonDoc.py:122
 msgid "Persian"
 msgstr "perski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:137
+#: addon/globalPlugins/brailleExtender/addonDoc.py:123
 msgid "Polish"
 msgstr "Polski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:138
+#: addon/globalPlugins/brailleExtender/addonDoc.py:124
 msgid "Russian"
 msgstr "rosyjski"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:140
+#: addon/globalPlugins/brailleExtender/addonDoc.py:126
+msgid "Copyrights and acknowledgements"
+msgstr "Prawa autorskie i podziękowania"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:128
+msgid "and other contributors"
+msgstr "i inni współtwórcy"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:132
+msgid "Translators"
+msgstr "tłumacze"
+
+#: addon/globalPlugins/brailleExtender/addonDoc.py:138
 msgid "Code contributions and other"
 msgstr "wkład do kodu i inne"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:140
+#: addon/globalPlugins/brailleExtender/addonDoc.py:138
 msgid "Additional third party copyrighted code is included:"
 msgstr ""
 "Dołączony został dodatkowy kod trzeciej strony, chroniony prawem autorskim:"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:143
+#: addon/globalPlugins/brailleExtender/addonDoc.py:141
 msgid "Thanks also to"
 msgstr "dziękuję również"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:145
+#: addon/globalPlugins/brailleExtender/addonDoc.py:143
 msgid "And thank you very much for all your feedback and comments."
 msgstr "I dziękuję państwu za informacje zwrotne i e-maile."
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:148
+#: addon/globalPlugins/brailleExtender/addonDoc.py:145
 #, python-format
 msgid "%s's documentation"
 msgstr "Pomoc dla %sa"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:164
+#: addon/globalPlugins/brailleExtender/addonDoc.py:161
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "emuluje wciśnięcie %s na klawiaturze systemowej"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:171
+#: addon/globalPlugins/brailleExtender/addonDoc.py:168
 msgid "description currently unavailable for this shortcut"
 msgstr "Opis tego skrótu jest tymczasowo niedostępny"
 
-#: addon/globalPlugins/brailleExtender/addonDoc.py:189
+#: addon/globalPlugins/brailleExtender/addonDoc.py:186
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1936,6 +1924,24 @@ msgstr ""
 #: buildVars.py:48
 msgid "actions and quick navigation through a rotor"
 msgstr "akcje i szybka nawigacja za pomocą rotora"
+
+#~ msgid ""
+#~ "In virtual documents (HTML/PDF/…) you can navigate element type by "
+#~ "element type using keyboard. These navigation keys should work with your "
+#~ "braille terminal equally.</p><p>In addition to these, there are some "
+#~ "specific shortcuts:"
+#~ msgstr ""
+#~ "W dokumentach wirtualnych (HTML/PDF/…) można nawigować według typów "
+#~ "elementów używając klawiatury. Klawisze szybkiej nawigacji powinny wtedy "
+#~ "działać bez zmian z monitorem brajlowskim.</p><p>Dodatkowo, polecenia "
+#~ "szybkiej nawigacji można wywoływać z poziomu linijki brajlowskiej.:"
+
+#~ msgid "Shortcuts on system keyboard specific to the add-on"
+#~ msgstr "skróty na systemowej klawiaturze określone dla dodatku"
+
+#~ msgid "Copyright (C) 2016-2020 André-Abush Clause and other contributors:"
+#~ msgstr ""
+#~ "Prawa autorskie (C) 2016-2020 André-Abush Clause i inni współtwórcy:"
 
 #~ msgid "%s menu"
 #~ msgstr "%s meni"

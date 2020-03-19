@@ -551,16 +551,7 @@ def _translate(self, endWord):
 #: louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
-	if sys.version_info.major == 2:
-		if sys.platform == "win32":
-			return b",".join([x.decode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
-		else:
-			return b",".join([x.decode("UTF-8").encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
-	else:
-		if sys.platform == "win32":
-			return b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in tablesList])
-		else:
-			return b",".join([x.encode("UTF-8") if isinstance(x, str) else bytes(x) for x in tablesList])
+	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
 
 # applying patches
 braille.Region.update = update

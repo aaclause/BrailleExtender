@@ -209,7 +209,7 @@ def undefinedCharProcess(self):
 					start=start,
 					end=end,
 				),
-				table=config.conf["brailleExtender"]["undefinedCharBrailleTable"]
+				table=[config.conf["brailleExtender"]["undefinedCharBrailleTable"]]
 			) for braillePos in allBraillePos}
 	elif config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
 		HUC6 = config.conf["brailleExtender"]["undefinedCharReprMethod"] == configBE.CHOICE_HUC6

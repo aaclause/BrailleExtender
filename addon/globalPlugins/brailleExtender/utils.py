@@ -248,10 +248,14 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 
-def getTextInBraille(t=None, table=None):
+def getTextInBraille(t=None, table=[]):
+	if not isinstance(table, list): raise TypeError("Wrong type for table parameter: %s" % repr(table))
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
-	if not table or table == "current": table = [os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])]
+	if not table or "current" in table:
+		currentTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+		if "current" in table: table[table.index("current")] = currentTable
+		else: table.append(currentTable)
 	nt = []
 	res = ''
 	t = t.split("\n")

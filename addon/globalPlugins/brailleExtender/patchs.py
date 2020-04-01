@@ -151,6 +151,12 @@ def update(self):
 	else:
 		if instanceGP and instanceGP.hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
+	if config.conf["brailleExtender"]["readingRightToLeft"]:
+		if self.cursorPos is not None:
+			self.cursorPos = len(self.brailleCells)-1-self.cursorPos
+		self.brailleCells = self.brailleCells[::-1]
+		self.brailleToRawPos = self.brailleToRawPos[::-1]
+		self.rawToBraillePos = self.rawToBraillePos[::-1]
 
 def setUndefinedChar(t=None):
 	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharReprMethod"]

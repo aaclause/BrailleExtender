@@ -110,6 +110,10 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.reverseScrollBtns.SetValue(config.conf["brailleExtender"]["reverseScrollBtns"])
 
 		# Translators: label of a dialog.
+		self.readingRightToLeft = sHelper.addItem(wx.CheckBox(self, label=_("Reading from right to left")))
+		self.readingRightToLeft.SetValue(config.conf["brailleExtender"]["readingRightToLeft"])
+
+		# Translators: label of a dialog.
 		self.autoScrollDelay = sHelper.addLabeledControl(_("Autoscroll delay (ms)")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=125, max=42000, initial=int(config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD]))
 		self.brailleDisplay1 = sHelper.addLabeledControl(_("First braille display preferred"), wx.Choice, choices=self.bds_v)
 		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
@@ -131,6 +135,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		if self.reverseScrollBtns.IsChecked(): instanceGP.reverseScrollBtns()
 		else: instanceGP.reverseScrollBtns(None, True)
 		config.conf["brailleExtender"]["reverseScrollBtns"] = self.reverseScrollBtns.IsChecked()
+		config.conf["brailleExtender"]["readingRightToLeft"] = self.readingRightToLeft.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechScroll"] = self.stopSpeechScroll.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()

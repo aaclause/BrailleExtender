@@ -195,6 +195,7 @@ def getConfspec():
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"oneHandMode": "boolean(default=False)",
+		"readingRightToLeft": "boolean(default=False)",
 		"oneHandMethod": "integer(min=0, max=%d, default=%d)" % (CHOICE_oneHandMethodDots, CHOICE_oneHandMethodSides),
 		"features": {
 			"attributes": "boolean(default=True)",

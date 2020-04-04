@@ -305,7 +305,7 @@ class AddonDoc:
 				)
 			)
 		)
-		for language, authors in translators.items():
+		for language, authors in sorted(translators.items()):
 			doc += f"<li>{language}{punctuationSeparator}: {escape(authors)}</li>"
 		doc += "".join(
 			[

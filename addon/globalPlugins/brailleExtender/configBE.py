@@ -167,6 +167,7 @@ def getConfspec():
 		"undefinedCharEnd": "string(default=])",
 		"undefinedCharLang": "string(default=Windows)",
 		"undefinedCharBrailleTable": "string(default=current)",
+		"exitAdvancedInputModeAfterOneChar": "boolean(default=False)",
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",

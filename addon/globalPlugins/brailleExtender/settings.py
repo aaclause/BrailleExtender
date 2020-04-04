@@ -407,7 +407,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 			repr_ = re.sub('\-+','-', repr_)
 		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
 		instanceGP.reloadBrailleTables()
-		super(BrailleTablesDlg, self).onOk(evt)
 		if restartRequired:
 			res = gui.messageBox(
 				_("NVDA must be restarted for some new options to take effect. Do you want restart now?"),
@@ -510,6 +509,21 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
+
+class AdvancedDlg(gui.settingsDialogs.SettingsPanel):
+
+	# Translators: title of a dialog.
+	title = _("Advanced")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+
+		# Translators: label of a dialog.
+		self.exitAdvancedInputModeAfterOneChar = sHelper.addItem(wx.CheckBox(self, label=_("E&xit the advanced input mode after typing one character")))
+		self.exitAdvancedInputModeAfterOneChar.SetValue(config.conf["brailleExtender"]["exitAdvancedInputModeAfterOneChar"])
+
+	def onSave(self):
+		config.conf["brailleExtender"]["exitAdvancedInputModeAfterOneChar"] = self.exitAdvancedInputModeAfterOneChar.IsChecked()
 
 
 class UndefinedCharsDlg(gui.settingsDialogs.SettingsDialog):
@@ -975,6 +989,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AttribraDlg,
 		BrailleTablesDlg,
 		RoleLabelsDlg,
+		AdvancedDlg
 	]
 
 	def __init__(self, parent, initialCategory=None):

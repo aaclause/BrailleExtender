@@ -434,18 +434,18 @@ def input_(self, dots):
 		pos = self.untranslatedStart + self.untranslatedCursorPos
 		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
 		if advancedInputStr:
+			res = ''
 			if advancedInputStr[0] in "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭":
 				equiv = {'⠃': 'b', '⠙': 'd', '⠓': 'h', '⠕': 'o', '⠭': 'x', '⡃': 'B', '⡙': 'D', '⡓': 'H', '⡕': 'O', '⡭': 'X'}
 				if advancedInputStr[-1] == '⠀':
 					text = equiv[advancedInputStr[0]]+louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr[1:-1])[0]
 					try:
-						char = getCharFromValue(text)
-						sendChar(char)
+						res = getCharFromValue(text)
+						sendChar(res)
 					except BaseException as err:
 							speech.speakMessage(repr(err))
 							badInput(self)
 				else: self._reportUntranslated(pos)
-				return
 			else:
 				res = huc.isValidHUCInput(advancedInputStr)
 				if res == huc.HUC_INPUT_INCOMPLETE: return self._reportUntranslated(pos)
@@ -453,6 +453,8 @@ def input_(self, dots):
 				else:
 					res = huc.backTranslate(advancedInputStr)
 					sendChar(res)
+			if res and config.conf["brailleExtender"]["exitAdvancedInputModeAfterOneChar"]:
+				instanceGP.advancedInput = False
 		return
 	# For uncontracted braille, translate the buffer for each cell added.
 	# Any new characters produced are then sent immediately.

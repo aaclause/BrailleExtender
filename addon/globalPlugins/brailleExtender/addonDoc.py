@@ -282,7 +282,7 @@ class AddonDoc:
 			_("Arabic"): "Ikrami Ahmad",
 			_("Croatian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>",
 			_("Danish"): "Daniel Gartmann <dg@danielgartmann.dk>",
-			_("English and french"): "Sof <hellosof@gmail.com>, André-Abush Clause <dev@andreabc.net>",
+			_("English and French"): "Sof <hellosof@gmail.com>, André-Abush Clause <dev@andreabc.net>",
 			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
 			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",

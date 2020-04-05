@@ -208,7 +208,11 @@ def splitInTwoCells(dotPattern):
 	return [c1, c2]
 
 def isValidHUCInput(s):
-	if not s or len(s) < 2: return HUC_INPUT_INCOMPLETE
+	if not s: return HUC_INPUT_INCOMPLETE
+	if len(s) == 1:
+		matchePatterns = [e for e in HUC8_patterns.keys() if e.startswith(s)]
+		if matchePatterns: return HUC_INPUT_INCOMPLETE
+		else: return HUC_INPUT_INVALID
 	prefix = s[0:2] if len(s) == 4 else s[0]
 	s = s[2:] if len(s) == 4 else s[1:]
 	size = len(s)

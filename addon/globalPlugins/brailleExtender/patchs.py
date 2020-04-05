@@ -39,6 +39,7 @@ import watchdog
 from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
+from . import advancedInputMode
 from . import dictionaries
 from . import huc
 from .utils import getCurrentChar, getTether, getTextInBraille, getCharFromValue
@@ -435,25 +436,33 @@ def input_(self, dots):
 		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
 		if advancedInputStr:
 			res = ''
-			if advancedInputStr[0] in "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭":
+			abreviations = advancedInputMode.getReplacements([advancedInputStr])
+			startUnicodeValue = "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭"
+			if not abreviations and advancedInputStr[0] in startUnicodeValue: advancedInputStr = config.conf["brailleExtender"]["advancedInputMode"]["startSign"] + advancedInputStr
+			if advancedInputStr == config.conf["brailleExtender"]["advancedInputMode"]["startSign"] or (advancedInputStr.startswith(config.conf["brailleExtender"]["advancedInputMode"]["startSign"]) and len(advancedInputStr) > 1 and advancedInputStr[1] in startUnicodeValue):
 				equiv = {'⠃': 'b', '⠙': 'd', '⠓': 'h', '⠕': 'o', '⠭': 'x', '⡃': 'B', '⡙': 'D', '⡓': 'H', '⡕': 'O', '⡭': 'X'}
 				if advancedInputStr[-1] == '⠀':
-					text = equiv[advancedInputStr[0]]+louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr[1:-1])[0]
+					text = equiv[advancedInputStr[1]] + louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr[2:-1])[0]
 					try:
 						res = getCharFromValue(text)
 						sendChar(res)
 					except BaseException as err:
 							speech.speakMessage(repr(err))
-							badInput(self)
+							return badInput(self)
 				else: self._reportUntranslated(pos)
+			elif abreviations:
+				if len(abreviations) == 1:
+					res = abreviations[0].replaceBy
+					sendChar(res)
+				else: return self._reportUntranslated(pos)
 			else:
 				res = huc.isValidHUCInput(advancedInputStr)
 				if res == huc.HUC_INPUT_INCOMPLETE: return self._reportUntranslated(pos)
-				elif res == huc.HUC_INPUT_INVALID: badInput(self)
+				elif res == huc.HUC_INPUT_INVALID: return badInput(self)
 				else:
 					res = huc.backTranslate(advancedInputStr)
 					sendChar(res)
-			if res and config.conf["brailleExtender"]["exitAdvancedInputModeAfterOneChar"]:
+			if res and config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"]:
 				instanceGP.advancedInput = False
 		return
 	# For uncontracted braille, translate the buffer for each cell added.
@@ -482,7 +491,9 @@ def input_(self, dots):
 def sendChar(char):
 	nvwave.playWaveFile(os.path.join(configBE.baseDir, "res/sounds/keyPress.wav"))
 	core.callLater(0, brailleInput.handler.sendChars, char)
-	core.callLater(100, speech.speakSpelling, char)
+	if len(char) == 1:
+		core.callLater(100, speech.speakSpelling, char)
+	else: core.callLater(100, speech.speakMessage, char)
 
 def badInput(self):
 	nvwave.playWaveFile("waves/textError.wav")

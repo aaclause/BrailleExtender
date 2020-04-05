@@ -510,20 +510,20 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 			utils.refreshBD()
 		else: evt.Skip()
 
-class AdvancedDlg(gui.settingsDialogs.SettingsPanel):
+class AdvancedInputModeDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = _("Advanced")
+	title = _("Advanced input mode")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 
 		# Translators: label of a dialog.
-		self.exitAdvancedInputModeAfterOneChar = sHelper.addItem(wx.CheckBox(self, label=_("E&xit the advanced input mode after typing one character")))
-		self.exitAdvancedInputModeAfterOneChar.SetValue(config.conf["brailleExtender"]["exitAdvancedInputModeAfterOneChar"])
+		self.stopAdvancedInputModeAfterOneChar = sHelper.addItem(wx.CheckBox(self, label=_("E&xit the advanced input mode after typing one pattern")))
+		self.stopAdvancedInputModeAfterOneChar.SetValue(config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"])
 
 	def onSave(self):
-		config.conf["brailleExtender"]["exitAdvancedInputModeAfterOneChar"] = self.exitAdvancedInputModeAfterOneChar.IsChecked()
+		config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"] = self.stopAdvancedInputModeAfterOneChar.IsChecked()
 
 
 class UndefinedCharsDlg(gui.settingsDialogs.SettingsDialog):
@@ -989,7 +989,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AttribraDlg,
 		BrailleTablesDlg,
 		RoleLabelsDlg,
-		AdvancedDlg
+		AdvancedInputModeDlg
 	]
 
 	def __init__(self, parent, initialCategory=None):

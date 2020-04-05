@@ -11,6 +11,7 @@ addonHandler.initTranslation()
 import braille
 from . import configBE
 from collections import OrderedDict
+import config
 import cursorManager
 import globalCommands
 import ui
@@ -41,6 +42,8 @@ def getFeaturesDoc():
 	for i in range(1, len(undefinedCharsSamples)):
 		ch = undefinedCharsSamples[i][0][0]
 		undefinedCharsSamples[i][0] = "%s (%s)" % (ch, utils.getSpeechSymbols(ch))
+
+	braillePattern = config.conf["brailleExtender"]["advancedInputMode"]["startSign"]
 
 	features = {
 		_("Representation of undefined characters"): [
@@ -77,6 +80,7 @@ def getFeaturesDoc():
 			"</p><p>",
 			"If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 cells, the interpretation will be performed each time 3 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:",
 			"</p><ol>",
+			"<li>" + _(f"Enter {braillePattern}") + "</li>",
 			"<li>" + _("Specify the basis as follows") + f"{punctuationSeparator}:",
 			"<ul><li>",
 			_("⠭ or ⠓") + f"{punctuationSeparator}: " + _("for a hexadecimal value") + "</li>",

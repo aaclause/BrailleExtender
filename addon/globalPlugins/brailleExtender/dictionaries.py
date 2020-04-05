@@ -21,7 +21,7 @@ from .common import *
 from . import huc
 from logHandler import log
 
-BrailleDictEntry = namedtuple("BrailleDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
+TableDictEntry = namedtuple("TableDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
 OPCODE_SIGN = "sign"
 OPCODE_MATH = "math"
 OPCODE_REPLACE = "replace"
@@ -82,7 +82,7 @@ def getDictionary(type_):
 				if line[1] == "replace" and len(line) == 3: line.append("")
 				else: continue
 			if len(line) == 4: line.append("")
-			out.append(BrailleDictEntry(line[1], line[2], line[3], line[0], ' '.join(line[4:]).replace("	", " ")))
+			out.append(TableDictEntry(line[1], line[2], line[3], line[0], ' '.join(line[4:]).replace("	", " ")))
 	return True, out
 
 def saveDict(type_, dict_):
@@ -128,7 +128,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		# Translators: The label for the combo box of dictionary entries in speech dictionary dialog.
+		# Translators: The label for the combo box of dictionary entries in table dictionary dialog.
 		entriesLabelText = _("Dictionary &entries")
 		self.dictList = sHelper.addLabeledControl(entriesLabelText, wx.ListCtrl, style=wx.LC_REPORT|wx.LC_SINGLE_SEL,size=(550,350))
 		# Translators: The label for a column in dictionary entries list used to identify comments for the entry.
@@ -145,19 +145,19 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in speech dictionaries dialog to add new entries.
+			# Translators: The label for a button in table dictionaries dialog to add new entries.
 			label=_("&Add")
 		).Bind(wx.EVT_BUTTON, self.onAddClick)
 
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in speech dictionaries dialog to edit existing entries.
+			# Translators: The label for a button in table dictionaries dialog to edit existing entries.
 			label=_("&Edit")
 		).Bind(wx.EVT_BUTTON, self.onEditClick)
 
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in speech dictionaries dialog to remove existing entries.
+			# Translators: The label for a button in table dictionaries dialog to remove existing entries.
 			label=_("Re&move")
 		).Bind(wx.EVT_BUTTON, self.onRemoveClick)
 
@@ -165,12 +165,12 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in speech dictionaries dialog to open dictionary file in an editor.
+			# Translators: The label for a button in table dictionaries dialog to open dictionary file in an editor.
 			label=_("&Open the current dictionary file in an editor")
 		).Bind(wx.EVT_BUTTON, self.onOpenFileClick)
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in speech dictionaries dialog to reload dictionary.
+			# Translators: The label for a button in table dictionaries dialog to reload dictionary.
 			label=_("&Reload the dictionary")
 		).Bind(wx.EVT_BUTTON, self.onReloadDictClick)
 		sHelper.addItem(bHelper)
@@ -190,6 +190,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onOpenFileClick(self, evt):
 		dictPath = getPathDict(self.type_)
+		if not os.path.exists(dictPath): return
 		try: os.startfile(dictPath)
 		except OSError: os.popen("notepad \"%s\"" % dictPath)
 
@@ -385,7 +386,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		else: textPattern = textPattern.lower().replace("\\", r"\\")
 		textPattern = textPattern.replace("	", r"\t").replace(" ", r"\s")
 		braillePattern = braillePattern.replace("\\", r"\\").replace("	", r"\t").replace(" ", r"\s")
-		newEntry = BrailleDictEntry(opcode, textPattern, braillePattern, self.getDirection(), self.commentTextCtrl.GetValue())
+		newEntry = TableDictEntry(opcode, textPattern, braillePattern, self.getDirection(), self.commentTextCtrl.GetValue())
 		save = True if hasattr(self, "dictRadioBox") else False
 		if save:
 			type_ = self.getType_()

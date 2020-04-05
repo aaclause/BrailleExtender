@@ -50,6 +50,7 @@ from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
 from .updateCheck import *
+from . import advancedInputMode
 from . import dictionaries
 from . import huc
 from . import patchs
@@ -180,6 +181,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	switchedMode = False
 
 	def __init__(self):
+		startTime = time.time()
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		patchs.instanceGP = self
 		self.reloadBrailleTables()
@@ -205,7 +207,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
-		log.info("%s %s loaded" % (addonName, addonVersion))
+		advancedInputMode.initialize()
+		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):
 		global rotorItem, lastRotorItemInVD, lastRotorItemInVDSaved
@@ -264,7 +267,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			item
 		)
 		dictionariesMenu = wx.Menu()
-		self.submenu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
+		self.submenu.AppendSubMenu(dictionariesMenu, _("Table &dictionaries"), _("'Braille dictionaries' menu"))
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
@@ -272,6 +275,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
+		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("Advanced &input mode dictionary"), _("Advanced input mode configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(
+			wx.EVT_MENU,
+			lambda event: gui.mainFrame._popupSettingsDialog(advancedInputMode.AdvancedInputModeDlg),
+			item
+		)
 		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU, 
@@ -1324,6 +1333,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		dictionaries.removeTmpDict()
+		advancedInputMode.terminate()
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):

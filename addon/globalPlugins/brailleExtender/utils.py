@@ -447,7 +447,7 @@ def getSpeechSymbols(text = None):
 	if not text: text = getTextSelection()
 	if not text: return ui.message(_("No text selected"))
 	locale = languageHandler.getLanguage()
-	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_MOST).strip()
+	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_CHAR).strip()
 
 def getTether():
 	if hasattr(braille.handler, "getTether"):
@@ -464,3 +464,13 @@ def getCharFromValue(s):
 	b = supportedBases[base]
 	n = int(n, b)
 	return chr(n)
+
+def getExtendedSymbols(locale):
+	if locale == "Windows": locale = languageHandler.getLanguage()
+	try:
+		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+	except LookupError:
+		b, u = characterProcessing._getSpeechSymbolsForLocale(locale.split('_')[0])
+	a = {k: v.replacement.replace("  ", " ") for k, v in b.symbols.items() if len(k) > 1}
+	a.update({k: v.replacement.replace("  ", " ") for k, v in u.symbols.items() if len(k) > 1})
+	return a

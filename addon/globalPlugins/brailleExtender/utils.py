@@ -462,7 +462,10 @@ def getCharFromValue(s):
 
 def getExtendedSymbols(locale):
 	if locale == "Windows": locale = languageHandler.getLanguage()
-	b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+	try:
+		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+	except LookupError:
+		b, u = characterProcessing._getSpeechSymbolsForLocale(locale.split('_')[0])
 	a = {k: v.replacement.replace("  ", " ") for k, v in b.symbols.items() if len(k) > 1}
 	a.update({k: v.replacement.replace("  ", " ") for k, v in u.symbols.items() if len(k) > 1})
 	return a

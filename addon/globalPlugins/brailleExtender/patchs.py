@@ -594,4 +594,8 @@ globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 
-extendedSymbols = getExtendedSymbols(config.conf["brailleExtender"]["undefinedCharLang"])
+try: 
+	extendedSymbols = getExtendedSymbols(config.conf["brailleExtender"]["undefinedCharLang"])
+except BaseException as err:
+	extendedSymbols = {}
+	log.error(f"Unable to load extended symbols for %s: %s" % (config.conf["brailleExtender"]["undefinedCharLang"], err))

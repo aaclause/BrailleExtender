@@ -27,6 +27,18 @@ from .utils import getCurrentBrailleTables
 HUCDotPattern = "12345678-78-12345678"
 undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
+def getHardValue():
+	selected = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
+	if selected == configBE.CHOICE_otherDots:
+		return config.conf["brailleExtender"]["undefinedCharsRepr"][
+			"hardDotPatternValue"
+		]
+	elif selected == configBE.CHOICE_otherSign:
+		return config.conf["brailleExtender"]["undefinedCharsRepr"][
+			"hardSignPatternValue"
+		]
+	else:
+		return ""
 
 def setUndefinedChar(t=None):
 	if not t or t > CHOICE_HUC6 or t < 0:
@@ -47,7 +59,7 @@ def setUndefinedChar(t=None):
 		if v == "questionMark":
 			s = "?"
 		else:
-			s = config.conf["brailleExtender"]["undefinedCharsRepr"][""]
+			s = getHardValue()
 		v = huc.unicodeBrailleToDescription(
 			getTextInBraille(s, getCurrentBrailleTables())
 		)

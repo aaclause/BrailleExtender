@@ -13,12 +13,11 @@ addonHandler.initTranslation()
 import braille
 import config
 import configobj
-if hasattr(configobj, "validate"):
-	Validator = configobj.validate.Validator
-else: from validate import Validator
 import inputCore
 import languageHandler
 from .common import *
+
+Validator = configobj.validate.Validator
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -183,14 +182,18 @@ def getConfspec():
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
 		"tabSpace": "boolean(default=False)",
-		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
-		"undefinedCharReprMethod": "integer(min=0, default=%s, max=%s)" % (CHOICE_HUC8, CHOICE_bin),
-		"undefinedCharRepr": "string(default=0)",
-		"undefinedCharDesc": "boolean(default=True)",
-		"undefinedCharStart": "string(default=[)",
-		"undefinedCharEnd": "string(default=])",
-		"undefinedCharLang": "string(default=Windows)",
-		"undefinedCharBrailleTable": "string(default=current)",
+		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
+		"undefinedCharsRepr": {
+			"method": "integer(min=0, default=%s, max=%s)" % (CHOICE_HUC8, CHOICE_bin),
+			"hardSignPatternValue": "string(default=??)",
+			"hardDotPatternValue": "string(default=6-12345678)",
+			"desc": "boolean(default=True)",
+			"extendedDesc": "boolean(default=True)",
+			"start": "string(default=[)",
+			"end": "string(default=])",
+			"lang": "string(default=Windows)",
+			"table": "string(default=current)"
+		},
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
@@ -249,7 +252,7 @@ def getConfspec():
 		"brailleTables": {},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
-			"startSign": "string(default=⠼)",
+			"escapeSignUnicodeValue": "string(default=⠼)",
 		}
 		
 	}

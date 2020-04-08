@@ -7,7 +7,9 @@ from __future__ import unicode_literals
 import os.path as osp
 import re
 import api
+import appModuleHandler
 import braille
+import brailleInput
 import brailleTables
 import characterProcessing
 import louis
@@ -24,6 +26,7 @@ import treeInterceptorHandler
 import unicodedata
 from .common import *
 from . import huc
+from . import dictionaries
 
 charToDotsInLouis = hasattr(louis, "charToDots")
 
@@ -465,12 +468,21 @@ def getCharFromValue(s):
 	n = int(n, b)
 	return chr(n)
 
-def getExtendedSymbols(locale):
-	if locale == "Windows": locale = languageHandler.getLanguage()
-	try:
-		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
-	except LookupError:
-		b, u = characterProcessing._getSpeechSymbolsForLocale(locale.split('_')[0])
-	a = {k: v.replacement.replace("  ", " ") for k, v in b.symbols.items() if len(k) > 1}
-	a.update({k: v.replacement.replace("  ", " ") for k, v in u.symbols.items() if len(k) > 1})
-	return a
+def getCurrentBrailleTables(input_=False, brf=False):
+	if brf:
+		tables = [
+			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
+	else:
+		tables = []
+		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
+		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
+		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
+		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+		tables += [
+			mainTable,
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
+	return tables
+

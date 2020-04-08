@@ -20,8 +20,6 @@ import urllib
 import gui
 import wx
 
-from . import settings
-
 import addonHandler
 addonHandler.initTranslation()
 import api
@@ -54,7 +52,9 @@ from . import advancedInputMode
 from . import dictionaries
 from . import huc
 from . import patchs
+from . import settings
 from .common import *
+from . import undefinedChars
 
 instanceGP = None
 lang = configBE.lang
@@ -312,7 +312,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if isPy3:
 				patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
 			else: patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef))
-		patchs.setUndefinedChar()
+		undefinedChars.setUndefinedChar()
 
 	@staticmethod
 	def onDefaultDictionary(evt):
@@ -664,9 +664,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_advancedInput.__doc__ = _("Enable/disable the advanced input mode")
 
 	def script_undefinedCharsDesc(self, gesture):
-		config.conf["brailleExtender"]["undefinedCharDesc"] = not config.conf["brailleExtender"]["undefinedCharDesc"]
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] = not config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
 		states = [_("disabled"), _("enabled")]
-		speech.speakMessage(_("Description of undefined characters %s") % states[int(config.conf["brailleExtender"]["undefinedCharDesc"])])
+		speech.speakMessage(_("Description of undefined characters %s") % states[int(config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"])])
 		utils.refreshBD()
 	script_undefinedCharsDesc.__doc__ = _("Enable/disable description of undefined characters")
 

@@ -19,16 +19,15 @@ import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
-import characterProcessing
 import controlTypes
 import config
 import core
-from . import configBE
 import globalCommands
 import inputCore
 import keyboardHandler
 import languageHandler
 import louis
+import louisHelper
 import queueHandler
 import sayAllHandler
 import scriptHandler
@@ -37,18 +36,20 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
+
+
 import addonHandler
 addonHandler.initTranslation()
+
 from . import advancedInputMode
+from . import configBE
 from . import dictionaries
 from . import huc
-from .utils import getCurrentChar, getTether, getTextInBraille, getCharFromValue, getExtendedSymbols
+from . import undefinedChars
+from .utils import getCurrentChar, getTether, getCharFromValue, getCurrentBrailleTables
 from .common import *
-import louisHelper
 
 instanceGP = None
-HUCDotPattern = "12345678-78-12345678"
-undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
 
 SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 origFunc = {
@@ -73,24 +74,6 @@ def sayCurrentLine():
 				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
 			info.expand(textInfos.UNIT_LINE)
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
-
-def getCurrentBrailleTables(input_=False):
-	if instanceGP.BRFMode:
-		tables = [
-			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
-	else:
-		tables = []
-		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
-		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
-		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		tables += [
-			mainTable,
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
-	return tables
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
 def script_braille_routeTo(self, gesture):
@@ -130,13 +113,14 @@ def update(self):
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
 	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-		getCurrentBrailleTables(),
+		getCurrentBrailleTables(brf=instanceGP.BRFMode),
 		self.rawText,
 		typeform=self.rawTextTypeforms,
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6, configBE.CHOICE_hex, configBE.CHOICE_dec, configBE.CHOICE_oct, configBE.CHOICE_bin]: undefinedCharProcess(self)
+	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6, configBE.CHOICE_hex, configBE.CHOICE_dec, configBE.CHOICE_oct, configBE.CHOICE_bin]:
+		undefinedChars.undefinedCharProcess(self)
 	if self.selectionStart is not None and self.selectionEnd is not None:
 		try:
 			# Mark the selection.
@@ -152,113 +136,6 @@ def update(self):
 		if instanceGP and instanceGP.hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 
-def setUndefinedChar(t=None):
-	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharReprMethod"]
-	if t == 0: return
-	c = ["default", "12345678", "123456", '0', config.conf["brailleExtender"]["undefinedCharRepr"], "questionMark", "sign"] + [HUCDotPattern]*7
-	v = c[t]
-	if v in ["questionMark", "sign"]:
-		if v == "questionMark": s = '?'
-		else: s = config.conf["brailleExtender"]["undefinedCharRepr"]
-		v = huc.unicodeBrailleToDescription(getTextInBraille(s, getCurrentBrailleTables()))
-	louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
-
-def getExtendedSymbolsForString(s):
-	return {c: (d, [(m.start(), m.end()) for m in re.finditer(c, s)]) for c, d in extendedSymbols.items() if c in s}
-
-def getDescChar(c, lang="Windows", start='', end=''):
-	if lang == "Windows": lang = languageHandler.getLanguage()
-	desc = characterProcessing.processSpeechSymbols(lang, c, characterProcessing.SYMLVL_CHAR).strip().replace("  ", ' ')
-	if not desc or desc == c:
-		if config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
-			HUC6 = config.conf["brailleExtender"]["undefinedCharReprMethod"] == configBE.CHOICE_HUC6
-			return huc.translate(c, HUC6=HUC6)
-		else: return getTextInBraille(''.join(getNotationOrd(c)))
-	return f"{start}{desc}{end}"
-
-def getLiblouisStyle(c):
-	if c < 0x10000: return r"\x%.4x" % c
-	elif c <= 0x100000: return r"\y%.5x" % c
-	else: return r"\z%.6x" % c
-
-def getNotationOrd(s, notation=None):
-	if not notation: notation = config.conf["brailleExtender"]["undefinedCharReprMethod"]
-	matches = {
-		configBE.CHOICE_bin: bin,
-		configBE.CHOICE_oct: oct,
-		configBE.CHOICE_dec: lambda s: s,
-		configBE.CHOICE_hex: hex,
-		configBE.CHOICE_liblouis: getLiblouisStyle,
-	}
-	fn = matches[notation]
-	s = getTextInBraille(''.join(["'%s'" % fn(ord(c)) for c in s]))
-	return s
-
-def undefinedCharProcess(self):
-	extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText)
-	unicodeBrailleRepr = ''.join([chr(10240 + cell) for cell in self.brailleCells])
-	allBraillePos = [m.start() for m in re.finditer(undefinedCharPattern, unicodeBrailleRepr)]
-	allExtendedPos = {}
-	for c, v in extendedSymbolsRawText.items():
-		for start, end in v[1]: allExtendedPos[start] = end
-	if not allBraillePos: return
-	if config.conf["brailleExtender"]["undefinedCharDesc"]:
-		start = config.conf["brailleExtender"]["undefinedCharStart"]
-		end = config.conf["brailleExtender"]["undefinedCharEnd"]
-		if start: start = getTextInBraille(start)
-		if end: end = getTextInBraille(end)
-		replacements = {braillePos:
-			getTextInBraille(
-				(
-					getDescChar(
-						self.rawText[self.brailleToRawPos[braillePos]:allExtendedPos[self.brailleToRawPos[braillePos]]],
-						lang=config.conf["brailleExtender"]["undefinedCharLang"],
-						start=start,
-						end=f":{allExtendedPos[self.brailleToRawPos[braillePos]] - self.brailleToRawPos[braillePos]}{end}" + getDescChar(self.rawText[self.brailleToRawPos[braillePos]], lang=config.conf["brailleExtender"]["undefinedCharLang"], start=start, end=end)
-					)
-				) if self.brailleToRawPos[braillePos] in allExtendedPos else getDescChar(
-					self.rawText[self.brailleToRawPos[braillePos]],
-					lang=config.conf["brailleExtender"]["undefinedCharLang"],
-					start=start,
-					end=end
-				),
-				table=[config.conf["brailleExtender"]["undefinedCharBrailleTable"]]
-			) for braillePos in allBraillePos}
-	elif config.conf["brailleExtender"]["undefinedCharReprMethod"] in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
-		HUC6 = config.conf["brailleExtender"]["undefinedCharReprMethod"] == configBE.CHOICE_HUC6
-		replacements = {braillePos: huc.translate(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6) for braillePos in allBraillePos}
-	else:
-		replacements = {braillePos: getNotationOrd(self.rawText[self.brailleToRawPos[braillePos]]) for braillePos in allBraillePos}
-	newBrailleCells = []
-	newBrailleToRawPos = []
-	newRawToBraillePos = []
-	lenBrailleToRawPos = len(self.brailleToRawPos)
-	alreadyDone = []
-	i = 0
-	for iBrailleCells, brailleCells in enumerate(self.brailleCells):
-		brailleToRawPos = self.brailleToRawPos[iBrailleCells]
-		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(undefinedCharPattern[0]):
-			toAdd = [ord(c)-10240 for c in replacements[iBrailleCells]]
-			newBrailleCells += toAdd
-			newBrailleToRawPos += [i] * len(toAdd)
-			alreadyDone += list(range(iBrailleCells, iBrailleCells+3))
-			i += 1
-		else:
-			if iBrailleCells in alreadyDone: continue
-			newBrailleCells.append(self.brailleCells[iBrailleCells])
-			newBrailleToRawPos += [i]
-			if (iBrailleCells + 1) < lenBrailleToRawPos and self.brailleToRawPos[iBrailleCells+1] != brailleToRawPos:
-				i += 1
-	pos = -42
-	for i, brailleToRawPos in enumerate(newBrailleToRawPos):
-		if brailleToRawPos != pos:
-			pos = brailleToRawPos
-			newRawToBraillePos.append(i)
-	self.brailleCells = newBrailleCells
-	self.brailleToRawPos = newBrailleToRawPos
-	self.rawToBraillePos = newRawToBraillePos
-	if self.cursorPos: self.brailleCursorPos = self.rawToBraillePos[self.cursorPos]
-	# self.brailleCells self.rawText self.rawToBraillePos self.brailleToRawPos
 
 #: braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -452,11 +329,12 @@ def input_(self, dots):
 			res = ''
 			abreviations = advancedInputMode.getReplacements([advancedInputStr])
 			startUnicodeValue = "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭"
-			if not abreviations and advancedInputStr[0] in startUnicodeValue: advancedInputStr = config.conf["brailleExtender"]["advancedInputMode"]["startSign"] + advancedInputStr
-			if advancedInputStr == config.conf["brailleExtender"]["advancedInputMode"]["startSign"] or (advancedInputStr.startswith(config.conf["brailleExtender"]["advancedInputMode"]["startSign"]) and len(advancedInputStr) > 1 and advancedInputStr[1] in startUnicodeValue):
+			if not abreviations and advancedInputStr[0] in startUnicodeValue: advancedInputStr = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] + advancedInputStr
+			lenEscapeSign = len(config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"])
+			if advancedInputStr == config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] or (advancedInputStr.startswith(config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"]) and len(advancedInputStr) > lenEscapeSign and advancedInputStr[lenEscapeSign] in startUnicodeValue):
 				equiv = {'⠃': 'b', '⠙': 'd', '⠓': 'h', '⠕': 'o', '⠭': 'x', '⡃': 'B', '⡙': 'D', '⡓': 'H', '⡕': 'O', '⡭': 'X'}
 				if advancedInputStr[-1] == '⠀':
-					text = equiv[advancedInputStr[1]] + louis.backTranslate(getCurrentBrailleTables(True), advancedInputStr[2:-1])[0]
+					text = equiv[advancedInputStr[1]] + louis.backTranslate(getCurrentBrailleTables(True, brf=instanceGP.BRFMode), advancedInputStr[2:-1])[0]
 					try:
 						res = getCharFromValue(text)
 						sendChar(res)
@@ -533,7 +411,7 @@ def _translate(self, endWord):
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans
-	self.bufferText = louis.backTranslate(getCurrentBrailleTables(True),
+	self.bufferText = louis.backTranslate(getCurrentBrailleTables(True, brf=instanceGP.BRFMode),
 		data, mode=mode)[0]
 	newText = self.bufferText[oldTextLen:]
 	if newText:
@@ -593,9 +471,3 @@ brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
-
-try: 
-	extendedSymbols = getExtendedSymbols(config.conf["brailleExtender"]["undefinedCharLang"])
-except BaseException as err:
-	extendedSymbols = {}
-	log.error(f"Unable to load extended symbols for %s: %s" % (config.conf["brailleExtender"]["undefinedCharLang"], err))

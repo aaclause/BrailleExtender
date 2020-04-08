@@ -26,6 +26,8 @@ addonHandler.initTranslation()
 from . import configBE
 from . import utils
 from .common import *
+from . import advancedInputMode
+from . import undefinedChars
 
 instanceGP = None
 def notImplemented(msg='', style=wx.OK|wx.ICON_INFORMATION):
@@ -354,33 +356,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 
 		# Translators: label of a dialog.
 		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
-		# Translators: label of a dialog.
-		label = _("Representation of &undefined characters")
-		choices = [
-			_("Use braille table behavior"),
-			_("Dots 1-8 (⣿)"),
-			_("Dots 1-6 (⠿)"),
-			_("Empty cell (⠀)"),
-			_("Other dot pattern (e.g.: 6-123456)"),
-			_("Question mark (depending output table)"),
-			_("Other sign/pattern (e.g.: \, ??)"),
-			_("Hexadecimal, Liblouis style"),
-			_("Hexadecimal, HUC8"),
-			_("Hexadecimal, HUC6"),
-			_("Hexadecimal"),
-			_("Decimal"),
-			_("Octal"),
-			_("Binary")
-		]
-		self.undefinedCharReprList = sHelper.addLabeledControl(label, wx.Choice, choices=choices)
-		self.undefinedCharReprList.Bind(wx.EVT_CHOICE, self.onUndefinedCharReprList)
-		self.undefinedCharReprList.SetSelection(config.conf["brailleExtender"]["undefinedCharReprMethod"])
-		# Translators: label of a dialog.
-		self.undefinedCharReprEdit = sHelper.addLabeledControl(_("Specify another pattern"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
-		self.onUndefinedCharReprList()
-		self.undefinedCharsBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Description of undefined characters"), wx.DefaultPosition)
-		self.undefinedCharsBtn.Bind(wx.EVT_BUTTON, self.onUndefinedCharsBtn)
-
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
 		sHelper.addItem(bHelper1)
@@ -394,19 +369,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
-		if ((self.tabSpace.IsChecked() and config.conf["brailleExtender"]["tabSpace"] != self.tabSpace.IsChecked())
-			or (self.undefinedCharReprList.GetSelection() != 0 and config.conf["brailleExtender"]["undefinedCharReprMethod"] != self.undefinedCharReprList.GetSelection())):
+		if self.tabSpace.IsChecked() and config.conf["brailleExtender"]["tabSpace"] != self.tabSpace.IsChecked():
 			restartRequired = True
 		else: restartRequired = False
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
-		config.conf["brailleExtender"]["undefinedCharReprMethod"] = self.undefinedCharReprList.GetSelection()
-		repr_ = self.undefinedCharReprEdit.Value
-		if self.undefinedCharReprList.GetSelection() == configBE.CHOICE_otherDots:
-			repr_ = re.sub("[^0-8\-]", "", repr_).strip('-')
-			repr_ = re.sub('\-+','-', repr_)
-		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
-		instanceGP.reloadBrailleTables()
 		if restartRequired:
 			res = gui.messageBox(
 				_("NVDA must be restarted for some new options to take effect. Do you want restart now?"),
@@ -469,15 +436,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		else: return
 		self.setCurrentSelection(tbl, newDir)
 
-	def onUndefinedCharReprList(self, evt=None):
-		selected = self.undefinedCharReprList.GetSelection()
-		if selected in [configBE.CHOICE_otherDots, configBE.CHOICE_otherSign]: self.undefinedCharReprEdit.Enable()
-		else: self.undefinedCharReprEdit.Disable()
-
-	def onUndefinedCharsBtn(self, evt):
-		undefinedCharsDlg = UndefinedCharsDlg(self, multiInstanceAllowed=True)
-		undefinedCharsDlg.ShowModal()
-
 	def onCustomBrailleTablesBtn(self, evt):
 		customBrailleTablesDlg = CustomBrailleTablesDlg(self, multiInstanceAllowed=True)
 		customBrailleTablesDlg.ShowModal()
@@ -509,61 +467,6 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, "%s" % newSwitch)
 			utils.refreshBD()
 		else: evt.Skip()
-
-class AdvancedInputModeDlg(gui.settingsDialogs.SettingsPanel):
-
-	# Translators: title of a dialog.
-	title = _("Advanced input mode")
-
-	def makeSettings(self, settingsSizer):
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-
-		# Translators: label of a dialog.
-		self.stopAdvancedInputModeAfterOneChar = sHelper.addItem(wx.CheckBox(self, label=_("E&xit the advanced input mode after typing one pattern")))
-		self.stopAdvancedInputModeAfterOneChar.SetValue(config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"])
-
-	def onSave(self):
-		config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"] = self.stopAdvancedInputModeAfterOneChar.IsChecked()
-
-
-class UndefinedCharsDlg(gui.settingsDialogs.SettingsDialog):
-
-	# Translators: title of a dialog.
-	title = "Braille Extender - %s" % _("Description of undefined characters")
-
-	def makeSettings(self, settingsSizer):
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.undefinedCharDesc = sHelper.addItem(wx.CheckBox(self, label=_("Describe undefined characters if possible")))
-		self.undefinedCharDesc.SetValue(config.conf["brailleExtender"]["undefinedCharDesc"])
-		self.undefinedCharStart = sHelper.addLabeledControl(_("Start tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharStart"])
-		self.undefinedCharEnd = sHelper.addLabeledControl(_("End tag"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharEnd"])
-		values = [lang[1] for lang in languageHandler.getAvailableLanguages()]
-		keys = [lang[0] for lang in languageHandler.getAvailableLanguages()]
-		undefinedCharLang = config.conf["brailleExtender"]["undefinedCharLang"]
-		if not undefinedCharLang in keys: undefinedCharLang = keys[-1]
-		undefinedCharLangID = keys.index(undefinedCharLang)
-		self.undefinedCharLang = sHelper.addLabeledControl(_("Language"), wx.Choice, choices=values)
-		self.undefinedCharLang.SetSelection(undefinedCharLangID)
-		values = [_("Use the current output table")] + [table.displayName for table in configBE.tables if table.output]
-		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
-		undefinedCharBrailleTable = config.conf["brailleExtender"]["undefinedCharBrailleTable"]
-		if undefinedCharBrailleTable not in configBE.tablesFN + ["current"]: undefinedCharBrailleTable = "current"
-		undefinedCharBrailleTableID = keys.index(undefinedCharBrailleTable)
-		self.undefinedCharBrailleTable = sHelper.addLabeledControl(_("Braille table"), wx.Choice, choices=values)
-		self.undefinedCharBrailleTable.SetSelection(undefinedCharBrailleTableID)
-
-
-	def postInit(self): self.undefinedCharDesc.SetFocus()
-
-	def onOk(self, evt):
-		config.conf["brailleExtender"]["undefinedCharDesc"] = self.undefinedCharDesc.IsChecked()
-		config.conf["brailleExtender"]["undefinedCharStart"] = self.undefinedCharStart.Value
-		config.conf["brailleExtender"]["undefinedCharEnd"] = self.undefinedCharEnd.Value
-		config.conf["brailleExtender"]["undefinedCharLang"] = languageHandler.getAvailableLanguages()[self.undefinedCharLang.GetSelection()][0]
-		undefinedCharBrailleTable = self.undefinedCharBrailleTable.GetSelection()
-		keys = ["current"] + [table.fileName for table in configBE.tables if table.output]
-		config.conf["brailleExtender"]["undefinedCharBrailleTable"] = keys[undefinedCharBrailleTable]
-		super(UndefinedCharsDlg, self).onOk(evt)
 
 
 class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
@@ -988,8 +891,9 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		GeneralDlg,
 		AttribraDlg,
 		BrailleTablesDlg,
+		undefinedChars.SettingsDlg,
+		advancedInputMode.SettingsDlg,
 		RoleLabelsDlg,
-		AdvancedInputModeDlg
 	]
 
 	def __init__(self, parent, initialCategory=None):

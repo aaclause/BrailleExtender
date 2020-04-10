@@ -2,20 +2,22 @@
 # advancedInputMode.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
-from collections import namedtuple
 import codecs
 import json
-import gui
+from collections import namedtuple
+
 import wx
 
 import addonHandler
-
-addonHandler.initTranslation()
 import brailleInput
 import brailleTables
 import config
+import gui
+
 from .common import *
 from .utils import getTextInBraille
+
+addonHandler.initTranslation()
 
 AdvancedInputModeDictEntry = namedtuple(
 	"AdvancedInputModeDictEntry", ("abreviation", "replaceBy", "table")
@@ -196,8 +198,10 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 			return
 		editIndex = self.dictList.GetFirstSelected()
 		entryDialog = DictionaryEntryDlg(self)
-		entryDialog.abreviationTextCtrl.SetValue(self.tmpDict[editIndex].abreviation)
-		entryDialog.replaceByTextCtrl.SetValue(self.tmpDict[editIndex].replaceBy)
+		entryDialog.abreviationTextCtrl.SetValue(
+			self.tmpDict[editIndex].abreviation)
+		entryDialog.replaceByTextCtrl.SetValue(
+			self.tmpDict[editIndex].replaceBy)
 		if entryDialog.ShowModal() == wx.ID_OK:
 			entry = entryDialog.dictEntry
 			self.tmpDict[editIndex] = entry
@@ -254,7 +258,8 @@ class DictionaryEntryDlg(wx.Dialog):
 			replaceByLabelText, wx.TextCtrl
 		)
 
-		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK | wx.CANCEL))
+		sHelper.addDialogDismissButtons(
+			self.CreateButtonSizer(wx.OK | wx.CANCEL))
 
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
 		mainSizer.Fit(self)
@@ -281,7 +286,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		# Translators: label of a dialog.
 		self.stopAdvancedInputModeAfterOneChar = sHelper.addItem(
 			wx.CheckBox(
-				self, label=_("E&xit the advanced input mode after typing one pattern")
+				self, label=_(
+					"E&xit the advanced input mode after typing one pattern")
 			)
 		)
 		self.stopAdvancedInputModeAfterOneChar.SetValue(
@@ -294,9 +300,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 
 	def onSave(self):
-		config.conf["brailleExtender"]["advancedInputMode"][
-			"stopAfterOneChar"
-		] = self.stopAdvancedInputModeAfterOneChar.IsChecked()
+		config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"] = self.stopAdvancedInputModeAfterOneChar.IsChecked()
 		s = self.escapeSignUnicodeValue.Value
 		if s:
-			config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] = getTextInBraille(s[0])
+			config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] = getTextInBraille(
+				s[0])

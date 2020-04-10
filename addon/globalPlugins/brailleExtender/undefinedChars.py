@@ -2,30 +2,31 @@
 # undefinedChars.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
-from collections import namedtuple
 import codecs
 import json
 import re
-import gui
+from collections import namedtuple
+
 import wx
 
 import addonHandler
-
-addonHandler.initTranslation()
 import brailleInput
 import brailleTables
 import characterProcessing
 import config
+import gui
 import louis
 
+from . import configBE, huc
 from .common import *
-from .utils import getTextInBraille
-from . import configBE
-from . import huc
-from .utils import getCurrentBrailleTables
+from .utils import getCurrentBrailleTables, getTextInBraille
+
+addonHandler.initTranslation()
+
 
 HUCDotPattern = "12345678-78-12345678"
 undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
+
 
 def getHardValue():
 	selected = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
@@ -39,6 +40,7 @@ def getHardValue():
 		]
 	else:
 		return ""
+
 
 def setUndefinedChar(t=None):
 	if not t or t > CHOICE_HUC6 or t < 0:
@@ -63,7 +65,8 @@ def setUndefinedChar(t=None):
 		v = huc.unicodeBrailleToDescription(
 			getTextInBraille(s, getCurrentBrailleTables())
 		)
-	louis.compileString(getCurrentBrailleTables(), bytes("undefined %s" % v, "ASCII"))
+	louis.compileString(getCurrentBrailleTables(),
+						bytes("undefined %s" % v, "ASCII"))
 
 
 def getExtendedSymbolsForString(s: str) -> dict:
@@ -82,8 +85,8 @@ def getDescChar(c, lang="Windows", start="", end=""):
 	).replace(' ', '').strip()
 	if not desc or desc == c:
 		if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] in [
-			configBE.CHOICE_HUC6,
-			configBE.CHOICE_HUC8,
+				configBE.CHOICE_HUC6,
+				configBE.CHOICE_HUC8,
 		]:
 			HUC6 = (
 				config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
@@ -123,7 +126,8 @@ def undefinedCharProcess(self):
 	extendedSymbolsRawText = {}
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
 		extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText)
-	unicodeBrailleRepr = "".join([chr(10240 + cell) for cell in self.brailleCells])
+	unicodeBrailleRepr = "".join([chr(10240 + cell)
+								  for cell in self.brailleCells])
 	allBraillePos = [
 		m.start() for m in re.finditer(undefinedCharPattern, unicodeBrailleRepr)
 	]
@@ -145,7 +149,7 @@ def undefinedCharProcess(self):
 				(
 					getDescChar(
 						self.rawText[
-							self.brailleToRawPos[braillePos] : allExtendedPos[
+							self.brailleToRawPos[braillePos]: allExtendedPos[
 								self.brailleToRawPos[braillePos]
 							]
 						],
@@ -171,13 +175,14 @@ def undefinedCharProcess(self):
 					start=start,
 					end=end,
 				),
-				table=[config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]],
+				table=[config.conf["brailleExtender"]
+					   ["undefinedCharsRepr"]["table"]],
 			)
 			for braillePos in allBraillePos
 		}
 	elif config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] in [
-		configBE.CHOICE_HUC6,
-		configBE.CHOICE_HUC8,
+			configBE.CHOICE_HUC6,
+			configBE.CHOICE_HUC8,
 	]:
 		HUC6 = (
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
@@ -205,7 +210,7 @@ def undefinedCharProcess(self):
 	for iBrailleCells, brailleCells in enumerate(self.brailleCells):
 		brailleToRawPos = self.brailleToRawPos[iBrailleCells]
 		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(
-			undefinedCharPattern[0]
+				undefinedCharPattern[0]
 		):
 			toAdd = [ord(c) - 10240 for c in replacements[iBrailleCells]]
 			newBrailleCells += toAdd
@@ -218,7 +223,7 @@ def undefinedCharProcess(self):
 			newBrailleCells.append(self.brailleCells[iBrailleCells])
 			newBrailleToRawPos += [i]
 			if (iBrailleCells + 1) < lenBrailleToRawPos and self.brailleToRawPos[
-				iBrailleCells + 1
+					iBrailleCells + 1
 			] != brailleToRawPos:
 				i += 1
 	pos = -42
@@ -266,14 +271,16 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.undefinedCharReprList.SetSelection(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 		)
-		self.undefinedCharReprList.Bind(wx.EVT_CHOICE, self.onUndefinedCharReprList)
+		self.undefinedCharReprList.Bind(
+			wx.EVT_CHOICE, self.onUndefinedCharReprList)
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(
 			_("Specify another pattern"), wx.TextCtrl, value=self.getHardValue()
 		)
 		self.onUndefinedCharReprList()
 		self.undefinedCharDesc = sHelper.addItem(
-			wx.CheckBox(self, label=_("Describe undefined characters if possible"))
+			wx.CheckBox(self, label=_(
+				"Describe undefined characters if possible"))
 		)
 		self.undefinedCharDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
@@ -281,7 +288,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.undefinedCharDesc.Bind(wx.EVT_CHECKBOX, self.onUndefinedCharDesc)
 		self.undefinedCharExtendedDesc = sHelper.addItem(
 			wx.CheckBox(
-				self, label=_("Also describe extended characters (e.g.: country flags)")
+				self, label=_(
+					"Also describe extended characters (e.g.: country flags)")
 			)
 		)
 		self.undefinedCharExtendedDesc.SetValue(
@@ -412,7 +420,8 @@ def getExtendedSymbols(locale):
 	try:
 		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
 	except LookupError:
-		b, u = characterProcessing._getSpeechSymbolsForLocale(locale.split("_")[0])
+		b, u = characterProcessing._getSpeechSymbolsForLocale(
+			locale.split("_")[0])
 	a = {
 		k.strip(): v.replacement.replace(' ', '').strip()
 		for k, v in b.symbols.items()

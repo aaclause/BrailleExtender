@@ -2,27 +2,26 @@
 # undefinedChars.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
-from .utils import getCurrentBrailleTables
-from . import huc
-from . import configBE
-from .utils import getTextInBraille
-from .common import *
-import louis
-import config
-import characterProcessing
-import brailleTables
-import brailleInput
-from collections import namedtuple
 import codecs
 import json
 import re
-import gui
+from collections import namedtuple
+
 import wx
 
 import addonHandler
+import brailleInput
+import brailleTables
+import characterProcessing
+import config
+import gui
+import louis
+
+from . import configBE, huc
+from .common import *
+from .utils import getCurrentBrailleTables, getTextInBraille
 
 addonHandler.initTranslation()
-
 
 HUCDotPattern = "12345678-78-12345678"
 undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)

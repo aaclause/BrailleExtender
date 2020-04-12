@@ -60,7 +60,7 @@ origFunc = {
 
 def sayCurrentLine():
 	global instanceGP
-	if not instanceGP.autoScrollRunning:
+	if not instanceGP or not instanceGP.autoScrollRunning:
 		if getTether() == braille.handler.TETHER_REVIEW:
 			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
 				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
@@ -112,8 +112,9 @@ def update(self):
 	"""
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
+	BRFMode = instanceGP.BRFMode if instanceGP else False
 	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-		getCurrentBrailleTables(brf=instanceGP.BRFMode),
+		getCurrentBrailleTables(brf=BRFMode),
 		self.rawText,
 		typeform=self.rawTextTypeforms,
 		mode=mode,
@@ -133,7 +134,8 @@ def update(self):
 				self.brailleCells[pos] |= SELECTION_SHAPE()
 		except IndexError: pass
 	else:
-		if instanceGP and instanceGP.hideDots78:
+		hideDots78 = instanceGP.hideDots78 if instanceGP else False
+		if hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 
 
@@ -191,7 +193,8 @@ def executeGesture(self, gesture):
 
 		script = gesture.script
 		if "brailleDisplayDrivers" in str(type(gesture)):
-			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.__name__ != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
+			brailleKeyboardLocked = instanceGP.brailleKeyboardLocked if instanceGP else False
+			if brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.__name__ != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
 			if not config.conf["brailleExtender"]['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
 			elif hasattr(script, "__func__") and (script.__func__.__name__ in [
 			"script_braille_dots", "script_braille_enter",
@@ -302,7 +305,7 @@ def emulateKey(self, key, withModifiers=True):
 		gesture = key
 	try:
 		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(gesture))
-		instanceGP.lastShortcutPerformed = gesture
+		if instanceGP: instanceGP.lastShortcutPerformed = gesture
 	except BaseException:
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
@@ -326,7 +329,7 @@ def input_(self, dots):
 	if instanceGP:
 		focusObj = api.getFocusObject()
 		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
-	if instanceGP.advancedInput and ok:
+	if instanceGP and instanceGP.advancedInput and ok:
 		pos = self.untranslatedStart + self.untranslatedCursorPos
 		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
 		if advancedInputStr:

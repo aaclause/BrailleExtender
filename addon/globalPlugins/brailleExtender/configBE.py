@@ -15,6 +15,7 @@ import config
 import configobj
 import inputCore
 import languageHandler
+from . import brailleTablesHelper
 from .common import *
 
 Validator = configobj.validate.Validator
@@ -112,19 +113,10 @@ profileFileExists = gesturesFileExists = False
 
 noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
 outputTables = inputTables = None
-preTable = []
-postTable = []
+preTables = []
+postTables = []
 if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
-try:
-	import brailleTables
-	tables = brailleTables.listTables()
-	tablesFN = [t[0] for t in brailleTables.listTables()]
-	tablesUFN = [t[0] for t in brailleTables.listTables() if not t.contracted and t.output]
-	tablesTR = [t[1] for t in brailleTables.listTables()]
-	noUnicodeTable = False
-except BaseException:
-	noUnicodeTable = True
 
 def getValidBrailleDisplayPrefered():
 	l = braille.getDisplayList()
@@ -179,8 +171,8 @@ def getConfspec():
 		"speakRoutingTo": "boolean(default=True)",
 		"routingReviewModeWithCursorKeys": "boolean(default=False)",
 		"inputTableShortcuts": 'string(default="?")',
-		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
-		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
+		"preferedInputTables": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
+		"preferedOutputTables": f'string(default="{config.conf["braille"]["translationTable"]}")',
 		"tabSpace": "boolean(default=False)",
 		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
@@ -194,7 +186,7 @@ def getConfspec():
 			"lang": "string(default=Windows)",
 			"table": "string(default=current)"
 		},
-		"postTable": 'string(default="None")',
+		"postTables": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"oneHandMode": "boolean(default=False)",
@@ -254,21 +246,7 @@ def getConfspec():
 			"stopAfterOneChar": "boolean(default=True)",
 			"escapeSignUnicodeValue": "string(default=⠼)",
 		}
-		
 	}
-
-def loadPreferedTables():
-	global inputTables, outputTables
-	listInputTables = [table[0] for table in brailleTables.listTables() if table.input]
-	listOutputTables = [table[0] for table in brailleTables.listTables() if table.output]
-	inputTables = config.conf["brailleExtender"]["inputTables"]
-	outputTables = config.conf["brailleExtender"]["outputTables"]
-	if not isinstance(inputTables, list):
-		inputTables = inputTables.replace(', ', ',').split(',')
-	if not isinstance(outputTables, list):
-		outputTables = outputTables.replace(', ', ',').split(',')
-	inputTables = [t for t in inputTables if t in listInputTables]
-	outputTables = [t for t in outputTables if t in listOutputTables]
 
 def getLabelFromID(idCategory, idLabel):
 	if idCategory == 0: return braille.roleLabels[int(idLabel)]
@@ -304,7 +282,7 @@ def discardRoleLabels():
 	backupRoleLabels = {}
 
 def loadConf():
-	global curBD, gesturesFileExists, profileFileExists, iniProfile
+	global curBD, gesturesFileExists, profileFileExists, iniProfile, inputTables, outputTables
 	curBD = braille.handler.display.name
 	try: brlextConf = config.conf["brailleExtender"].copy()
 	except configobj.validate.VdtValueError:
@@ -338,10 +316,10 @@ def loadConf():
 	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
 	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
 		braille.handler.displaySize = backupDisplaySize-limitCellsRight
-	if not noUnicodeTable: loadPreferedTables()
-	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
+	if config.conf["brailleExtender"]["inputTableShortcuts"] not in brailleTablesHelper.listTablesFileName(brailleTablesHelper.listUncontractedTables()): config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+	inputTables, outputTables = brailleTablesHelper.getPreferedTables()
 	return True
 
 def loadGestures():
@@ -394,11 +372,6 @@ def initGestures():
 					iniGestures["globalCommands.GlobalCommands"][g])).replace('br(' + curBD + '):', '')] = g
 	return gesturesFileExists, iniGestures
 
-def isContractedTable(table):
-	if not table in tablesFN: return False
-	tablePos = tablesFN.index(table)
-	if brailleTables.listTables()[tablePos].contracted: return True
-	return False
 
 def getKeyboardLayout():
 	if (config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] is not None
@@ -406,14 +379,10 @@ def getKeyboardLayout():
 		return iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % curBD])
 	else: return 0
 
-def getCustomBrailleTables():
-	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]
-
 def getTabSize():
 	size = config.conf["brailleExtender"]["tabSize_%s" % curBD]
 	if size < 0: size = 2
 	return size
-
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"
 cfgFileAttribra = globalVars.appArgs.configPath + r"\attribra-BE.ini"

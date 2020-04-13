@@ -342,12 +342,13 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 
-		listTables = [f"{table.displayName}, {table.fileName}" for table in brailleTables.listTables()]
+		listTables = [f"{table.displayName}, {table.fileName}" for table in brailleTables.listTables() if table.input]
 		label = _("Prefered input tables")
 		self.inputTables = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=listTables)
 		self.inputTables.CheckedItems = listPreferedTablesIndexes[0]
 		self.inputTables.Select(0)
 
+		listTables = [f"{table.displayName}, {table.fileName}" for table in brailleTables.listTables() if table.output]
 		label = _("Prefered output tables")
 		self.outputTables = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=listTables)
 		self.outputTables.CheckedItems = listPreferedTablesIndexes[1]
@@ -389,16 +390,24 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 	def postInit(self): self.tables.SetFocus()
 
 	def onSave(self):
-		inputTables = '|'.join(brailleTablesHelper.getTablesFilenameByID(self.inputTables.CheckedItems))
-		outputTables = '|'.join(brailleTablesHelper.getTablesFilenameByID(self.outputTables.CheckedItems))
+		inputTables = '|'.join(brailleTablesHelper.getTablesFilenameByID(
+			self.inputTables.CheckedItems,
+			brailleTablesHelper.listInputTables()
+		))
+		outputTables = '|'.join(
+			brailleTablesHelper.getTablesFilenameByID(
+				self.outputTables.CheckedItems,
+				brailleTablesHelper.listOutputTables()
+			)
+		)
 		#postTables = '|'.join(brailleTablesHelper.getTablesFilenameByID(self.postTables.CheckedItems))
-		config.conf["brailleExtender"]["inputTables"] = ','.join(inputTables)
-		config.conf["brailleExtender"]["outputTables"] = ','.join(outputTables)
+		config.conf["brailleExtender"]["preferedInputTables"] = inputTables
+		config.conf["brailleExtender"]["preferedOutputTables"] = outputTables
 		#config.conf["brailleExtender"]["postTables"] = postTables
 		config.conf["brailleExtender"]["inputTableShortcuts"] = configBE.tablesUFN[self.inputTableShortcuts.GetSelection()-1] if self.inputTableShortcuts.GetSelection() > 0 else '?'
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"][f"tabSize_{configBE.curBD}"] = self.tabSize.Value
-		configBE.inputTables, configBE.outputTables = brailleTablesHelper.getPreferedTables()
+		configBE.initializePreferedTables()
 
 class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 

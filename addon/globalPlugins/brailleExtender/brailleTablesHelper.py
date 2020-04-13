@@ -35,12 +35,13 @@ def getPreferedTables() -> Tuple[List[str]]:
 
 def getPreferedTablesIndexes() -> List[int]:
 	preferedInputTables, preferedOutputTables = getPreferedTables()
-	tablesFileName = [table.fileName for table in brailleTables.listTables()]
+	inputTables = listTablesFileName(listInputTables())
+	outputTables = listTablesFileName(listOutputTables())
 	o = []
-	for l in [preferedInputTables, preferedOutputTables]:
+	for a, b in [(preferedInputTables, inputTables), (preferedOutputTables, outputTables)]:
 		o_ = []
-		for i, e in enumerate(l):
-			if e in tablesFileName: o_.append(tablesFileName.index(e))
+		for e in a:
+			if e in b: o_.append(b.index(e))
 		o.append(o_)
 	return o
 
@@ -71,8 +72,8 @@ def isContractedTable(fileName):
 	if fileName in tablesFN: return False
 	return brailleTables.listTables()[tablesFN.index(fileName)].contracted
 
-def getTablesFilenameByID(l: List[int]) -> List[int]:
-	listTablesFileName = [table.fileName for table in brailleTables.listTables()]
+def getTablesFilenameByID(l: List[int], tables=None) -> List[int]:
+	listTablesFileName = [table.fileName for table in (tables or brailleTables.listTables())]
 	o = []
 	size = len(listTablesFileName)
 	for i in l:

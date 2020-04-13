@@ -282,7 +282,7 @@ def discardRoleLabels():
 	backupRoleLabels = {}
 
 def loadConf():
-	global curBD, gesturesFileExists, profileFileExists, iniProfile, inputTables, outputTables
+	global curBD, gesturesFileExists, profileFileExists, iniProfile
 	curBD = braille.handler.display.name
 	try: brlextConf = config.conf["brailleExtender"].copy()
 	except configobj.validate.VdtValueError:
@@ -319,8 +319,12 @@ def loadConf():
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in brailleTablesHelper.listTablesFileName(brailleTablesHelper.listUncontractedTables()): config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
-	inputTables, outputTables = brailleTablesHelper.getPreferedTables()
+	initializePreferedTables()
 	return True
+
+def initializePreferedTables():
+	global inputTables, outputTables
+	inputTables, outputTables = brailleTablesHelper.getPreferedTables()
 
 def loadGestures():
 	if gesturesFileExists:

@@ -2,10 +2,13 @@
 # brailleTablesHelper.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+import addonHandler
 import brailleTables
 import config
 from typing import Optional, List, Tuple
 from logHandler import log
+
+addonHandler.initTranslation()
 
 listContractedTables = lambda tables=None: [table for table in (tables or brailleTables.listTables()) if table.contracted]
 listUncontractedTables = lambda tables=None: [table for table in (tables or brailleTables.listTables()) if not table.contracted]
@@ -13,6 +16,13 @@ listInputTables = lambda tables=None: [table for table in (tables or brailleTabl
 listOutputTables = lambda tables=None: [table for table in (tables or brailleTables.listTables()) if table.output]
 listTablesFileName = lambda tables=None: [table.fileName for table in (tables or brailleTables.listTables())]
 listTablesDisplayName = lambda tables=None: [table.displayName for table in (tables or brailleTables.listTables())]
+
+def fileName2displayName(l):
+	allTablesFileName = listTablesFileName()
+	o = []
+	for e in l:
+		if e in allTablesFileName: o.append(allTablesFileName.index(e))
+	return ', '.join([brailleTables.listTables()[e].displayName for e in o])
 
 def getPreferedTables() -> Tuple[List[str]]:
 	allInputTablesFileName = listTablesFileName(listInputTables())
@@ -68,3 +78,9 @@ def getTablesFilenameByID(l: List[int]) -> List[int]:
 	for i in l:
 		if i < size: o.append(listTablesFileName[i])
 	return o
+
+def translateUsableIn(s):
+	if s.startswith('i:'): return _("input")
+	elif s.startswith('o:'): return _("output")
+	elif s.startswith('io:'): return _("input and output")
+	else: return _("None")

@@ -358,7 +358,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		self.inputTableShortcuts = sHelper.addLabeledControl(label, wx.Choice, choices=[currentTableLabel] + listUncontractedTables)
 		#self.inputTableShortcuts.SetSelection(iSht)
 
-		self.tablesGroupBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Groups of tables"), wx.DefaultPosition)
+		self.tablesGroupBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Groups of tables"), wx.DefaultPosition)
 		self.tablesGroupBtn.Bind(wx.EVT_BUTTON, self.onTablesGroupsBtn)
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
@@ -409,26 +409,47 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		wx.CallAfter(notImplemented)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		groupsLabelText = _("List of table groups")
+		self.groupsList = sHelper.addLabeledControl(groupsLabelText, wx.ListCtrl, style=wx.LC_REPORT|wx.LC_SINGLE_SEL,size=(550,350))
+		self.groupsList.InsertColumn(0, _("Name"), width=150)
+		self.groupsList.InsertColumn(1, _("Members"), width=150)
+		self.groupsList.InsertColumn(2, _("Usable in"), width=150)
+		self.onSetGroups()
 		self.addTablesGroupBtn = bHelper.addButton(self, wx.NewId(), "%s..." % _("&Add a group"), wx.DefaultPosition)
 		self.addTablesGroupBtn.Bind(wx.EVT_BUTTON, self.onAddTablesGroupBtn)
 		sHelper.addItem(bHelper)
 
-	def addTablesGroupBtn(self, evt):
+
+	def onSetGroups(self, evt=None):
+		groups = {
+			"Fake group 1": "i:en-ueb-g1.ctb|fr-bfu-comp8.utb",
+			"Fake group 2": "o:ru.ctb|fr-bfu-comp8.utb",
+			"Fake group 3": "n:ru.ctb|en-ueb-g1.ctb",
+		}
+		for name, desc in groups.items():
+			self.groupsList.Append((
+				name,
+				brailleTablesHelper.fileName2displayName(desc.split(':')[-1].split('|')),
+				brailleTablesHelper.translateUsableIn(desc),
+			))
+
+	def onAddTablesGroupBtn(self, evt):
 		addTablesGroupDlg = AddTablesGroupDlg(self, multiInstanceAllowed=True)
 		addTablesGroupDlg.ShowModal()
 
 class AddTablesGroupDlg(gui.settingsDialogs.SettingsDialog):
-	
+
 	title = _("Add a group of tables")
 
 	def makeSettings(self, settingsSizer):
+		listUncontractedTables = brailleTablesHelper.listTablesDisplayName(brailleTablesHelper.listUncontractedTables())
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		self.name = sHelper.addLabeledControl(_("Group name"), wx.TextCtrl)
 		self.description = sHelper.addLabeledControl(_("Description"), wx.TextCtrl, style=wx.TE_MULTILINE|wx.TE_PROCESS_ENTER, size = (360, 90), pos=(-1,-1))
 		label = _(f"Group members")
 		self.members = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=listUncontractedTables)
 		#self.outputTables.CheckedItems = brailleTablesHelper.getPostTablesIndexes()
-		self.outputTables.Select(0)
+		#self.outputTables.Select(0)
 
 
 class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):

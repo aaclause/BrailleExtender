@@ -389,6 +389,18 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 
 	def postInit(self): self.tables.SetFocus()
 
+	def isValid(self):
+		if self.tabSize.Value > 42:
+			gui.messageBox(
+				_("Tab size is invalid"),
+				_("Error"),
+				wx.OK|wx.ICON_ERROR,
+				self
+			)
+			self.tabSize.SetFocus()
+			return False
+		return super().isValid()
+
 	def onSave(self):
 		inputTables = '|'.join(brailleTablesHelper.getTablesFilenameByID(
 			self.inputTables.CheckedItems,
@@ -407,6 +419,8 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["inputTableShortcuts"] = configBE.tablesUFN[self.inputTableShortcuts.GetSelection()-1] if self.inputTableShortcuts.GetSelection() > 0 else '?'
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"][f"tabSize_{configBE.curBD}"] = self.tabSize.Value
+
+	def postSave(self):
 		configBE.initializePreferedTables()
 
 class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):

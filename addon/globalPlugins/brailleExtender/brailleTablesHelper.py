@@ -2,6 +2,7 @@
 # brailleTablesHelper.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+
 import addonHandler
 import brailleTables
 import config
@@ -58,19 +59,11 @@ def getPostTablesIndexes() -> List[int]:
 		if e in tablesFileName: o.append(tablesFileName.index(e))
 	return o
 
-def cleanTablesFileName(tables: List[str], output: Optional[bool]=False) -> List[str]:
-	listTablesFileName = listTablesFileName()
-	for t in tables:
-		if not t in listTablesFileName: tables.remove(l)
-	return tables
-
 def getCustomBrailleTables():
 	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]
 
 def isContractedTable(fileName):
-	listContractedTables = listContractedTables()
-	if fileName in tablesFN: return False
-	return brailleTables.listTables()[tablesFN.index(fileName)].contracted
+	return fileName in listTablesFileName(listContractedTables())
 
 def getTablesFilenameByID(l: List[int], tables=None) -> List[int]:
 	listTablesFileName = [table.fileName for table in (tables or brailleTables.listTables())]

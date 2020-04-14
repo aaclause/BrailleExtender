@@ -15,7 +15,7 @@ import config
 import configobj
 import inputCore
 import languageHandler
-from . import brailleTablesHelper
+from . import brailleTablesExt
 from .common import *
 
 Validator = configobj.validate.Validator
@@ -170,9 +170,6 @@ def getConfspec():
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
 		"routingReviewModeWithCursorKeys": "boolean(default=False)",
-		"inputTableShortcuts": 'string(default="?")',
-		"preferedInputTables": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
-		"preferedOutputTables": f'string(default="{config.conf["braille"]["translationTable"]}")',
 		"tabSpace": "boolean(default=False)",
 		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
@@ -186,7 +183,6 @@ def getConfspec():
 			"lang": "string(default=Windows)",
 			"table": "string(default=current)"
 		},
-		"postTables": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"oneHandMode": "boolean(default=False)",
@@ -241,7 +237,12 @@ def getConfspec():
 		},
 		"quickLaunches": {},
 		"roleLabels": {},
-		"brailleTables": {},
+		"tables": {
+			"groups": {},
+			"shortcuts": 'string(default="?")',
+			"preferedInput": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
+			"preferedOutput": f'string(default="{config.conf["braille"]["translationTable"]}")',
+		},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
 			"escapeSignUnicodeValue": "string(default=⠼)",
@@ -316,7 +317,7 @@ def loadConf():
 	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
 	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
 		braille.handler.displaySize = backupDisplaySize-limitCellsRight
-	if config.conf["brailleExtender"]["inputTableShortcuts"] not in brailleTablesHelper.listTablesFileName(brailleTablesHelper.listUncontractedTables()): config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
+	if config.conf["brailleExtender"]["tables"]["shortcuts"] not in brailleTablesExt.listTablesFileName(brailleTablesExt.listUncontractedTables()): config.conf["brailleExtender"]["tables"]["shortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	initializePreferedTables()
@@ -324,7 +325,7 @@ def loadConf():
 
 def initializePreferedTables():
 	global inputTables, outputTables
-	inputTables, outputTables = brailleTablesHelper.getPreferedTables()
+	inputTables, outputTables = brailleTablesExt.getPreferedTables()
 
 def loadGestures():
 	if gesturesFileExists:

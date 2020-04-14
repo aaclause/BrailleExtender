@@ -19,7 +19,7 @@ import louis
 
 from . import configBE, huc
 from .common import *
-from . import brailleTablesHelper
+from . import brailleTablesExt
 from .utils import getCurrentBrailleTables, getTextInBraille
 
 addonHandler.initTranslation()
@@ -315,8 +315,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("Language"), wx.Choice, choices=values
 		)
 		self.undefinedCharLang.SetSelection(undefinedCharLangID)
-		values = [_("Use the current output table")] + brailleTablesHelper.listTablesDisplayName(brailleTablesHelper.listOutputTables())
-		keys = ["current"] + brailleTablesHelper.listTablesFileName(brailleTablesHelper.listOutputTables())
+		values = [_("Use the current output table")] + brailleTablesExt.listTablesDisplayName(brailleTablesExt.listOutputTables())
+		keys = ["current"] + brailleTablesExt.listTablesFileName(brailleTablesExt.listOutputTables())
 		undefinedCharTable = config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]
 		if undefinedCharTable not in keys: undefinedCharTable = "current"
 		undefinedCharTableID = keys.index(undefinedCharTable)
@@ -399,7 +399,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			0
 		]
 		undefinedCharTable = self.undefinedCharTable.GetSelection()
-		keys = ["current"] + brailleTablesHelper.listTablesFileName(brailleTablesHelper.listOutputTables())
+		keys = ["current"] + brailleTablesExt.listTablesFileName(brailleTablesExt.listOutputTables())
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["table"] = keys[
 			undefinedCharTable
 		]

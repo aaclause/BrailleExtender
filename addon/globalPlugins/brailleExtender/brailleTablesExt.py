@@ -95,9 +95,6 @@ def setDict(newGroups):
 	global _groups
 	_groups = newGroups
 
-def getGroups():
-	return _groups if _groups else []
-
 def getPathGroups():
 	return f"{configDir}/groups-tables.json"
 
@@ -128,7 +125,8 @@ def saveGroups(entries=None):
 	with codecs.open(getPathGroups(), "w", "UTF-8") as outfile:
 		json.dump(entries, outfile, ensure_ascii=False, indent=2)
 
-def getGroups():
+def getGroups(plain=True):
+	if plain: return _groups if _groups else []
 	groups = getGroups()
 	i = [group for group in groups if group.usableIn in ['i', 'io']]
 	o = [group for group in groups if group.usableIn in ['o', 'io']]

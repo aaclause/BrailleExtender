@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2020-04-15 09:24+0200\n"
-"PO-Revision-Date: 2020-04-15 12:18+0100\n"
+"PO-Revision-Date: 2020-04-15 16:39+0100\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -958,35 +958,42 @@ msgid ""
 "Alternatively, an option allows you to automatically exit this mode after "
 "entering a single pattern. "
 msgstr ""
+"Ova vam opcija omogućuje unos bilo kojeg znaka koristeći njegov HUC8 izgled "
+"ili njegovu heksadecimalnu/decimalnu/oktalnu/binarnu vrijednost. Čak "
+"štoviše, omogućuje vam razvoj skraćenica. Kako biste mogli koristiti ovu "
+"funkciju, uključite ga i upišite znak. Podrazumjevane prečice: NVDA+Windows"
+"+i ili ⡊+razmaknica (na podržanim brajičnim retcima). Pritisnite isti prečac "
+"za izlaz. Alternativno, opcija vam dozvoljava isključivanje ovog načina "
+"poslije upisanog samo jednog znaka. "
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:80
 msgid "Specify the basis as follows"
-msgstr ""
+msgstr "Odredite brojevnu bazu vrijednosti kako slijedi"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "⠭ or ⠓"
-msgstr ""
+msgstr "⠭ ili ⠓"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "for a hexadecimal value"
-msgstr ""
+msgstr "za heksadecimalnu vrijednost"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:83
 msgid "for a decimal value"
-msgstr ""
+msgstr "za decimalnu vrijednost"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:84
 msgid "for an octal value"
-msgstr ""
+msgstr "Za oktalnu vrijednost"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:87
 msgid ""
 "Enter the value of the character according to the previously selected basis."
-msgstr ""
+msgstr "Upišite znak u skladu sa odabranom brojevnom bazom."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:88
 msgid "Press Space to validate."
-msgstr ""
+msgstr "Pritisnite razmaknicu za provjeru."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:91
 msgid ""
@@ -994,18 +1001,21 @@ msgid ""
 "dictionaries -. Then, you just have to enter your abbreviation and press "
 "space to expand it. For example, you can associate — ⠎⠺ — with — sandwich —."
 msgstr ""
+"za skraćenice, prvo ih morate dodati u dijaloški okvir - rječnici naprednog "
+"načina unosa -. Poslije toga trebate upisati vašu kraticu i pritisnuti enter "
+"za raširivanje. na primjer, možete pridružiti — ⠎⠺ — sa — sendvič —."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:93
 msgid "Here are some examples of sequences to be entered for given characters:"
-msgstr ""
+msgstr "Ovdje su primjeri za upis znakova pri korištenju raznih kombinacija:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:97
 msgid "Note: the HUC6 input is currently not supported."
-msgstr ""
+msgstr "Napomena: HUC6 unos nije podržan."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:100
 msgid "One-hand mode"
-msgstr ""
+msgstr "Način upisa jednom rukom"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:102
 msgid ""
@@ -1014,10 +1024,14 @@ msgid ""
 "fly using NVDA+Windows+h gesture by default (⡂+space on supported displays). "
 "Three input methods are available."
 msgstr ""
+"Ova vam funkcija omogućuje upis znakova u nekoliko koraka. Opa opcija može "
+"biti aktivirana u općim postavkama dodatka ili s pomoću podrazumjevanog "
+"prečaca NVDA+Windows+h  (⡂+razmaknica na podržanim brajičnim retcima). Tri "
+"metode unosa su dostupne."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:103
 msgid "Method #1: fill a cell in 2 stages on both sides"
-msgstr ""
+msgstr "Metoda #1: popuni ćeliju u dva koraka obostrano"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:105
 msgid ""
@@ -1025,27 +1039,34 @@ msgid ""
 "side is empty, type the dots correspondig to the opposite side twice, or "
 "type the dots corresponding to the non-empty side in 2 steps."
 msgstr ""
+"Uz pomoć ove metode, upisujte točke lijeve strane, a potom desne strane. Akj "
+"je jedna strana prazna, upisujte točke koje odgovaraju točkama suprotne "
+"strane dvaput, ili upisujte točke koje odgovaraju  strani koja nije prazna u "
+"dva koraka."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:106
 #: addon/globalPlugins/brailleExtender/addonDoc.py:115
 msgid "For example:"
-msgstr ""
+msgstr "Na primjer:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:108
 msgid "For ⠛: press dots 1-2 then dots 4-5."
-msgstr ""
+msgstr "za ⠛: pritisnite točkice 1-2 a potom točkice 4-5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:109
 msgid "For ⠃: press dots 1-2 then dots 1-2, or dot 1 then dot 2."
 msgstr ""
+"za ⠃: upišite točkice 1-2 a potom točkice 1-2, ili točku 1 a potom točku 2."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:110
 msgid "For ⠘: press 4-5 then 4-5, or dot 4 then dot 5."
-msgstr ""
+msgstr "Za ⠘: upišite 4-5 a potom 4-5, ili točku 4 a potom točku 5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:112
 msgid "Method #2: fill a cell in two stages on one side (Space = empty side)"
 msgstr ""
+"Metoda#2: ispuni ćeliju u dva koraka jednostrano (razmaknica označava praznu "
+"stranu)"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:114
 msgid ""
@@ -1054,48 +1075,63 @@ msgid ""
 "dots 1-2-3-7 and the second one 4-5-6-8. If one side is empty, press space. "
 "An empty cell will be obtained by pressing the space key twice."
 msgstr ""
+"Koristeći ovu metodu, Možete upisivati jednom rukom neovisno o tome koji dio "
+"brajične tipkovnice poželite koristiti. Prvi vam korak omogućuje unos "
+"točkica 1-2-3-7 a drugi 4-5-6-8. Ako je jedna strana prazna, Pritisnite "
+"razmaknicu. Praznu ćete ćeliju dobiti pritišćući razmaknicu dvaput."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:117
 msgid "For ⠛: press dots 1-2 then dots 1-2, or dots 4-5 then dots 4-5."
 msgstr ""
+"Za ⠛: pritisnite točkice 1-2 potom točkice 1-2, ili točkice 4-5 a potomdots "
+"4-5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:118
 msgid "For ⠃: press dots 1-2 then space, or 4-5 then space."
 msgstr ""
+"Za ⠃: Pritisnite točkice 1-2 a potom razmaknicu, ili 4-5 a potom space."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:119
 msgid "For ⠘: press space then 1-2, or space then dots 4-5."
 msgstr ""
+"Za ⠘: pritisnite razmaknicu a potom 1-2, ili pritisnite razmaknicu a potom "
+"točkice 4-5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:121
 msgid ""
 "Method #3: fill a cell dots by dots (each dot is a toggle, press Space to "
 "validate the character)"
 msgstr ""
+"Metoda #3: ispunite ćeliju točku po točku (svaka točkica je preklopnik, "
+"pritisnite razmaknicu za provjeru znaka)"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:126
 msgid "Dots 1-2, then dots 4-5, then space."
-msgstr ""
+msgstr "točkice 1-2, potom točkice 4-5, a potom razmaknica."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:127
 msgid "Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space."
 msgstr ""
+"Točkice 1-2-3, potom točkica 3 (za ispravak), a potom točkice 4-5, a potom "
+"razmaknicu."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:128
 msgid "Dot 1, then dots 2-4-5, then space."
-msgstr ""
+msgstr "točkica 1, potom točkice 2-4-5, a potom razmaknica."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:129
 msgid "Dots 1-2-4, then dot 5, then space."
-msgstr ""
+msgstr "točkice 1-2-4, potom točkica 5, a potom razmaknica."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:130
 msgid "Dot 2, then dot 1, then dot 5, then dot 4, and then space."
 msgstr ""
+"točkica 2, potom točkica 1, potom točkica 5, potom točkica 4, i potom "
+"razmaknica."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "Etc."
-msgstr ""
+msgstr "Itd."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:150
 msgid "Documentation"

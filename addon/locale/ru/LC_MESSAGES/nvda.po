@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2020-04-15 09:24+0200\n"
-"PO-Revision-Date: 2020-04-16 14:36+0100\n"
+"PO-Revision-Date: 2020-04-16 15:13+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -396,7 +396,7 @@ msgstr "Выключено"
 #: addon/globalPlugins/brailleExtender/__init__.py:571
 #, python-format
 msgid "One hand mode %s"
-msgstr ""
+msgstr "Режим одной руки %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:572
 msgid "Enable/disable one hand mode feature"
@@ -524,7 +524,7 @@ msgstr ""
 #: addon/globalPlugins/brailleExtender/__init__.py:663
 #, python-format
 msgid "Advanced braille input mode %s"
-msgstr ""
+msgstr "Режим расширенного брайлевского ввода %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:664
 msgid "Enable/disable the advanced input mode"
@@ -533,11 +533,11 @@ msgstr "Включить или выключить режим расширенн
 #: addon/globalPlugins/brailleExtender/__init__.py:669
 #, python-format
 msgid "Description of undefined characters %s"
-msgstr ""
+msgstr "Описание неопределённых знаков %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:671
 msgid "Enable/disable description of undefined characters"
-msgstr ""
+msgstr "Включить или выключить описание неопределённых знаков"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:675
 msgid "Get the cursor position of text"
@@ -825,25 +825,25 @@ msgstr "Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:35
 msgid "HUC8"
-msgstr ""
+msgstr "HUC8"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:35
 #: addon/globalPlugins/brailleExtender/configBE.py:64
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:258
 msgid "Hexadecimal"
-msgstr ""
+msgstr "шестнадцатиричный"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:35
 #: addon/globalPlugins/brailleExtender/configBE.py:65
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:259
 msgid "Decimal"
-msgstr ""
+msgstr "Десятиричный"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:35
 #: addon/globalPlugins/brailleExtender/configBE.py:66
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:260
 msgid "Octal"
-msgstr ""
+msgstr "Восмиричный"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:35
 #: addon/globalPlugins/brailleExtender/configBE.py:67
@@ -855,7 +855,7 @@ msgstr "Двоичная"
 #: addon/globalPlugins/brailleExtender/addonDoc.py:46
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:239
 msgid "Representation of undefined characters"
-msgstr ""
+msgstr "Режим отображения неопределённых знаков"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:48
 msgid ""
@@ -863,16 +863,19 @@ msgid ""
 "represented within a braille table. To do so, go to the braille table "
 "settings. You can choose between the following representations:"
 msgstr ""
+"Дополнение даёт вам возможность настройки отображения неопределённых знаков "
+"внутри брайлевской таблицы. Чтобы настроить этот режим, зайдите в настройки "
+"брайлевских таблиц. Возможен выбор следующих отображений:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:52
 msgid ""
 "You can also combine this option with the “describe the character if "
 "possible” setting."
-msgstr ""
+msgstr "Эту опцию возможно сочетать с опцией “описывать знаки если возможно”."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:54
 msgid "Notes:"
-msgstr ""
+msgstr "Примечания:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:56
 msgid ""
@@ -880,11 +883,14 @@ msgid ""
 "best combination is the usage of the HUC8 representation without checking "
 "the “describe character if possible” option."
 msgstr ""
+"Чтобы различать неопределённые знаки при увеличении места на брайлевском "
+"дисплее, самая лучшая комбинация это использование HUC8 отображения без "
+"включенной опции “Описать неопределённые знаки если возможно”."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:57
 #, python-brace-format
 msgid "To learn more about the HUC representation, see {url}"
-msgstr ""
+msgstr "Чтобы узнать больше об отображении HUC, посмотрите {url}"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:58
 msgid ""
@@ -892,10 +898,13 @@ msgid ""
 "take precedence over character descriptions, which also take precedence over "
 "the chosen representation for undefined characters."
 msgstr ""
+"Имейте в виду, что определения в ваших таблицах или словарях таблиц имеют "
+"приоритет над описаниями знаков, которые тоже имеют приоритет над выбранными "
+"отображениями неопределённых знаков."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:61
 msgid "Getting Current Character Info"
-msgstr ""
+msgstr "получение информации об актуальном знаке"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:63
 msgid ""
@@ -1081,7 +1090,7 @@ msgstr ""
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "Etc."
-msgstr ""
+msgstr "Итд."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:150
 msgid "Documentation"
@@ -1170,7 +1179,7 @@ msgstr "Датский"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:285
 msgid "English and French"
-msgstr ""
+msgstr "Английский и французский"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:286
 msgid "German"
@@ -1261,7 +1270,7 @@ msgstr "Словарные &статьи"
 #. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:131
 msgid "Abbreviation"
-msgstr ""
+msgstr "Сокращение"
 
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:132
 msgid "Replace by"
@@ -1311,7 +1320,7 @@ msgstr "Добавить словарь"
 
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:221
 msgid "File doesn't exist yet"
-msgstr ""
+msgstr "Файл ещё не существует"
 
 #. Translators: This is the label for the edit dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:242
@@ -1332,15 +1341,15 @@ msgstr "&Заменить с"
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:276
 msgid "Advanced input mode"
-msgstr ""
+msgstr "Режим расширенного ввода"
 
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:284
 msgid "E&xit the advanced input mode after typing one pattern"
-msgstr ""
+msgstr "&Выйти из разсширенного режима ввода после набора одной комбинации"
 
 #: addon/globalPlugins/brailleExtender/advancedInputMode.py:291
 msgid "Escape sign for Unicode values"
-msgstr ""
+msgstr "Знак ескейп для значений юникод"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:54
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:248
@@ -1350,45 +1359,45 @@ msgstr "Использовать поведение брайлевской та�
 #: addon/globalPlugins/brailleExtender/configBE.py:55
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:249
 msgid "Dots 1-8 (⣿)"
-msgstr ""
+msgstr "Точки 1-8 (⣿)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:56
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:250
 msgid "Dots 1-6 (⠿)"
-msgstr ""
+msgstr "Точки 1-6 (⠿)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:57
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:251
 msgid "Empty cell (⠀)"
-msgstr ""
+msgstr "Пустая клетка (⠀)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:58
 msgid "Other dot pattern (e.g.: 6-123456)"
-msgstr ""
+msgstr "Другая комбинация точек (например.: 6-123456)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:59
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:253
 msgid "Question mark (depending output table)"
-msgstr ""
+msgstr "Вопросительный знак (зависит от таблицы вывода)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:60
 msgid "Other sign/pattern (e.g.: \\, ??)"
-msgstr ""
+msgstr "другой знак или комбинация точек (например.: \\, ??)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:61
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:255
 msgid "Hexadecimal, Liblouis style"
-msgstr ""
+msgstr "Шестнадцатиричный, Стиль Liblouis"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:62
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:256
 msgid "Hexadecimal, HUC8"
-msgstr ""
+msgstr "Шестнадцатиричный, HUC8"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:63
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:257
 msgid "Hexadecimal, HUC6"
-msgstr ""
+msgstr "Шестнадцатиричный, HUC6"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:70
 #: addon/globalPlugins/brailleExtender/configBE.py:77
@@ -1440,17 +1449,20 @@ msgstr "Режим просмотра"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:102
 msgid "Fill a cell in two stages on both sides"
-msgstr ""
+msgstr "Заполнять клетку в двух шагах с обеих сторон"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:103
 msgid "Fill a cell in two stages on one side (space = empty side)"
 msgstr ""
+"Заполнять клетку в двух шагах на одной стороне (пробел = пустая клетка)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:104
 msgid ""
 "Fill a cell dots by dots (each dot is a toggle, press space to validate the "
 "character)"
 msgstr ""
+"Заполнять клетку точку в точку (каждая из точек является переключателем, "
+"нажмите пробел, чтобы проверить знак)"
 
 #: addon/globalPlugins/brailleExtender/configBE.py:131
 msgid "last known"

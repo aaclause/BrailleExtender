@@ -118,7 +118,7 @@ postTables = []
 if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
 
-def getValidBrailleDisplayPrefered():
+def getValidBrailleDisplayPreferred():
 	l = braille.getDisplayList()
 	l.append(("last", _("last known")))
 	return l
@@ -240,8 +240,8 @@ def getConfspec():
 		"tables": {
 			"groups": {},
 			"shortcuts": 'string(default="?")',
-			"preferedInput": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
-			"preferedOutput": f'string(default="{config.conf["braille"]["translationTable"]}")',
+			"preferredInput": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
+			"preferredOutput": f'string(default="{config.conf["braille"]["translationTable"]}")',
 		},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
@@ -320,12 +320,12 @@ def loadConf():
 	if config.conf["brailleExtender"]["tables"]["shortcuts"] not in brailleTablesExt.listTablesFileName(brailleTablesExt.listUncontractedTables()): config.conf["brailleExtender"]["tables"]["shortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
-	initializePreferedTables()
+	initializePreferredTables()
 	return True
 
-def initializePreferedTables():
+def initializePreferredTables():
 	global inputTables, outputTables
-	inputTables, outputTables = brailleTablesExt.getPreferedTables()
+	inputTables, outputTables = brailleTablesExt.getPreferredTables()
 
 def loadGestures():
 	if gesturesFileExists:

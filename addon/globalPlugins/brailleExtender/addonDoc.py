@@ -43,7 +43,7 @@ def getFeaturesDoc():
 		ch = undefinedCharsSamples[i][0][0]
 		undefinedCharsSamples[i][0] = "%s (%s)" % (ch, utils.getSpeechSymbols(ch))
 
-	braillePattern = config.conf["brailleExtender"]["advancedInputMode"]["startSign"]
+	braillePattern = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"]
 
 	features = {
 		_("Representation of undefined characters"): [

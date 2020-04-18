@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-04-18 11:47+0200\n"
-"PO-Revision-Date: 2020-04-18 11:50+0200\n"
+"POT-Creation-Date: 2020-04-18 12:05+0200\n"
+"PO-Revision-Date: 2020-04-18 12:18+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -849,21 +849,16 @@ msgid "Representation of undefined characters"
 msgstr "Représentation des caractères indéfinis"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:51
-#, fuzzy
-#| msgid ""
-#| "The extension allows you to customize how an undefined character should "
-#| "be represented within a braille table. To do so, go to the braille table "
-#| "settings. You can choose between the following representations:"
 msgid ""
 "The extension allows you to customize how an undefined character should be "
 "represented within a braille table. To do so, go to the — Representation of "
 "undefined characters — settings. You can choose between the following "
 "representations:"
 msgstr ""
-"L'extension vous permet de personnaliser la façon dont un caractère non "
-"défini doit être représenté dans un tableau braille. Pour ce faire, accédez "
-"aux paramètres des tables braille. Vous pouvez choisir entre les "
-"représentations suivantes :"
+"L'extension vous permet de personnaliser la façon dont un caractère indéfini "
+"dans une table braille doit être représenté. Pour ce faire, accédez aux "
+"paramètres — Représentation des caractères indéfinis —. Vous pouvez choisir "
+"entre les représentations suivantes :"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:55
 msgid ""
@@ -917,11 +912,6 @@ msgstr ""
 "telles que:"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:68
-#, fuzzy
-#| msgid ""
-#| "the HUC8 and HUC6 representations; the hexadecimal, decimal, octal or "
-#| "binary values; A description of the character if possible; - The Unicode "
-#| "Braille representation and the Braille dot pattern."
 msgid ""
 "the HUC8 and HUC6 representations; the hexadecimal, decimal, octal or binary "
 "values; A description of the character if possible; the Unicode braille "
@@ -929,7 +919,7 @@ msgid ""
 msgstr ""
 "les représentations HUC8 et HUC6 ; les valeurs hexadécimales, décimales, "
 "octales ou binaires ; Une description du caractère si possible ; la "
-"représentation braille Unicode et le motif de points braille."
+"représentation braille Unicode et les points du motif braille."
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:70
 msgid ""
@@ -959,8 +949,6 @@ msgstr ""
 "informations suivantes :"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:77
-#, fuzzy
-#| msgid "Advanced Braille Input"
 msgid "Advanced braille input"
 msgstr "Saisie braille avancée"
 
@@ -1032,12 +1020,6 @@ msgid "Press Space to validate."
 msgstr "Appuyez sur Espace pour valider."
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:95
-#, fuzzy
-#| msgid ""
-#| "For abbreviations, you must first add them in the dialog box - Advanced "
-#| "mode dictionaries -. Then, you just have to enter your abbreviation and "
-#| "press space to expand it. For example, you can associate — ⠎⠺ — with — "
-#| "sandwich —."
 msgid ""
 "For abbreviations, you must first add them in the dialog box — Advanced mode "
 "dictionaries —. Then, you just have to enter your abbreviation and press "
@@ -1047,7 +1029,8 @@ msgstr ""
 "Pour les abréviations, vous devez d'abord les ajouter dans la boîte de "
 "dialogue — Dictionnaires du mode avancé —. Ensuite, il vous suffit de saisir "
 "votre abréviation et d'appuyer sur l'espace pour la développer. Par exemple, "
-"vous pouvez associer - ⠎⠺ - à - sandwich -."
+"vous pouvez définir les abréviations suivantes: \"⠎⠺\" pour \"sandwich\", "
+"\"⠋⠛⠋⠗\" pour \"🇫🇷\"."
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:97
 msgid "Here are some examples of sequences to be entered for given characters:"
@@ -1471,22 +1454,16 @@ msgid "Use the current input table"
 msgstr "Utiliser la table braille d’entrée actuelle"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:149
-#, fuzzy
-#| msgid "Prefered braille tables"
-msgid "Prefered input tables"
-msgstr "Tables braille préférées"
+msgid "Preferred &input tables"
+msgstr "Tables de &saisie braille préférées"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:155
-#, fuzzy
-#| msgid "Prefered braille tables"
-msgid "Prefered output tables"
-msgstr "Tables braille préférées"
+msgid "Preferred &output tables"
+msgstr "Tables braille d’a&ffichage préférées"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:160
-#, fuzzy
-#| msgid "Input braille table for keyboard shortcut keys"
 msgid "Input braille table to use for keyboard shortcuts"
-msgstr "Table braille d’entrée pour les raccourcis clavier"
+msgstr "Table braille d’entrée à utiliser pour les raccourcis clavier"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:170
 msgid "&Groups of tables"
@@ -1498,17 +1475,13 @@ msgstr "Tables braille &alternatives et personnalisées"
 
 #. Translators: label of a dialog.
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:177
-#, fuzzy
-#| msgid "Display tab signs as spaces"
 msgid "Display &tab signs as spaces"
-msgstr "Afficher les signes de tabulation en tant qu’espaces"
+msgstr "Afficher les signes de &tabulation comme des espaces"
 
 #. Translators: label of a dialog.
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:182
-#, fuzzy
-#| msgid "Number of space for a tab sign"
 msgid "Number of &space for a tab sign"
-msgstr "Nombre d’espaces pour un signe de tabulation"
+msgstr "Nombre d’e&spaces pour un signe de tabulation"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:182
 #: addon\globalPlugins\brailleExtender\settings.py:105
@@ -1551,10 +1524,8 @@ msgstr "Utilisable en"
 
 #. Translators: The label for a button in groups of tables dialog to open groups of tables file in an editor.
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:277
-#, fuzzy
-#| msgid "&Open the current dictionary file in an editor"
 msgid "&Open the groups of tables file in an editor"
-msgstr "&Ouvrir le fichier de dictionnaire actuel dans un éditeur"
+msgstr "&Ouvrir le fichier de groupes de tables dans un éditeur"
 
 #. Translators: The label for a button in groups of tables dialog to reload groups of tables.
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:282
@@ -1562,10 +1533,8 @@ msgid "&Reload the groups of tables"
 msgstr "&Recharger les groupes de tables"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:296
-#, fuzzy
-#| msgid "Add gesture"
 msgid "Add group entry"
-msgstr "Ajouter un geste"
+msgstr "Ajouter une entrée de groupe"
 
 #: addon\globalPlugins\brailleExtender\brailleTablesExt.py:362
 msgid "Group name"
@@ -2295,10 +2264,8 @@ msgstr "Paramètres"
 
 #. Translators: label of a dialog.
 #: addon\globalPlugins\brailleExtender\undefinedChars.py:249
-#, fuzzy
-#| msgid "Representation"
 msgid "Representation &method"
-msgstr "Représentation"
+msgstr "&Méthode de représentation"
 
 #: addon\globalPlugins\brailleExtender\undefinedChars.py:257
 #, python-brace-format

@@ -42,21 +42,21 @@ def listTablesIndexes(l, tables):
 	tables = listTablesFileName(tables)
 	return [tables.index(e) for e in l if e in tables]
 
-def getPreferedTables() -> Tuple[List[str]]:
+def getPreferredTables() -> Tuple[List[str]]:
 	allInputTablesFileName = listTablesFileName(listInputTables())
 	allOutputTablesFileName = listTablesFileName(listOutputTables())
-	preferedInputTablesFileName = config.conf["brailleExtender"]["tables"]["preferedInput"].split('|')
-	preferedOutputTablesFileName = config.conf["brailleExtender"]["tables"]["preferedOutput"].split('|')
-	inputTables = [fn for fn in preferedInputTablesFileName if fn in allInputTablesFileName]
-	outputTables = [fn for fn in preferedOutputTablesFileName if fn in allOutputTablesFileName]
+	preferredInputTablesFileName = config.conf["brailleExtender"]["tables"]["preferredInput"].split('|')
+	preferredOutputTablesFileName = config.conf["brailleExtender"]["tables"]["preferredOutput"].split('|')
+	inputTables = [fn for fn in preferredInputTablesFileName if fn in allInputTablesFileName]
+	outputTables = [fn for fn in preferredOutputTablesFileName if fn in allOutputTablesFileName]
 	return inputTables, outputTables
 
-def getPreferedTablesIndexes() -> List[int]:
-	preferedInputTables, preferedOutputTables = getPreferedTables()
+def getPreferredTablesIndexes() -> List[int]:
+	preferredInputTables, preferredOutputTables = getPreferredTables()
 	inputTables = listTablesFileName(listInputTables())
 	outputTables = listTablesFileName(listOutputTables())
 	o = []
-	for a, b in [(preferedInputTables, inputTables), (preferedOutputTables, outputTables)]:
+	for a, b in [(preferredInputTables, inputTables), (preferredOutputTables, outputTables)]:
 		o_ = []
 		for e in a:
 			if e in b: o_.append(b.index(e))
@@ -140,21 +140,21 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 	title = _("Braille tables")
 
 	def makeSettings(self, settingsSizer):
-		listPreferedTablesIndexes = getPreferedTablesIndexes()
+		listPreferredTablesIndexes = getPreferredTablesIndexes()
 		currentTableLabel = _("Use the current input table")
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 
 		tables = [f"{table.displayName}, {table.fileName}" for table in listTables() if table.input]
-		label = _("Prefered input tables")
+		label = _("Preferred &input tables")
 		self.inputTables = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=tables)
-		self.inputTables.CheckedItems = listPreferedTablesIndexes[0]
+		self.inputTables.CheckedItems = listPreferredTablesIndexes[0]
 		self.inputTables.Select(0)
 
 		tables = [f"{table.displayName}, {table.fileName}" for table in listTables() if table.output]
-		label = _("Prefered output tables")
+		label = _("Preferred &output tables")
 		self.outputTables = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=tables)
-		self.outputTables.CheckedItems = listPreferedTablesIndexes[1]
+		self.outputTables.CheckedItems = listPreferredTablesIndexes[1]
 		self.outputTables.Select(0)
 
 		label = _("Input braille table to use for keyboard shortcuts")
@@ -224,14 +224,14 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 			[self.inputTableShortcuts.GetSelection()-1],
 			listUncontractedInputTables
 		)[0] if self.inputTableShortcuts.GetSelection() > 0 else '?'
-		config.conf["brailleExtender"]["tables"]["preferedInput"] = inputTables
-		config.conf["brailleExtender"]["tables"]["preferedOutput"] = outputTables
+		config.conf["brailleExtender"]["tables"]["preferredInput"] = inputTables
+		config.conf["brailleExtender"]["tables"]["preferredOutput"] = outputTables
 		config.conf["brailleExtender"]["tables"]["shortcuts"] = tablesShortcuts
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"][f"tabSize_{configBE.curBD}"] = self.tabSize.Value
 
 	def postSave(self):
-		configBE.initializePreferedTables()
+		configBE.initializePreferredTables()
 
 
 class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):

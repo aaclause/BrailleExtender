@@ -11,6 +11,7 @@ addonHandler.initTranslation()
 import braille
 from . import configBE
 from collections import OrderedDict
+import config
 import cursorManager
 import globalCommands
 import ui
@@ -42,10 +43,12 @@ def getFeaturesDoc():
 		ch = undefinedCharsSamples[i][0][0]
 		undefinedCharsSamples[i][0] = "%s (%s)" % (ch, utils.getSpeechSymbols(ch))
 
+	braillePattern = config.conf["brailleExtender"]["advancedInputMode"]["startSign"]
+
 	features = {
 		_("Representation of undefined characters"): [
 			"<p>",
-			_("The extension allows you to customize how an undefined character should be represented within a braille table. To do so, go to the braille table settings. You can choose between the following representations:"),
+			_("The extension allows you to customize how an undefined character should be represented within a braille table. To do so, go to the — Representation of undefined characters — settings. You can choose between the following representations:"),
 			"</p><ul>",
 			''.join([f"<li>{choice}</li>" for choice in configBE.CHOICES_undefinedCharRepr]),
 			"</ul><p>",
@@ -62,7 +65,7 @@ def getFeaturesDoc():
 			"<p>",
 			_("This feature allows you to obtain various information regarding the character under the cursor using the current input braille table, such as:"),
 			"<br />",
-			_("the HUC8 and HUC6 representations; the hexadecimal, decimal, octal or binary values; A description of the character if possible; - The Unicode Braille representation and the Braille dot pattern."),
+			_("the HUC8 and HUC6 representations; the hexadecimal, decimal, octal or binary values; A description of the character if possible; the Unicode braille representation and the braille pattern dots."),
 			"</p><p>",
 			_("Pressing the defined gesture associated to this function once shows you the information in a flash message and a double-press displays the same information in a virtual NVDA buffer."),
 			"<br />",
@@ -71,12 +74,13 @@ def getFeaturesDoc():
 			_(f"For example, for the '{chosenChar}' character, we will get the following information:"),
 			"<br /><blockquote>" + utils.currentCharDesc(chosenChar, 0) + "</blockquote></p>",
 		],
-		_("Advanced Braille Input"): [
+		_("Advanced braille input"): [
 			"<p>",
 			_("This feature allows you to enter any character from its HUC8 representation or its hexadecimal/decimal/octal/binary value. Moreover, it allows you to develop abbreviations. To use this function, enter the advanced input mode and then enter the desired pattern. Default gestures: NVDA+Windows+i or ⡊+space (on supported displays). Press the same gesture to exit this mode. Alternatively, an option allows you to automatically exit this mode after entering a single pattern. "),
 			"</p><p>",
-			"If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 cells, the interpretation will be performed each time 3 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:",
+			_("If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 cells, the interpretation will be performed each time 3 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:"),
 			"</p><ol>",
+			"<li>" + _(f"Enter {braillePattern}") + "</li>",
 			"<li>" + _("Specify the basis as follows") + f"{punctuationSeparator}:",
 			"<ul><li>",
 			_("⠭ or ⠓") + f"{punctuationSeparator}: " + _("for a hexadecimal value") + "</li>",
@@ -88,7 +92,7 @@ def getFeaturesDoc():
 			"<li>" + _("Press Space to validate.") + "</li>",
 			"</ol>",
 			"<p>",
-			_("For abbreviations, you must first add them in the dialog box - Advanced mode dictionaries -. Then, you just have to enter your abbreviation and press space to expand it. For example, you can associate — ⠎⠺ — with — sandwich —."),
+			_('For abbreviations, you must first add them in the dialog box — Advanced mode dictionaries —. Then, you just have to enter your abbreviation and press space to expand it. For example, you can define the following abbreviations: "⠎⠺" with "sandwich", "⠋⠛⠋⠗" to "🇫🇷".'),
 			"</p><p>",
 			_("Here are some examples of sequences to be entered for given characters:"),
 			"</p><table>",

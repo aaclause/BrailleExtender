@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-04-18 12:33+0200\n"
-"PO-Revision-Date: 2020-04-18 12:35+0200\n"
+"POT-Creation-Date: 2020-04-18 12:48+0200\n"
+"PO-Revision-Date: 2020-04-18 12:51+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -964,10 +964,10 @@ msgid ""
 msgstr ""
 "Cette fonction vous permet de saisir n'importe quel caractère depuis sa "
 "représentation HUC8 ou sa valeur hexadécimale / décimale / octale / binaire. "
-"De plus, il vous permet de développer des abréviations. Pour utiliser cette "
-"fonction, entrez dans le mode de saisie avancé, puis entrez le motif "
-"souhaité. Gestes par défaut: NVDA+Windows+i ou ⡊+espace (sur les afficheurs "
-"pris en charge). Appuyez sur le même geste pour quitter ce mode. "
+"De plus, elle vous permet de développer des abréviations. Pour utiliser "
+"cette fonctionnalité, entrez dans le mode de saisie avancé, puis entrez le "
+"motif souhaité. Gestes par défaut: NVDA+Windows+i ou ⡊+espace (sur les "
+"afficheurs pris en charge). Appuyez sur le même geste pour quitter ce mode. "
 "Alternativement, une option vous permet de quitter automatiquement ce mode "
 "après avoir entré un seul motif."
 
@@ -2323,14 +2323,10 @@ msgid "Language"
 msgstr "Langue"
 
 #: addon\globalPlugins\brailleExtender\undefinedChars.py:318
-#, fuzzy
-#| msgid "Use the current input table"
 msgid "Use the current output table"
-msgstr "Utiliser la table braille d’entrée actuelle"
+msgstr "Utiliser la table d'affichage actuelle"
 
 #: addon\globalPlugins\brailleExtender\undefinedChars.py:324
-#, fuzzy
-#| msgid "Braille tables"
 msgid "Braille table"
 msgstr "Tables braille"
 

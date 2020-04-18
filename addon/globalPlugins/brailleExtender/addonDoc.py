@@ -92,7 +92,7 @@ def getFeaturesDoc():
 			"<li>" + _("Press Space to validate.") + "</li>",
 			"</ol>",
 			"<p>",
-			_('For abbreviations, you must first add them in the dialog box — Advanced mode dictionaries —. Then, you just have to enter your abbreviation and press space to expand it. For example, you can define the following abbreviations: "⠎⠺" with "sandwich", "⠋⠛⠋⠗" to "🇫🇷".'),
+			_('For abbreviations, you must first add them in the dialog box — Advanced input mode dictionary —. Then, you just have to enter your abbreviation and press space to expand it. For example, you can define the following abbreviations: "⠎⠺" with "sandwich", "⠋⠛⠋⠗" to "🇫🇷".'),
 			"</p><p>",
 			_("Here are some examples of sequences to be entered for given characters:"),
 			"</p><table>",

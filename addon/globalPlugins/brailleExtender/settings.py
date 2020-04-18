@@ -40,8 +40,8 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
 	title = _("General")
-	bds_k = [k for k, v in configBE.getValidBrailleDisplayPrefered()]
-	bds_v = [v for k, v in configBE.getValidBrailleDisplayPrefered()]
+	bds_k = [k for k, v in configBE.getValidBrailleDisplayPreferred()]
+	bds_v = [v for k, v in configBE.getValidBrailleDisplayPreferred()]
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)

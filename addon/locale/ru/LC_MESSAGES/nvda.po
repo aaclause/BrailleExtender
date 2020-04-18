@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2020-04-15 09:24+0200\n"
-"PO-Revision-Date: 2020-04-16 15:13+0100\n"
+"PO-Revision-Date: 2020-04-17 22:14+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -911,6 +911,8 @@ msgid ""
 "This feature allows you to obtain various information regarding the "
 "character under the cursor using the current input braille table, such as:"
 msgstr ""
+"Эта функция позволяет вам получить информацию о знаке под курсором используя "
+"актуальную брайлевскую таблицу, такую как:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:65
 msgid ""
@@ -918,6 +920,9 @@ msgid ""
 "values; A description of the character if possible; - The Unicode Braille "
 "representation and the Braille dot pattern."
 msgstr ""
+"Изображения HUC8 и HUC6; шестнадцатиричное, десятиричное, восмиричное или "
+"двоичное значения; и если возможно, описание знака; - отображение в "
+"брайлевском юникоде и комбинация точек."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:67
 msgid ""
@@ -925,23 +930,28 @@ msgid ""
 "information in a flash message and a double-press displays the same "
 "information in a virtual NVDA buffer."
 msgstr ""
+"Нажимая однажды клавишную комбинацию связанную с этой функцией,показывается "
+"информация в скором сообщении а нажатие дважды показывает Показывает ту-же "
+"самую информацию в виртуальном окне NVDA."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:69
 msgid ""
 "On supported displays the defined gesture is ⡉+space. No system gestures are "
 "defined by default."
 msgstr ""
+"На поддержанных брайлевских дисплеях жест по умолчанию -  ⡉+пробел. По "
+"умолчанию нет клавишной комбинации в системе."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:71
 #, python-brace-format
 msgid ""
 "For example, for the '{chosenChar}' character, we will get the following "
 "information:"
-msgstr ""
+msgstr "Например, для '{chosenChar}' знака, получаем следующую информацию:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:74
 msgid "Advanced Braille Input"
-msgstr ""
+msgstr "Расширенный брайлевский ввод"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:76
 msgid ""
@@ -953,35 +963,42 @@ msgid ""
 "Alternatively, an option allows you to automatically exit this mode after "
 "entering a single pattern. "
 msgstr ""
+"Эта функция даёт вам возможность написания знаков в отображении HUC8 или в "
+"их сестнадцатиричных, десятеричных, восмиричных, или двоичных. Даже у вас "
+"есть возможность развития сокращений. Чтобы пользоватся этим функционалом, "
+"включите расширенный ввод и напишите желанный вами знак. Жесты по умолчанию: "
+"NVDA+Windows+i или ⡊+space (на поддержанных дисплеях. Нажмите тот же самый "
+"жест, чтобы выйти. Алтернативно, существует опция, которая даёт вам "
+"возможность выйти из этого режима. "
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:80
 msgid "Specify the basis as follows"
-msgstr ""
+msgstr "Определите базу как следует"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "⠭ or ⠓"
-msgstr ""
+msgstr "⠭ или ⠓"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:82
 msgid "for a hexadecimal value"
-msgstr ""
+msgstr "для шестнадцатиричного значения"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:83
 msgid "for a decimal value"
-msgstr ""
+msgstr "Для десятиричного значения"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:84
 msgid "for an octal value"
-msgstr ""
+msgstr "Для восмиричного значения"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:87
 msgid ""
 "Enter the value of the character according to the previously selected basis."
-msgstr ""
+msgstr "Начните писать знак в соответствии с выбранной базой."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:88
 msgid "Press Space to validate."
-msgstr ""
+msgstr "Чтобы проверить, нажмите пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:91
 msgid ""
@@ -989,18 +1006,22 @@ msgid ""
 "dictionaries -. Then, you just have to enter your abbreviation and press "
 "space to expand it. For example, you can associate — ⠎⠺ — with — sandwich —."
 msgstr ""
+"Для сокращений, сначала нужно их добавить в диалоговом окне - словари "
+"расширенного ввода -. после этого, начинаете писать своё сокращение и "
+"нажимаете пробел чтобы расширить его. Например, Возможно  прикрутить — ⠎⠺ — к"
+"— слову бутерброд —."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:93
 msgid "Here are some examples of sequences to be entered for given characters:"
-msgstr ""
+msgstr "Здесь приводятся примеры дл некоторых знаков:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:97
 msgid "Note: the HUC6 input is currently not supported."
-msgstr ""
+msgstr "Примечание: Ввод HUC6 не поддерживается."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:100
 msgid "One-hand mode"
-msgstr ""
+msgstr "Режим одной рукой"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:102
 msgid ""

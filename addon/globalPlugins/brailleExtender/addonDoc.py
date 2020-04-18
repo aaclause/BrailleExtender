@@ -124,7 +124,7 @@ def getFeaturesDoc():
 			"</ul>",
 			"<h4>" + _("Method #3: fill a cell dots by dots (each dot is a toggle, press Space to validate the character)") + "</h4>",
 			"<p>",
-			"In this mode, each dot is a toggle. You must press the space key as soon as the cell you have entered is the desired one to input the character. Thus, the more dots are contained in the cell, the more ways you have to enter the character.",
+			_("In this mode, each dot is a toggle. You must press the space key as soon as the cell you have entered is the desired one to input the character. Thus, the more dots are contained in the cell, the more ways you have to enter the character."),
 			"<br />" + "For example, for ⠛, you can compose the cell in the following ways:",
 			"</p><ul>",
 			"<li>" + _("Dots 1-2, then dots 4-5, then space.") + "</li>",
@@ -153,9 +153,9 @@ class AddonDoc:
 		manifestDescription = self.getDescFormated(addonDesc)
 		doc = f"<h1>{addonSummary} {addonVersion} — " + _("Documentation") + "</h1>"
 		doc += f"<p>{manifestDescription}</p>"
-		doc += "<h2>Let's explore some features</h2>"
+		doc += "<h2>" + _("Let's explore some features") + "</h2>"
 		doc += getFeaturesDoc()
-		doc += "<h2>Profile gestures</h2>"
+		doc += "<h2>" + _("Profile gestures") + "</h2>"
 		if configBE.gesturesFileExists:
 			brailleDisplayDriverName = configBE.curBD.capitalize()
 			profileName = "default"

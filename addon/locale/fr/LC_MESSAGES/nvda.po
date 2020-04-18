@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-04-18 12:23+0200\n"
-"PO-Revision-Date: 2020-04-18 12:25+0200\n"
+"POT-Creation-Date: 2020-04-18 12:33+0200\n"
+"PO-Revision-Date: 2020-04-18 12:35+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -1136,6 +1136,18 @@ msgstr ""
 "Méthode n° 3 : remplir une cellule points par points (chaque point est une "
 "bascule, appuyez sur Espace pour valider le caractère)"
 
+#: addon\globalPlugins\brailleExtender\addonDoc.py:127
+msgid ""
+"In this mode, each dot is a toggle. You must press the space key as soon as "
+"the cell you have entered is the desired one to input the character. Thus, "
+"the more dots are contained in the cell, the more ways you have to enter the "
+"character."
+msgstr ""
+"Dans ce mode, chaque point est une bascule. Vous devez appuyer sur la touche "
+"espace dès que la cellule que vous avez entrée est celle souhaitée pour "
+"saisir le caractère. Ainsi, plus il y a de points dans la cellule, plus vous "
+"devez saisir de caractères."
+
 #: addon\globalPlugins\brailleExtender\addonDoc.py:130
 msgid "Dots 1-2, then dots 4-5, then space."
 msgstr "Points 1-2, puis points 4-5, puis espace."
@@ -1164,6 +1176,14 @@ msgstr "Etc.."
 #: addon\globalPlugins\brailleExtender\addonDoc.py:154
 msgid "Documentation"
 msgstr "Documentation"
+
+#: addon\globalPlugins\brailleExtender\addonDoc.py:156
+msgid "Let's explore some features"
+msgstr "Explorons quelques fonctionnalités"
+
+#: addon\globalPlugins\brailleExtender\addonDoc.py:158
+msgid "Profile gestures"
+msgstr "Gestes du profil"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:164
 msgid "Driver loaded"

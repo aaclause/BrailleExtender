@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2020-04-15 09:24+0200\n"
-"PO-Revision-Date: 2020-04-17 22:14+0100\n"
+"PO-Revision-Date: 2020-04-19 10:04+0100\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -1030,10 +1030,14 @@ msgid ""
 "fly using NVDA+Windows+h gesture by default (⡂+space on supported displays). "
 "Three input methods are available."
 msgstr ""
+"Эта функция позволяет вам писать текст в нескольких шагах. Эта опция может "
+"быть включена в настройках дополнения или на лету, используя NVDA+Windows+h "
+"по умолчанию (⡂+пробел на поддержанных брайлевских дисплеях). Три метода "
+"ввода доступны."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:103
 msgid "Method #1: fill a cell in 2 stages on both sides"
-msgstr ""
+msgstr "Метод #1: заполнять клетку в двух шагах двусторонно"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:105
 msgid ""
@@ -1041,27 +1045,33 @@ msgid ""
 "side is empty, type the dots correspondig to the opposite side twice, or "
 "type the dots corresponding to the non-empty side in 2 steps."
 msgstr ""
+"С помощью этого метода, набирайте точки одной стороны клетки, а потом правую "
+"сторону клетки. Если одна сторона пустая, набирайте точки соответствующие "
+"обратной стороны два раза, или набирайте точки, которые соответствуют полной "
+"стороны в два шага."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:106
 #: addon/globalPlugins/brailleExtender/addonDoc.py:115
 msgid "For example:"
-msgstr ""
+msgstr "Например:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:108
 msgid "For ⠛: press dots 1-2 then dots 4-5."
-msgstr ""
+msgstr "для ⠛: набирайте точки 1-2 потом точки 4-5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:109
 msgid "For ⠃: press dots 1-2 then dots 1-2, or dot 1 then dot 2."
-msgstr ""
+msgstr "Для ⠃: набираййте точки 1-2 потом точки 1-2, или точку 1 потом dot 2."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:110
 msgid "For ⠘: press 4-5 then 4-5, or dot 4 then dot 5."
-msgstr ""
+msgstr "для ⠘: набирайте 4-5 потом 4-5, или точку 4 потом точку 5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:112
 msgid "Method #2: fill a cell in two stages on one side (Space = empty side)"
 msgstr ""
+"Метод #2: набирайте знаки клетки в двух шагах по одной стороне (пробел = "
+"пустая часть клетки)"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:114
 msgid ""
@@ -1070,44 +1080,53 @@ msgid ""
 "dots 1-2-3-7 and the second one 4-5-6-8. If one side is empty, press space. "
 "An empty cell will be obtained by pressing the space key twice."
 msgstr ""
+"Используя этот метод, вы можете набрать знаки в клетке одной рукой, "
+"независимо от выбранной стороны брайлевской клавиатуры. Первый шаг вам "
+"позволяет набрать точки 1-2-3-7 а вторая 4-5-6-8. Если одна сторона - пуста, "
+"нажмите пробел. Получите пустую клетку после нажатия пробела дважды."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:117
 msgid "For ⠛: press dots 1-2 then dots 1-2, or dots 4-5 then dots 4-5."
 msgstr ""
+"для ⠛: нажмите точки 1-2 потом точки 1-2, или точки 4-5 потом точки 4-5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:118
 msgid "For ⠃: press dots 1-2 then space, or 4-5 then space."
-msgstr ""
+msgstr "Для ⠃: нажмите точки 1-2 а потом пробел, или 4-5 а потом пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:119
 msgid "For ⠘: press space then 1-2, or space then dots 4-5."
-msgstr ""
+msgstr "Для ⠘: нажмите пробел а потом 1-2, или пробел а потом точки 4-5."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:121
 msgid ""
 "Method #3: fill a cell dots by dots (each dot is a toggle, press Space to "
 "validate the character)"
 msgstr ""
+"Метод #3: заполнять клетку точку по точку (каждая точка является "
+"переключателем, нажмите пробел для проверки знака)"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:126
 msgid "Dots 1-2, then dots 4-5, then space."
-msgstr ""
+msgstr "Точка 1-2, потом точки 4-5, потом пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:127
 msgid "Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space."
 msgstr ""
+"точки 1-2-3, потом точка 3 (для корректировки), потом точки 4-5, потом "
+"пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:128
 msgid "Dot 1, then dots 2-4-5, then space."
-msgstr ""
+msgstr "точка 1, потом точки 2-4-5, потом пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:129
 msgid "Dots 1-2-4, then dot 5, then space."
-msgstr ""
+msgstr "точки 1-2-4, потом точка 5, а потом пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:130
 msgid "Dot 2, then dot 1, then dot 5, then dot 4, and then space."
-msgstr ""
+msgstr "точка 2, потом точка 1, потом точка 5, потом точка 4, и потом пробел."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "Etc."

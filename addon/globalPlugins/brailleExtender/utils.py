@@ -25,6 +25,7 @@ addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
 from .common import *
+from . import brailleTablesExt
 from . import huc
 from . import dictionaries
 
@@ -478,10 +479,16 @@ def getCurrentBrailleTables(input_=False, brf=False):
 		tables = []
 		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
 		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
-		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
-		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		tables += [
-			mainTable,
+		if input_:
+			mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
+			group = brailleTablesExt.getGroup(usableIn='i')
+			if group: group = group.members
+		else:
+			mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+			group = brailleTablesExt.getGroup(usableIn='o')
+			if group: group = group.members
+		tbl = group or [mainTable]
+		tables += tbl + [
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 		]
 	return tables

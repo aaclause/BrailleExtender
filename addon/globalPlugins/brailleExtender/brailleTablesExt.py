@@ -20,6 +20,15 @@ from .common import *
 
 addonHandler.initTranslation()
 
+POSITION_CURRENT = "c"
+POSITION_PREVIOUS = "p"
+POSITION_NEXT = "n"
+POSITIONS = [POSITION_CURRENT, POSITION_PREVIOUS, POSITION_NEXT]
+
+USABLE_INPUT = "i"
+USABLE_OUTPUT = "o"
+USABLE_LIST = [USABLE_INPUT, USABLE_OUTPUT]
+
 GroupTables = namedtuple("GroupTables", ("name", "members", "usableIn"))
 
 listContractedTables = lambda tables=None: [table for table in (tables or listTables()) if table.contracted]
@@ -132,7 +141,51 @@ def getGroups(plain=True):
 	o = [group for group in groups if group.usableIn in ['o', 'io']]
 	return i, o
 
+def getAllGroups(usableIn):
+	usableInIndex = USABLE_LIST.index(usableIn)
+	return [None] +tablesToGroups(getPreferredTables()[usableInIndex], usableIn=usableIn) + getGroups(0)[usableInIndex]
+
+def getGroup(
+	usableIn,
+	position=POSITION_CURRENT,
+	choices=None
+):
+	global _currentGroup
+	if position not in POSITIONS or usableIn not in USABLE_LIST: return None
+	usableInIndex = USABLE_LIST.index(usableIn)
+	currentGroup = _currentGroup[usableInIndex]
+	if not choices: choices = getAllGroups(usableIn)
+	if currentGroup not in choices:
+		currentGroup = choices[0]
+	curPos = choices.index(currentGroup)
+	newPos = curPos
+	if position == POSITION_PREVIOUS: newPos = curPos - 1
+	elif position == POSITION_NEXT: newPos = curPos + 1
+	return choices[newPos % len(choices)]
+
+def setTableOrGroup(usableIn, e, choices=None):
+	global _currentGroup
+	if not usableIn in USABLE_LIST: return False
+	usableInIndex = USABLE_LIST.index(usableIn)
+	choices = getAllGroups(usableIn)
+	if not e in choices: return False
+	_currentGroup[usableInIndex] = e
+	return True
+
+def tablesToGroups(tables, usableIn):
+	groups = []
+	for table in tables:
+		groups.append(GroupTables(
+			fileName2displayName([table]),
+			[table],
+			usableIn
+		))
+		fileName2displayName
+	return groups
+
 _groups = None
+_currentGroup = [None, None]
+
 
 class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 

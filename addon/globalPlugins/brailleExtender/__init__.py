@@ -858,35 +858,46 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_decreaseDelayAutoScroll.__doc__ = _("Decrease autoscroll delay")
 
 	def script_switchInputBrailleTable(self, gesture):
-		if len(configBE.inputTables) < 2:
-			return ui.message(_("You must choose at least two tables for this feature. Please fill in the settings"))
-		if not config.conf["braille"]["inputTable"] in configBE.inputTables:
-			configBE.inputTables.append(config.conf["braille"]["inputTable"])
-		tid = configBE.inputTables.index(config.conf["braille"]["inputTable"])
-		nID = tid + 1 if tid + 1 < len(configBE.inputTables) else 0
-		brailleInput.handler.table = brailleTables.listTables(
-		)[brailleTablesExt.listTablesFileName().index(configBE.inputTables[nID])]
-		ui.message(_("Input: %s") % brailleInput.handler.table.displayName)
-		return
-
-	script_switchInputBrailleTable.__doc__ = _(
-		"Switch between his favorite input braille tables")
-
-	def script_switchOutputBrailleTable(self, gesture):
-		if len(configBE.outputTables) < 2:
-			return ui.message(_("You must choose at least two tables for this feature. Please fill in the settings"))
-		if not config.conf["braille"]["translationTable"] in configBE.outputTables:
-			configBE.outputTables.append(config.conf["braille"]["translationTable"])
-		tid = configBE.outputTables.index(
-			config.conf["braille"]["translationTable"])
-		nID = tid + 1 if tid + 1 < len(configBE.outputTables) else 0
-		config.conf["braille"]["translationTable"] = configBE.outputTables[nID]
+		usableIn = brailleTablesExt.USABLE_INPUT
+		choices = brailleTablesExt.getPreferredTables()[0] + brailleTablesExt.getGroups(0)[0]
+		if len(choices) < 2:
+			return ui.message(_("Please fill at least two tables and/or groups of tables for this feature first"))
+		newGroup = brailleTablesExt.getGroup(
+			position=brailleTablesExt.POSITION_NEXT,
+			usableIn=usableIn
+		)
+		res = brailleTablesExt.setTableOrGroup(
+			usableIn=usableIn,
+			e=newGroup
+		)
+		if not res: raise RuntimeError("error")
 		utils.refreshBD()
 		dictionaries.setDictTables()
-		ui.message(_("Output: %s") % brailleTablesExt.listTablesDisplayName()[brailleTablesExt.listTablesFileName().index(config.conf["braille"]["translationTable"])])
-		return
+		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default"))
+		ui.message(_("Input: %s") % desc)
 
-	script_switchOutputBrailleTable.__doc__ = _("Switch between his favorite output braille tables")
+	script_switchInputBrailleTable.__doc__ = _("Switch between your favorite input braille tables including groups")
+
+	def script_switchOutputBrailleTable(self, gesture):
+		usableIn = brailleTablesExt.USABLE_OUTPUT
+		choices = brailleTablesExt.getPreferredTables()[1] + brailleTablesExt.getGroups(0)[1]
+		if len(choices) < 2:
+			return ui.message(_("Please fill at least two tables and/or groups of tables for this feature first"))
+		newGroup = brailleTablesExt.getGroup(
+			position=brailleTablesExt.POSITION_NEXT,
+			usableIn=usableIn
+		)
+		res = brailleTablesExt.setTableOrGroup(
+			usableIn=usableIn,
+			e=newGroup
+		)
+		if not res: raise RuntimeError("error")
+		utils.refreshBD()
+		dictionaries.setDictTables()
+		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default"))
+		ui.message(_("Output: %s") % desc)
+
+	script_switchOutputBrailleTable.__doc__ = _("Switch between your favorite output braille tables including groups")
 
 	def script_currentBrailleTable(self, gesture):
 		inTable = brailleInput.handler.table.displayName

@@ -180,8 +180,7 @@ def bkToChar(dots, inTable=-1):
 	if inTable == -1: inTable = config.conf["braille"]["inputTable"]
 	char = chr(dots | 0x8000)
 	text = louis.backTranslate(
-		[osp.join(r"louis\tables", inTable),
-		 "braille-patterns.cti"],
+		[osp.join(r"louis\tables", inTable), "braille-patterns.cti"],
 		char, mode=louis.dotsIO)
 	chars = text[0]
 	if len(chars) == 1 and chars.isupper():
@@ -482,11 +481,12 @@ def getCurrentBrailleTables(input_=False, brf=False):
 		if input_:
 			mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
 			group = brailleTablesExt.getGroup(usableIn='i')
-			if group: group = group.members
 		else:
 			mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
 			group = brailleTablesExt.getGroup(usableIn='o')
-			if group: group = group.members
+		if group:
+			group = group.members
+			group = [f if '\\' in f else osp.join(r"louis\tables", f) for f in group]
 		tbl = group or [mainTable]
 		tables += tbl + [
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")

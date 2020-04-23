@@ -12,6 +12,7 @@ import addonHandler
 import brailleTables
 import config
 from collections import namedtuple
+from itertools import permutations
 from typing import Optional, List, Tuple
 from brailleTables import listTables
 from logHandler import log
@@ -44,7 +45,7 @@ def fileName2displayName(l):
 	o = []
 	for e in l:
 		if e in allTablesFileName: o.append(allTablesFileName.index(e))
-	return ', '.join([listTables()[e].displayName for e in o])
+	return [listTables()[e].displayName for e in o]
 
 def listTablesIndexes(l, tables):
 	if not tables: tables = listTables()
@@ -176,11 +177,10 @@ def tablesToGroups(tables, usableIn):
 	groups = []
 	for table in tables:
 		groups.append(GroupTables(
-			fileName2displayName([table]),
+			", ".join(fileName2displayName([table])),
 			[table],
 			usableIn
 		))
-		fileName2displayName
 	return groups
 
 _groups = None
@@ -341,7 +341,7 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		for group in self.tmpGroups:
 			self.groupsList.Append((
 				group.name,
-				fileName2displayName(group.members),
+				", ".join(fileName2displayName(group.members)),
 				translateUsableIn(group.usableIn)
 			))
 
@@ -351,7 +351,7 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 			entry = entryDialog.groupEntry
 			self.tmpGroups.append(entry)
 			self.groupsList.Append(
-				(entry.name, fileName2displayName(entry.members), translateUsableIn(entry.usableIn))
+				(entry.name, ", ".join(fileName2displayName(entry.members)), translateUsableIn(entry.usableIn))
 			)
 			index = self.groupsList.GetFirstSelected()
 			while index >= 0:
@@ -370,12 +370,18 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		entryDialog = GroupEntryDlg(self)
 		entryDialog.name.SetValue(self.tmpGroups[editIndex].name)
 		entryDialog.members.CheckedItems = listTablesIndexes(self.tmpGroups[editIndex].members, listUncontractedInputTables)
+		entryDialog.refreshOrders()
+		selectedItem = 0
+		try:
+			selectedItem = list(entryDialog.orderPermutations.keys()).index(tuple(listTablesIndexes(self.tmpGroups[editIndex].members, listUncontractedTables())))
+			entryDialog.order.SetSelection(selectedItem)
+		except ValueError: pass
 		entryDialog.usableIn.CheckedItems = translateUsableInIndexes(self.tmpGroups[editIndex].usableIn)
 		if entryDialog.ShowModal() == wx.ID_OK:
 			entry = entryDialog.groupEntry
 			self.tmpGroups[editIndex] = entry
 			self.groupsList.SetItem(editIndex, 0, entry.name)
-			self.groupsList.SetItem(editIndex, 1, fileName2displayName(entry.members))
+			self.groupsList.SetItem(editIndex, 1, ", ".join(fileName2displayName(entry.members)))
 			self.groupsList.SetItem(editIndex, 2, translateUsableIn(entry.usableIn))
 			self.groupsList.SetFocus()
 			entryDialog.Destroy()
@@ -408,6 +414,8 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 
 class GroupEntryDlg(wx.Dialog):
 
+	orderPermutations = {}
+
 	def __init__(self, parent=None, title=_("Edit Dictionary Entry")):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -416,7 +424,10 @@ class GroupEntryDlg(wx.Dialog):
 		label = _(f"Group members")
 		self.members = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=listTablesDisplayName(listUncontractedTables()))
 		self.members.SetSelection(0)
+		self.members.Bind(wx.EVT_CHECKLISTBOX, lambda s: self.refreshOrders())
 		label = _("Usable in")
+		self.order = sHelper.addLabeledControl(_("Order of the tables"), wx.Choice, choices=[])
+		self.refreshOrders()
 		choices = [_("input"), _("output")]
 		self.usableIn = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=choices)
 		self.usableIn.SetSelection(0)
@@ -427,10 +438,16 @@ class GroupEntryDlg(wx.Dialog):
 		self.Bind(wx.EVT_BUTTON, self.onOk, id=wx.ID_OK)
 		self.name.SetFocus()
 
+	def refreshOrders(self, evt=None):
+		tables = listUncontractedTables()
+		self.orderPermutations = {e: fileName2displayName(getTablesFilenameByID(e, tables)) for e in permutations(self.members.CheckedItems) if e}
+		self.order.SetItems([", ".join(e) for e in self.orderPermutations.values()])
+		self.order.SetSelection(0)
+
 	def onOk(self, evt):
 		name = self.name.Value
-		members = getTablesFilenameByID(
-			self.members.CheckedItems, listUncontractedTables())
+		if not self.orderPermutations: return
+		members = getTablesFilenameByID(list(self.orderPermutations.keys())[self.order.GetSelection()], listUncontractedTables())
 		matches = ['i', 'o']
 		usableIn = ''.join([matches[e] for e in self.usableIn.CheckedItems])
 		if not name:

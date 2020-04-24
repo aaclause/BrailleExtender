@@ -46,29 +46,40 @@ DIRECTION_LABELS = {
 }
 DIRECTION_LABELS_ORDERING = (DIRECTION_BOTH, DIRECTION_FORWARD, DIRECTION_BACKWARD)
 
-dictTables = []
-invalidDictTables = set()
+inputTables = []
+outputTables = []
+invalidTables = set()
 
 def checkTable(path):
-	global invalidDictTables
+	global invalidTables
 	tablesString = b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in [path]])
 	if not louis.liblouis.lou_checkTable(tablesString):
 		log.error("Can't compile: tables %s" % path)
-		invalidDictTables.add(path)
+		invalidTables.add(path)
 		return False
 	return True
 
-def getValidPathsDict():
+def getValidPathsDict(usableIn):
 	types = ["tmp", "table", "default"]
-	paths = [getPathDict(type_) for type_ in types]
+	paths = [getPathDict(type_, usableIn) for type_ in types]
 	valid = lambda path: os.path.exists(path) and os.path.isfile(path) and checkTable(path)
 	return [path for path in paths if valid(path)]
 
-def getPathDict(type_):
-	if brailleTablesExt.groupEnabled(): return ''
-	if type_ == "table": path = os.path.join(configDir, "brailleDicts", config.conf["braille"]["translationTable"])
+def getPathDict(type_, usableIn):
+	groupEnabled = brailleTablesExt.groupEnabled()
+	g = brailleTablesExt.getGroup(usableIn=usableIn)
+	table = os.path.join(configDir, "brailleDicts", config.conf["braille"]["inputTable"]) if usableIn == brailleTablesExt.USABLE_INPUT else config.conf["braille"]["translationTable"]
+	if type_ == "table":
+		if groupEnabled and g and g.members:
+			if len(g.members) == 1: path = os.path.join(configDir, "brailleDicts", g.members[0])
+			else: path = ''
+		else: path = os.path.join(configDir, "brailleDicts", table)
 	elif type_ == "tmp": path = os.path.join(configDir, "brailleDicts", "tmp")
-	else: path = os.path.join(configDir, "brailleDicts", "default")
+	else:
+		if groupEnabled and g and g.members:
+			if len(g.members) == 1: path = os.path.join(configDir, "brailleDicts", "default")
+			else: path = ''
+		else: path = os.path.join(configDir, "brailleDicts", "default")
 	return "%s.cti" % path
 
 def getDictionary(type_):
@@ -99,18 +110,19 @@ def saveDict(type_, dict_):
 	return True
 
 def setDictTables():
-	global dictTables
-	dictTables = getValidPathsDict()
-	invalidDictTables.clear()
+	global inputTables, outTable
+	inputTables = getValidPathsDict(brailleTablesExt.USABLE_INPUT)
+	outputTables = getValidPathsDict(brailleTablesExt.USABLE_OUTPUT)
+	invalidTables.clear()
 
 def notifyInvalidTables():
-	if invalidDictTables:
+	if invalidTables:
 		dicts = {
 			getPathDict("default"): "default",
 			getPathDict("table"): "table",
 			getPathDict("tmp"): "tmp"
 		}
-		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded.") % ", ".join([dicts[path] for path in invalidDictTables if path in dicts])
+		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded.") % ", ".join([dicts[path] for path in invalidTables if path in dicts])
 		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 
 def removeTmpDict():

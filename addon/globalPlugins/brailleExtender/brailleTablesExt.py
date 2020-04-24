@@ -26,8 +26,8 @@ POSITION_PREVIOUS = "p"
 POSITION_NEXT = "n"
 POSITIONS = [POSITION_CURRENT, POSITION_PREVIOUS, POSITION_NEXT]
 
-USABLE_INPUT = "i"
-USABLE_OUTPUT = "o"
+USABLE_INPUT = 'i'
+USABLE_OUTPUT = 'o'
 USABLE_LIST = [USABLE_INPUT, USABLE_OUTPUT]
 
 GroupTables = namedtuple("GroupTables", ("name", "members", "usableIn"))
@@ -78,6 +78,11 @@ def getCustomBrailleTables():
 
 def isContractedTable(fileName):
 	return fileName in listTablesFileName(listContractedTables())
+def getTable(fileName, tables=None):
+	if not tables: tables = listTables()
+	for table in tables:
+		if table.fileName == fileName: return table
+	return None
 
 def getTablesFilenameByID(l: List[int], tables=None) -> List[int]:
 	tablesFileName = [table.fileName for table in (tables or listTables())]

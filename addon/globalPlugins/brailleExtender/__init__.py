@@ -867,11 +867,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			usableIn=usableIn,
 			e=newGroup
 		)
+		table = brailleTablesExt.getTable(newGroup.members[0] if newGroup else config.conf["braille"]["inputTable"])
+		if table: brailleInput.handler._table = table
 		if not res: raise RuntimeError("error")
 		self.reloadBrailleTables()
 		utils.refreshBD()
 		dictionaries.setDictTables()
-		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default"))
+		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default") + " (%s)" % brailleInput.handler.table.displayName)
 		ui.message(_("Input: %s") % desc)
 
 	script_switchInputBrailleTable.__doc__ = _("Switch between your favorite input braille tables including groups")
@@ -893,24 +895,30 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.reloadBrailleTables()
 		utils.refreshBD()
 		dictionaries.setDictTables()
-		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default"))
+		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else (_("Default") + " (%s)" % brailleTablesExt.fileName2displayName([config.conf["braille"]["translationTable"]])[0]))
 		ui.message(_("Output: %s") % desc)
 
 	script_switchOutputBrailleTable.__doc__ = _("Switch between your favorite output braille tables including groups")
 
 	def script_currentBrailleTable(self, gesture):
-		inTable = brailleInput.handler.table.displayName
-		ouTable = brailleTablesExt.listTablesDisplayName()[brailleTablesExt.listTablesFileName().index(config.conf["braille"]["translationTable"])]
+		inTable = None
+		ouTable = None
+		if brailleTablesExt.groupEnabled():
+			i = brailleTablesExt.getGroup(brailleTablesExt.USABLE_INPUT)
+			o = brailleTablesExt.getGroup(brailleTablesExt.USABLE_OUTPUT)
+			if i: inTable = i.name
+			if o: ouTable = o.name
+		if not inTable: inTable = brailleInput.handler.table.displayName
+		if not ouTable: ouTable = brailleTablesExt.listTablesDisplayName()[brailleTablesExt.listTablesFileName().index(config.conf["braille"]["translationTable"])]
 		if ouTable == inTable:
 			braille.handler.message(_("I⣿O:{I}").format(I=inTable, O=ouTable))
 			speech.speakMessage(_("Input and output: {I}.").format(I=inTable, O=ouTable))
 		else:
 			braille.handler.message(_("I:{I} ⣿ O: {O}").format(I=inTable, O=ouTable))
 			speech.speakMessage(_("Input: {I}; Output: {O}").format(I=inTable, O=ouTable))
-		return
 
 	script_currentBrailleTable.__doc__ = _(
-		"Announce the current input and output braille tables")
+		"Announce the current input and output braille tables and/or groups")
 
 	def script_brlDescChar(self, gesture):
 		utils.currentCharDesc()

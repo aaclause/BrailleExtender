@@ -183,6 +183,9 @@ def tablesToGroups(tables, usableIn):
 		))
 	return groups
 
+def groupEnabled():
+	return bool(_groups)
+
 _groups = None
 _currentGroup = [None, None]
 

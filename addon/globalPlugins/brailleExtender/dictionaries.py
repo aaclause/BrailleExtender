@@ -18,6 +18,7 @@ import louis
 from collections import namedtuple
 from . import configBE
 from .common import *
+from . import brailleTablesExt
 from . import huc
 from logHandler import log
 
@@ -64,6 +65,7 @@ def getValidPathsDict():
 	return [path for path in paths if valid(path)]
 
 def getPathDict(type_):
+	if brailleTablesExt.groupEnabled(): return ''
 	if type_ == "table": path = os.path.join(configDir, "brailleDicts", config.conf["braille"]["translationTable"])
 	elif type_ == "tmp": path = os.path.join(configDir, "brailleDicts", "tmp")
 	else: path = os.path.join(configDir, "brailleDicts", "default")
@@ -294,7 +296,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		if specifyDict:
 			# Translators: This is a label for an edit field in add dictionary entry dialog.
 			dictText = _("Dictionary")
-			outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+			outTable = brailleTablesExt.fileName2displayName(config.conf["braille"]["translationTable"])
 			dictChoices = [_("Global"), _("Table")+(" (%s)" % outTable), _("Temporary")]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
@@ -340,7 +342,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 
 	def onSeeEntriesClick(self, evt):
-		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		outTable = brailleTablesExt.fileName2displayName(config.conf["braille"]["translationTable"])
 		label = [_("Global dictionary"), _("Table dictionary")+(" (%s)" % outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()

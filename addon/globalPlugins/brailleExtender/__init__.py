@@ -203,7 +203,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields
 		self.backup__update = braille.TextInfoRegion.update
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
-		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
 		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
 		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
@@ -250,7 +249,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			configBE.curBD = braille.handler.display.name
 			self.onReload(None, 1)
 
-		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]: self.reloadBrailleTables()
 
 		nextHandler()
 		return
@@ -307,7 +305,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
 
 	def reloadBrailleTables(self):
-		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
 		dictionaries.setDictTables()
 		dictionaries.notifyInvalidTables()
 		if config.conf["brailleExtender"]["tabSpace"]:
@@ -871,6 +868,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			e=newGroup
 		)
 		if not res: raise RuntimeError("error")
+		self.reloadBrailleTables()
 		utils.refreshBD()
 		dictionaries.setDictTables()
 		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default"))
@@ -892,6 +890,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			e=newGroup
 		)
 		if not res: raise RuntimeError("error")
+		self.reloadBrailleTables()
 		utils.refreshBD()
 		dictionaries.setDictTables()
 		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default"))

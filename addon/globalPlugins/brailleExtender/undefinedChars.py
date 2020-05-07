@@ -43,30 +43,9 @@ def getHardValue():
 
 
 def setUndefinedChar(t=None):
-	if not t or t > CHOICE_HUC6 or t < 0:
-		t = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-	if t == 0:
-		return
-	c = [
-		"default",
-		"12345678",
-		"123456",
-		"0",
-		config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"],
-		"questionMark",
-		"sign",
-	] + [HUCDotPattern] * 7
-	v = c[t]
-	if v in ["questionMark", "sign"]:
-		if v == "questionMark":
-			s = "?"
-		else:
-			s = getHardValue()
-		v = huc.unicodeBrailleToDescription(
-			getTextInBraille(s, getCurrentBrailleTables())
-		)
-	louis.compileString(getCurrentBrailleTables(),
-						bytes("undefined %s" % v, "ASCII"))
+	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
+	if t == 0: return
+	louis.compileString(getCurrentBrailleTables(), bytes(f"undefined {HUCDotPattern}", "ASCII"))
 
 
 def getExtendedSymbolsForString(s: str) -> dict:
@@ -78,13 +57,14 @@ def getExtendedSymbolsForString(s: str) -> dict:
 
 
 def getDescChar(c, lang="Windows", start="", end=""):
+	method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	if lang == "Windows":
 		lang = languageHandler.getLanguage()
 	desc = characterProcessing.processSpeechSymbols(
 		lang, c, characterProcessing.SYMLVL_CHAR
 	).replace(' ', '').strip()
 	if not desc or desc == c:
-		if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] in [
+		if method in [
 				configBE.CHOICE_HUC6,
 				configBE.CHOICE_HUC8,
 		]:
@@ -93,8 +73,15 @@ def getDescChar(c, lang="Windows", start="", end=""):
 				== configBE.CHOICE_HUC6
 			)
 			return huc.translate(c, HUC6=HUC6)
-		else:
+		elif method in [
+			configBE.CHOICE_bin,
+			configBE.CHOICE_oct,
+			configBE.CHOICE_dec,
+			configBE.CHOICE_hex
+		]:
 			return getTextInBraille("".join(getUnicodeNotation(c)))
+		else:
+			return getUndefinedCharSign(method)
 	return f"{start}{desc}{end}"
 
 
@@ -122,7 +109,17 @@ def getUnicodeNotation(s, notation=None):
 	return s
 
 
+def getUndefinedCharSign(method):
+	if method == configBE.CHOICE_allDots8: return '⣿'
+	elif method == configBE.CHOICE_allDots6: return '⠿'
+	elif method == configBE.CHOICE_otherDots: return huc.cellDescriptionsToUnicodeBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"])
+	elif method == configBE.CHOICE_questionMark: return getTextInBraille('?')
+	elif method == configBE.CHOICE_otherSign: return getTextInBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"])
+	else: return '⠀'
+
+
 def undefinedCharProcess(self):
+	method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	extendedSymbolsRawText = {}
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
 		extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText)
@@ -175,30 +172,35 @@ def undefinedCharProcess(self):
 					start=start,
 					end=end,
 				),
-				table=[config.conf["brailleExtender"]
-					   ["undefinedCharsRepr"]["table"]],
+				table=[config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]],
 			)
 			for braillePos in allBraillePos
 		}
-	elif config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] in [
-			configBE.CHOICE_HUC6,
-			configBE.CHOICE_HUC8,
+	elif method in [
+		configBE.CHOICE_HUC6,
+		configBE.CHOICE_HUC8,
 	]:
-		HUC6 = (
-			config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-			== configBE.CHOICE_HUC6
-		)
+		HUC6 = method == configBE.CHOICE_HUC6
 		replacements = {
-			braillePos: huc.translate(
-				self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6
+			braillePos: huc.translate(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6)
+			for braillePos in allBraillePos
+		}
+	elif method in [
+		configBE.CHOICE_bin,
+		configBE.CHOICE_oct,
+		configBE.CHOICE_dec,
+		configBE.CHOICE_hex,
+	]:
+		replacements = {
+			braillePos: getUnicodeNotation(
+				self.rawText[self.brailleToRawPos[braillePos]],
+				method
 			)
 			for braillePos in allBraillePos
 		}
 	else:
 		replacements = {
-			braillePos: getUnicodeNotation(
-				self.rawText[self.brailleToRawPos[braillePos]]
-			)
+			braillePos: getUndefinedCharSign(method)
 			for braillePos in allBraillePos
 		}
 	newBrailleCells = []
@@ -209,13 +211,11 @@ def undefinedCharProcess(self):
 	i = 0
 	for iBrailleCells, brailleCells in enumerate(self.brailleCells):
 		brailleToRawPos = self.brailleToRawPos[iBrailleCells]
-		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(
-				undefinedCharPattern[0]
-		):
+		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(undefinedCharPattern):
 			toAdd = [ord(c) - 10240 for c in replacements[iBrailleCells]]
 			newBrailleCells += toAdd
 			newBrailleToRawPos += [i] * len(toAdd)
-			alreadyDone += list(range(iBrailleCells, iBrailleCells + 3))
+			alreadyDone += list(range(iBrailleCells, iBrailleCells + len(undefinedCharPattern)))
 			i += 1
 		else:
 			if iBrailleCells in alreadyDone:
@@ -223,19 +223,31 @@ def undefinedCharProcess(self):
 			newBrailleCells.append(self.brailleCells[iBrailleCells])
 			newBrailleToRawPos += [i]
 			if (iBrailleCells + 1) < lenBrailleToRawPos and self.brailleToRawPos[
-					iBrailleCells + 1
+				iBrailleCells + 1
 			] != brailleToRawPos:
 				i += 1
-	pos = -42
+	lastPos = -42
 	for i, brailleToRawPos in enumerate(newBrailleToRawPos):
-		if brailleToRawPos != pos:
-			pos = brailleToRawPos
+		if brailleToRawPos != lastPos:
+			lastPos = brailleToRawPos
 			newRawToBraillePos.append(i)
 	self.brailleCells = newBrailleCells
 	self.brailleToRawPos = newBrailleToRawPos
 	self.rawToBraillePos = newRawToBraillePos
 	if self.cursorPos:
-		self.brailleCursorPos = self.rawToBraillePos[self.cursorPos]
+			if len(self.rawToBraillePos) > self.cursorPos:
+				self.brailleCursorPos = self.rawToBraillePos[self.cursorPos]
+			else:
+				log.error(("error during  adding undefined char descriptions:\n"
+					f"cursorPos: {self.cursorPos}\n"
+					f"brailleCursorPos: {self.brailleCursorPos}\n"
+					f"brailleCells: {self.brailleCells}\n"
+					f"=> {''.join([chr(c+10240) for c in self.brailleCells])}\n"
+					f"==> {len(self.brailleCells)}\n"
+					f"brailleToRawPos: {self.brailleToRawPos}\n"
+					f"rawToBraillePos: {self.rawToBraillePos}\n"
+					f"rawText: {self.rawText}"
+				))
 
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):

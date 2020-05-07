@@ -119,7 +119,7 @@ def update(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] in [configBE.CHOICE_liblouis, configBE.CHOICE_HUC8, configBE.CHOICE_HUC6, configBE.CHOICE_hex, configBE.CHOICE_dec, configBE.CHOICE_oct, configBE.CHOICE_bin]:
+	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != configBE.CHOICE_tableBehaviour:
 		undefinedChars.undefinedCharProcess(self)
 	if self.selectionStart is not None and self.selectionEnd is not None:
 		try:

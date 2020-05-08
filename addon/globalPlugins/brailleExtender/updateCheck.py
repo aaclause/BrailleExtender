@@ -1,7 +1,7 @@
 # coding: utf-8
 # updateCheck.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2019 André-Abush Clause, released under GPL.
+# Copyright 2020 André-Abush Clause, released under GPL.
 from __future__ import unicode_literals
 from logHandler import log
 import json
@@ -10,7 +10,7 @@ import sys
 import time
 import threading
 import tones
-isPy3 = True if sys.version_info >= (3, 0) else False
+isPy3 = sys.version_info >= (3, 0)
 if isPy3:
 	import urllib.parse
 	import urllib.request

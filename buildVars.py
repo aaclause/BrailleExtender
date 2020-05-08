@@ -1,6 +1,12 @@
 # -*- coding: UTF-8 -*-
+import subprocess
 import time
 
+hashCommit = "unknown"
+out = subprocess.check_output(["git", "status", "--porcelain"]).strip().decode()
+if not out.strip():
+	label = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).strip().decode()
+	if len(hashCommit) == 7: hashCommit = label
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
 
@@ -20,20 +26,20 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description": [
 	_("BrailleExtender is a NVDA add-on that provides various features at braille level. Currently, the following features are implemented"), ":",
-	"\n* ", _("reload two favorite braille display with shortcuts"), ";",
-	"\n* ", _("automatic review cursor tethering in terminal role like in PuTTY, Powershell, bash, cmd"), ";",
-	"\n* ", _("auto scroll"), ";",
-	"\n* ", _("switch between several input/output braille tables"), ";",
-	"\n* ", _("mark the text with special attributes through dot 7, dot 8 or both"), ";",
-	"\n* ", _("use two output braille tables simultaneously"), ";",
-	"\n* ", _("display tab signs as spaces"), ";",
-	"\n* ", _("reverse forward scroll and back scroll buttons"), ";",
-	"\n* ", _("say the current line during text scrolling either in review mode, or in focus mode or both"), ";",
-	"\n* ", _("translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"), ";",
-	"\n* ", _("convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"), ";",
-	"\n* ", _("lock braille keyboard"), ";",
-	"\n* ", _("launch an application/URL with gesture"), ";",
-	"\n* ", _("braille dictionaries"), ";",
+	"\n* ", _("reload two favorite braille display with shortcuts"), ".",
+	"\n* ", _("automatic review cursor tethering in terminal role like in PuTTY, Powershell, bash, cmd"), ".",
+	"\n* ", _("auto scroll"), ".",
+	"\n* ", _("switch between several input/output braille tables"), ".",
+	"\n* ", _("mark the text with special attributes through dot 7, dot 8 or both"), ".",
+	"\n* ", _("use two output braille tables simultaneously"), ".",
+	"\n* ", _("display tab signs as spaces"), ".",
+	"\n* ", _("reverse forward scroll and back scroll buttons"), ".",
+	"\n* ", _("say the current line during text scrolling either in review mode, or in focus mode or both"), ".",
+	"\n* ", _("translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"), ".",
+	"\n* ", _("convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"), ".",
+	"\n* ", _("lock braille keyboard"), ".",
+	"\n* ", _("launch an application/URL with gesture"), ".",
+	"\n* ", _("braille dictionaries"), ".",
 	"\n* ", _("and much more!"),
 	"\n\n",_("For some braille displays, it extends the braille display commands to provide"), ":",
 	"\n* ", _("offer complete gesture maps including function keys, multimedia keys, quick navigation, etc."), ";",
@@ -42,7 +48,7 @@ addon_info = {
 	"\n* ", _("actions and quick navigation through a rotor"), "."
 	],
 	# version
-	"addon_version": time.strftime("%y.%m.%d-%H%M%S"),
+	"addon_version": time.strftime("%y.%m.%d:") + hashCommit,
 	# Author(s)
 	"addon_author": "André-Abush Clause <dev@andreabc.net>",
 	# URL for the add-on documentation support
@@ -50,9 +56,9 @@ addon_info = {
 	# Documentation file name
 	"addon_docFileName": "readme.html",
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
-	"addon_minimumNVDAVersion": "2018.3",
+	"addon_minimumNVDAVersion": "2019.3",
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": "2019.3",
+	"addon_lastTestedNVDAVersion": "2020.1",
 	# Add-on update channel (default is stable or None)
 	"addon_updateChannel": None,
 }

@@ -1,11 +1,10 @@
 # coding: utf-8
 # configBE.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2019 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import os
-import sys
 import globalVars
 from collections import OrderedDict
 
@@ -14,14 +13,12 @@ addonHandler.initTranslation()
 import braille
 import config
 import configobj
-if hasattr(configobj, "validate"):
-	Validator = configobj.validate.Validator
-else: from validate import Validator
 import inputCore
 import languageHandler
-from logHandler import log
+from . import brailleTablesExt
+from .common import *
 
-isPy3 = True if sys.version_info >= (3, 0) else False
+Validator = configobj.validate.Validator
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -39,16 +36,45 @@ CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
 NOVIEWSAVED = chr(4)
 
-dict_ = dict if isPy3 else OrderedDict
-
-outputMessage = dict_([
+# undefined char representations
+CHOICE_tableBehaviour = 0
+CHOICE_allDots8 = 1
+CHOICE_allDots6 = 2
+CHOICE_emptyCell = 3
+CHOICE_otherDots = 4
+CHOICE_questionMark = 5
+CHOICE_otherSign = 6
+CHOICE_liblouis = 7
+CHOICE_HUC8 = 8
+CHOICE_HUC6 = 9
+CHOICE_hex = 10
+CHOICE_dec = 11
+CHOICE_oct = 12
+CHOICE_bin = 13
+CHOICES_undefinedCharRepr = [
+	_("Use braille table behavior"),
+	_("Dots 1-8 (⣿)"),
+	_("Dots 1-6 (⠿)"),
+	_("Empty cell (⠀)"),
+	_("Other dot pattern (e.g.: 6-123456)"),
+	_("Question mark (depending output table)"),
+	_("Other sign/pattern (e.g.: \, ??)"),
+	_("Hexadecimal, Liblouis style"),
+	_("Hexadecimal, HUC8"),
+	_("Hexadecimal, HUC6"),
+	_("Hexadecimal"),
+	_("Decimal"),
+	_("Octal"),
+	_("Binary")
+]
+outputMessage = dict([
 	(CHOICE_none,             _("none")),
 	(CHOICE_braille,          _("braille only")),
 	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
 
-attributeChoices = dict_([
+attributeChoices = dict([
 	(CHOICE_none,   _("none")),
 	(CHOICE_dots78, _("dots 7 and 8")),
 	(CHOICE_dot7,   _("dot 7")),
@@ -57,54 +83,42 @@ attributeChoices = dict_([
 attributeChoicesKeys = list(attributeChoices)
 attributeChoicesValues = list(attributeChoices.values())
 
-updateChannels = dict_([
+updateChannels = dict([
 	(CHANNEL_stable,  _("stable")),
 	(CHANNEL_dev,     _("development"))
 ])
 
-focusOrReviewChoices = dict_([
+focusOrReviewChoices = dict([
 	(CHOICE_none,           _("none")),
 	(CHOICE_focus,          _("focus mode")),
 	(CHOICE_review,         _("review mode")),
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+CHOICE_oneHandMethodSides = 0
+CHOICE_oneHandMethodSide = 1
+CHOICE_oneHandMethodDots = 2
+
+CHOICE_oneHandMethods = dict([
+	(CHOICE_oneHandMethodSides, _("Fill a cell in two stages on both sides")),
+	(CHOICE_oneHandMethodSide, _("Fill a cell in two stages on one side (space = empty side)")),
+	(CHOICE_oneHandMethodDots,  _("Fill a cell dots by dots (each dot is a toggle, press space to validate the character)"))
+])
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}
 iniGestures = {}
 iniProfile = {}
 profileFileExists = gesturesFileExists = False
-lang = languageHandler.getLanguage().split('_')[-1].lower()
-noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
-sep = ' ' if 'fr' in lang else ''
-outputTables = inputTables = None
-preTable = []
-postTable = []
-configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
-baseDir = os.path.dirname(__file__)
-if not isPy3: baseDir = baseDir.decode("mbcs")
-_addonDir = os.path.join(baseDir, "..", "..")
-_addonName = addonHandler.Addon(_addonDir).manifest["name"]
-_addonVersion = addonHandler.Addon(_addonDir).manifest["version"]
-_addonURL = addonHandler.Addon(_addonDir).manifest["url"]
-_addonAuthor = addonHandler.Addon(_addonDir).manifest["author"]
-_addonDesc = addonHandler.Addon(_addonDir).manifest["description"]
 
-profilesDir = os.path.join(baseDir, "Profiles")
+noMessageTimeout = True if 'noMessageTimeout' in config.conf["braille"] else False
+outputTables = inputTables = None
+preTables = []
+postTables = []
 if not os.path.exists(profilesDir): log.error('Profiles\' path not found')
 else: log.debug('Profiles\' path (%s) found' % profilesDir)
-try:
-	import brailleTables
-	tables = brailleTables.listTables()
-	tablesFN = [t[0] for t in brailleTables.listTables()]
-	tablesUFN = [t[0] for t in brailleTables.listTables() if not t.contracted and t.output]
-	tablesTR = [t[1] for t in brailleTables.listTables()]
-	noUnicodeTable = False
-except BaseException:
-	noUnicodeTable = True
 
-def getValidBrailleDisplayPrefered():
+def getValidBrailleDisplayPreferred():
 	l = braille.getDisplayList()
 	l.append(("last", _("last known")))
 	return l
@@ -156,16 +170,23 @@ def getConfspec():
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
 		"routingReviewModeWithCursorKeys": "boolean(default=False)",
-		"inputTableShortcuts": 'string(default="?")',
-		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
-		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
 		"tabSpace": "boolean(default=False)",
-		"tabSize_%s" % curBD: "integer(min=1, default=2, max=42)",
-		"preventUndefinedCharHex":  "boolean(default=False)",
-		"undefinedCharRepr": "string(default=0)",
-		"postTable": 'string(default="None")',
+		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
+		"undefinedCharsRepr": {
+			"method": "integer(min=0, default=%s, max=%s)" % (CHOICE_HUC8, CHOICE_bin),
+			"hardSignPatternValue": "string(default=??)",
+			"hardDotPatternValue": "string(default=6-12345678)",
+			"desc": "boolean(default=True)",
+			"extendedDesc": "boolean(default=True)",
+			"start": "string(default=[)",
+			"end": "string(default=])",
+			"lang": "string(default=Windows)",
+			"table": "string(default=current)"
+		},
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
+		"oneHandMode": "boolean(default=False)",
+		"oneHandMethod": "integer(min=0, max=%d, default=%d)" % (CHOICE_oneHandMethodDots, CHOICE_oneHandMethodSides),
 		"features": {
 			"attributes": "boolean(default=True)",
 			"roleLabels": "boolean(default=True)"
@@ -216,21 +237,17 @@ def getConfspec():
 		},
 		"quickLaunches": {},
 		"roleLabels": {},
-		"brailleTables": {},
+		"tables": {
+			"groups": {},
+			"shortcuts": 'string(default="?")',
+			"preferredInput": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
+			"preferredOutput": f'string(default="{config.conf["braille"]["translationTable"]}")',
+		},
+		"advancedInputMode": {
+			"stopAfterOneChar": "boolean(default=True)",
+			"escapeSignUnicodeValue": "string(default=⠼)",
+		}
 	}
-
-def loadPreferedTables():
-	global inputTables, outputTables
-	listInputTables = [table[0] for table in brailleTables.listTables() if table.input]
-	listOutputTables = [table[0] for table in brailleTables.listTables() if table.output]
-	inputTables = config.conf["brailleExtender"]["inputTables"]
-	outputTables = config.conf["brailleExtender"]["outputTables"]
-	if not isinstance(inputTables, list):
-		inputTables = inputTables.replace(', ', ',').split(',')
-	if not isinstance(outputTables, list):
-		outputTables = outputTables.replace(', ', ',').split(',')
-	inputTables = [t for t in inputTables if t in listInputTables]
-	outputTables = [t for t in outputTables if t in listOutputTables]
 
 def getLabelFromID(idCategory, idLabel):
 	if idCategory == 0: return braille.roleLabels[int(idLabel)]
@@ -300,11 +317,15 @@ def loadConf():
 	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
 	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
 		braille.handler.displaySize = backupDisplaySize-limitCellsRight
-	if not noUnicodeTable: loadPreferedTables()
-	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
+	if config.conf["brailleExtender"]["tables"]["shortcuts"] not in brailleTablesExt.listTablesFileName(brailleTablesExt.listUncontractedTables()): config.conf["brailleExtender"]["tables"]["shortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+	initializePreferredTables()
 	return True
+
+def initializePreferredTables():
+	global inputTables, outputTables
+	inputTables, outputTables = brailleTablesExt.getPreferredTables()
 
 def loadGestures():
 	if gesturesFileExists:
@@ -322,7 +343,7 @@ def loadGestures():
 def gesturesBDPath(a = False):
 	l = ['\\'.join([profilesDir, curBD, config.conf["brailleExtender"]["profile_%s" % curBD], "gestures.ini"]),
 	'\\'.join([profilesDir, curBD, "default", "gestures.ini"])]
-	if a: return '; '.join(l)
+	if a: return "; ".join(l)
 	for p in l:
 		if os.path.exists(p): return p
 	return '?'
@@ -356,68 +377,6 @@ def initGestures():
 					iniGestures["globalCommands.GlobalCommands"][g])).replace('br(' + curBD + '):', '')] = g
 	return gesturesFileExists, iniGestures
 
-def isContractedTable(table):
-	if not table in tablesFN: return False
-	tablePos = tablesFN.index(table)
-	if brailleTables.listTables()[tablePos].contracted: return True
-	return False
-
-def loadPostTable():
-	global postTable
-	postTable = []
-	postTableValid = True if config.conf["brailleExtender"]["postTable"] in tablesFN else False
-	if postTableValid:
-		postTable.append(os.path.join(brailleTables.TABLES_DIR, config.conf["brailleExtender"]["postTable"]).encode("UTF-8"))
-		log.debug('Secondary table enabled: %s' % config.conf["brailleExtender"]["postTable"])
-	else:
-		if config.conf["brailleExtender"]["postTable"] != "None":
-			log.error("Invalid secondary table")
-	tableChangesFile = os.path.join(configDir, "brailleDicts", "undefinedChar.cti")
-	defUndefinedChar = "undefined %s\n" % config.conf["brailleExtender"]["undefinedCharRepr"]
-	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and not os.path.exists(tableChangesFile):
-		log.debug("File not found, creating undefined char file")
-		createTableChangesFile(tableChangesFile, defUndefinedChar)
-	if config.conf["brailleExtender"]["preventUndefinedCharHex"] and os.path.exists(tableChangesFile):
-		f = open(tableChangesFile, "r")
-		if f.read() != defUndefinedChar:
-			log.debug("Difference, creating undefined char file...")
-			if createTableChangesFile(tableChangesFile, defUndefinedChar):
-				postTable.append(tableChangesFile.encode("UTF-8"))
-		else:
-			postTable.append(tableChangesFile.encode("UTF-8"))
-		f.close()
-
-
-def createTableChangesFile(f, c):
-	try:
-		f = open(f, "w")
-		f.write(c)
-		f.close()
-		return True
-	except BaseException as e:
-		log.error("Error while creating tab file (%s)" % e)
-		return False
-
-def loadPreTable():
-	global preTable
-	preTable = []
-	tableChangesFile = os.path.join(configDir, "brailleDicts", "changes.cti")
-	defTab = 'space \\t ' + \
-		('0-' * int(config.conf["brailleExtender"]["tabSize_%s" % curBD]))[:-1] + '\n'
-	if config.conf["brailleExtender"]['tabSpace'] and not os.path.exists(tableChangesFile):
-		log.debug("File not found, creating table changes file")
-		createTableChangesFile(tableChangesFile, defTab)
-	if config.conf["brailleExtender"]['tabSpace'] and os.path.exists(tableChangesFile):
-		f = open(tableChangesFile, "r")
-		if f.read() != defTab:
-			log.debug('Difference, creating tab file...')
-			if createTableChangesFile(tableChangesFile, defTab):
-				preTable.append(tableChangesFile.encode("UTF-8"))
-		else:
-			preTable.append(tableChangesFile.encode("UTF-8"))
-			log.debug('Tab as spaces enabled')
-		f.close()
-	else: log.debug('Tab as spaces disabled')
 
 def getKeyboardLayout():
 	if (config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] is not None
@@ -425,9 +384,10 @@ def getKeyboardLayout():
 		return iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % curBD])
 	else: return 0
 
-def getCustomBrailleTables():
-	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]
-
+def getTabSize():
+	size = config.conf["brailleExtender"]["tabSize_%s" % curBD]
+	if size < 0: size = 2
+	return size
 # remove old config files
 cfgFile = globalVars.appArgs.configPath + r"\BrailleExtender.conf"
 cfgFileAttribra = globalVars.appArgs.configPath + r"\attribra-BE.ini"

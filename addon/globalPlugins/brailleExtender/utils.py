@@ -1,14 +1,15 @@
 # coding: utf-8
 # utils.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2018 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 from __future__ import unicode_literals
 import os.path as osp
-import sys
 import re
 import api
+import appModuleHandler
 import braille
+import brailleInput
 import brailleTables
 import characterProcessing
 import louis
@@ -23,10 +24,13 @@ import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
+from .common import *
+from . import brailleTablesExt
+from . import huc
+from . import dictionaries
 
-isPy3 = True if sys.version_info >= (3, 0) else False
 charToDotsInLouis = hasattr(louis, "charToDots")
-unichr_ = chr if isPy3 else unichr
+
 # -----------------------------------------------------------------------------
 # Thanks to Tim Roberts for the (next) Control Volume code!
 # -> https://mail.python.org/pipermail/python-win32/2014-March/013080.html
@@ -174,10 +178,9 @@ def getVolume():
 
 def bkToChar(dots, inTable=-1):
 	if inTable == -1: inTable = config.conf["braille"]["inputTable"]
-	char = unichr_(dots | 0x8000)
+	char = chr(dots | 0x8000)
 	text = louis.backTranslate(
-		[osp.join(r"louis\tables", inTable),
-		 "braille-patterns.cti"],
+		[osp.join(r"louis\tables", inTable), "braille-patterns.cti"],
 		char, mode=louis.dotsIO)
 	chars = text[0]
 	if len(chars) == 1 and chars.isupper():
@@ -194,16 +197,24 @@ def reload_brailledisplay(bd_name):
 	ui.message(_("Reload failed"))
 	return False
 
-def currentCharDesc():
-	ch = getCurrentChar()
-	if not ch: return ui.message(_("Not a character"))
+def currentCharDesc(ch=None, display=True):
+	if not ch:
+		ch = getCurrentChar()
+		if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
 	if c:
-		s = '%c: %s; %s; %s; %s; %s [%s]' % (ch, hex(c), c, oct(c), bin(c), unicodedata.name(ch), unicodedata.category(ch))
+		charDescCurLang = getSpeechSymbols(ch)
+		try: charDesc = unicodedata.name(ch)
+		except ValueError: charDesc = _("N/A")
+		HUCrepr = " (%s, %s)" % (huc.translate(ch, False), huc.translate(ch, True))
+		brch = getTextInBraille(ch)
+		brchDesc = huc.unicodeBrailleToDescription(brch)
+		charCategory = unicodedata.category(ch)
+		s = f"{ch}{HUCrepr}: {hex(c)}, {c}, {oct(c)}, {bin(c)}, {charDescCurLang} / {charDesc} [{charCategory}]. {brch} {brchDesc}"
+		if not display: return s
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
-			brch = getTextInBraille(ch)
-			ui.browseableMessage("%s\n%s (%s)" % (s, brch, unicodeBrailleToDescription(brch)), r'\x%d (%s) - Char info' % (c, ch))
+			ui.browseableMessage(s, r'\x%d (%s) - Char info' % (c, ch))
 	else: ui.message(_("Not a character"))
 
 def getCurrentChar():
@@ -245,52 +256,21 @@ def getKeysTranslation(n):
 			return o
 		return nk + n
 
-def getTextInBraille(t = '', table = None):
+def getTextInBraille(t=None, table=[]):
+	if not isinstance(table, list): raise TypeError("Wrong type for table parameter: %s" % repr(table))
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
-	if not table: table = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+	if not table or "current" in table:
+		table = getCurrentBrailleTables()
 	nt = []
 	res = ''
 	t = t.split("\n")
 	for l in t:
 		l = l.rstrip()
 		if not l: res = ''
-		elif charToDotsInLouis: res = louis.charToDots([table], l, louis.ucBrl)
-		else: res = louis.translateString([table], l, None, louis.dotsIO)
+		else: res = ''.join([chr(ord(ch)-0x8000+0x2800) for ch in louis.translateString(table, l, mode=louis.dotsIO)])
 		nt.append(res)
-	nt = '\n'.join(nt)
-	if charToDotsInLouis: return nt
-	return ''.join([unichr_(ord(ch)-0x8000+0x2800) if ord(ch) > 8000 else ch for ch in nt])
-
-def cellDescToChar(cell):
-	if not re.match("^[0-8]+$", cell): return '?'
-	toAdd = 0
-	for dot in cell: toAdd += 1 << int(dot)-1 if int(dot) > 0 else 0
-	return unichr_(10240+toAdd)
-
-def charToCellDesc(ch):
-	"""
-	Return a description of an unicode braille char
-	@param ch: the unicode braille character to describe
-		must be between 0x2800 and 0x2999 included
-	@type ch: str
-	@return: the list of dots describing the braille cell
-	@rtype: str
-	@Example: "d" -> "145"
-	"""
-	res = ""
-	if len(ch) != 1: raise ValueError("Param size can only be one char (currently: %d)" % len(ch))
-	p = ord(ch)
-	if p >= 0x2800 and p <= 0x2999: p -= 0x2800
-	if p > 255: raise ValueError(r"It is not an unicode braille (%d)" % p)
-	dots ={1:1, 2:2, 4:3, 8:4,16:5,32:6,64:7, 128:8}
-	i = 1
-	while p != 0:
-		if p - (128 / i) >= 0:
-			res += str(dots[(128/i)])
-			p -= (128 / i)
-		i *= 2
-	return res[::-1] if len(res) > 0 else '0'
+	return '\n'.join(nt)
 
 def combinationDesign(dots, noDot = '⠤'):
 	out = ""
@@ -313,16 +293,16 @@ def getTableOverview(tbl = ''):
 	available = ""
 	i = 0x2800
 	while i<0x2800+256:
-		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], unichr_(i), mode=louis.ucBrl)
+		text = louis.backTranslate([osp.join(r"louis\tables", config.conf["braille"]["inputTable"]), "braille-patterns.cti"], chr(i), mode=louis.ucBrl)
 		if i != 0x2800:
 			t = 'Input              Output\n'
 		if not re.match(r'^\\.+/$', text[0]):
 			tmp['%s' % text[0] if text[0] != '' else '?'] = '%s       %-7s' % (
-			'%s (%s)' % (unichr_(i), combinationDesign(unicodeBrailleToDescription(unichr_(i)))),
+			'%s (%s)' % (chr(i), combinationDesign(huc.unicodeBrailleToDescription(chr(i)))),
 			'%s%-8s' % (text[0].rstrip('\x00'), '%s' % (' (%-10s)' % str(hex(ord(text[0]))) if len(text[0]) == 1 else '' if text[0] != '' else '#ERROR'))
 			)
 		else:
-			available += unichr_(i)
+			available += chr(i)
 		i += 1
 	t += '\n'.join(tmp[k] for k in sorted(tmp))
 	nbAvailable = len(available)
@@ -332,13 +312,7 @@ def getTableOverview(tbl = ''):
 		t += '\n'+_("One combination available")+": %s" % available
 	return t
 
-def unicodeBrailleToDescription(t, sep = '-'):
-	return ''.join([charToCellDesc(ch)+'-' if ch not in ['\n','\r'] else ch for ch in t])[:-1].replace("-\n",'\n')
-
-def descriptionToUnicodeBraille(t):
-	return re.sub('([0-8]+)\-?', lambda m: cellDescToChar(m.group(1)), t)
-
-def beautifulSht(t, curBD="noBraille", model = True, sep = ' / '):
+def beautifulSht(t, curBD="noBraille", model=True, sep=" / "):
 	if isinstance(t, list): t = ' '.join(t)
 	t = t.replace(',', ' ')
 	t = t.replace(';',' ')
@@ -474,9 +448,46 @@ def getSpeechSymbols(text = None):
 	if not text: text = getTextSelection()
 	if not text: return ui.message(_("No text selected"))
 	locale = languageHandler.getLanguage()
-	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_MOST).strip()
+	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_CHAR).strip()
 
 def getTether():
 	if hasattr(braille.handler, "getTether"):
 		return braille.handler.getTether()
 	else: return braille.handler.tether
+
+
+def getCharFromValue(s):
+	if not isinstance(s, str if isPy3 else (str, unicode)): raise TypeError("Wrong type")
+	if not s or len(s) < 2: raise ValueError("Wrong value")
+	supportedBases = {'b': 2, 'd': 10, 'h': 16, 'o': 8, 'x': 16}
+	base, n = s[0].lower(), s[1:]
+	if base not in supportedBases.keys(): raise ValueError("Wrong base (%s)" % base)
+	b = supportedBases[base]
+	n = int(n, b)
+	return chr(n)
+
+def getCurrentBrailleTables(input_=False, brf=False):
+	if brf:
+		tables = [
+			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
+	else:
+		tables = []
+		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
+		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.inputTables if input_ else dictionaries.outputTables
+		if input_:
+			mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
+			group = brailleTablesExt.getGroup(usableIn='i')
+		else:
+			mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+			group = brailleTablesExt.getGroup(usableIn='o')
+		if group:
+			group = group.members
+			group = [f if '\\' in f else osp.join(r"louis\tables", f) for f in group]
+		tbl = group or [mainTable]
+		tables += tbl + [
+			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+		]
+	return tables
+

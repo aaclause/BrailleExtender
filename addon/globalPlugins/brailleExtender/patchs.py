@@ -330,7 +330,7 @@ def emulateKey(self, key, withModifiers=True):
 		self.sendChars(key)
 
 #: brailleInput.BrailleInputHandler.input()
-def input(self, dots):
+def input_(self, dots):
 		"""Handle one cell of braille input.
 		"""
 		# Insert the newly entered cell into the buffer at the cursor position.
@@ -451,7 +451,7 @@ inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
 brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
-brailleInput.BrailleInputHandler.input = input
+brailleInput.BrailleInputHandler.input = input_
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

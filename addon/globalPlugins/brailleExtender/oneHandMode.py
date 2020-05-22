@@ -38,10 +38,8 @@ def process(self, dots):
 		if endChar: equiv = "045645688"
 		else:
 			equiv = "012312377"
-			if dots == 0:
-				endChar = endWord = True
-				addSpace = True
-		if dots != 0:
+			if dots == 0: addSpace = True
+		if dots:
 			translatedBufferBrailleDots = 0
 			if self.bufferBraille:
 				translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
@@ -99,12 +97,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
+		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
 		self.featureEnabled.SetValue(config.conf["brailleExtender"]["oneHandedMode"]["enabled"])
 		self.featureEnabled.Bind(wx.EVT_CHECKBOX, self.onFeatureEnabled)
 		choices = list(INPUT_METHODS.values())
 		itemToSelect = list(INPUT_METHODS.keys()).index(config.conf["brailleExtender"]["oneHandedMode"]["inputMethod"])
-		self.inputMethod = sHelper.addLabeledControl(_("Input method"), wx.Choice, choices=choices)
+		self.inputMethod = sHelper.addLabeledControl(_("Input &method"), wx.Choice, choices=choices)
 		self.inputMethod.SetSelection(itemToSelect)
 		self.onFeatureEnabled(None)
 

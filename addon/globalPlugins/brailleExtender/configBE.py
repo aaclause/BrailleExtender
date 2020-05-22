@@ -16,6 +16,7 @@ import configobj
 import inputCore
 import languageHandler
 from .common import *
+from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 Validator = configobj.validate.Validator
 
@@ -227,6 +228,10 @@ def getConfspec():
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
 			"escapeSignUnicodeValue": "string(default=⠼)",
+		},
+		"oneHandedMode": {
+			"enabled": "boolean(default=False)",
+			"inputMethod": f"option({DOT_BY_DOT}, {BOTH_SIDES}, {ONE_SIDE}, default={ONE_SIDE})",
 		},
 	}
 

@@ -25,9 +25,10 @@ addonHandler.initTranslation()
 
 from . import configBE
 from . import utils
+from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
+from .oneHandMode import SettingsDlg as OneHandModeDlg
+from .undefinedChars import SettingsDlg as UndefinedCharsDlg
 from .common import *
-from . import advancedInputMode
-from . import undefinedChars
 
 instanceGP = None
 def notImplemented(msg='', style=wx.OK|wx.ICON_INFORMATION):
@@ -891,8 +892,9 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		GeneralDlg,
 		AttribraDlg,
 		BrailleTablesDlg,
-		undefinedChars.SettingsDlg,
-		advancedInputMode.SettingsDlg,
+		UndefinedCharsDlg,
+		AdvancedInputModeDlg,
+		OneHandModeDlg,
 		RoleLabelsDlg,
 	]
 

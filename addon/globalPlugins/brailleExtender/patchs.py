@@ -44,6 +44,7 @@ from . import configBE
 from . import dictionaries
 from . import huc
 from . import undefinedChars
+from .oneHandMode import process as processOneHandMode
 from .utils import getCurrentChar, getTether, getCharFromValue, getCurrentBrailleTables
 from .common import *
 
@@ -311,16 +312,20 @@ def input_(self, dots):
 	"""
 	# Insert the newly entered cell into the buffer at the cursor position.
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	self.bufferBraille.insert(pos, dots)
-	self.untranslatedCursorPos += 1
 	# Space ends the word.
 	endWord = dots == 0
-
+	continue_ = True
+	if config.conf["brailleExtender"]["oneHandedMode"]["enabled"]:
+		continue_, endWord = processOneHandMode(self, dots)
+		if not continue_: return
+	else:
+		self.bufferBraille.insert(pos, dots)
+		self.untranslatedCursorPos += 1
 	ok = False
 	if instanceGP:
 		focusObj = api.getFocusObject()
 		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
-	if instanceGP.advancedInput and ok:
+	if instanceGP and instanceGP.advancedInput and ok:
 		pos = self.untranslatedStart + self.untranslatedCursorPos
 		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
 		if advancedInputStr:

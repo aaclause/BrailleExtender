@@ -227,8 +227,7 @@ def getConfspec():
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
 			"escapeSignUnicodeValue": "string(default=⠼)",
-		}
-		
+		},
 	}
 
 def loadPreferedTables():

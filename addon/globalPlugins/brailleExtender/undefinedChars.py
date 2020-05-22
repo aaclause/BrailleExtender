@@ -51,7 +51,7 @@ def getExtendedSymbolsForString(s: str) -> dict:
 	}
 
 
-def getAlternativeDescChar(method):
+def getAlternativeDescChar(c, method):
 	if method in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
 		HUC6 = method == configBE.CHOICE_HUC6
 		return huc.translate(c, HUC6=HUC6)
@@ -64,7 +64,7 @@ def getDescChar(c, lang="Windows", start="", end=""):
 	method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	if lang == "Windows": lang = languageHandler.getLanguage()
 	desc = characterProcessing.processSpeechSymbols(lang, c, characterProcessing.SYMLVL_CHAR).replace(' ', '').strip()
-	if not desc or desc == c: return getAlternativeDescChar(method)
+	if not desc or desc == c: return getAlternativeDescChar(c, method)
 	return f"{start}{desc}{end}"
 
 

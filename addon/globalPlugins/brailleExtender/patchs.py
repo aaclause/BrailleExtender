@@ -12,7 +12,6 @@ import time
 import unicodedata
 import struct
 import winUser
-import nvwave
 
 import api
 import appModuleHandler
@@ -25,9 +24,9 @@ import core
 import globalCommands
 import inputCore
 import keyboardHandler
-import languageHandler
 import louis
 import louisHelper
+import nvwave
 import queueHandler
 import sayAllHandler
 import scriptHandler
@@ -36,7 +35,6 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
-
 
 import addonHandler
 addonHandler.initTranslation()

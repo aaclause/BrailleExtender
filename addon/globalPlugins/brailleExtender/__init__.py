@@ -544,8 +544,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleLockBrailleKeyboard.__doc__ = _("Lock/unlock braille keyboard")
 
 	def script_toggleOneHandMode(self, gesture):
-		config.conf["brailleExtender"]["oneHandMode"] = not config.conf["brailleExtender"]["oneHandMode"]
-		state = _("enabled") if config.conf["brailleExtender"]["oneHandMode"] else _("disabled")
+		config.conf["brailleExtender"]["oneHandedMode"]["enabled"] = not config.conf["brailleExtender"]["oneHandedMode"]["enabled"]
+		state = _("enabled") if config.conf["brailleExtender"]["oneHandedMode"]["enabled"] else _("disabled")
 		ui.message(_("One hand mode %s") % state)
 	script_toggleOneHandMode.__doc__ = _("Enable/disable one hand mode feature")
 

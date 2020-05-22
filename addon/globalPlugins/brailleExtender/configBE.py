@@ -201,7 +201,7 @@ def getConfspec():
 		"quickLaunches": {},
 		"roleLabels": {},
 		"brailleTables": {},
-		"oneHandMode": {
+		"oneHandedMode": {
 			"enabled": "boolean(default=False)",
 			"inputMethod": f"option({DOT_BY_DOT}, {BOTH_SIDES}, {ONE_SIDE}, default={ONE_SIDE})",
 		},

@@ -338,7 +338,7 @@ def input(self, dots):
 		# Space ends the word.
 		endWord = dots == 0
 		continue_ = True
-		if config.conf["brailleExtender"]["oneHandMode"]["enabled"]:
+		if config.conf["brailleExtender"]["oneHandedMode"]["enabled"]:
 			continue_, endWord = processOneHandMode(self, dots)
 			if not continue_: return
 		else:

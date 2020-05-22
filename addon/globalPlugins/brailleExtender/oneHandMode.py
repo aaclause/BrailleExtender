@@ -24,7 +24,7 @@ endChar = True
 def process(self, dots):
 	global endChar
 	addSpace = False
-	method = config.conf["brailleExtender"]["oneHandMode"]["inputMethod"]
+	method = config.conf["brailleExtender"]["oneHandedMode"]["inputMethod"]
 	pos = self.untranslatedStart + self.untranslatedCursorPos
 	continue_ = True
 	endWord = False
@@ -100,10 +100,10 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
-		self.featureEnabled.SetValue(config.conf["brailleExtender"]["oneHandMode"]["enabled"])
+		self.featureEnabled.SetValue(config.conf["brailleExtender"]["oneHandedMode"]["enabled"])
 		self.featureEnabled.Bind(wx.EVT_CHECKBOX, self.onFeatureEnabled)
 		choices = list(INPUT_METHODS.values())
-		itemToSelect = list(INPUT_METHODS.keys()).index(config.conf["brailleExtender"]["oneHandMode"]["inputMethod"])
+		itemToSelect = list(INPUT_METHODS.keys()).index(config.conf["brailleExtender"]["oneHandedMode"]["inputMethod"])
 		self.inputMethod = sHelper.addLabeledControl(_("Input method"), wx.Choice, choices=choices)
 		self.inputMethod.SetSelection(itemToSelect)
 		self.onFeatureEnabled(None)
@@ -113,5 +113,5 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		else: self.inputMethod.Disable()
 
 	def onSave(self):
-		config.conf["brailleExtender"]["oneHandMode"]["enabled"] = self.featureEnabled.IsChecked()
-		config.conf["brailleExtender"]["oneHandMode"]["inputMethod"] = list(INPUT_METHODS.keys())[self.inputMethod.GetSelection()]
+		config.conf["brailleExtender"]["oneHandedMode"]["enabled"] = self.featureEnabled.IsChecked()
+		config.conf["brailleExtender"]["oneHandedMode"]["inputMethod"] = list(INPUT_METHODS.keys())[self.inputMethod.GetSelection()]

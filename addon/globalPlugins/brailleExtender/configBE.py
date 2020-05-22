@@ -19,6 +19,7 @@ else: from validate import Validator
 import inputCore
 import languageHandler
 from .common import *
+from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -200,6 +201,10 @@ def getConfspec():
 		"quickLaunches": {},
 		"roleLabels": {},
 		"brailleTables": {},
+		"oneHandedMode": {
+			"enabled": "boolean(default=False)",
+			"inputMethod": f"option({DOT_BY_DOT}, {BOTH_SIDES}, {ONE_SIDE}, default={ONE_SIDE})",
+		},
 	}
 
 def loadPreferedTables():

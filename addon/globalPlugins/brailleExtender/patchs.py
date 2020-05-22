@@ -31,6 +31,7 @@ from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
+from .oneHandMode import process as processOneHandMode
 from .utils import getCurrentChar, getTether
 from .common import *
 import louisHelper
@@ -328,6 +329,41 @@ def emulateKey(self, key, withModifiers=True):
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 
+#: brailleInput.BrailleInputHandler.input()
+def input_(self, dots):
+		"""Handle one cell of braille input.
+		"""
+		# Insert the newly entered cell into the buffer at the cursor position.
+		pos = self.untranslatedStart + self.untranslatedCursorPos
+		# Space ends the word.
+		endWord = dots == 0
+		continue_ = True
+		if config.conf["brailleExtender"]["oneHandedMode"]["enabled"]:
+			continue_, endWord = processOneHandMode(self, dots)
+			if not continue_: return
+		else:
+			self.bufferBraille.insert(pos, dots)
+			self.untranslatedCursorPos += 1
+		# For uncontracted braille, translate the buffer for each cell added.
+		# Any new characters produced are then sent immediately.
+		# For contracted braille, translate the buffer only when a word is ended (i.e. a space is typed).
+		# This is because later cells can change characters produced by previous cells.
+		# For example, in English grade 2, "tg" produces just "tg",
+		# but "tgr" produces "together".
+		if not self.useContractedForCurrentFocus or endWord:
+			if self._translate(endWord):
+				if not endWord:
+					self.cellsWithText.add(pos)
+			elif self.bufferText and not self.useContractedForCurrentFocus:
+				# Translators: Reported when translation didn't succeed due to unsupported input.
+				speech.speakMessage(_("Unsupported input"))
+				self.flushBuffer()
+			else:
+				# This cell didn't produce any text; e.g. number sign.
+				self._reportUntranslated(pos)
+		else:
+			self._reportUntranslated(pos)
+
 #: brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input
 def _translate(self, endWord):
@@ -406,6 +442,7 @@ inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
 brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
+brailleInput.BrailleInputHandler.input = input_
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

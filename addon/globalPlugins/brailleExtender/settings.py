@@ -24,6 +24,7 @@ import ui
 addonHandler.initTranslation()
 
 from . import configBE
+from .oneHandMode import SettingsDlg as OneHandModeDlg
 from . import utils
 from .common import *
 
@@ -895,6 +896,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AttribraDlg,
 		BrailleTablesDlg,
 		RoleLabelsDlg,
+		OneHandModeDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

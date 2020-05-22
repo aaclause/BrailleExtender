@@ -1,22 +1,8 @@
 #!/usr/bin/env python3
 # coding: UTF-8
-from __future__ import print_function, unicode_literals
 import re
 import sys
 import struct
-
-isPy3 = sys.version_info >= (3, 0)
-
-
-def chrPy2(i):
-	try:
-		return unichr(i)
-	except ValueError:
-		return struct.pack('i', i).decode('utf-32')
-
-
-if not isPy3:
-	chr = chrPy2
 
 HUC6_patterns = {
 	"⠿":   (0x000000, 0x1FFFF),

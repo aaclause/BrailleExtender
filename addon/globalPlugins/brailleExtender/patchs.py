@@ -31,7 +31,8 @@ from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
-from .utils import getCurrentChar, getTether, unicodeBrailleToDescription, descriptionToUnicodeBraille
+from . import oneHandMode
+from .utils import getCurrentChar, getTether
 from .common import *
 import louisHelper
 
@@ -329,79 +330,6 @@ def emulateKey(self, key, withModifiers=True):
 		self.sendChars(key)
 
 #: brailleInput.BrailleInputHandler.input()
-endChar = True
-def processOneHandMode(self, dots):
-	global endChar
-	addSpace = False
-	method = config.conf["brailleExtender"]["oneHandMethod"]
-	pos = self.untranslatedStart + self.untranslatedCursorPos
-	continue_ = True
-	endWord = False
-	if method == configBE.CHOICE_oneHandMethodSides:
-		endChar = not endChar
-		if dots == 0:
-			endChar = endWord = True
-			addSpace = True
-	elif method == configBE.CHOICE_oneHandMethodSide:
-		endChar = not endChar
-		if endChar: equiv = "045645688"
-		else:
-			equiv = "012312377"
-			if dots == 0:
-				endChar = endWord = True
-				addSpace = True
-		if dots != 0:
-			translatedBufferBrailleDots = 0
-			if self.bufferBraille:
-				translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
-				translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
-			translatedDots = chr(dots | 0x2800)
-			translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
-			newDots = ""
-			for dot in translatedDotsBrailleDots:
-				dot = int(dot)
-				if dots >= 0 and dot < 9: newDots += equiv[dot]
-			newDots = ''.join(sorted(set(newDots)))
-			if not newDots: newDots = "0"
-			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
-	elif method == configBE.CHOICE_oneHandMethodDots:
-		endChar = dots == 0
-		translatedBufferBrailleDots = "0"
-		if self.bufferBraille:
-			translatedBufferBraille = chr(self.bufferBraille[-1] | 0x2800)
-			translatedBufferBrailleDots = unicodeBrailleToDescription(translatedBufferBraille)
-		translatedDots = chr(dots | 0x2800)
-		translatedDotsBrailleDots = unicodeBrailleToDescription(translatedDots)
-		for dot in translatedDotsBrailleDots:
-			if dot not in translatedBufferBrailleDots: translatedBufferBrailleDots += dot
-			else: translatedBufferBrailleDots = translatedBufferBrailleDots.replace(dot, '')
-		if not translatedBufferBrailleDots: translatedBufferBrailleDots = "0"
-		newDots = ''.join(sorted(set(translatedBufferBrailleDots)))
-		log.info("===> " + newDots)
-		dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
-	else:
-		speech.speakMessage(_("Unsupported input method"))
-		self.flushBuffer()
-		return False, False
-	if endChar:
-		if not self.bufferBraille: self.bufferBraille.insert(pos, 0)
-		if method == configBE.CHOICE_oneHandMethodDots:
-			self.bufferBraille[-1] = dots
-		else: self.bufferBraille[-1] |= dots
-		if not endWord: endWord = self.bufferBraille[-1] == 0
-		if method == configBE.CHOICE_oneHandMethodDots:
-			self.bufferBraille.append(0)
-		self.untranslatedCursorPos += 1
-		if addSpace:
-			self.bufferBraille.append(0)
-			self.untranslatedCursorPos += 1
-	else:
-		continue_ = False
-		if self.bufferBraille and method == configBE.CHOICE_oneHandMethodDots: self.bufferBraille[-1] = dots
-		else: self.bufferBraille.insert(pos, dots)
-		self._reportUntranslated(pos)
-	return continue_, endWord
-
 def input(self, dots):
 		"""Handle one cell of braille input.
 		"""
@@ -411,7 +339,7 @@ def input(self, dots):
 		endWord = dots == 0
 		continue_ = True
 		if config.conf["brailleExtender"]["oneHandMode"]:
-			continue_, endWord = processOneHandMode(self, dots)
+			continue_, endWord = oneHandMode.process(self, dots)
 			if not continue_: return
 		else:
 			self.bufferBraille.insert(pos, dots)

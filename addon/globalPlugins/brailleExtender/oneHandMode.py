@@ -9,31 +9,31 @@ addonHandler.initTranslation()
 import config
 from .utils import unicodeBrailleToDescription, descriptionToUnicodeBraille
 
-CHOICE_oneHandMethodSides = 0
-CHOICE_oneHandMethodSide = 1
-CHOICE_oneHandMethodDots = 2
+ONE_SIDE = "side"
+BOTH_SIDES = "sides"
+DOT_BY_DOT = "dot"
 
-CHOICE_oneHandMethods = dict([
-	(CHOICE_oneHandMethodSides, _("Fill a cell in two stages on both sides")),
-	(CHOICE_oneHandMethodSide, _("Fill a cell in two stages on one side (space = empty side)")),
-	(CHOICE_oneHandMethodDots,  _("Fill a cell dots by dots (each dot is a toggle, press space to validate the character)"))
-])
+INPUT_METHODS = {
+	ONE_SIDE: _("Fill a cell in two stages using one side only"),
+	BOTH_SIDES: _("Fill a cell in two stages using both sides"),
+	DOT_BY_DOT: _("Fill a cell dots by dots")
+}
 
 endChar = True
 
 def process(self, dots):
 	global endChar
 	addSpace = False
-	method = config.conf["brailleExtender"]["oneHandMethod"]
+	method = config.conf["brailleExtender"]["oneHandMode"]["inputMethod"]
 	pos = self.untranslatedStart + self.untranslatedCursorPos
 	continue_ = True
 	endWord = False
-	if method == CHOICE_oneHandMethodSides:
+	if method == BOTH_SIDES:
 		endChar = not endChar
 		if dots == 0:
 			endChar = endWord = True
 			addSpace = True
-	elif method == CHOICE_oneHandMethodSide:
+	elif method == ONE_SIDE:
 		endChar = not endChar
 		if endChar: equiv = "045645688"
 		else:
@@ -55,7 +55,7 @@ def process(self, dots):
 			newDots = ''.join(sorted(set(newDots)))
 			if not newDots: newDots = "0"
 			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
-	elif method == CHOICE_oneHandMethodDots:
+	elif method == DOT_BY_DOT:
 		endChar = dots == 0
 		translatedBufferBrailleDots = "0"
 		if self.bufferBraille:
@@ -75,11 +75,11 @@ def process(self, dots):
 		return False, False
 	if endChar:
 		if not self.bufferBraille: self.bufferBraille.insert(pos, 0)
-		if method == CHOICE_oneHandMethodDots:
+		if method == DOT_BY_DOT:
 			self.bufferBraille[-1] = dots
 		else: self.bufferBraille[-1] |= dots
 		if not endWord: endWord = self.bufferBraille[-1] == 0
-		if method == CHOICE_oneHandMethodDots:
+		if method == DOT_BY_DOT:
 			self.bufferBraille.append(0)
 		self.untranslatedCursorPos += 1
 		if addSpace:
@@ -87,7 +87,7 @@ def process(self, dots):
 			self.untranslatedCursorPos += 1
 	else:
 		continue_ = False
-		if self.bufferBraille and method == CHOICE_oneHandMethodDots: self.bufferBraille[-1] = dots
+		if self.bufferBraille and method == DOT_BY_DOT: self.bufferBraille[-1] = dots
 		else: self.bufferBraille.insert(pos, dots)
 		self._reportUntranslated(pos)
 	return continue_, endWord
@@ -99,19 +99,19 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.oneHandMode = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
-		self.oneHandMode.SetValue(config.conf["brailleExtender"]["oneHandMode"])
-		self.oneHandMode.Bind(wx.EVT_CHECKBOX, self.onOneHandMode)
-		choices = list(CHOICE_oneHandMethods.values())
-		itemToSelect = list(CHOICE_oneHandMethods.keys()).index(config.conf["brailleExtender"]["oneHandMethod"])
-		self.oneHandMethod = sHelper.addLabeledControl(_("Input method"), wx.Choice, choices=choices)
-		self.oneHandMethod.SetSelection(itemToSelect)
-		self.onOneHandMode(None)
+		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
+		self.featureEnabled.SetValue(config.conf["brailleExtender"]["oneHandMode"]["enabled"])
+		self.featureEnabled.Bind(wx.EVT_CHECKBOX, self.onFeatureEnabled)
+		choices = list(INPUT_METHODS.values())
+		itemToSelect = list(INPUT_METHODS.keys()).index(config.conf["brailleExtender"]["oneHandMode"]["inputMethod"])
+		self.inputMethod = sHelper.addLabeledControl(_("Input method"), wx.Choice, choices=choices)
+		self.inputMethod.SetSelection(itemToSelect)
+		self.onFeatureEnabled(None)
 
-	def onOneHandMode(self, evt):
-		if self.oneHandMode.IsChecked(): self.oneHandMethod.Enable()
-		else: self.oneHandMethod.Disable()
+	def onFeatureEnabled(self, evt):
+		if self.featureEnabled.IsChecked(): self.inputMethod.Enable()
+		else: self.inputMethod.Disable()
 
 	def onSave(self):
-		config.conf["brailleExtender"]["oneHandMode"] = self.oneHandMode.IsChecked()
-		config.conf["brailleExtender"]["oneHandMethod"] = list(CHOICE_oneHandMethods.keys())[self.oneHandMethod.GetSelection()]
+		config.conf["brailleExtender"]["oneHandMode"]["enabled"] = self.featureEnabled.IsChecked()
+		config.conf["brailleExtender"]["oneHandMode"]["inputMethod"] = list(INPUT_METHODS.keys())[self.inputMethod.GetSelection()]

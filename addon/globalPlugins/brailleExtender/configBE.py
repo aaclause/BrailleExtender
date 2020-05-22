@@ -19,7 +19,7 @@ else: from validate import Validator
 import inputCore
 import languageHandler
 from .common import *
-from .oneHandMode import CHOICE_oneHandMethodDots, CHOICE_oneHandMethodSides, CHOICE_oneHandMethodSide
+from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
@@ -150,8 +150,6 @@ def getConfspec():
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
-		"oneHandMode": "boolean(default=False)",
-		"oneHandMethod": "integer(min=0, max=%d, default=%d)" % (CHOICE_oneHandMethodDots, CHOICE_oneHandMethodSides),
 		"features": {
 			"attributes": "boolean(default=True)",
 			"roleLabels": "boolean(default=True)"
@@ -203,6 +201,10 @@ def getConfspec():
 		"quickLaunches": {},
 		"roleLabels": {},
 		"brailleTables": {},
+		"oneHandMode": {
+			"enabled": "boolean(default=False)",
+			"inputMethod": f"option({DOT_BY_DOT}, {BOTH_SIDES}, {ONE_SIDE}, default={ONE_SIDE})",
+		},
 	}
 
 def loadPreferedTables():

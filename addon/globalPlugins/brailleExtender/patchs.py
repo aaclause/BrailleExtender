@@ -31,7 +31,7 @@ from logHandler import log
 import addonHandler
 addonHandler.initTranslation()
 from . import dictionaries
-from . import oneHandMode
+from .oneHandMode import process as processOneHandMode
 from .utils import getCurrentChar, getTether
 from .common import *
 import louisHelper
@@ -338,8 +338,8 @@ def input(self, dots):
 		# Space ends the word.
 		endWord = dots == 0
 		continue_ = True
-		if config.conf["brailleExtender"]["oneHandMode"]:
-			continue_, endWord = oneHandMode.process(self, dots)
+		if config.conf["brailleExtender"]["oneHandMode"]["enabled"]:
+			continue_, endWord = processOneHandMode(self, dots)
 			if not continue_: return
 		else:
 			self.bufferBraille.insert(pos, dots)

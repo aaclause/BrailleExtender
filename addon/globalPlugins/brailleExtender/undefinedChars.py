@@ -264,9 +264,9 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("Braille table"), wx.Choice, choices=values
 		)
 		self.undefinedCharTable.SetSelection(undefinedCharTableID)
-		self.onUndefinedCharReprList()
 		self.onExtendedDesc()
 		self.onUndefinedCharDesc()
+		self.onUndefinedCharReprList()
 
 	def getHardValue(self):
 		selected = self.undefinedCharReprList.GetSelection()

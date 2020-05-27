@@ -20,13 +20,13 @@ import louis
 from . import configBE, huc
 from .common import *
 from .utils import getCurrentBrailleTables, getTextInBraille
+from . import brailleRegionHelper
 
 addonHandler.initTranslation()
 
 
 HUCDotPattern = "12345678-78-12345678"
 undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
-
 
 def getHardValue():
 	selected = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
@@ -45,7 +45,7 @@ def setUndefinedChar(t=None):
 
 def getExtendedSymbolsForString(s: str) -> dict:
 	return {
-		c: (d, [(m.start(), m.end()) for m in re.finditer(c, s)])
+		c: (d, [(m.start(), m.end()-1) for m in re.finditer(c, s)])
 		for c, d in extendedSymbols.items()
 		if c in s
 	}
@@ -100,90 +100,66 @@ def getUndefinedCharSign(method):
 	elif method == configBE.CHOICE_otherSign: return getTextInBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"])
 	else: return '⠀'
 
-
-def undefinedCharProcess(self):
-	method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-	extendedSymbolsRawText = {}
-	if config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]: extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText)
-	unicodeBrailleRepr = "".join([chr(0x2800 + cell) for cell in self.brailleCells])
-	allBraillePos = [m.start() for m in re.finditer(undefinedCharPattern, unicodeBrailleRepr) if not 0x2800 <= ord(self.rawText[self.brailleToRawPos[m.start()]]) <= 0x28ff]
-	allExtendedPos = {}
-	for c, v in extendedSymbolsRawText.items():
-		for start, end in v[1]:
-			allExtendedPos[start] = end
-	if not allBraillePos: return
+def getReplacement(text, method=None):
+	if not method: method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
+	out = {}
+	if not text: return ''
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]:
 		start = config.conf["brailleExtender"]["undefinedCharsRepr"]["start"]
 		end = config.conf["brailleExtender"]["undefinedCharsRepr"]["end"]
 		if start: start = getTextInBraille(start)
 		if end: end = getTextInBraille(end)
-		replacements = {braillePos: getTextInBraille((
-			getDescChar(
-				self.rawText[self.brailleToRawPos[braillePos]: allExtendedPos[self.brailleToRawPos[braillePos]]],
-				lang=config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"],
-				start=start,
-				end=f":{allExtendedPos[self.brailleToRawPos[braillePos]] - self.brailleToRawPos[braillePos]}{end}" + getDescChar(
-					self.rawText[self.brailleToRawPos[braillePos]],
-					lang=config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"],
-					start=start,
-					end=end,
-				),
-			)
-		)
-		if self.brailleToRawPos[braillePos] in allExtendedPos
-		else getDescChar(self.rawText[self.brailleToRawPos[braillePos]], lang=config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"], start=start, end=end), table=[config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]) for braillePos in allBraillePos}
+		lang = config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"]
+		table = [config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]
+		return getTextInBraille(getDescChar(
+			text,
+			lang=lang,
+			start=start,
+			end=end
+		), table)
 	elif method in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
 		HUC6 = method == configBE.CHOICE_HUC6
-		replacements = {braillePos: huc.translate(self.rawText[self.brailleToRawPos[braillePos]], HUC6=HUC6) for braillePos in allBraillePos}
+		return huc.translate(text, HUC6=HUC6)
 	elif method in [ configBE.CHOICE_bin, configBE.CHOICE_oct, configBE.CHOICE_dec, configBE.CHOICE_hex,]:
-		replacements = {braillePos: getUnicodeNotation(self.rawText[self.brailleToRawPos[braillePos]], method) for braillePos in allBraillePos}
+		return getUnicodeNotation(text)
 	else:
-		replacements = {braillePos: getUndefinedCharSign(method) for braillePos in allBraillePos}
-	newBrailleCells = []
+		return getUndefinedCharSign(method)
+
+def undefinedCharProcess(self):
+	Repl = brailleRegionHelper.BrailleCellReplacement
+	fullExtendedDesc = config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"]
+	startTag = config.conf["brailleExtender"]["undefinedCharsRepr"]["start"]
+	endTag = config.conf["brailleExtender"]["undefinedCharsRepr"]["end"]
+	if startTag: startTag = getTextInBraille(startTag)
+	if endTag: endTag = getTextInBraille(endTag)
+	lang = config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"]
+	table = [config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]
+	undefinedCharsPos = [e for e in brailleRegionHelper.findBrailleCellsPattern(self, undefinedCharPattern)]
+	extendedSymbolsRawText = {}
+	if config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
+		extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText)
+	replacements = []
+	for c, v in extendedSymbolsRawText.items():
+		for start, end in v[1]:
+			if start in undefinedCharsPos:
+				replaceBy = getTextInBraille(f"{startTag}{v[0]}:{len(c)}{endTag}", table)
+				replacements.append(Repl(
+					start,
+					start if fullExtendedDesc else end,
+					replaceBy=getReplacement(c[0]) if fullExtendedDesc else replaceBy,
+					insertBefore=replaceBy if fullExtendedDesc else ''
+				))
+	#if not allBraillePos: return
+	l = brailleRegionHelper.streamRegionFromRawText(self)
+	replacements = [Repl(pos, replaceBy=getReplacement(self.rawText[pos])) for pos in undefinedCharsPos] + replacements
+	if not replacements: return
+	brailleRegionHelper.replaceBrailleCells(self, replacements)
 	newBrailleToRawPos = []
 	newRawToBraillePos = []
-	lenBrailleToRawPos = len(self.brailleToRawPos)
-	alreadyDone = []
-	i = 0
-	for iBrailleCells, brailleCells in enumerate(self.brailleCells):
-		brailleToRawPos = self.brailleToRawPos[iBrailleCells]
-		if iBrailleCells in replacements and not replacements[iBrailleCells].startswith(undefinedCharPattern):
-			toAdd = [ord(c) - 0x2800 for c in replacements[iBrailleCells]]
-			newBrailleCells += toAdd
-			newBrailleToRawPos += [i] * len(toAdd)
-			alreadyDone += list(range(iBrailleCells, iBrailleCells + len(undefinedCharPattern)))
-			i += 1
-		else:
-			if iBrailleCells in alreadyDone:
-				continue
-			newBrailleCells.append(self.brailleCells[iBrailleCells])
-			newBrailleToRawPos += [i]
-			if (iBrailleCells + 1) < lenBrailleToRawPos and self.brailleToRawPos[
-				iBrailleCells + 1
-			] != brailleToRawPos:
-				i += 1
-	lastPos = -42
-	for i, brailleToRawPos in enumerate(newBrailleToRawPos):
-		if brailleToRawPos != lastPos:
-			lastPos = brailleToRawPos
-			newRawToBraillePos.append(i)
-	self.brailleCells = newBrailleCells
-	self.brailleToRawPos = newBrailleToRawPos
-	self.rawToBraillePos = newRawToBraillePos
-	if self.cursorPos:
-			if len(self.rawToBraillePos) > self.cursorPos:
-				self.brailleCursorPos = self.rawToBraillePos[self.cursorPos]
-			else:
-				log.error(("error during adding undefined char description:\n"
-					f"cursorPos: {self.cursorPos}\n"
-					f"brailleCursorPos: {self.brailleCursorPos}\n"
-					f"brailleCells: {self.brailleCells}\n"
-					f"=> {''.join([chr(c + 0x2800) for c in self.brailleCells])}\n"
-					f"==> {len(self.brailleCells)}\n"
-					f"brailleToRawPos: {self.brailleToRawPos}\n"
-					f"rawToBraillePos: {self.rawToBraillePos}\n"
-					f"rawText: {self.rawText}"
-				))
+	newBrailleCells = []
+	for i, rawText, startBraillePos, endBraillePos, bc, uc in l:
+		pass #newBrailleCells.append()
+	return
 
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
@@ -198,7 +174,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		dotPatternSample = "6-12345678"
 		signPatternSample = "??"
 		choices = [
-			_("Use braille table behavior"),
+			_("Use braille table behavior") + "(%s)" % _("no description possible"),
 			_("Dots 1-8 (⣿)"),
 			_("Dots 1-6 (⠿)"),
 			_("Empty cell (⠀)"),
@@ -225,7 +201,6 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(
 			_("Specify another pattern"), wx.TextCtrl, value=self.getHardValue()
 		)
-		self.onUndefinedCharReprList()
 		self.undefinedCharDesc = sHelper.addItem(
 			wx.CheckBox(self, label=_(
 				"Describe undefined characters if possible"))
@@ -234,21 +209,31 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
 		)
 		self.undefinedCharDesc.Bind(wx.EVT_CHECKBOX, self.onUndefinedCharDesc)
-		self.undefinedCharExtendedDesc = sHelper.addItem(
+		self.extendedDesc = sHelper.addItem(
 			wx.CheckBox(
-				self, label=_(
-					"Also describe extended characters (e.g.: country flags)")
+				self,
+				label=_("Also describe extended characters (e.g.: country flags)")
 			)
 		)
-		self.undefinedCharExtendedDesc.SetValue(
+		self.extendedDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]
 		)
-		self.undefinedCharStart = sHelper.addLabeledControl(
+		self.extendedDesc.Bind(wx.EVT_CHECKBOX, self.onExtendedDesc)
+		self.fullExtendedDesc = sHelper.addItem(
+			wx.CheckBox(
+				self,
+				label=_("Full extended description")
+			)
+		)
+		self.fullExtendedDesc.SetValue(
+			config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"]
+		)
+		self.startTag = sHelper.addLabeledControl(
 			_("Start tag"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["start"],
 		)
-		self.undefinedCharEnd = sHelper.addLabeledControl(
+		self.endTag = sHelper.addLabeledControl(
 			_("End tag"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["end"],
@@ -279,6 +264,9 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("Braille table"), wx.Choice, choices=values
 		)
 		self.undefinedCharTable.SetSelection(undefinedCharTableID)
+		self.onUndefinedCharReprList()
+		self.onExtendedDesc()
+		self.onUndefinedCharDesc()
 
 	def getHardValue(self):
 		selected = self.undefinedCharReprList.GetSelection()
@@ -293,12 +281,13 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		else:
 			return ""
 
-	def onUndefinedCharDesc(self, evt):
+	def onUndefinedCharDesc(self, evt=None):
 		l = [
 			self.undefinedCharReprEdit,
-			self.undefinedCharExtendedDesc,
-			self.undefinedCharStart,
-			self.undefinedCharEnd,
+			self.extendedDesc,
+			self.fullExtendedDesc,
+			self.startTag,
+			self.endTag,
 			self.undefinedCharLang,
 			self.undefinedCharTable,
 		]
@@ -307,6 +296,10 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 				e.Enable()
 			else:
 				e.Disable()
+
+	def onExtendedDesc(self, evt=None):
+		if self.extendedDesc.IsChecked(): self.fullExtendedDesc.Enable()
+		else: self.fullExtendedDesc.Disable()
 
 	def onUndefinedCharReprList(self, evt=None):
 		selected = self.undefinedCharReprList.GetSelection()
@@ -334,18 +327,15 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			config.conf["brailleExtender"]["undefinedCharsRepr"][
 				"hardSignPatternValue"
 			] = repr_
-		config.conf["brailleExtender"]["undefinedCharsRepr"][
-			"desc"
-		] = self.undefinedCharDesc.IsChecked()
-		config.conf["brailleExtender"]["undefinedCharsRepr"][
-			"extendedDesc"
-		] = self.undefinedCharExtendedDesc.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] = self.undefinedCharDesc.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"] = self.extendedDesc.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"] = self.fullExtendedDesc.IsChecked()
 		config.conf["brailleExtender"]["undefinedCharsRepr"][
 			"start"
-		] = self.undefinedCharStart.Value
+		] = self.startTag.Value
 		config.conf["brailleExtender"]["undefinedCharsRepr"][
 			"end"
-		] = self.undefinedCharEnd.Value
+		] = self.endTag.Value
 		config.conf["brailleExtender"]["undefinedCharsRepr"][
 			"lang"
 		] = languageHandler.getAvailableLanguages()[

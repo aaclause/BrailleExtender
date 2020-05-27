@@ -166,6 +166,7 @@ def getConfspec():
 			"hardDotPatternValue": "string(default=6-12345678)",
 			"desc": "boolean(default=True)",
 			"extendedDesc": "boolean(default=True)",
+			"fullExtendedDesc": "boolean(default=False)",
 			"start": "string(default=[)",
 			"end": "string(default=])",
 			"lang": "string(default=Windows)",

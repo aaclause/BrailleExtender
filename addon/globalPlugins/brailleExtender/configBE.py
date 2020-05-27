@@ -167,6 +167,7 @@ def getConfspec():
 			"desc": "boolean(default=True)",
 			"extendedDesc": "boolean(default=True)",
 			"fullExtendedDesc": "boolean(default=False)",
+			"showSize": "boolean(default=True)",
 			"start": "string(default=[)",
 			"end": "string(default=])",
 			"lang": "string(default=Windows)",

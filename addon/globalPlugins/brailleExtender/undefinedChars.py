@@ -43,10 +43,20 @@ def setUndefinedChar(t=None):
 	louis.compileString(getCurrentBrailleTables(), bytes(f"undefined {HUCDotPattern}", "ASCII"))
 
 
-def getExtendedSymbolsForString(s: str) -> dict:
+def getExtendedSymbolsForString(s: str, lang) -> dict:
+	global extendedSymbols, localesFail
+	if not lang in extendedSymbols:
+		try:
+			extendedSymbols[lang] = getExtendedSymbols(lang)
+		except BaseException:
+			log.error(f"Unable to load extended symbols for: {lang}")
+			localesFail.append(lang)
+	if lang in localesFail:
+		lang = "en"
+		if not lang in localesFail: extendedSymbols[lang] = getExtendedSymbols(lang)
 	return {
 		c: (d, [(m.start(), m.end()-1) for m in re.finditer(c, s)])
-		for c, d in extendedSymbols.items()
+		for c, d in extendedSymbols[lang].items()
 		if c in s
 	}
 
@@ -136,30 +146,23 @@ def undefinedCharProcess(self):
 	table = [config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]
 	undefinedCharsPos = [e for e in brailleRegionHelper.findBrailleCellsPattern(self, undefinedCharPattern)]
 	extendedSymbolsRawText = {}
-	if config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
-		extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText)
+	if config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] and config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
+		extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText, lang)
 	replacements = []
 	for c, v in extendedSymbolsRawText.items():
 		for start, end in v[1]:
 			if start in undefinedCharsPos:
-				replaceBy = getTextInBraille(f"{startTag}{v[0]}:{len(c)}{endTag}", table)
+				toAdd = f":{len(c)}" if config.conf["brailleExtender"]["undefinedCharsRepr"]["showSize"] else ''
+				replaceBy = getTextInBraille(f"{startTag}{v[0]}{toAdd}{endTag}", table)
 				replacements.append(Repl(
 					start,
 					start if fullExtendedDesc else end,
 					replaceBy=getReplacement(c[0]) if fullExtendedDesc else replaceBy,
 					insertBefore=replaceBy if fullExtendedDesc else ''
 				))
-	#if not allBraillePos: return
-	l = brailleRegionHelper.streamRegionFromRawText(self)
 	replacements = [Repl(pos, replaceBy=getReplacement(self.rawText[pos])) for pos in undefinedCharsPos] + replacements
 	if not replacements: return
 	brailleRegionHelper.replaceBrailleCells(self, replacements)
-	newBrailleToRawPos = []
-	newRawToBraillePos = []
-	newBrailleCells = []
-	for i, rawText, startBraillePos, endBraillePos, bc, uc in l:
-		pass #newBrailleCells.append()
-	return
 
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
@@ -203,7 +206,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 		self.undefinedCharDesc = sHelper.addItem(
 			wx.CheckBox(self, label=_(
-				"Describe undefined characters if possible"))
+				"&Describe undefined characters if possible"))
 		)
 		self.undefinedCharDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
@@ -212,7 +215,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.extendedDesc = sHelper.addItem(
 			wx.CheckBox(
 				self,
-				label=_("Also describe extended characters (e.g.: country flags)")
+				label=_("Also describe e&xtended characters (e.g.: country flags)")
 			)
 		)
 		self.extendedDesc.SetValue(
@@ -222,19 +225,28 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.fullExtendedDesc = sHelper.addItem(
 			wx.CheckBox(
 				self,
-				label=_("Full extended description")
+				label=_("&Full extended description")
 			)
 		)
 		self.fullExtendedDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"]
 		)
+		self.showSize = sHelper.addItem(
+			wx.CheckBox(
+				self,
+				label=_("Show the si&ze taken")
+			)
+		)
+		self.showSize.SetValue(
+			config.conf["brailleExtender"]["undefinedCharsRepr"]["showSize"]
+		)
 		self.startTag = sHelper.addLabeledControl(
-			_("Start tag"),
+			_("&Start tag"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["start"],
 		)
 		self.endTag = sHelper.addLabeledControl(
-			_("End tag"),
+			_("&End tag"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["end"],
 		)
@@ -245,7 +257,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			undefinedCharLang = keys[-1]
 		undefinedCharLangID = keys.index(undefinedCharLang)
 		self.undefinedCharLang = sHelper.addLabeledControl(
-			_("Language"), wx.Choice, choices=values
+			_("&Language"), wx.Choice, choices=values
 		)
 		self.undefinedCharLang.SetSelection(undefinedCharLangID)
 		values = [_("Use the current output table")] + [
@@ -261,7 +273,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			undefinedCharTable = "current"
 		undefinedCharTableID = keys.index(undefinedCharTable)
 		self.undefinedCharTable = sHelper.addLabeledControl(
-			_("Braille table"), wx.Choice, choices=values
+			_("Braille &table"), wx.Choice, choices=values
 		)
 		self.undefinedCharTable.SetSelection(undefinedCharTableID)
 		self.onExtendedDesc()
@@ -286,6 +298,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			self.undefinedCharReprEdit,
 			self.extendedDesc,
 			self.fullExtendedDesc,
+			self.showSize,
 			self.startTag,
 			self.endTag,
 			self.undefinedCharLang,
@@ -298,8 +311,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 				e.Disable()
 
 	def onExtendedDesc(self, evt=None):
-		if self.extendedDesc.IsChecked(): self.fullExtendedDesc.Enable()
-		else: self.fullExtendedDesc.Disable()
+		if self.extendedDesc.IsChecked():
+			self.fullExtendedDesc.Enable()
+			self.showSize.Enable()
+		else:
+			self.fullExtendedDesc.Disable()
+			self.showSize.Disable()
 
 	def onUndefinedCharReprList(self, evt=None):
 		selected = self.undefinedCharReprList.GetSelection()
@@ -330,6 +347,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] = self.undefinedCharDesc.IsChecked()
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"] = self.extendedDesc.IsChecked()
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"] = self.fullExtendedDesc.IsChecked()
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["showSize"] = self.showSize.IsChecked()
 		config.conf["brailleExtender"]["undefinedCharsRepr"][
 			"start"
 		] = self.startTag.Value
@@ -374,14 +392,5 @@ def getExtendedSymbols(locale):
 	)
 	return a
 
-
-try:
-	extendedSymbols = getExtendedSymbols(
-		config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"]
-	)
-except BaseException as err:
-	extendedSymbols = {}
-	log.error(
-		f"Unable to load extended symbols for %s: %s"
-		% (config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"], err)
-	)
+extendedSymbols = {}
+localesFail = []

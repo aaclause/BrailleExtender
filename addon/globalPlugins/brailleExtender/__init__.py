@@ -14,13 +14,11 @@ from logHandler import log
 import os
 import re
 import subprocess
+import sys
 import time
 import urllib
 import gui
 import wx
-
-from . import settings
-from . import dictionaries
 
 import addonHandler
 addonHandler.initTranslation()
@@ -50,8 +48,13 @@ from . import configBE
 config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
 from .updateCheck import *
+from . import advancedInputMode
+from . import dictionaries
+from . import huc
 from . import patchs
+from . import settings
 from .common import *
+from . import undefinedChars
 
 instanceGP = None
 lang = configBE.lang
@@ -130,8 +133,7 @@ def decorator(fn, s):
 		fn(self, info, conf, isSelection)
 
 	def update(self):
-		try: fn(self)
-		except BaseException as e: log.error("Fatal error: %s" % e)
+		fn(self)
 		if not attribraEnabled(): return
 		DOT7 = 64
 		DOT8 = 128
@@ -161,6 +163,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	lastShortcutPerformed = None
 	hideDots78 = False
 	BRFMode = False
+	advancedInput = False
 	modifiersLocked = False
 	hourDatePlayed = False
 	hourDateTimer = None
@@ -178,8 +181,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	switchedMode = False
 
 	def __init__(self):
+		startTime = time.time()
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
 		patchs.instanceGP = self
+		self.reloadBrailleTables()
 		settings.instanceGP = self
 		configBE.loadConf()
 		configBE.initGestures()
@@ -202,7 +207,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
-		log.info("%s %s loaded" % (addonName, addonVersion))
+		advancedInputMode.initialize()
+		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):
 		global rotorItem, lastRotorItemInVD, lastRotorItemInVDSaved
@@ -241,9 +247,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			configBE.curBD = braille.handler.display.name
 			self.onReload(None, 1)
 
-		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]:
-			self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
-			dictionaries.setDictTables()
+		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]: self.reloadBrailleTables()
+
 		nextHandler()
 		return
 
@@ -262,7 +267,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			item
 		)
 		dictionariesMenu = wx.Menu()
-		self.submenu.AppendSubMenu(dictionariesMenu, _("Braille &dictionaries"), _("'Braille dictionaries' menu"))
+		self.submenu.AppendSubMenu(dictionariesMenu, _("Table &dictionaries"), _("'Braille dictionaries' menu"))
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
 		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
@@ -270,6 +275,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
+		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("Advanced &input mode dictionary"), _("Advanced input mode configuration"))
+		gui.mainFrame.sysTrayIcon.Bind(
+			wx.EVT_MENU,
+			lambda event: gui.mainFrame._popupSettingsDialog(advancedInputMode.AdvancedInputModeDlg),
+			item
+		)
 		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU, 
@@ -291,6 +302,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = self.submenu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
+
+	def reloadBrailleTables(self):
+		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
+		dictionaries.setDictTables()
+		dictionaries.notifyInvalidTables()
+		if config.conf["brailleExtender"]["tabSpace"]:
+			liblouisDef = r"always \t " + ("0-" * configBE.getTabSize()).strip('-')
+			if isPy3:
+				patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
+			else: patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef))
+		undefinedChars.setUndefinedChar()
 
 	@staticmethod
 	def onDefaultDictionary(evt):
@@ -609,7 +631,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ouTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
 		t = (_(" Input table")+": %s\n"+_("Output table")+": %s\n\n") % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
 		t += utils.getTableOverview()
-		ui.browseableMessage('<pre>%s</pre>' % t, _('Table overview (%s)' % brailleInput.handler.table.displayName), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Table overview (%s)" % brailleInput.handler.table.displayName), True)
 	script_getTableOverview.__doc__ = _("Display an overview of current input braille table")
 
 	def script_translateInBRU(self, gesture):
@@ -622,7 +644,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_charsToCellDescriptions(self, gesture):
 		tm = time.time()
 		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
-		t = utils.unicodeBrailleToDescription(t)
+		t = huc.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage(t, _("Braille Unicode to cell descriptions")+(" (%.2f s)" % (time.time()-tm)))
 	script_charsToCellDescriptions.__doc__ = _("Convert text selection in braille cell descriptions and display it in a browseable message")
@@ -631,9 +653,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		tm = time.time()
 		t = utils.getTextSelection()
 		if not t.strip(): return ui.message(_("No text selection"))
-		t = utils.descriptionToUnicodeBraille(t)
+		t = huc.cellDescriptionsToUnicodeBraille(t)
 		ui.browseableMessage(t, _("Cell descriptions to braille Unicode")+(" (%.2f s)" % (time.time()-tm)))
 	script_cellDescriptionsToChars.__doc__ = _("Braille cell description to Unicode Braille. E.g.: in a edit field type '125-24-0-1-123-123'. Then select this text and execute this command")
+
+	def script_advancedInput(self, gesture):
+		self.advancedInput = not self.advancedInput
+		states = [_("disabled"), _("enabled")]
+		speech.speakMessage(_("Advanced braille input mode %s") % states[int(self.advancedInput)])
+	script_advancedInput.__doc__ = _("Enable/disable the advanced input mode")
+
+	def script_undefinedCharsDesc(self, gesture):
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] = not config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
+		states = [_("disabled"), _("enabled")]
+		speech.speakMessage(_("Description of undefined characters %s") % states[int(config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"])])
+		utils.refreshBD()
+	script_undefinedCharsDesc.__doc__ = _("Enable/disable description of undefined characters")
 
 	def script_position(self, gesture=None):
 		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
@@ -1267,6 +1302,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay2"
 	__gestures["kb:nvda+alt+h"] = "toggleDots78"
 	__gestures["kb:nvda+alt+f"] = "toggleBRFMode"
+	__gestures["kb:nvda+windows+i"] = "advancedInput"
+	__gestures["kb:nvda+windows+u"] = "undefinedCharsDesc"
 	__gestures["kb:nvda+windows+h"] = "toggleOneHandMode"
 	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
@@ -1296,6 +1333,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		dictionaries.removeTmpDict()
+		advancedInputMode.terminate()
 		super(GlobalPlugin, self).terminate()
 
 	def removeMenu(self):

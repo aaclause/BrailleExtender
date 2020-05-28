@@ -6,8 +6,13 @@
 
 from __future__ import unicode_literals
 import os
+import re
 import sys
 import time
+import unicodedata
+import struct
+import winUser
+
 import api
 import appModuleHandler
 import braille
@@ -15,11 +20,13 @@ import brailleInput
 import brailleTables
 import controlTypes
 import config
-from . import configBE
+import core
 import globalCommands
 import inputCore
 import keyboardHandler
 import louis
+import louisHelper
+import nvwave
 import queueHandler
 import sayAllHandler
 import scriptHandler
@@ -28,13 +35,18 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
+
 import addonHandler
 addonHandler.initTranslation()
+
+from . import advancedInputMode
+from . import configBE
 from . import dictionaries
+from . import huc
+from . import undefinedChars
 from .oneHandMode import process as processOneHandMode
-from .utils import getCurrentChar, getTether
+from .utils import getCurrentChar, getTether, getCharFromValue, getCurrentBrailleTables
 from .common import *
-import louisHelper
 
 instanceGP = None
 
@@ -61,24 +73,6 @@ def sayCurrentLine():
 				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
 			info.expand(textInfos.UNIT_LINE)
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
-
-def getCurrentBrailleTables(input_=False):
-	if instanceGP.BRFMode:
-		tables = [
-			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
-	else:
-		tables = []
-		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
-		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
-		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		tables += [
-			mainTable,
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
-	return tables
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
 def script_braille_routeTo(self, gesture):
@@ -117,56 +111,15 @@ def update(self):
 	"""
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
-	try:
-		if isPy3:
-			self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-				getCurrentBrailleTables(),
-				self.rawText,
-				typeform=self.rawTextTypeforms,
-				mode=mode,
-				cursorPos=self.cursorPos
-			)
-		else:
-			text = unicode(self.rawText).replace('\0', '')
-			braille, self.brailleToRawPos, self.rawToBraillePos, brailleCursorPos = louis.translate(getCurrentBrailleTables(),
-				text,
-				# liblouis mutates typeform if it is a list.
-				typeform=tuple(
-					self.rawTextTypeforms) if isinstance(
-					self.rawTextTypeforms,
-					list) else self.rawTextTypeforms,
-				mode=mode,
-				cursorPos=self.cursorPos or 0
-			)
-	except BaseException as e:
-		log.error("Unable to translate with tables: %s\nDetails: %s" % (getCurrentBrailleTables(), e))
-		return
-	if not isPy3:
-		# liblouis gives us back a character string of cells, so convert it to a list of ints.
-		# For some reason, the highest bit is set, so only grab the lower 8
-		# bits.
-		self.brailleCells = [ord(cell) & 255 for cell in braille]
-		# #2466: HACK: liblouis incorrectly truncates trailing spaces from its output in some cases.
-		# Detect this and add the spaces to the end of the output.
-		if self.rawText and self.rawText[-1] == " ":
-			# rawToBraillePos isn't truncated, even though brailleCells is.
-			# Use this to figure out how long brailleCells should be and thus
-			# how many spaces to add.
-			correctCellsLen = self.rawToBraillePos[-1] + 1
-			currentCellsLen = len(self.brailleCells)
-			if correctCellsLen > currentCellsLen:
-				self.brailleCells.extend(
-					(0,) * (correctCellsLen - currentCellsLen))
-		if self.cursorPos is not None:
-			# HACK: The cursorPos returned by liblouis is notoriously buggy (#2947 among other issues).
-			# rawToBraillePos is usually accurate.
-			try:
-				brailleCursorPos = self.rawToBraillePos[self.cursorPos]
-			except IndexError:
-				pass
-		else:
-			brailleCursorPos = None
-		self.brailleCursorPos = brailleCursorPos
+	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
+		getCurrentBrailleTables(brf=instanceGP.BRFMode),
+		self.rawText,
+		typeform=self.rawTextTypeforms,
+		mode=mode,
+		cursorPos=self.cursorPos
+	)
+	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
+		undefinedChars.undefinedCharProcess(self)
 	if self.selectionStart is not None and self.selectionEnd is not None:
 		try:
 			# Mark the selection.
@@ -175,12 +128,13 @@ def update(self):
 				self.brailleSelectionEnd = len(self.brailleCells)
 			else:
 				self.brailleSelectionEnd = self.rawToBraillePos[self.selectionEnd]
-			fn = range if isPy3 else xrange
-			for pos in fn(self.brailleSelectionStart, self.brailleSelectionEnd):
+			for pos in range(self.brailleSelectionStart, self.brailleSelectionEnd):
 				self.brailleCells[pos] |= SELECTION_SHAPE()
 		except IndexError: pass
 	else:
-		if instanceGP.hideDots78: self.brailleCells = [(cell & 63) for cell in self.brailleCells]
+		if instanceGP and instanceGP.hideDots78:
+			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
+
 
 #: braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -305,6 +259,29 @@ def executeGesture(self, gesture):
 			return
 
 		raise NoInputGestureAction
+#: brailleInput.BrailleInputHandler.sendChars()
+def sendChars(self, chars):
+	"""Sends the provided unicode characters to the system.
+	@param chars: The characters to send to the system.
+	"""
+	inputs = []
+	chars = ''.join(c if ord(c) <= 0xffff else ''.join(chr(x) for x in struct.unpack('>2H', c.encode("utf-16be"))) for c in chars)
+	for ch in chars:
+		for direction in (0,winUser.KEYEVENTF_KEYUP):
+			input = winUser.Input()
+			input.type = winUser.INPUT_KEYBOARD
+			input.ii.ki = winUser.KeyBdInput()
+			input.ii.ki.wScan = ord(ch)
+			input.ii.ki.dwFlags = winUser.KEYEVENTF_UNICODE|direction
+			inputs.append(input)
+	winUser.SendInput(inputs)
+	focusObj = api.getFocusObject()
+	if keyboardHandler.shouldUseToUnicodeEx(focusObj):
+		# #10569: When we use ToUnicodeEx to detect typed characters,
+		# emulated keypresses aren't detected.
+		# Send TypedCharacter events manually.
+		for ch in chars:
+			focusObj.event_typedCharacter(ch=ch)
 
 #: brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
@@ -331,41 +308,94 @@ def emulateKey(self, key, withModifiers=True):
 
 #: brailleInput.BrailleInputHandler.input()
 def input_(self, dots):
-		"""Handle one cell of braille input.
-		"""
-		# Insert the newly entered cell into the buffer at the cursor position.
+	"""Handle one cell of braille input.
+	"""
+	# Insert the newly entered cell into the buffer at the cursor position.
+	pos = self.untranslatedStart + self.untranslatedCursorPos
+	# Space ends the word.
+	endWord = dots == 0
+	continue_ = True
+	if config.conf["brailleExtender"]["oneHandedMode"]["enabled"]:
+		continue_, endWord = processOneHandMode(self, dots)
+		if not continue_: return
+	else:
+		self.bufferBraille.insert(pos, dots)
+		self.untranslatedCursorPos += 1
+	ok = False
+	if instanceGP:
+		focusObj = api.getFocusObject()
+		ok = not self.currentModifiers and (not focusObj.treeInterceptor or focusObj.treeInterceptor.passThrough)
+	if instanceGP and instanceGP.advancedInput and ok:
 		pos = self.untranslatedStart + self.untranslatedCursorPos
-		# Space ends the word.
-		endWord = dots == 0
-		continue_ = True
-		if config.conf["brailleExtender"]["oneHandedMode"]["enabled"]:
-			continue_, endWord = processOneHandMode(self, dots)
-			if not continue_: return
-		else:
-			self.bufferBraille.insert(pos, dots)
-			self.untranslatedCursorPos += 1
-		# For uncontracted braille, translate the buffer for each cell added.
-		# Any new characters produced are then sent immediately.
-		# For contracted braille, translate the buffer only when a word is ended (i.e. a space is typed).
-		# This is because later cells can change characters produced by previous cells.
-		# For example, in English grade 2, "tg" produces just "tg",
-		# but "tgr" produces "together".
-		if not self.useContractedForCurrentFocus or endWord:
-			if self._translate(endWord):
-				if not endWord:
-					self.cellsWithText.add(pos)
-			elif self.bufferText and not self.useContractedForCurrentFocus:
-				# Translators: Reported when translation didn't succeed due to unsupported input.
-				speech.speakMessage(_("Unsupported input"))
-				self.flushBuffer()
+		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
+		if advancedInputStr:
+			res = ''
+			abreviations = advancedInputMode.getReplacements([advancedInputStr])
+			startUnicodeValue = "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭"
+			if not abreviations and advancedInputStr[0] in startUnicodeValue: advancedInputStr = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] + advancedInputStr
+			lenEscapeSign = len(config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"])
+			if advancedInputStr == config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] or (advancedInputStr.startswith(config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"]) and len(advancedInputStr) > lenEscapeSign and advancedInputStr[lenEscapeSign] in startUnicodeValue):
+				equiv = {'⠃': 'b', '⠙': 'd', '⠓': 'h', '⠕': 'o', '⠭': 'x', '⡃': 'B', '⡙': 'D', '⡓': 'H', '⡕': 'O', '⡭': 'X'}
+				if advancedInputStr[-1] == '⠀':
+					text = equiv[advancedInputStr[1]] + louis.backTranslate(getCurrentBrailleTables(True, brf=instanceGP.BRFMode), advancedInputStr[2:-1])[0]
+					try:
+						res = getCharFromValue(text)
+						sendChar(res)
+					except BaseException as err:
+							speech.speakMessage(repr(err))
+							return badInput(self)
+				else: self._reportUntranslated(pos)
+			elif abreviations:
+				if len(abreviations) == 1:
+					res = abreviations[0].replaceBy
+					sendChar(res)
+				else: return self._reportUntranslated(pos)
 			else:
-				# This cell didn't produce any text; e.g. number sign.
-				self._reportUntranslated(pos)
+				res = huc.isValidHUCInput(advancedInputStr)
+				if res == huc.HUC_INPUT_INCOMPLETE: return self._reportUntranslated(pos)
+				elif res == huc.HUC_INPUT_INVALID: return badInput(self)
+				else:
+					res = huc.backTranslate(advancedInputStr)
+					sendChar(res)
+			if res and config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"]:
+				instanceGP.advancedInput = False
+		return
+	# For uncontracted braille, translate the buffer for each cell added.
+	# Any new characters produced are then sent immediately.
+	# For contracted braille, translate the buffer only when a word is ended (i.e. a space is typed).
+	# This is because later cells can change characters produced by previous cells.
+	# For example, in English grade 2, "tg" produces just "tg",
+	# but "tgr" produces "together".
+	if not self.useContractedForCurrentFocus or endWord:
+		if self._translate(endWord):
+			if not endWord:
+				self.cellsWithText.add(pos)
+		elif self.bufferText and not self.useContractedForCurrentFocus:
+			# Translators: Reported when translation didn't succeed due to unsupported input.
+			speech.speakMessage(_("Unsupported input"))
+			self.flushBuffer()
 		else:
+			# This cell didn't produce any text; e.g. number sign.
 			self._reportUntranslated(pos)
+	else:
+		self._reportUntranslated(pos)
 
 #: brailleInput.BrailleInputHandler._translate()
-# reason for patching: possibility to lock modifiers, display modifiers in braille during input
+# reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
+
+def sendChar(char):
+	nvwave.playWaveFile(os.path.join(configBE.baseDir, "res/sounds/keyPress.wav"))
+	core.callLater(0, brailleInput.handler.sendChars, char)
+	if len(char) == 1:
+		core.callLater(100, speech.speakSpelling, char)
+	else: core.callLater(100, speech.speakMessage, char)
+
+def badInput(self):
+	nvwave.playWaveFile("waves/textError.wav")
+	self.flushBuffer()
+	pos = self.untranslatedStart + self.untranslatedCursorPos
+	self._reportUntranslated(pos)
+
 def _translate(self, endWord):
 	"""Translate buffered braille up to the cursor.
 	Any text produced is sent to the system.
@@ -384,7 +414,7 @@ def _translate(self, endWord):
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
 		mode |=  louis.partialTrans
-	self.bufferText = louis.backTranslate(getCurrentBrailleTables(True),
+	self.bufferText = louis.backTranslate(getCurrentBrailleTables(True, brf=instanceGP.BRFMode),
 		data, mode=mode)[0]
 	newText = self.bufferText[oldTextLen:]
 	if newText:
@@ -431,18 +461,16 @@ def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
 
-configBE.loadPostTable()
-configBE.loadPreTable()
-
 # applying patches
 braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 inputCore.InputManager.executeGesture = executeGesture
 NoInputGestureAction = inputCore.NoInputGestureAction
-brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler._translate = _translate
+brailleInput.BrailleInputHandler.emulateKey = emulateKey
 brailleInput.BrailleInputHandler.input = input_
+brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__

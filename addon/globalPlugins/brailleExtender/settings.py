@@ -15,21 +15,23 @@ import addonHandler
 import braille
 import config
 import controlTypes
+import core
 import inputCore
 import keyLabels
-import louis
 import queueHandler
 import scriptHandler
 import ui
 addonHandler.initTranslation()
 
 from . import configBE
-from .oneHandMode import SettingsDlg as OneHandModeDlg
 from . import utils
+from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
+from .oneHandMode import SettingsDlg as OneHandModeDlg
+from .undefinedChars import SettingsDlg as UndefinedCharsDlg
 from .common import *
 
 instanceGP = None
-def notImplemented(msg=''):
+def notImplemented(msg='', style=wx.OK|wx.ICON_INFORMATION):
 	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
 	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
 
@@ -328,7 +330,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		self.oTables = set(configBE.outputTables)
 		self.iTables = set(configBE.inputTables)
-		lt = [_('Use the current input table')]
+		lt = [_("Use the current input table")]
 		for table in configBE.tables:
 			if table.output and not table.contracted: lt.append(table[1])
 			if config.conf["brailleExtender"]["inputTableShortcuts"] in configBE.tablesUFN:
@@ -350,17 +352,11 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		self.postTable.SetSelection(configBE.tablesFN.index(config.conf["brailleExtender"]["postTable"]) if config.conf["brailleExtender"]["postTable"] in configBE.tablesFN else 0)
 
 		# Translators: label of a dialog.
-		self.tabSpace = sHelper.addItem(wx.CheckBox(self, label=_("Display tab signs as spaces")))
+		self.tabSpace = sHelper.addItem(wx.CheckBox(self, label=_("Display &tab signs as spaces")))
 		self.tabSpace.SetValue(config.conf["brailleExtender"]["tabSpace"])
 
 		# Translators: label of a dialog.
-		self.tabSize = sHelper.addLabeledControl(_("Number of space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
-		# Translators: label of a dialog.
-		self.preventUndefinedCharHex = sHelper.addItem(wx.CheckBox(self, label=_("Prevent undefined characters with Hexadecimal Unicode value")))
-		self.preventUndefinedCharHex.SetValue(config.conf["brailleExtender"]["preventUndefinedCharHex"])
-		# Translators: label of a dialog.
-		self.undefinedCharRepr = sHelper.addLabeledControl(_("Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"), wx.TextCtrl, value=config.conf["brailleExtender"]["undefinedCharRepr"])
-
+		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
 		sHelper.addItem(bHelper1)
@@ -370,21 +366,22 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 	def onSave(self):
 		config.conf["brailleExtender"]["outputTables"] = ','.join(self.oTables)
 		config.conf["brailleExtender"]["inputTables"] = ','.join(self.iTables)
-		configBE.loadPreferedTables()
 		config.conf["brailleExtender"]["inputTableShortcuts"] = configBE.tablesUFN[self.inputTableShortcuts.GetSelection()-1] if self.inputTableShortcuts.GetSelection()>0 else '?'
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable
-		configBE.loadPostTable()
+		if self.tabSpace.IsChecked() and config.conf["brailleExtender"]["tabSpace"] != self.tabSpace.IsChecked():
+			restartRequired = True
+		else: restartRequired = False
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
 		config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD] = self.tabSize.Value
-		config.conf["brailleExtender"]["preventUndefinedCharHex"] = self.preventUndefinedCharHex.IsChecked()
-		repr_ = re.sub("[^0-8\-]", "", self.undefinedCharRepr.Value)
-		repr_ = re.sub('\-+','-', repr_)
-		if not repr_ or repr_.startswith('-') or repr_.endswith('-'): repr_ = "0"
-		config.conf["brailleExtender"]["undefinedCharRepr"] = repr_
-		configBE.loadPreTable()
-		configBE.loadPostTable()
+		if restartRequired:
+			res = gui.messageBox(
+				_("NVDA must be restarted for some new options to take effect. Do you want restart now?"),
+				_("Braille Extender"),
+				style=wx.YES_NO|wx.ICON_INFORMATION
+			)
+			if res == wx.YES: core.restart()
 
 	def getTablesWithSwitches(self):
 		out = []
@@ -895,8 +892,10 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		GeneralDlg,
 		AttribraDlg,
 		BrailleTablesDlg,
-		RoleLabelsDlg,
+		UndefinedCharsDlg,
+		AdvancedInputModeDlg,
 		OneHandModeDlg,
+		RoleLabelsDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

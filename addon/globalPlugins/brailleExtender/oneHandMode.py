@@ -7,7 +7,7 @@ import wx
 import addonHandler
 addonHandler.initTranslation()
 import config
-from .utils import unicodeBrailleToDescription, descriptionToUnicodeBraille
+from .huc import unicodeBrailleToDescription, cellDescriptionsToUnicodeBraille
 
 ONE_SIDE = "side"
 BOTH_SIDES = "sides"
@@ -52,7 +52,7 @@ def process(self, dots):
 				if dots >= 0 and dot < 9: newDots += equiv[dot]
 			newDots = ''.join(sorted(set(newDots)))
 			if not newDots: newDots = "0"
-			dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
+			dots = ord(cellDescriptionsToUnicodeBraille(newDots))-0x2800
 	elif method == DOT_BY_DOT:
 		endChar = dots == 0
 		translatedBufferBrailleDots = "0"
@@ -66,7 +66,7 @@ def process(self, dots):
 			else: translatedBufferBrailleDots = translatedBufferBrailleDots.replace(dot, '')
 		if not translatedBufferBrailleDots: translatedBufferBrailleDots = "0"
 		newDots = ''.join(sorted(set(translatedBufferBrailleDots)))
-		dots = ord(descriptionToUnicodeBraille(newDots))-0x2800
+		dots = ord(cellDescriptionsToUnicodeBraille(newDots))-0x2800
 	else:
 		speech.speakMessage(_("Unsupported input method"))
 		self.flushBuffer()

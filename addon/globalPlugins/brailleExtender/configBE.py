@@ -17,7 +17,6 @@ import inputCore
 import languageHandler
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
-from .undefinedChars import CHOICE_tableBehaviour, CHOICE_allDots8, CHOICE_allDots6, CHOICE_emptyCell, CHOICE_otherDots, CHOICE_questionMark, CHOICE_otherSign, CHOICE_liblouis, CHOICE_HUC8, CHOICE_HUC6, CHOICE_hex, CHOICE_dec, CHOICE_oct, CHOICE_bin
 
 Validator = configobj.validate.Validator
 
@@ -146,7 +145,7 @@ def getConfspec():
 		"tabSpace": "boolean(default=False)",
 		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
-			"method": f"integer(min=0, default={CHOICE_HUC8}, max={CHOICE_bin})",
+			"method": f"integer(min=0, default=8)",
 			"hardSignPatternValue": "string(default=??)",
 			"hardDotPatternValue": "string(default=6-12345678)",
 			"desc": "boolean(default=True)",

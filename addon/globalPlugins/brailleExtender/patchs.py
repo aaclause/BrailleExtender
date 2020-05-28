@@ -40,6 +40,7 @@ import addonHandler
 addonHandler.initTranslation()
 
 from . import advancedInputMode
+from . import brailleRegionHelper
 from . import configBE
 from . import dictionaries
 from . import huc
@@ -120,6 +121,22 @@ def update(self):
 	)
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
 		undefinedChars.undefinedCharProcess(self)
+	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != configBE.CHOICE_none:
+		d = {
+			configBE.CHOICE_dot7: 64,
+			configBE.CHOICE_dot8: 128,
+			configBE.CHOICE_dots78: 192
+		}
+		if config.conf["brailleExtender"]["attributes"]["selectedElement"] in d:
+			addDots = d[config.conf["brailleExtender"]["attributes"]["selectedElement"]]
+			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
+				name = self.obj.name
+				if name in self.rawText:
+					start = self.rawText.index(name)
+					end = start + len(name)-1
+					startBraillePos, _ = brailleRegionHelper.getBraillePosFromRawPos(self, start)
+					_, endBraillePos = brailleRegionHelper.getBraillePosFromRawPos(self, end)
+					self.brailleCells = [cell | addDots if startBraillePos <= pos <= endBraillePos else cell for pos, cell in enumerate(self.brailleCells)]
 	if self.selectionStart is not None and self.selectionEnd is not None:
 		try:
 			# Mark the selection.

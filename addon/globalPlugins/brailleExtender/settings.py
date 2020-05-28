@@ -155,6 +155,8 @@ class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
 		self.toggleAttribra.SetValue(config.conf["brailleExtender"]["features"]["attributes"])
+		self.selectedElement = sHelper.addLabeledControl(_("Show selected elements with"), wx.Choice, choices=configBE.attributeChoicesValues)
+		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
 		self.spellingErrorsAttribute = sHelper.addLabeledControl(_("Show spelling errors with"), wx.Choice, choices=configBE.attributeChoicesValues)
 		self.spellingErrorsAttribute.SetSelection(self.getItemToSelect("invalid-spelling"))
 		self.boldAttribute = sHelper.addLabeledControl(_("Show bold with"), wx.Choice, choices=configBE.attributeChoicesValues)
@@ -174,6 +176,7 @@ class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onSave(self):
 		config.conf["brailleExtender"]["features"]["attributes"] = self.toggleAttribra.IsChecked()
+		config.conf["brailleExtender"]["attributes"]["selectedElement"] = configBE.attributeChoicesKeys[self.selectedElement.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = configBE.attributeChoicesKeys[self.spellingErrorsAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["bold"] = configBE.attributeChoicesKeys[self.boldAttribute.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["italic"] = configBE.attributeChoicesKeys[self.italicAttribute.GetSelection()]

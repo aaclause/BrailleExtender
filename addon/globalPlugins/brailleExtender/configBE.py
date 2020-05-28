@@ -165,6 +165,7 @@ def getConfspec():
 			"roleLabels": "boolean(default=True)"
 		},
 		"attributes": {
+			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
 			"bold": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
 				CHOICE_none=CHOICE_none,
 				CHOICE_dot7=CHOICE_dot7,

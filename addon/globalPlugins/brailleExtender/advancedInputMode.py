@@ -27,7 +27,7 @@ entries = None
 
 
 def getPathDict():
-	return f"{configDir}/brailleDicts/advancedInputMode.json"
+	return f"{configDir}/advancedInputMode.json"
 
 
 def getDictionary():

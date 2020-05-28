@@ -17,6 +17,7 @@ import inputCore
 import languageHandler
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
+from .undefinedChars import CHOICE_tableBehaviour, CHOICE_allDots8, CHOICE_allDots6, CHOICE_emptyCell, CHOICE_otherDots, CHOICE_questionMark, CHOICE_otherSign, CHOICE_liblouis, CHOICE_HUC8, CHOICE_HUC6, CHOICE_hex, CHOICE_dec, CHOICE_oct, CHOICE_bin
 
 Validator = configobj.validate.Validator
 
@@ -35,22 +36,6 @@ CHOICE_focus = "focus"
 CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
 NOVIEWSAVED = chr(4)
-
-# undefined char representations
-CHOICE_tableBehaviour = 0
-CHOICE_allDots8 = 1
-CHOICE_allDots6 = 2
-CHOICE_emptyCell = 3
-CHOICE_otherDots = 4
-CHOICE_questionMark = 5
-CHOICE_otherSign = 6
-CHOICE_liblouis = 7
-CHOICE_HUC8 = 8
-CHOICE_HUC6 = 9
-CHOICE_hex = 10
-CHOICE_dec = 11
-CHOICE_oct = 12
-CHOICE_bin = 13
 
 outputMessage = dict([
 	(CHOICE_none,             _("none")),
@@ -161,7 +146,7 @@ def getConfspec():
 		"tabSpace": "boolean(default=False)",
 		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
-			"method": "integer(min=0, default=%s, max=%s)" % (CHOICE_HUC8, CHOICE_bin),
+			"method": f"integer(min=0, default={CHOICE_HUC8}, max={CHOICE_bin})",
 			"hardSignPatternValue": "string(default=??)",
 			"hardDotPatternValue": "string(default=6-12345678)",
 			"desc": "boolean(default=True)",

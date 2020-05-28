@@ -27,20 +27,39 @@ addonHandler.initTranslation()
 
 HUCDotPattern = "12345678-78-12345678"
 undefinedCharPattern = huc.cellDescriptionsToUnicodeBraille(HUCDotPattern)
+CHOICE_tableBehaviour = 0
+CHOICE_allDots8 = 1
+CHOICE_allDots6 = 2
+CHOICE_emptyCell = 3
+CHOICE_otherDots = 4
+CHOICE_questionMark = 5
+CHOICE_otherSign = 6
+CHOICE_liblouis = 7
+CHOICE_HUC8 = 8
+CHOICE_HUC6 = 9
+CHOICE_hex = 10
+CHOICE_dec = 11
+CHOICE_oct = 12
+CHOICE_bin = 13
+
 
 def getHardValue():
 	selected = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-	if selected == configBE.CHOICE_otherDots:
+	if selected == CHOICE_otherDots:
 		return config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"]
-	elif selected == configBE.CHOICE_otherSign:
+	elif selected == CHOICE_otherSign:
 		return config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"]
-	else: return ''
+	else:
+		return ''
 
 
 def setUndefinedChar(t=None):
-	if not t or t > CHOICE_HUC6 or t < 0: t = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-	if t == 0: return
-	louis.compileString(getCurrentBrailleTables(), bytes(f"undefined {HUCDotPattern}", "ASCII"))
+	if not t or t > CHOICE_HUC6 or t < 0:
+		t = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
+	if t == 0:
+		return
+	louis.compileString(getCurrentBrailleTables(), bytes(
+		f"undefined {HUCDotPattern}", "ASCII"))
 
 
 def getExtendedSymbolsForString(s: str, lang) -> dict:
@@ -53,7 +72,8 @@ def getExtendedSymbolsForString(s: str, lang) -> dict:
 			localesFail.append(lang)
 	if lang in localesFail:
 		lang = "en"
-		if not lang in localesFail: extendedSymbols[lang] = getExtendedSymbols(lang)
+		if not lang in localesFail:
+			extendedSymbols[lang] = getExtendedSymbols(lang)
 	return {
 		c: (d, [(m.start(), m.end()-1) for m in re.finditer(c, s)])
 		for c, d in extendedSymbols[lang].items()
@@ -62,63 +82,89 @@ def getExtendedSymbolsForString(s: str, lang) -> dict:
 
 
 def getAlternativeDescChar(c, method):
-	if method in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
-		HUC6 = method == configBE.CHOICE_HUC6
+	if method in [CHOICE_HUC6, CHOICE_HUC8]:
+		HUC6 = method == CHOICE_HUC6
 		return huc.translate(c, HUC6=HUC6)
-	elif method in [configBE.CHOICE_bin, configBE.CHOICE_oct, configBE.CHOICE_dec, configBE.CHOICE_hex]:
+	elif method in [CHOICE_bin, CHOICE_oct, CHOICE_dec, CHOICE_hex]:
 		return getTextInBraille("".join(getUnicodeNotation(c)))
-	else: return getUndefinedCharSign(method)
+	elif method == CHOICE_liblouis:
+		return getTextInBraille(getLiblouisStyle(c))
+	else:
+		return getUndefinedCharSign(method)
 
 
 def getDescChar(c, lang="Windows", start="", end=""):
 	method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-	if lang == "Windows": lang = languageHandler.getLanguage()
-	desc = characterProcessing.processSpeechSymbols(lang, c, characterProcessing.SYMLVL_CHAR).replace(' ', '').strip()
-	if not desc or desc == c: return getAlternativeDescChar(c, method)
+	if lang == "Windows":
+		lang = languageHandler.getLanguage()
+	desc = characterProcessing.processSpeechSymbols(
+		lang, c, characterProcessing.SYMLVL_CHAR).replace(' ', '').strip()
+	if not desc or desc == c:
+		return getAlternativeDescChar(c, method)
 	return f"{start}{desc}{end}"
 
 
 def getLiblouisStyle(c):
-	if not isinstance(c, str): raise ("wrong type")
-	if not c or len(c) > 1: raise ValueError(f"Please provide one character only. Received: {c}")
-	if c < 0x10000: return r"\x%.4x" % c
-	elif c <= 0x100000: return r"\y%.5x" % c
-	else: return r"\z%.6x" % c
+	if isinstance(c, str):
+		if not c or len(c) > 1:
+			raise ValueError(f"Please provide one character only. Received: {c}")
+		c = ord(c)
+	if not isinstance(c, int):
+		raise TypeError("wrong type")
+	if c < 0x10000:
+		return r"\x%.4x" % c
+	elif c <= 0x100000:
+		return r"\y%.5x" % c
+	else:
+		return r"\z%.6x" % c
 
 
 def getUnicodeNotation(s, notation=None):
-	if not isinstance(s, str): raise ("wrong type")
+	if not isinstance(s, str):
+		raise TypeError("wrong type")
 	if not notation:
 		notation = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	matches = {
-		configBE.CHOICE_bin: bin,
-		configBE.CHOICE_oct: oct,
-		configBE.CHOICE_dec: lambda s: s,
-		configBE.CHOICE_hex: hex,
-		configBE.CHOICE_liblouis: getLiblouisStyle,
+		CHOICE_bin: bin,
+		CHOICE_oct: oct,
+		CHOICE_dec: lambda s: s,
+		CHOICE_hex: hex,
+		CHOICE_liblouis: getLiblouisStyle,
 	}
-	if notation not in matches.keys(): raise ValueError(f"Wrong value ({notation})")
+	if notation not in matches.keys():
+		raise ValueError(f"Wrong value ({notation})")
 	fn = matches[notation]
 	return getTextInBraille("".join(["'%s'" % fn(ord(c)) for c in s]))
 
 
 def getUndefinedCharSign(method):
-	if method == configBE.CHOICE_allDots8: return '⣿'
-	elif method == configBE.CHOICE_allDots6: return '⠿'
-	elif method == configBE.CHOICE_otherDots: return huc.cellDescriptionsToUnicodeBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"])
-	elif method == configBE.CHOICE_questionMark: return getTextInBraille('?')
-	elif method == configBE.CHOICE_otherSign: return getTextInBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"])
-	else: return '⠀'
+	if method == CHOICE_allDots8:
+		return '⣿'
+	elif method == CHOICE_allDots6:
+		return '⠿'
+	elif method == CHOICE_otherDots:
+		return huc.cellDescriptionsToUnicodeBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"])
+	elif method == CHOICE_questionMark:
+		return getTextInBraille('?')
+	elif method == CHOICE_otherSign:
+		return getTextInBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"])
+	else:
+		return '⠀'
+
 
 def getReplacement(text, method=None):
-	if not method: method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
+	if not method:
+		method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	out = {}
-	if not text: return ''
+	if not text:
+		return ''
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]:
 		start = config.conf["brailleExtender"]["undefinedCharsRepr"]["start"]
 		end = config.conf["brailleExtender"]["undefinedCharsRepr"]["end"]
-		if start: start = getTextInBraille(start)
-		if end: end = getTextInBraille(end)
+		if start:
+			start = getTextInBraille(start)
+		if end:
+			end = getTextInBraille(end)
 		lang = config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"]
 		table = [config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]
 		return getTextInBraille(getDescChar(
@@ -127,41 +173,50 @@ def getReplacement(text, method=None):
 			start=start,
 			end=end
 		), table)
-	elif method in [configBE.CHOICE_HUC6, configBE.CHOICE_HUC8]:
-		HUC6 = method == configBE.CHOICE_HUC6
+	elif method in [CHOICE_HUC6, CHOICE_HUC8]:
+		HUC6 = method == CHOICE_HUC6
 		return huc.translate(text, HUC6=HUC6)
-	elif method in [ configBE.CHOICE_bin, configBE.CHOICE_oct, configBE.CHOICE_dec, configBE.CHOICE_hex,]:
+	elif method in [CHOICE_bin, CHOICE_oct, CHOICE_dec, CHOICE_hex, CHOICE_liblouis]:
 		return getUnicodeNotation(text)
 	else:
 		return getUndefinedCharSign(method)
+
 
 def undefinedCharProcess(self):
 	Repl = brailleRegionHelper.BrailleCellReplacement
 	fullExtendedDesc = config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"]
 	startTag = config.conf["brailleExtender"]["undefinedCharsRepr"]["start"]
 	endTag = config.conf["brailleExtender"]["undefinedCharsRepr"]["end"]
-	if startTag: startTag = getTextInBraille(startTag)
-	if endTag: endTag = getTextInBraille(endTag)
+	if startTag:
+		startTag = getTextInBraille(startTag)
+	if endTag:
+		endTag = getTextInBraille(endTag)
 	lang = config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"]
 	table = [config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]
-	undefinedCharsPos = [e for e in brailleRegionHelper.findBrailleCellsPattern(self, undefinedCharPattern)]
+	undefinedCharsPos = [e for e in brailleRegionHelper.findBrailleCellsPattern(
+		self, undefinedCharPattern)]
 	extendedSymbolsRawText = {}
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] and config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
-		extendedSymbolsRawText = getExtendedSymbolsForString(self.rawText, lang)
+		extendedSymbolsRawText = getExtendedSymbolsForString(
+			self.rawText, lang)
 	replacements = []
 	for c, v in extendedSymbolsRawText.items():
 		for start, end in v[1]:
 			if start in undefinedCharsPos:
 				toAdd = f":{len(c)}" if config.conf["brailleExtender"]["undefinedCharsRepr"]["showSize"] else ''
-				replaceBy = getTextInBraille(f"{startTag}{v[0]}{toAdd}{endTag}", table)
+				replaceBy = getTextInBraille(
+					f"{startTag}{v[0]}{toAdd}{endTag}", table)
 				replacements.append(Repl(
 					start,
 					start if fullExtendedDesc else end,
-					replaceBy=getReplacement(c[0]) if fullExtendedDesc else replaceBy,
+					replaceBy=getReplacement(
+						c[0]) if fullExtendedDesc else replaceBy,
 					insertBefore=replaceBy if fullExtendedDesc else ''
 				))
-	replacements = [Repl(pos, replaceBy=getReplacement(self.rawText[pos])) for pos in undefinedCharsPos] + replacements
-	if not replacements: return
+	replacements = [Repl(pos, replaceBy=getReplacement(self.rawText[pos]))
+					for pos in undefinedCharsPos] + replacements
+	if not replacements:
+		return
 	brailleRegionHelper.replaceBrailleCells(self, replacements)
 
 
@@ -177,7 +232,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		dotPatternSample = "6-12345678"
 		signPatternSample = "??"
 		choices = [
-			_("Use braille table behavior") + "(%s)" % _("no description possible"),
+			_("Use braille table behavior") +
+			"(%s)" % _("no description possible"),
 			_("Dots 1-8 (⣿)"),
 			_("Dots 1-6 (⠿)"),
 			_("Empty cell (⠀)"),
@@ -282,11 +338,11 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def getHardValue(self):
 		selected = self.undefinedCharReprList.GetSelection()
-		if selected == configBE.CHOICE_otherDots:
+		if selected == CHOICE_otherDots:
 			return config.conf["brailleExtender"]["undefinedCharsRepr"][
 				"hardDotPatternValue"
 			]
-		elif selected == configBE.CHOICE_otherSign:
+		elif selected == CHOICE_otherSign:
 			return config.conf["brailleExtender"]["undefinedCharsRepr"][
 				"hardSignPatternValue"
 			]
@@ -320,7 +376,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onUndefinedCharReprList(self, evt=None):
 		selected = self.undefinedCharReprList.GetSelection()
-		if selected in [configBE.CHOICE_otherDots, configBE.CHOICE_otherSign]:
+		if selected in [CHOICE_otherDots, CHOICE_otherSign]:
 			self.undefinedCharReprEdit.Enable()
 		else:
 			self.undefinedCharReprEdit.Disable()
@@ -334,7 +390,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			"method"
 		] = self.undefinedCharReprList.GetSelection()
 		repr_ = self.undefinedCharReprEdit.Value
-		if self.undefinedCharReprList.GetSelection() == configBE.CHOICE_otherDots:
+		if self.undefinedCharReprList.GetSelection() == CHOICE_otherDots:
 			repr_ = re.sub("[^0-8\-]", "", repr_).strip("-")
 			repr_ = re.sub("\-+", "-", repr_)
 			config.conf["brailleExtender"]["undefinedCharsRepr"][
@@ -391,6 +447,7 @@ def getExtendedSymbols(locale):
 		}
 	)
 	return a
+
 
 extendedSymbols = {}
 localesFail = []

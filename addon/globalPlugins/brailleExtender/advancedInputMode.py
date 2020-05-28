@@ -294,7 +294,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"]
 		)
 		self.escapeSignUnicodeValue = sHelper.addLabeledControl(
-			_("Escape sign for Unicode values"),
+			_("&Escape character for Unicode values input"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"],
 		)

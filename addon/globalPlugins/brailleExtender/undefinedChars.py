@@ -42,6 +42,25 @@ CHOICE_dec = 11
 CHOICE_oct = 12
 CHOICE_bin = 13
 
+dotPatternSample = "6-123456"
+signPatternSample = "??"
+
+CHOICES_LABELS = {
+	CHOICE_tableBehaviour: _("Use braille table behavior") + " (%s)" % _("no description possible"),
+	CHOICE_allDots8: _("Dots 1-8 (⣿)"),
+	CHOICE_allDots6: _("Dots 1-6 (⠿)"),
+	CHOICE_emptyCell: _("Empty cell (⠀)"),
+	CHOICE_otherDots: _(f"Other dot pattern (e.g.: {dotPatternSample})"),
+	CHOICE_questionMark: ("Question mark (depending output table)"),
+	CHOICE_otherSign: _(f"Other sign/pattern (e.g.: {signPatternSample})"),
+	CHOICE_hex: _("Hexadecimal, Liblouis style"),
+	CHOICE_HUC8: _("Hexadecimal, HUC8"),
+	CHOICE_HUC6: _("Hexadecimal, HUC6"),
+	CHOICE_hex: _("Hexadecimal"),
+	CHOICE_dec: _("Decimal"),
+	CHOICE_oct: _("Octal"),
+	CHOICE_bin: _("Binary"),
+}
 
 def getHardValue():
 	selected = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
@@ -229,27 +248,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		# Translators: label of a dialog.
 		label = _("Representation &method")
-		dotPatternSample = "6-12345678"
-		signPatternSample = "??"
-		choices = [
-			_("Use braille table behavior") +
-			"(%s)" % _("no description possible"),
-			_("Dots 1-8 (⣿)"),
-			_("Dots 1-6 (⠿)"),
-			_("Empty cell (⠀)"),
-			_(f"Other dot pattern (e.g.: {dotPatternSample})"),
-			_("Question mark (depending output table)"),
-			_(f"Other sign/pattern (e.g.: {signPatternSample})"),
-			_("Hexadecimal, Liblouis style"),
-			_("Hexadecimal, HUC8"),
-			_("Hexadecimal, HUC6"),
-			_("Hexadecimal"),
-			_("Decimal"),
-			_("Octal"),
-			_("Binary"),
-		]
 		self.undefinedCharReprList = sHelper.addLabeledControl(
-			label, wx.Choice, choices=choices
+			label, wx.Choice, choices=list(CHOICES_LABELS.values())
 		)
 		self.undefinedCharReprList.SetSelection(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]

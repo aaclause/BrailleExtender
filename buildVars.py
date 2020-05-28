@@ -40,6 +40,9 @@ addon_info = {
 	"\n* ", _("lock braille keyboard"), ".",
 	"\n* ", _("launch an application/URL with gesture"), ".",
 	"\n* ", _("braille dictionaries"), ".",
+	"\n* ", _("type with one-hand from braille keyboard"), ".",
+	"\n* ", _("display undefined characters from braille tables (including emojis) using altenative representations"), ".",
+	"\n* ", _("enter any character from braille keyboard (including emojis)"), ".",
 	"\n* ", _("and much more!"),
 	"\n\n",_("For some braille displays, it extends the braille display commands to provide"), ":",
 	"\n* ", _("offer complete gesture maps including function keys, multimedia keys, quick navigation, etc."), ";",
@@ -58,7 +61,7 @@ addon_info = {
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
 	"addon_minimumNVDAVersion": "2019.3",
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": "2020.1",
+	"addon_lastTestedNVDAVersion": "2020.2",
 	# Add-on update channel (default is stable or None)
 	"addon_updateChannel": None,
 }

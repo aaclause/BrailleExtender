@@ -6,13 +6,18 @@
 
 class BrailleCellReplacement:
 
-	def __init__(self, start, end=-1, replaceBy='', insertAfter='', insertBefore=''):
+	def __init__(
+		self, start: int, end: int=-1,
+		replaceBy: str='', insertAfter: str='', insertBefore: str='',
+		addDots: int=0
+	):
 		if start < 0: raise ValueError("start must be a value >= 0")
 		self.start = start
 		self.end = start if end < 0 else end
 		self.replaceBy = replaceBy
 		self.insertAfter = insertAfter
 		self.insertBefore = insertBefore
+		self.addDots = addDots
 
 	def __repr__(self):
 		return repr({
@@ -20,7 +25,8 @@ class BrailleCellReplacement:
 			"end": self.end,
 			"replaceBy": self.replaceBy,
 			"insertAfter": self.insertAfter,
-			"insertBefore": self.insertBefore
+			"insertBefore": self.insertBefore,
+			"addDots": self.addDots
 		})
 
 
@@ -64,8 +70,10 @@ def replaceBrailleCells(region, replacements):
 		if i in rawPosDone: continue
 		szBefore = 0
 		szRawText = 1
+		addDots = 0
 		if i in replacements:
 			r = replacements[i]
+			addDots = r.addDots
 			szBefore = len(r.insertBefore)
 			if r.replaceBy: uc = r.replaceBy
 			uc = r.insertBefore + uc + r.insertAfter
@@ -78,6 +86,7 @@ def replaceBrailleCells(region, replacements):
 			newRawToBraillePos += [newRawToBraillePos[-1]]
 			continue
 		newBrailleCells += [ord(c)-0x2800 for c in uc]
+		if addDots: newBrailleCells = [d | addDots for d in newBrailleCells]
 		newBrailleToRawPos += len(uc)*[i]
 		newRawToBraillePos += [cursorPos] * szRawText
 		newPosDone = [e for e in range(startBraillePos, endBraillePos+1)]

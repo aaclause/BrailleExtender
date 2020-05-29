@@ -18,7 +18,9 @@ import louis
 from collections import namedtuple
 from . import configBE
 from .common import *
+from . import brailleTablesExt
 from . import huc
+from logHandler import log
 
 TableDictEntry = namedtuple("TableDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
 OPCODE_SIGN = "sign"
@@ -44,27 +46,40 @@ DIRECTION_LABELS = {
 }
 DIRECTION_LABELS_ORDERING = (DIRECTION_BOTH, DIRECTION_FORWARD, DIRECTION_BACKWARD)
 
-dictTables = []
-invalidDictTables = set()
+inputTables = []
+outputTables = []
+invalidTables = set()
 
 def checkTable(path):
-	global invalidDictTables
-	try:
-		louis.checkTable([path])
-		return True
-	except RuntimeError: invalidDictTables.add(path)
-	return False
+	global invalidTables
+	tablesString = b",".join([x.encode("mbcs") if isinstance(x, str) else bytes(x) for x in [path]])
+	if not louis.liblouis.lou_checkTable(tablesString):
+		log.error("Can't compile: tables %s" % path)
+		invalidTables.add(path)
+		return False
+	return True
 
-def getValidPathsDict():
+def getValidPathsDict(usableIn):
 	types = ["tmp", "table", "default"]
-	paths = [getPathDict(type_) for type_ in types]
+	paths = [getPathDict(type_, usableIn) for type_ in types]
 	valid = lambda path: os.path.exists(path) and os.path.isfile(path) and checkTable(path)
 	return [path for path in paths if valid(path)]
 
-def getPathDict(type_):
-	if type_ == "table": path = os.path.join(configDir, "brailleDicts", config.conf["braille"]["translationTable"])
+def getPathDict(type_, usableIn):
+	groupEnabled = brailleTablesExt.groupEnabled()
+	g = brailleTablesExt.getGroup(usableIn=usableIn)
+	table = os.path.join(configDir, "brailleDicts", config.conf["braille"]["inputTable"]) if usableIn == brailleTablesExt.USABLE_INPUT else config.conf["braille"]["translationTable"]
+	if type_ == "table":
+		if groupEnabled and g and g.members:
+			if len(g.members) == 1: path = os.path.join(configDir, "brailleDicts", g.members[0])
+			else: path = ''
+		else: path = os.path.join(configDir, "brailleDicts", table)
 	elif type_ == "tmp": path = os.path.join(configDir, "brailleDicts", "tmp")
-	else: path = os.path.join(configDir, "brailleDicts", "default")
+	else:
+		if groupEnabled and g and g.members:
+			if len(g.members) == 1: path = os.path.join(configDir, "brailleDicts", "default")
+			else: path = ''
+		else: path = os.path.join(configDir, "brailleDicts", "default")
 	return "%s.cti" % path
 
 def getDictionary(type_):
@@ -95,18 +110,19 @@ def saveDict(type_, dict_):
 	return True
 
 def setDictTables():
-	global dictTables
-	dictTables = getValidPathsDict()
-	invalidDictTables.clear()
+	global inputTables, outTable
+	inputTables = getValidPathsDict(brailleTablesExt.USABLE_INPUT)
+	outputTables = getValidPathsDict(brailleTablesExt.USABLE_OUTPUT)
+	invalidTables.clear()
 
 def notifyInvalidTables():
-	if invalidDictTables:
+	if invalidTables:
 		dicts = {
 			getPathDict("default"): "default",
 			getPathDict("table"): "table",
 			getPathDict("tmp"): "tmp"
 		}
-		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded.") % ", ".join([dicts[path] for path in invalidDictTables if path in dicts])
+		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded.") % ", ".join([dicts[path] for path in invalidTables if path in dicts])
 		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 
 def removeTmpDict():
@@ -292,7 +308,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		if specifyDict:
 			# Translators: This is a label for an edit field in add dictionary entry dialog.
 			dictText = _("Dictionary")
-			outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+			outTable = brailleTablesExt.fileName2displayName(config.conf["braille"]["translationTable"])
 			dictChoices = [_("Global"), _("Table")+(" (%s)" % outTable), _("Temporary")]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
@@ -338,7 +354,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 
 	def onSeeEntriesClick(self, evt):
-		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		outTable = brailleTablesExt.fileName2displayName(config.conf["braille"]["translationTable"])
 		label = [_("Global dictionary"), _("Table dictionary")+(" (%s)" % outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()

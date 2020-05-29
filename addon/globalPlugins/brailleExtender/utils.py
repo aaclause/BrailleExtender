@@ -25,6 +25,7 @@ addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
 from .common import *
+from . import brailleTablesExt
 from . import huc
 from . import dictionaries
 
@@ -179,8 +180,7 @@ def bkToChar(dots, inTable=-1):
 	if inTable == -1: inTable = config.conf["braille"]["inputTable"]
 	char = chr(dots | 0x8000)
 	text = louis.backTranslate(
-		[osp.join(r"louis\tables", inTable),
-		 "braille-patterns.cti"],
+		[osp.join(r"louis\tables", inTable), "braille-patterns.cti"],
 		char, mode=louis.dotsIO)
 	chars = text[0]
 	if len(chars) == 1 and chars.isupper():
@@ -202,11 +202,14 @@ def currentCharDesc(ch='', display=True):
 	if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
 	if c:
-		try: descChar = unicodedata.name(ch)
-		except ValueError: descChar = _("unknown")
+		charDescCurLang = getSpeechSymbols(ch)
+		try: charDesc = unicodedata.name(ch)
+		except ValueError: charDesc = _("N/A")
 		HUCrepr = " (%s, %s)" % (huc.translate(ch, False), huc.translate(ch, True))
 		brch = getTextInBraille(ch)
-		s = "%c%s: %s; %s; %s; %s; %s [%s]\n%s (%s)" % (ch, HUCrepr, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch), brch, huc.unicodeBrailleToDescription(brch))
+		brchDesc = huc.unicodeBrailleToDescription(brch)
+		charCategory = unicodedata.category(ch)
+		s = f"{ch}{HUCrepr}: {hex(c)}, {c}, {oct(c)}, {bin(c)}, {charDescCurLang} / {charDesc} [{charCategory}]. {brch} {brchDesc}"
 		if not display: return s
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
@@ -257,9 +260,7 @@ def getTextInBraille(t=None, table=[]):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
 	if not table or "current" in table:
-		currentTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		if "current" in table: table[table.index("current")] = currentTable
-		else: table.append(currentTable)
+		table = getCurrentBrailleTables()
 	nt = []
 	res = ''
 	t = t.split("\n")
@@ -473,11 +474,18 @@ def getCurrentBrailleTables(input_=False, brf=False):
 	else:
 		tables = []
 		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
-		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
-		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		tables += [
-			mainTable,
+		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.inputTables if input_ else dictionaries.outputTables
+		if input_:
+			mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
+			group = brailleTablesExt.getGroup(usableIn='i')
+		else:
+			mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+			group = brailleTablesExt.getGroup(usableIn='o')
+		if group:
+			group = group.members
+			group = [f if '\\' in f else osp.join(r"louis\tables", f) for f in group]
+		tbl = group or [mainTable]
+		tables += tbl + [
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 		]
 	return tables

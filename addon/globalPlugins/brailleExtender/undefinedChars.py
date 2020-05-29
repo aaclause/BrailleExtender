@@ -262,7 +262,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 		self.undefinedCharDesc = sHelper.addItem(
 			wx.CheckBox(self, label=_(
-				"&Describe undefined characters if possible"))
+				"Show punctuation/symbol &name for undefined characters if available"))
 		)
 		self.undefinedCharDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]

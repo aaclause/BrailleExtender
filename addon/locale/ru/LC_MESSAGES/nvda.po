@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2020-05-28 18:39+0300\n"
-"PO-Revision-Date: 2020-05-28 19:01+0300\n"
+"PO-Revision-Date: 2020-05-29 21:22+0300\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -618,7 +618,7 @@ msgstr "уменьшить задержку автопрокрутки"
 msgid ""
 "Please fill at least two tables and/or groups of tables for this feature "
 "first"
-msgstr ""
+msgstr "Сначала настройте две таблицы или группы таблиц для этой функции"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:876
 #: addon/globalPlugins/brailleExtender/__init__.py:898
@@ -866,6 +866,9 @@ msgid ""
 "undefined characters — settings. You can choose between the following "
 "representations:"
 msgstr ""
+"Дополнение даёт вам возможность настройки отображения неопределённых знаков. "
+"Чтобы настроить, зайдите в \"Отображение брайлевских знаков\" в настройках. "
+"Возможен выбор между следующими отображениями:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:55
 msgid ""
@@ -920,6 +923,9 @@ msgid ""
 "values; A description of the character if possible; the Unicode braille "
 "representation and the braille pattern dots."
 msgstr ""
+"Отображения HUC8 и HUc6, шеснадцатиричное, десятиричное, восмиричное или "
+"двоичное значения; опис знака если он доступен; брайлевское unicode "
+"отображение и комбинация точек."
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:70
 msgid ""
@@ -976,6 +982,11 @@ msgid ""
 "If you wish to enter a character from its hexadecimal, decimal, octal or "
 "binary value, do the following:"
 msgstr ""
+"Если хотите написать знак в качестве его отображения HUC8, просто начните "
+"писать HUC8 комбинацию точек. Хоть отображение HUC8 должно поместиться в три "
+"клетки, перевод будет выполнятся после нажатия трёх комбинаций. Если хотите "
+"написать знак через отображения шестнадцатиричное, десятиричное, восмиричное "
+"или двоичное, выполните следующее:"
 
 #: addon/globalPlugins/brailleExtender/addonDoc.py:83
 #, python-brace-format
@@ -2278,7 +2289,7 @@ msgstr "&Метод отображения"
 
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:193
 msgid "no description possible"
-msgstr ""
+msgstr "Нет возможного описания"
 
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:197
 #, python-brace-format
@@ -2304,7 +2315,7 @@ msgstr "Также описывать &расширенные знаки,так�
 
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:241
 msgid "&Full extended description"
-msgstr ""
+msgstr "&Полное расширенное описание"
 
 #: addon/globalPlugins/brailleExtender/undefinedChars.py:250
 msgid "Show the si&ze taken"

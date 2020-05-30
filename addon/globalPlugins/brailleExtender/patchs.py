@@ -46,7 +46,7 @@ from . import dictionaries
 from . import huc
 from . import undefinedChars
 from .oneHandMode import process as processOneHandMode
-from .utils import getCurrentChar, getTether, getCharFromValue, getCurrentBrailleTables
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
 from .common import *
 
 instanceGP = None
@@ -95,10 +95,19 @@ def script_braille_routeTo(self, gesture):
 		speech.speechMode = speechMode
 		speech.speakSpelling(getCurrentChar())
 		return
-	braille.handler.routeTo(gesture.routingIndex)
-	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]['speakRoutingTo']:
-		ch = getCurrentChar()
-		if ch: speech.speakSpelling(ch)
+	try: braille.handler.routeTo(gesture.routingIndex)
+	except LookupError: pass
+	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
+		region = braille.handler.buffer
+		if region.cursorPos is None: return
+		try:
+			start = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+			_, endBraillePos = brailleRegionHelper.getBraillePosFromRawPos(region, start)
+			end = region.brailleToRawPos[endBraillePos+1]
+			ch = region.rawText[start:end]
+			if ch:
+				speech.speakMessage(getSpeechSymbols(ch))
+		except IndexError: pass
 
 # braille.Region.update()
 def update(self):

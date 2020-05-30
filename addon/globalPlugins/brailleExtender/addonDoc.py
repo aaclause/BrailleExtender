@@ -126,7 +126,7 @@ def getFeaturesDoc():
 			"<h4>" + _("Method #3: fill a cell dots by dots (each dot is a toggle, press Space to validate the character)") + "</h4>",
 			"<p>",
 			_("In this mode, each dot is a toggle. You must press the space key as soon as the cell you have entered is the desired one to input the character. Thus, the more dots are contained in the cell, the more ways you have to enter the character."),
-			"<br />" + "For example, for ⠛, you can compose the cell in the following ways:",
+			"<br />" + _("For example, for ⠛, you can compose the cell in the following ways") + ':',
 			"</p><ul>",
 			"<li>" + _("Dots 1-2, then dots 4-5, then space.") + "</li>",
 			"<li>" + _("Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space.") + "</li>",

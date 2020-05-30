@@ -261,8 +261,10 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("Specify another pattern"), wx.TextCtrl, value=self.getHardValue()
 		)
 		self.undefinedCharDesc = sHelper.addItem(
-			wx.CheckBox(self, label=_(
-				"Show punctuation/symbol &name for undefined characters if available"))
+			wx.CheckBox(self, label=(
+				_("Show punctuation/symbol &name for undefined characters if available")
+				+ " (%s)" % _("can cause a lag")
+			))
 		)
 		self.undefinedCharDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]

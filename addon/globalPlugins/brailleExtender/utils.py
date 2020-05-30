@@ -217,17 +217,9 @@ def currentCharDesc(ch='', display=True):
 	else: ui.message(_("Not a character"))
 
 def getCurrentChar():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		info = obj.makeTextInfo(textInfos.POSITION_CARET)
-		info.expand(textInfos.UNIT_CHARACTER)
-		s = info.text
-		return s
-	except (TypeError, NotImplementedError): pass
-	return ''
+	info = api.getReviewPosition().copy()
+	info.expand(textInfos.UNIT_CHARACTER)
+	return info.text
 
 def getTextSelection():
 	obj = api.getFocusObject()
@@ -372,16 +364,9 @@ def getTextCarret():
 
 
 def getLine():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough: obj = treeInterceptor
-	try:
-		info = obj.makeTextInfo(textInfos.POSITION_CARET)
-		info.expand(textInfos.UNIT_LINE)
-		s = info.text
-		return s
-	except BaseException: pass
-	return None
+	info = api.getReviewPosition().copy()
+	info.expand(textInfos.UNIT_LINE)
+	return info.text
 
 def isLastLine():
 	obj = api.getFocusObject()

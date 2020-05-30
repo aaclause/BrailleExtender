@@ -94,7 +94,7 @@ def getExtendedSymbolsForString(s: str, lang) -> dict:
 		if not lang in localesFail:
 			extendedSymbols[lang] = getExtendedSymbols(lang)
 	return {
-		c: (d, [(m.start(), m.end()-1) for m in re.finditer(c, s)])
+		c: (d, [(m.start(), m.end()-1) for m in re.finditer(re.escape(c), s)])
 		for c, d in extendedSymbols[lang].items()
 		if c in s
 	}
@@ -437,7 +437,7 @@ def getExtendedSymbols(locale):
 	a = {
 		k.strip(): v.replacement.replace(' ', '').strip()
 		for k, v in b.symbols.items()
-		if len(k) > 1
+		if k and len(k) > 1 and ' ' not in k and v and v.replacement and v.replacement.strip()
 	}
 	a.update(
 		{

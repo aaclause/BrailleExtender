@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-05-30 12:13+0300\n"
-"PO-Revision-Date: 2020-05-30 12:28+0300\n"
+"POT-Creation-Date: 2020-05-31 18:24+0300\n"
+"PO-Revision-Date: 2020-05-31 18:30+0300\n"
 "Last-Translator: Zvonimir <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -1139,6 +1139,10 @@ msgstr ""
 "если вы набрали желанный вами знак. ИТо есть, чем больше точек в клетке, у "
 "вас есть больше способов для ввода одного знака."
 
+#: addon/globalPlugins/brailleExtender/addonDoc.py:129
+msgid "For example, for ⠛, you can compose the cell in the following ways"
+msgstr "На пример, для ⠛, возможно оформлять ячейку как следует:"
+
 #: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "Dots 1-2, then dots 4-5, then space."
 msgstr "Точка 1-2, потом точки 4-5, потом пробел."
@@ -1652,7 +1656,7 @@ msgid "Input &method"
 msgstr "Метод &ввода"
 
 #. Translators: Reported when translation didn't succeed due to unsupported input.
-#: addon/globalPlugins/brailleExtender/patchs.py:392
+#: addon/globalPlugins/brailleExtender/patchs.py:401
 msgid "Unsupported input"
 msgstr "Неподдержанный ввод"
 
@@ -2266,35 +2270,39 @@ msgstr ""
 "Показывать &название знака препинания/символа для неопределённых знаков если "
 "возможно"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:274
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:266
+msgid "can cause a lag"
+msgstr "Возможна задержка"
+
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:276
 msgid "Also describe e&xtended characters (e.g.: country flags)"
 msgstr "Также описывать &расширенные знаки,такие как флаги государств"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:284
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:286
 msgid "&Full extended description"
 msgstr "&Полное расширенное описание"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:293
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:295
 msgid "Show the si&ze taken"
 msgstr "&Показать взятый размер"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:300
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:302
 msgid "&Start tag"
 msgstr "&Разметка начала"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:305
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:307
 msgid "&End tag"
 msgstr "&разметка конца"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:316
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:318
 msgid "&Language"
 msgstr "&Язык"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:319
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:321
 msgid "Use the current output table"
 msgstr "Использовать актуальную таблицу вывода"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:332
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:334
 msgid "Braille &table"
 msgstr "Брайлевская таблица"
 
@@ -2350,52 +2358,52 @@ msgstr "Неизвестный"
 msgid "Char info"
 msgstr "Информации о знаке"
 
-#: addon/globalPlugins/brailleExtender/utils.py:308
+#: addon/globalPlugins/brailleExtender/utils.py:300
 msgid "Available combinations"
 msgstr "Доступные сочетания"
 
-#: addon/globalPlugins/brailleExtender/utils.py:310
+#: addon/globalPlugins/brailleExtender/utils.py:302
 msgid "One combination available"
 msgstr "Одно сочетание доступно"
 
-#: addon/globalPlugins/brailleExtender/utils.py:321
+#: addon/globalPlugins/brailleExtender/utils.py:313
 msgid "space"
 msgstr "пробел"
 
-#: addon/globalPlugins/brailleExtender/utils.py:322
+#: addon/globalPlugins/brailleExtender/utils.py:314
 msgid "left SHIFT"
 msgstr "Левый шифт"
 
-#: addon/globalPlugins/brailleExtender/utils.py:323
+#: addon/globalPlugins/brailleExtender/utils.py:315
 msgid "right SHIFT"
 msgstr "правый ШИФТ"
 
-#: addon/globalPlugins/brailleExtender/utils.py:324
+#: addon/globalPlugins/brailleExtender/utils.py:316
 msgid "left selector"
 msgstr "Левое выбирание"
 
-#: addon/globalPlugins/brailleExtender/utils.py:325
+#: addon/globalPlugins/brailleExtender/utils.py:317
 msgid "right selector"
 msgstr "Правое выбирание"
 
-#: addon/globalPlugins/brailleExtender/utils.py:326
+#: addon/globalPlugins/brailleExtender/utils.py:318
 msgid "dot"
 msgstr "точка"
 
-#: addon/globalPlugins/brailleExtender/utils.py:341
+#: addon/globalPlugins/brailleExtender/utils.py:333
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} на {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:418
+#: addon/globalPlugins/brailleExtender/utils.py:403
 msgid "No text"
 msgstr "Нет текста"
 
-#: addon/globalPlugins/brailleExtender/utils.py:427
+#: addon/globalPlugins/brailleExtender/utils.py:412
 msgid "Not text"
 msgstr "вне текста"
 
-#: addon/globalPlugins/brailleExtender/utils.py:447
+#: addon/globalPlugins/brailleExtender/utils.py:432
 msgid "No text selected"
 msgstr "Нет выделенного текста"
 

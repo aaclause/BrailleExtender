@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-05-30 12:13+0300\n"
-"PO-Revision-Date: 2020-05-30 12:16+0300\n"
+"POT-Creation-Date: 2020-05-31 18:24+0300\n"
+"PO-Revision-Date: 2020-05-31 18:27+0300\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: hr\n"
@@ -1140,6 +1140,10 @@ msgstr ""
 "put kada mislite da je kombinacija brajične kućice ona prava. Iako, čim više "
 "točkica sadrži ćelija, na više načina možete upisati znak."
 
+#: addon/globalPlugins/brailleExtender/addonDoc.py:129
+msgid "For example, for ⠛, you can compose the cell in the following ways"
+msgstr "Na primjer, za ⠛, možete upisivati brajični znak na slijedeći način"
+
 #: addon/globalPlugins/brailleExtender/addonDoc.py:131
 msgid "Dots 1-2, then dots 4-5, then space."
 msgstr "točkice 1-2, potom točkice 4-5, a potom razmaknica."
@@ -1653,7 +1657,7 @@ msgid "Input &method"
 msgstr "Metoda &unosa"
 
 #. Translators: Reported when translation didn't succeed due to unsupported input.
-#: addon/globalPlugins/brailleExtender/patchs.py:392
+#: addon/globalPlugins/brailleExtender/patchs.py:401
 msgid "Unsupported input"
 msgstr "Unos nije podržan"
 
@@ -2264,35 +2268,39 @@ msgid "Show punctuation/symbol &name for undefined characters if available"
 msgstr ""
 "Prikaži znak &interpunkcije/simbol za nedefinirane znakove ako je dostupan"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:274
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:266
+msgid "can cause a lag"
+msgstr "Može prouzročiti usporavanje rada"
+
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:276
 msgid "Also describe e&xtended characters (e.g.: country flags)"
 msgstr "Također opisuj proširene znakove &poput državnih zastava"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:284
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:286
 msgid "&Full extended description"
 msgstr "&Puni dugačak opis"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:293
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:295
 msgid "Show the si&ze taken"
 msgstr "prikazuj &datu veličinu"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:300
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:302
 msgid "&Start tag"
 msgstr "&Početna oznaka"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:305
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:307
 msgid "&End tag"
 msgstr "&Završna oznaka"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:316
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:318
 msgid "&Language"
 msgstr "&Jezik"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:319
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:321
 msgid "Use the current output table"
 msgstr "Koristi trenutnu izlaznu brajičnu tablicu"
 
-#: addon/globalPlugins/brailleExtender/undefinedChars.py:332
+#: addon/globalPlugins/brailleExtender/undefinedChars.py:334
 msgid "Braille &table"
 msgstr "Brajična &tablica"
 
@@ -2347,52 +2355,52 @@ msgstr "Nepoznato"
 msgid "Char info"
 msgstr "Informacije o znaku"
 
-#: addon/globalPlugins/brailleExtender/utils.py:308
+#: addon/globalPlugins/brailleExtender/utils.py:300
 msgid "Available combinations"
 msgstr "Dostupne kombinacije"
 
-#: addon/globalPlugins/brailleExtender/utils.py:310
+#: addon/globalPlugins/brailleExtender/utils.py:302
 msgid "One combination available"
 msgstr "Jedna kombinacija dostupna"
 
-#: addon/globalPlugins/brailleExtender/utils.py:321
+#: addon/globalPlugins/brailleExtender/utils.py:313
 msgid "space"
 msgstr "razmak"
 
-#: addon/globalPlugins/brailleExtender/utils.py:322
+#: addon/globalPlugins/brailleExtender/utils.py:314
 msgid "left SHIFT"
 msgstr "Lijevi SHIFT"
 
-#: addon/globalPlugins/brailleExtender/utils.py:323
+#: addon/globalPlugins/brailleExtender/utils.py:315
 msgid "right SHIFT"
 msgstr "desni SHIFT"
 
-#: addon/globalPlugins/brailleExtender/utils.py:324
+#: addon/globalPlugins/brailleExtender/utils.py:316
 msgid "left selector"
 msgstr "Lijevi odabirnik"
 
-#: addon/globalPlugins/brailleExtender/utils.py:325
+#: addon/globalPlugins/brailleExtender/utils.py:317
 msgid "right selector"
 msgstr "Desni odabirnik"
 
-#: addon/globalPlugins/brailleExtender/utils.py:326
+#: addon/globalPlugins/brailleExtender/utils.py:318
 msgid "dot"
 msgstr "točkica"
 
-#: addon/globalPlugins/brailleExtender/utils.py:341
+#: addon/globalPlugins/brailleExtender/utils.py:333
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
 msgstr "{gesture} na {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:418
+#: addon/globalPlugins/brailleExtender/utils.py:403
 msgid "No text"
 msgstr "Nema teksta"
 
-#: addon/globalPlugins/brailleExtender/utils.py:427
+#: addon/globalPlugins/brailleExtender/utils.py:412
 msgid "Not text"
 msgstr "Nije tekst"
 
-#: addon/globalPlugins/brailleExtender/utils.py:447
+#: addon/globalPlugins/brailleExtender/utils.py:432
 msgid "No text selected"
 msgstr "Nema označenog teksta"
 

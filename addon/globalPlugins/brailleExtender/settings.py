@@ -32,6 +32,9 @@ from .undefinedChars import SettingsDlg as UndefinedCharsDlg
 from .common import *
 
 instanceGP = None
+addonSettingsDialogActiveConfigProfile = None
+addonSettingsDialogWindowHandle = None
+
 def notImplemented(msg='', style=wx.OK|wx.ICON_INFORMATION):
 	if not msg: msg = _("The feature implementation is in progress. Thanks for your patience.")
 	gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_INFORMATION)
@@ -657,6 +660,33 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 
 	def __init__(self, parent, initialCategory=None):
 		# Translators: title of add-on parameters dialog.
-		dialogTitle = _("Settings")
-		self.title = "%s - %s" % (addonSummary, dialogTitle)
+		self.title = _(f"{addonSummary} settings").format(addonSummary=addonSummary)
 		super(AddonSettingsDialog,self).__init__(parent, initialCategory)
+
+	def makeSettings(self, settingsSizer):
+		# Ensure that after the settings dialog is created the name is set correctly
+		super(AddonSettingsDialog, self).makeSettings(settingsSizer)
+		self._doOnCategoryChange()
+		global addonSettingsDialogWindowHandle
+		addonSettingsDialogWindowHandle = self.GetHandle()
+
+	def _doOnCategoryChange(self):
+		global addonSettingsDialogActiveConfigProfile
+		addonSettingsDialogActiveConfigProfile = config.conf.profiles[-1].name
+		if not addonSettingsDialogActiveConfigProfile:
+			# Translators: The profile name for normal configuration
+			addonSettingsDialogActiveConfigProfile = _("normal configuration")
+		self.SetTitle(self._getDialogTitle())
+
+	def _getDialogTitle(self):
+		return u"{dialogTitle}: {panelTitle} ({configProfile})".format(
+			dialogTitle=self.title,
+			panelTitle=self.currentCategory.title,
+			configProfile=addonSettingsDialogActiveConfigProfile
+		)
+
+	def onCategoryChange(self,evt):
+		super(AddonSettingsDialog,self).onCategoryChange(evt)
+		if evt.Skipped:
+			return
+		self._doOnCategoryChange()

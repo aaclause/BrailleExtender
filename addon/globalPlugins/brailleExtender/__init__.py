@@ -1105,10 +1105,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def script_logFieldsAtCursor(self, gesture):
-		global logTextInfo
-		logTextInfo = not logTextInfo
+		textAttributes.logTextInfo = not textAttributes.logTextInfo
 		msg = ["stop", "start"]
-		ui.message("debug textInfo " + msg[logTextInfo])
+		ui.message(f"debug textInfo {msg[textAttributes.logTextInfo]}")
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:

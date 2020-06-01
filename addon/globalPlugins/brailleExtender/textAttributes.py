@@ -7,6 +7,7 @@ import wx
 
 import addonHandler
 import config
+from logHandler import log
 
 from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags
 

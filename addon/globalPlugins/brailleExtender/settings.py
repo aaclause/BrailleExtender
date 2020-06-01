@@ -893,6 +893,20 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 		self.validNewProfileNameButton.Disable()
 		self.newProfileName.Disable()
 
+class AdvancedDlg(gui.settingsDialogs.SettingsPanel):
+
+	# Translators: title of a dialog.
+	title = _("Advanced")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		self.fixCursorPositions = sHelper.addItem(wx.CheckBox(self, label=_("Try to avoid &cursor positions issues with some characters such as variation selectors")))
+		self.fixCursorPositions.SetValue(config.conf["brailleExtender"]["advanced"]["fixCursorPositions"])
+
+	def onSave(self):
+		config.conf["brailleExtender"]["advanced"]["fixCursorPositions"] = self.fixCursorPositions.IsChecked()
+
+
 class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
@@ -902,6 +916,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AdvancedInputModeDlg,
 		OneHandModeDlg,
 		RoleLabelsDlg,
+		AdvancedDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

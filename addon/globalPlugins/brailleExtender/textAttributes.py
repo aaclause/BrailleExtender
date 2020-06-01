@@ -85,6 +85,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		choices = list(CHOICES_LABELS.values())
 		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
 		self.featureEnabled.SetValue(config.conf["brailleExtender"]["attributes"]["enabled"])
+		self.featureEnabled.Bind(wx.EVT_CHECKBOX, self.onFeatureEnabled)
 		self.selectedElement = sHelper.addLabeledControl(_("Show selected &elements with"), wx.Choice, choices=choices)
 		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
 		self.spellingErrors = sHelper.addLabeledControl(_("Show &spelling errors with"), wx.Choice, choices=choices)
@@ -101,6 +102,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.sub.SetSelection(self.getItemToSelect("text-position:sub"))
 		self.super = sHelper.addLabeledControl(_("Show su&perscript with"), wx.Choice, choices=choices)
 		self.super.SetSelection(self.getItemToSelect("text-position:super"))
+		self.onFeatureEnabled()
 
 	def postInit(self): self.featureEnabled.SetFocus()
 
@@ -122,3 +124,19 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			log.error(err)
 			idx = 0
 		return idx
+
+	def onFeatureEnabled(self, evt=None):
+		l = [
+			self.selectedElement,
+			self.spellingErrors,
+			self.bold,
+			self.italic,
+			self.underline,
+			self.strikethrough,
+			self.sub,
+			self.super
+		]
+		for e in l:
+			if self.featureEnabled.IsChecked(): e.Enable()
+			else: e.Disable()
+		if evt: evt.Skip()

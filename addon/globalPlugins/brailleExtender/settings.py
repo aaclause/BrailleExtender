@@ -206,7 +206,7 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.toggleRoleLabels = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
+		self.toggleRoleLabels = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
 		self.toggleRoleLabels.SetValue(config.conf["brailleExtender"]["features"]["roleLabels"])
 		self.categories = sHelper.addLabeledControl(_("Role category"), wx.Choice, choices=[_("General"), _("Landmark"), _("Positive state"), _("Negative state")])
 		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)

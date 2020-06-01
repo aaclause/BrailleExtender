@@ -85,35 +85,35 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		choices = list(CHOICES_LABELS.values())
 		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
 		self.featureEnabled.SetValue(config.conf["brailleExtender"]["attributes"]["enabled"])
-		self.selectedElement = sHelper.addLabeledControl(_("Show selected elements with"), wx.Choice, choices=choices)
+		self.selectedElement = sHelper.addLabeledControl(_("Show selected &elements with"), wx.Choice, choices=choices)
 		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
-		self.spellingErrorsAttribute = sHelper.addLabeledControl(_("Show spelling errors with"), wx.Choice, choices=choices)
-		self.spellingErrorsAttribute.SetSelection(self.getItemToSelect("invalid-spelling"))
-		self.boldAttribute = sHelper.addLabeledControl(_("Show bold with"), wx.Choice, choices=choices)
-		self.boldAttribute.SetSelection(self.getItemToSelect("bold"))
-		self.italicAttribute = sHelper.addLabeledControl(_("Show italic with"), wx.Choice, choices=choices)
-		self.italicAttribute.SetSelection(self.getItemToSelect("italic"))
-		self.underlineAttribute = sHelper.addLabeledControl(_("Show underline with"), wx.Choice, choices=choices)
-		self.underlineAttribute.SetSelection(self.getItemToSelect("underline"))
-		self.strikethroughAttribute = sHelper.addLabeledControl(_("Show strikethrough with"), wx.Choice, choices=choices)
-		self.strikethroughAttribute.SetSelection(self.getItemToSelect("strikethrough"))
-		self.subAttribute = sHelper.addLabeledControl(_("Show subscript with"), wx.Choice, choices=choices)
-		self.subAttribute.SetSelection(self.getItemToSelect("text-position:sub"))
-		self.superAttribute = sHelper.addLabeledControl(_("Show superscript with"), wx.Choice, choices=choices)
-		self.superAttribute.SetSelection(self.getItemToSelect("text-position:super"))
+		self.spellingErrors = sHelper.addLabeledControl(_("Show &spelling errors with"), wx.Choice, choices=choices)
+		self.spellingErrors.SetSelection(self.getItemToSelect("invalid-spelling"))
+		self.bold = sHelper.addLabeledControl(_("Show b&old with"), wx.Choice, choices=choices)
+		self.bold.SetSelection(self.getItemToSelect("bold"))
+		self.italic = sHelper.addLabeledControl(_("Show &italic with"), wx.Choice, choices=choices)
+		self.italic.SetSelection(self.getItemToSelect("italic"))
+		self.underline = sHelper.addLabeledControl(_("Show &underline with"), wx.Choice, choices=choices)
+		self.underline.SetSelection(self.getItemToSelect("underline"))
+		self.strikethrough = sHelper.addLabeledControl(_("Show stri&kethrough with"), wx.Choice, choices=choices)
+		self.strikethrough.SetSelection(self.getItemToSelect("strikethrough"))
+		self.sub = sHelper.addLabeledControl(_("Show su&bscript with"), wx.Choice, choices=choices)
+		self.sub.SetSelection(self.getItemToSelect("text-position:sub"))
+		self.super = sHelper.addLabeledControl(_("Show su&perscript with"), wx.Choice, choices=choices)
+		self.super.SetSelection(self.getItemToSelect("text-position:super"))
 
 	def postInit(self): self.featureEnabled.SetFocus()
 
 	def onSave(self):
 		config.conf["brailleExtender"]["attributes"]["enabled"] = self.featureEnabled.IsChecked()
 		config.conf["brailleExtender"]["attributes"]["selectedElement"] = list(CHOICES_LABELS.keys())[self.selectedElement.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = list(CHOICES_LABELS.keys())[self.spellingErrorsAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["bold"] = list(CHOICES_LABELS.keys())[self.boldAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["italic"] = list(CHOICES_LABELS.keys())[self.italicAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["underline"] = list(CHOICES_LABELS.keys())[self.underlineAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["strikethrough"] = list(CHOICES_LABELS.keys())[self.strikethroughAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = list(CHOICES_LABELS.keys())[self.subAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["text-position:super"] = list(CHOICES_LABELS.keys())[self.superAttribute.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = list(CHOICES_LABELS.keys())[self.spellingErrors.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["bold"] = list(CHOICES_LABELS.keys())[self.bold.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["italic"] = list(CHOICES_LABELS.keys())[self.italic.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["underline"] = list(CHOICES_LABELS.keys())[self.underline.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["strikethrough"] = list(CHOICES_LABELS.keys())[self.strikethrough.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = list(CHOICES_LABELS.keys())[self.sub.GetSelection()]
+		config.conf["brailleExtender"]["attributes"]["text-position:super"] = list(CHOICES_LABELS.keys())[self.super.GetSelection()]
 
 	@staticmethod
 	def getItemToSelect(attribute):

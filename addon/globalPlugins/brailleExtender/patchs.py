@@ -122,7 +122,7 @@ def update(self):
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
 	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-		getCurrentBrailleTables(brf=instanceGP.BRFMode),
+		getCurrentBrailleTables(brf=False if instanceGP else False),
 		self.rawText,
 		typeform=self.rawTextTypeforms,
 		mode=mode,
@@ -130,7 +130,7 @@ def update(self):
 	)
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
 		undefinedChars.undefinedCharProcess(self)
-	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != configBE.CHOICE_none:
+	if config.conf["brailleExtender"]["attributes"]["enabled"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != configBE.CHOICE_none:
 		d = {
 			configBE.CHOICE_dot7: 64,
 			configBE.CHOICE_dot8: 128,

@@ -112,6 +112,22 @@ def update(self):
 	L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are similarly updated based on L{cursorPos}, L{selectionStart} and L{selectionEnd}, respectively.
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
+	if config.conf["brailleExtender"]["advanced"]["fixCursorPositions"]:
+		pattern = r"([^\ufe00-\ufe0f])[\ufe00-\ufe0f]\u20E3?"
+		matches = re.finditer(pattern, self.rawText)
+		posToRemove = []
+		for match in matches:
+			posToRemove += list(range(match.start() + 1, match.end()))
+		self.rawText = re.sub(pattern, r"\1", self.rawText)
+		if isinstance(self.cursorPos, int):
+			adjustCursor = len(list(filter(lambda e: e<=self.cursorPos, posToRemove)))
+			self.cursorPos -= adjustCursor
+		if isinstance(self.selectionStart, int):
+			adjustCursor = len(list(filter(lambda e: e<=self.selectionStart, posToRemove)))
+			self.selectionStart -= adjustCursor
+		if isinstance(self.selectionEnd, int):
+			adjustCursor = len(list(filter(lambda e: e<=self.selectionEnd, posToRemove)))
+			self.selectionEnd -= adjustCursor
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None: mode |= louis.compbrlAtCursor
 	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(

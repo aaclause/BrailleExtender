@@ -34,7 +34,7 @@ chosenChar = None
 
 def getFeaturesDoc():
 	undefinedCharsSamples = [
-		[_("Character"), _("HUC8"), _("Hexadecimal"), _("Decimal"), _("Octal"), _("Binary")],
+		[_("Character"), "HUC8", _("Hexadecimal"), _("Decimal"), _("Octal"), _("Binary")],
 		['👍', "⣭⢤⡙", "⠭1f44d or ⠓1f44d", "⠙128077", "⠕372115", "⠃11111010001001101"],
 		['😀', "⣭⡤⣺", "⠭1f600 or ⠓1f600", "⠙128512", "⠕373000", "⠃11111011000000000"],
 		['🍑', "⣭⠤⠕", "⠭1f351 or ⠓1f351", "⠙127825", "⠕371521", "⠃11111001101010001"],
@@ -126,7 +126,7 @@ def getFeaturesDoc():
 			"<h4>" + _("Method #3: fill a cell dots by dots (each dot is a toggle, press Space to validate the character)") + "</h4>",
 			"<p>",
 			_("In this mode, each dot is a toggle. You must press the space key as soon as the cell you have entered is the desired one to input the character. Thus, the more dots are contained in the cell, the more ways you have to enter the character."),
-			"<br />" + "For example, for ⠛, you can compose the cell in the following ways:",
+			"<br />" + _("For example, for ⠛, you can compose the cell in the following ways") + ':',
 			"</p><ul>",
 			"<li>" + _("Dots 1-2, then dots 4-5, then space.") + "</li>",
 			"<li>" + _("Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space.") + "</li>",

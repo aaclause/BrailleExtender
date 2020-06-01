@@ -50,9 +50,13 @@ CHOICES_LABELS = {
 	CHOICE_allDots8: _("Dots 1-8 (⣿)"),
 	CHOICE_allDots6: _("Dots 1-6 (⠿)"),
 	CHOICE_emptyCell: _("Empty cell (⠀)"),
-	CHOICE_otherDots: _(f"Other dot pattern (e.g.: {dotPatternSample})"),
-	CHOICE_questionMark: ("Question mark (depending output table)"),
-	CHOICE_otherSign: _(f"Other sign/pattern (e.g.: {signPatternSample})"),
+	CHOICE_otherDots: _("Other dot pattern (e.g.: {dotPatternSample})").format(
+		dotPatternSample=dotPatternSample
+	),
+	CHOICE_questionMark: _("Question mark (depending output table)"),
+	CHOICE_otherSign: _("Other sign/pattern (e.g.: {signPatternSample})").format(
+		signPatternSample=signPatternSample
+	),
 	CHOICE_hex: _("Hexadecimal, Liblouis style"),
 	CHOICE_HUC8: _("Hexadecimal, HUC8"),
 	CHOICE_HUC6: _("Hexadecimal, HUC6"),
@@ -94,7 +98,7 @@ def getExtendedSymbolsForString(s: str, lang) -> dict:
 		if not lang in localesFail:
 			extendedSymbols[lang] = getExtendedSymbols(lang)
 	return {
-		c: (d, [(m.start(), m.end()-1) for m in re.finditer(c, s)])
+		c: (d, [(m.start(), m.end()-1) for m in re.finditer(re.escape(c), s)])
 		for c, d in extendedSymbols[lang].items()
 		if c in s
 	}
@@ -258,11 +262,13 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			wx.EVT_CHOICE, self.onUndefinedCharReprList)
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(
-			_("Specify another pattern"), wx.TextCtrl, value=self.getHardValue()
+			_("Specify another &pattern"), wx.TextCtrl, value=self.getHardValue()
 		)
 		self.undefinedCharDesc = sHelper.addItem(
-			wx.CheckBox(self, label=_(
-				"&Describe undefined characters if possible"))
+			wx.CheckBox(self, label=(
+				_("Show punctuation/symbol &name for undefined characters if available")
+				+ " (%s)" % _("can cause a lag")
+			))
 		)
 		self.undefinedCharDesc.SetValue(
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
@@ -346,7 +352,6 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onUndefinedCharDesc(self, evt=None):
 		l = [
-			self.undefinedCharReprEdit,
 			self.extendedDesc,
 			self.fullExtendedDesc,
 			self.showSize,
@@ -430,7 +435,7 @@ def getExtendedSymbols(locale):
 	a = {
 		k.strip(): v.replacement.replace(' ', '').strip()
 		for k, v in b.symbols.items()
-		if len(k) > 1
+		if k and len(k) > 1 and ' ' not in k and v and v.replacement and v.replacement.strip()
 	}
 	a.update(
 		{

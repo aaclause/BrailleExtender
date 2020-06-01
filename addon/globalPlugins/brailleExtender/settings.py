@@ -156,7 +156,7 @@ class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("Enable this feature")))
+		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
 		self.toggleAttribra.SetValue(config.conf["brailleExtender"]["features"]["attributes"])
 		self.selectedElement = sHelper.addLabeledControl(_("Show selected elements with"), wx.Choice, choices=configBE.attributeChoicesValues)
 		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
@@ -906,7 +906,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 
 	def __init__(self, parent, initialCategory=None):
 		# Translators: title of add-on parameters dialog.
-		self.title = _(f"{addonSummary} settings").format(addonSummary=addonSummary)
+		self.title = _("{addonSummary} settings").format(addonSummary=addonSummary)
 		super(AddonSettingsDialog,self).__init__(parent, initialCategory)
 
 	def makeSettings(self, settingsSizer):

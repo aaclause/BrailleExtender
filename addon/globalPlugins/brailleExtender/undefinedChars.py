@@ -258,7 +258,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			wx.EVT_CHOICE, self.onUndefinedCharReprList)
 		# Translators: label of a dialog.
 		self.undefinedCharReprEdit = sHelper.addLabeledControl(
-			_("Specify another pattern"), wx.TextCtrl, value=self.getHardValue()
+			_("Specify another &pattern"), wx.TextCtrl, value=self.getHardValue()
 		)
 		self.undefinedCharDesc = sHelper.addItem(
 			wx.CheckBox(self, label=(
@@ -353,7 +353,6 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onUndefinedCharDesc(self, evt=None):
 		l = [
-			self.undefinedCharReprEdit,
 			self.extendedDesc,
 			self.fullExtendedDesc,
 			self.showSize,

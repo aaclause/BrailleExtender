@@ -18,6 +18,7 @@ import languageHandler
 from . import brailleTablesExt
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
+from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78
 
 Validator = configobj.validate.Validator
 
@@ -25,13 +26,9 @@ CHANNEL_stable = "stable"
 CHANNEL_testing = "testing"
 CHANNEL_dev = "dev"
 
-CHOICE_none = "none"
 CHOICE_braille = "braille"
 CHOICE_speech = "speech"
 CHOICE_speechAndBraille = "speechAndBraille"
-CHOICE_dot7 = "dot7"
-CHOICE_dot8 = "dot8"
-CHOICE_dots78 = "dots78"
 CHOICE_focus = "focus"
 CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
@@ -43,15 +40,6 @@ outputMessage = dict([
 	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
-
-attributeChoices = dict([
-	(CHOICE_none,   _("none")),
-	(CHOICE_dots78, _("dots 7 and 8")),
-	(CHOICE_dot7,   _("dot 7")),
-	(CHOICE_dot8,   _("dot 8"))
-])
-attributeChoicesKeys = list(attributeChoices)
-attributeChoicesValues = list(attributeChoices.values())
 
 updateChannels = dict([
 	(CHANNEL_stable,  _("stable")),
@@ -149,53 +137,18 @@ def getConfspec():
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
-			"attributes": "boolean(default=True)",
 			"roleLabels": "boolean(default=True)"
 		},
 		"attributes": {
+			"enabled": "boolean(default=True)",
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
-			"bold": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"italic": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"underline": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"strikethrough": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"text-position:sub": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"text-position:super": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"invalid-spelling": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			)
+			"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
+			"italic": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})",
+			"underline": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})",
+			"strikethrough": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})",
+			"text-position:sub": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})",
+			"text-position:super": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})",
+			"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})"
 		},
 		"quickLaunches": {},
 		"roleLabels": {},

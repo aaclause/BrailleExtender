@@ -50,9 +50,13 @@ CHOICES_LABELS = {
 	CHOICE_allDots8: _("Dots 1-8 (⣿)"),
 	CHOICE_allDots6: _("Dots 1-6 (⠿)"),
 	CHOICE_emptyCell: _("Empty cell (⠀)"),
-	CHOICE_otherDots: _(f"Other dot pattern (e.g.: {dotPatternSample})"),
-	CHOICE_questionMark: ("Question mark (depending output table)"),
-	CHOICE_otherSign: _(f"Other sign/pattern (e.g.: {signPatternSample})"),
+	CHOICE_otherDots: _("Other dot pattern (e.g.: {dotPatternSample})").format(
+		dotPatternSample=dotPatternSample
+	),
+	CHOICE_questionMark: _("Question mark (depending output table)"),
+	CHOICE_otherSign: _("Other sign/pattern (e.g.: {signPatternSample})").format(
+		signPatternSample=signPatternSample
+	),
 	CHOICE_hex: _("Hexadecimal, Liblouis style"),
 	CHOICE_HUC8: _("Hexadecimal, HUC8"),
 	CHOICE_HUC6: _("Hexadecimal, HUC6"),

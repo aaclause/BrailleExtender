@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-06-01 11:30+0200\n"
-"PO-Revision-Date: 2020-06-01 11:38+0200\n"
+"POT-Creation-Date: 2020-06-01 11:49+0200\n"
+"PO-Revision-Date: 2020-06-01 11:50+0200\n"
 "Last-Translator: André-Abush CLAUSE <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -821,28 +821,28 @@ msgid "Braille Extender"
 msgstr "Braille Extender"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:37
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:59
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:63
 msgid "Hexadecimal"
 msgstr "Hexadécimale"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:37
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:60
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:64
 msgid "Decimal"
 msgstr "Décimale"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:37
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:61
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:65
 msgid "Octal"
 msgstr "Octale"
 
 #: addon\globalPlugins\brailleExtender\addonDoc.py:37
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:62
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:66
 msgid "Binary"
 msgstr "Binaire"
 
 #. Translators: title of a dialog.
 #: addon\globalPlugins\brailleExtender\addonDoc.py:50
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:245
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:249
 msgid "Representation of undefined characters"
 msgstr "Représentation des caractères indéfinis"
 
@@ -1662,6 +1662,7 @@ msgstr "Méthode de saisie non prise en charge"
 
 #: addon\globalPlugins\brailleExtender\oneHandMode.py:100
 #: addon\globalPlugins\brailleExtender\settings.py:159
+#: addon\globalPlugins\brailleExtender\settings.py:209
 msgid "&Enable this feature"
 msgstr "&Activer cette fonctionnalité"
 
@@ -1819,10 +1820,6 @@ msgstr "Montrer la mise en exposant avec"
 #: addon\globalPlugins\brailleExtender\settings.py:202
 msgid "Role labels"
 msgstr "Étiquettes de rôle"
-
-#: addon\globalPlugins\brailleExtender\settings.py:209
-msgid "Enable this feature"
-msgstr "Activer cette fonctionnalité"
 
 #: addon\globalPlugins\brailleExtender\settings.py:211
 msgid "Role category"
@@ -2252,73 +2249,77 @@ msgstr "Cellule vide (⠀)"
 #: addon\globalPlugins\brailleExtender\undefinedChars.py:53
 #, python-brace-format
 msgid "Other dot pattern (e.g.: {dotPatternSample})"
-msgstr "Autre motif de points (p. ex. : {dotPatternSample})"
-
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:55
-#, python-brace-format
-msgid "Other sign/pattern (e.g.: {signPatternSample})"
-msgstr "Autre signe / motif (p. ex. : {signPatternSample})"
+msgstr "Autre motif de points (ex. : {dotPatternSample})"
 
 #: addon\globalPlugins\brailleExtender\undefinedChars.py:56
+msgid "Question mark (depending output table)"
+msgstr "Point d’interrogation (dépend de la table d’affichage)"
+
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:57
+#, python-brace-format
+msgid "Other sign/pattern (e.g.: {signPatternSample})"
+msgstr "Autre signe / motif (ex. : {signPatternSample})"
+
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:60
 msgid "Hexadecimal, Liblouis style"
 msgstr "Hexadécimale, style liblouis"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:57
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:61
 msgid "Hexadecimal, HUC8"
 msgstr "Hexadécimale, HUC8"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:58
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:62
 msgid "Hexadecimal, HUC6"
 msgstr "Hexadécimale, HUC6"
 
 #. Translators: label of a dialog.
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:250
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:254
 msgid "Representation &method"
 msgstr "&Méthode de représentation"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:261
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:265
 msgid "Specify another &pattern"
 msgstr "Spécifiez un autre m&otif"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:265
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:269
 msgid "Show punctuation/symbol &name for undefined characters if available"
 msgstr ""
 "Afficher le &nom des symboles/ponctuations pour les caractères non définis "
 "si possible"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:266
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:270
 msgid "can cause a lag"
 msgstr "peut provoquer des ralentissements"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:276
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:280
 msgid "Also describe e&xtended characters (e.g.: country flags)"
 msgstr "Décrire également les caractères &étendus (ex. : drapeaux de pays)"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:286
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:290
 msgid "&Full extended description"
 msgstr "Description étendue &complète"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:295
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:299
 msgid "Show the si&ze taken"
 msgstr "Montrer la &taille prise"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:302
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:306
 msgid "&Start tag"
 msgstr "Marqueur de &début"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:307
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:311
 msgid "&End tag"
 msgstr "Marqueur de &fin"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:318
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:322
 msgid "&Language"
 msgstr "&Langue"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:321
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:325
 msgid "Use the current output table"
 msgstr "Utiliser la table d’affichage actuelle"
 
-#: addon\globalPlugins\brailleExtender\undefinedChars.py:334
+#: addon\globalPlugins\brailleExtender\undefinedChars.py:338
 msgid "Braille &table"
 msgstr "Tables &braille"
 
@@ -2559,6 +2560,9 @@ msgstr ""
 msgid "actions and quick navigation through a rotor"
 msgstr "actions et navigation rapide au travers d’un rotor"
 
+#~ msgid "Enable this feature"
+#~ msgstr "Activer cette fonctionnalité"
+
 #~ msgid "input"
 #~ msgstr "saisie"
 
@@ -2612,9 +2616,6 @@ msgstr "actions et navigation rapide au travers d’un rotor"
 
 #~ msgid "Other dot pattern (e.g.: 6-123456)"
 #~ msgstr "Autre motif de points (p. ex. : 6-123456)"
-
-#~ msgid "Question mark (depending output table)"
-#~ msgstr "Point d'interrogation (dépend de la table d'affichage)"
 
 #~ msgid "Other sign/pattern (e.g.: \\, ??)"
 #~ msgstr "Autre signe / motif (p. ex. : \\, ??)"

@@ -195,7 +195,7 @@ _groups = None
 _currentGroup = [None, None]
 
 
-class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
+class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
 	title = _("Braille tables")

@@ -166,6 +166,9 @@ def getConfspec():
 			"preferredInput": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
 			"preferredOutput": f'string(default="{config.conf["braille"]["translationTable"]}")',
 		},
+		"advanced": {
+			"fixCursorPositions": "boolean(default=True)",
+		},
 	}
 
 def getLabelFromID(idCategory, idLabel):

@@ -87,15 +87,14 @@ def setUndefinedChar(t=None):
 
 def getExtendedSymbolsForString(s: str, lang) -> dict:
 	global extendedSymbols, localesFail
-	if not lang in extendedSymbols:
+	if lang in localesFail: lang = "en"
+	if not lang in extendedSymbols.keys():
 		try:
 			extendedSymbols[lang] = getExtendedSymbols(lang)
-		except BaseException:
-			log.error(f"Unable to load extended symbols for: {lang}")
+		except LookupError:
+			log.warning(f"Unable to load extended symbols for: {lang}, using english")
 			localesFail.append(lang)
-	if lang in localesFail:
-		lang = "en"
-		if not lang in localesFail:
+			lang = "en"
 			extendedSymbols[lang] = getExtendedSymbols(lang)
 	return {
 		c: (d, [(m.start(), m.end()-1) for m in re.finditer(re.escape(c), s)])
@@ -427,11 +426,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 def getExtendedSymbols(locale):
 	if locale == "Windows":
 		locale = languageHandler.getLanguage()
-	try:
-		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
-	except LookupError:
-		b, u = characterProcessing._getSpeechSymbolsForLocale(
-			locale.split("_")[0])
+	b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+	if not b and not u: return None
 	a = {
 		k.strip(): v.replacement.replace(' ', '').strip()
 		for k, v in b.symbols.items()
@@ -441,7 +437,7 @@ def getExtendedSymbols(locale):
 		{
 			k.strip(): v.replacement.replace(' ', '').strip()
 			for k, v in u.symbols.items()
-			if len(k) > 1
+			if v and k and len(k) > 1
 		}
 	)
 	return a

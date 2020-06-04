@@ -437,7 +437,7 @@ def getExtendedSymbols(locale):
 		{
 			k.strip(): v.replacement.replace(' ', '').strip()
 			for k, v in u.symbols.items()
-			if v and k and len(k) > 1
+			if k and len(k) > 1 and ' ' not in k and v and v.replacement and v.replacement.strip()
 		}
 	)
 	return a

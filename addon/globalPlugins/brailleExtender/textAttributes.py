@@ -21,6 +21,17 @@ CHOICES_LABELS = {
 	CHOICE_tags: _("tags")
 }
 
+CHOICES_LABELS_ATTRIBUTES = {
+	"selectedElement": _("selected elements"),
+	"spellingErrors": _("spelling errors"),
+	"bold": _("bold"),
+	"italic": _("italic"),
+	"underline": _("underline"),
+	"strikethrough": _("strikethrough"),
+	"text-position:sub": _("subscript"),
+	"text-position:super": _("superscript")
+}
+
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
 logTextInfo = False
 
@@ -75,6 +86,30 @@ def decorator(fn, s):
 	if s == "update": return update
 	if s == "_getTypeformFromFormatField": return _getTypeformFromFormatField
 
+class ManageTags(wx.Dialog):
+
+
+	def __init__(
+		self,
+		parent=None,
+		# Translators: title of a dialog.
+		title=_("Manage tags")
+	):
+		super(ManageTags, self).__init__(parent, title=title)
+		mainSizer = wx.BoxSizer(wx.VERTICAL)
+		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
+		choices = list(CHOICES_LABELS_ATTRIBUTES.values())
+		self.attributes = sHelper.addLabeledControl(_("Attributes"), wx.Choice, choices=choices)
+		self.attributes.SetSelection(0)
+		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK|wx.CANCEL))
+		mainSizer.Add(sHelper.sizer,border=20,flag=wx.ALL)
+		mainSizer.Fit(self)
+		self.SetSizer(mainSizer)
+		self.Bind(wx.EVT_BUTTON,self.onOk,id=wx.ID_OK)
+		self.attributes.SetFocus()
+
+	def onOk(self, evt): pass
+
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
@@ -83,6 +118,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		choices = list(CHOICES_LABELS.values())
 		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
 		self.featureEnabled.SetValue(config.conf["brailleExtender"]["attributes"]["enabled"])
@@ -103,6 +139,9 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.sub.SetSelection(self.getItemToSelect("text-position:sub"))
 		self.super = sHelper.addLabeledControl(_("Show su&perscript with"), wx.Choice, choices=choices)
 		self.super.SetSelection(self.getItemToSelect("text-position:super"))
+		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("Manage &Tags"))
+		sHelper.addItem(bHelper)
+		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		self.onFeatureEnabled()
 
 	def postInit(self): self.featureEnabled.SetFocus()
@@ -117,6 +156,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["attributes"]["strikethrough"] = list(CHOICES_LABELS.keys())[self.strikethrough.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = list(CHOICES_LABELS.keys())[self.sub.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["text-position:super"] = list(CHOICES_LABELS.keys())[self.super.GetSelection()]
+
+	def onTagsBtn(self, evt=None):
+		manageTags = ManageTags(self)
+		manageTags.ShowModal()
+		manageTags.Destroy()
+		self.tagsBtn.SetFocus()
 
 	@staticmethod
 	def getItemToSelect(attribute):

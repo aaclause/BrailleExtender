@@ -160,7 +160,17 @@ def getConfspec():
 			"strikethrough": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_none})",
 			"text-position:sub": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_none})",
 			"text-position:super": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_none})",
-			"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})"
+			"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
+			"tags": {
+				"selectedElement": "string(default=%s)" % '⣀'.join(["⣏⠎⣹", "⣏⡎⣹"]),
+				"spellingErrors": "string(default=%s)" % '⣀'.join(["⣏⠑⣹", "⣏⡑⣹"]),
+				"bold": "string(default=%s)" % '⣀'.join(["⣏⠃⣹", "⣏⡃⣹"]),
+				"italic": "string(default=%s)" % '⣀'.join(["⣏⠊⣹", "⣏⡊⣹"]),
+				"underline": "string(default=%s)" % '⣀'.join(["⣏⠥⣹", "⣏⡥⣹"]),
+				"strikethrough": "string(default=%s)" % '⣀'.join(["⣏⠅⣹", "⣏⡅⣹"]),
+				"text-position:sub": "string(default=%s)" % '⣀'.join(["_{", "}"]),
+				"text-position:super": "string(default=%s)" % '⣀'.join(["^{", "}"])
+			},
 		},
 		"quickLaunches": {},
 		"roleLabels": {},

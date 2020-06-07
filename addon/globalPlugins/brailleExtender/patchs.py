@@ -44,6 +44,7 @@ from . import brailleRegionHelper
 from . import configBE
 from . import dictionaries
 from . import huc
+from .objectPresentation import getPropertiesBraille
 from . import undefinedChars
 from .oneHandMode import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
@@ -176,7 +177,6 @@ def update(self):
 	else:
 		if instanceGP and instanceGP.hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
-
 
 #: braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -516,3 +516,4 @@ brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
+braille.getPropertiesBraille = getPropertiesBraille

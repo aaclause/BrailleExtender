@@ -6,19 +6,40 @@ import gui
 import wx
 
 import addonHandler
+import braille
 import config
+import textInfos
 from logHandler import log
 
-from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags
-
+from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags, CHOICE_liblouis, CHOICE_likeSpeech, CHOICE_enabled, CHOICE_disabled
+from .common import *
+from . import brailleRegionHelper
 addonHandler.initTranslation()
 
 CHOICES_LABELS = {
-	CHOICE_none: _("none"),
+	CHOICE_none: _("Nothing"),
+	CHOICE_liblouis: _("Hand over to Liblouis (defined in tables)"),
 	CHOICE_dots78: _("dots 7 and 8"),
 	CHOICE_dot7: _("dot 7"),
 	CHOICE_dot8: _("dot 8"),
 	CHOICE_tags: _("tags")
+}
+
+CHOICES_LABELS_ATTRIBUTES = {
+	"selectedElement": _("selected elements"),
+	"spellingErrors": _("spelling errors"),
+	"bold": _("bold"),
+	"italic": _("italic"),
+	"underline": _("underline"),
+	"strikethrough": _("strikethrough"),
+	"text-position:sub": _("subscript"),
+	"text-position:super": _("superscript")
+}
+
+CHOICES_LABELS_STATES = {
+	CHOICE_likeSpeech: _("like speech"),
+	CHOICE_enabled: _("enabled"),
+	CHOICE_disabled: _("disabled")
 }
 
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
@@ -46,10 +67,18 @@ def decorator(fn, s):
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
 		conf = formatConfig.copy()
 		if featureEnabled():
-			conf["reportFontAttributes"] = True
-			conf["reportColor"] = True
-			conf["reportSpellingErrors"] = True
-			if logTextInfo: log.info(info.getTextWithFields(conf))
+			keysToEnable = ["reportFontAttributes", "reportColor", "reportSpellingErrors", "reportAlignment", 
+			#"reportLineNumber",
+			"reportLineIndentation", "reportParagraphIndentation"]
+			for keyToEnable in keysToEnable:
+				conf[keyToEnable] = True
+		textInfo_ = info.getTextWithFields(conf)
+		formatField = textInfos.FormatField()
+		for field in textInfo_:
+			if isinstance(field,textInfos.FieldCommand) and isinstance(field.field,textInfos.FormatField):
+				formatField.update(field.field)
+		if logTextInfo: log.info(formatField)
+		self.formatField = formatField
 		fn(self, info, conf, isSelection)
 
 	def update(self):
@@ -70,25 +99,71 @@ def decorator(fn, s):
 				if j == 78: self.brailleCells[k] |= DOT7 | DOT8
 				if j == 7: self.brailleCells[k] |= DOT7
 				if j == 8: self.brailleCells[k] |= DOT8
+		formatField = self.formatField
+		textAlign = formatField.get("text-align")
+		if textAlign and textAlign not in ["start", "left"]:
+			textAlign = textAlign.replace("-moz-", "")
+			pct = {
+				"justified": 0.25,
+				"center": 0.5,
+				"right": 0.75,
+			}
+			displaySize = braille.handler.displaySize
+			sizeBrailleCells = len(self.brailleCells)-1
+			start = None
+			if textAlign == "center" and displaySize-1 > sizeBrailleCells:
+				start = int((displaySize-sizeBrailleCells)/2)
+			elif textAlign in pct:
+				start = int(pct[textAlign] * braille.handler.displaySize)-1
+			else:
+				log.warning(f"Unknown text-align {textAlign}")
+			if start is not None:
+				s = '⠀' * start
+				repl = brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s)
+				brailleRegionHelper.replaceBrailleCells(self, [repl])
 
 	if s == "addTextWithFields": return addTextWithFields_edit
 	if s == "update": return update
 	if s == "_getTypeformFromFormatField": return _getTypeformFromFormatField
 
+class ManageTags(wx.Dialog):
+
+	def __init__(
+		self,
+		parent=None,
+		# Translators: title of a dialog.
+		title=_("Manage tags")
+	):
+		super(ManageTags, self).__init__(parent, title=title)
+		mainSizer = wx.BoxSizer(wx.VERTICAL)
+		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
+		choices = list(CHOICES_LABELS_ATTRIBUTES.values())
+		self.attributes = sHelper.addLabeledControl(_("Attributes"), wx.Choice, choices=choices)
+		self.attributes.SetSelection(0)
+		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK|wx.CANCEL))
+		mainSizer.Add(sHelper.sizer,border=20,flag=wx.ALL)
+		mainSizer.Fit(self)
+		self.SetSizer(mainSizer)
+		self.Bind(wx.EVT_BUTTON,self.onOk,id=wx.ID_OK)
+		self.attributes.SetFocus()
+
+	def onOk(self, evt): pass
+
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = _("Text attributes")
+	title = N_("Document formatting")
+	panelDescription = _("The following options control the types of document formatting reported by NVDA in braille only.")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		sHelper.addItem(wx.StaticText(self, label=self.panelDescription))
 		choices = list(CHOICES_LABELS.values())
-		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
+		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=N_("Font attrib&utes")))
 		self.featureEnabled.SetValue(config.conf["brailleExtender"]["attributes"]["enabled"])
 		self.featureEnabled.Bind(wx.EVT_CHECKBOX, self.onFeatureEnabled)
-		self.selectedElement = sHelper.addLabeledControl(_("Show selected &elements with"), wx.Choice, choices=choices)
-		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
 		self.spellingErrors = sHelper.addLabeledControl(_("Show &spelling errors with"), wx.Choice, choices=choices)
 		self.spellingErrors.SetSelection(self.getItemToSelect("invalid-spelling"))
 		self.bold = sHelper.addLabeledControl(_("Show b&old with"), wx.Choice, choices=choices)
@@ -103,13 +178,15 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.sub.SetSelection(self.getItemToSelect("text-position:sub"))
 		self.super = sHelper.addLabeledControl(_("Show su&perscript with"), wx.Choice, choices=choices)
 		self.super.SetSelection(self.getItemToSelect("text-position:super"))
+		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("Manage &Tags"))
+		sHelper.addItem(bHelper)
+		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		self.onFeatureEnabled()
 
 	def postInit(self): self.featureEnabled.SetFocus()
 
 	def onSave(self):
 		config.conf["brailleExtender"]["attributes"]["enabled"] = self.featureEnabled.IsChecked()
-		config.conf["brailleExtender"]["attributes"]["selectedElement"] = list(CHOICES_LABELS.keys())[self.selectedElement.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = list(CHOICES_LABELS.keys())[self.spellingErrors.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["bold"] = list(CHOICES_LABELS.keys())[self.bold.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["italic"] = list(CHOICES_LABELS.keys())[self.italic.GetSelection()]
@@ -117,6 +194,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["attributes"]["strikethrough"] = list(CHOICES_LABELS.keys())[self.strikethrough.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = list(CHOICES_LABELS.keys())[self.sub.GetSelection()]
 		config.conf["brailleExtender"]["attributes"]["text-position:super"] = list(CHOICES_LABELS.keys())[self.super.GetSelection()]
+
+	def onTagsBtn(self, evt=None):
+		manageTags = ManageTags(self)
+		manageTags.ShowModal()
+		manageTags.Destroy()
+		self.tagsBtn.SetFocus()
 
 	@staticmethod
 	def getItemToSelect(attribute):
@@ -128,7 +211,6 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onFeatureEnabled(self, evt=None):
 		l = [
-			self.selectedElement,
 			self.spellingErrors,
 			self.bold,
 			self.italic,

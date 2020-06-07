@@ -36,3 +36,5 @@ if not isPy3:
 		except ValueError: return struct.pack('i', i).decode('utf-32')
 
 	chr = chrPy2
+
+N_ = lambda s: _(s)

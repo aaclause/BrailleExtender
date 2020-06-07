@@ -52,7 +52,7 @@ from . import patchs
 from . import settings
 from .common import *
 from . import undefinedChars
-from . import textAttributes
+from . import documentFormatting
 
 instanceGP = None
 lang = configBE.lang
@@ -146,9 +146,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.backup__update = braille.TextInfoRegion.update
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
 		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
-		braille.TextInfoRegion._addTextWithFields = textAttributes.decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
-		braille.TextInfoRegion.update = textAttributes.decorator(braille.TextInfoRegion.update, "update")
-		braille.TextInfoRegion._getTypeformFromFormatField = textAttributes.decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
+		braille.TextInfoRegion._addTextWithFields = documentFormatting.decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
+		braille.TextInfoRegion.update = documentFormatting.decorator(braille.TextInfoRegion.update, "update")
+		braille.TextInfoRegion._getTypeformFromFormatField = documentFormatting.decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedInputMode.initialize()
@@ -533,9 +533,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleLockModifiers.__doc__ = _("Lock/unlock modifiers keys")
 
 	def script_toggleTextAttributes(self, gesture):
-		config.conf["brailleExtender"]["attributes"]["enabled"] = not textAttributes.featureEnabled()
+		config.conf["brailleExtender"]["attributes"]["enabled"] = not documentFormatting.featureEnabled()
 		utils.refreshBD()
-		state = _("enabled") if textAttributes.featureEnabled() else _("disabled")
+		state = _("enabled") if documentFormatting.featureEnabled() else _("disabled")
 		speech.speakMessage(_("Text attributes {state}").format(state=state))
 	script_toggleTextAttributes.__doc__ = _("Enable/disable text attributes")
 
@@ -1105,9 +1105,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def script_logFieldsAtCursor(self, gesture):
-		textAttributes.logTextInfo = not textAttributes.logTextInfo
+		documentFormatting.logTextInfo = not documentFormatting.logTextInfo
 		msg = ["stop", "start"]
-		ui.message(f"debug textInfo {msg[textAttributes.logTextInfo]}")
+		ui.message(f"debug textInfo {msg[documentFormatting.logTextInfo]}")
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:

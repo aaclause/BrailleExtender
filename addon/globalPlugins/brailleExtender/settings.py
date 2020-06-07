@@ -27,8 +27,9 @@ from . import configBE
 from . import utils
 from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
 from .oneHandMode import SettingsDlg as OneHandModeDlg
+from .objectPresentation import SettingsDlg as ObjectPresentationDlg
 from .undefinedChars import SettingsDlg as UndefinedCharsDlg
-from .textAttributes import SettingsDlg as TextAttributesDlg
+from .documentFormatting import SettingsDlg as documentFormattingDlg
 from .common import *
 
 instanceGP = None
@@ -851,7 +852,8 @@ class ProfileEditorDlg(gui.settingsDialogs.SettingsDialog):
 class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
-		TextAttributesDlg,
+		documentFormattingDlg,
+		ObjectPresentationDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,

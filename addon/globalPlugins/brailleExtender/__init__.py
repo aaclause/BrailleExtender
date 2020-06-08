@@ -531,10 +531,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleLockModifiers.__doc__ = _("Lock/unlock modifiers keys")
 
 	def script_toggleTextAttributes(self, gesture):
-		config.conf["brailleExtender"]["attributes"]["enabled"] = not documentFormatting.featureEnabled()
+		newState = not documentFormatting.attributesEnabled()
+		documentFormatting.setAttributes(newState)
 		utils.refreshBD()
-		state = _("enabled") if documentFormatting.featureEnabled() else _("disabled")
-		speech.speakMessage(_("Text attributes {state}").format(state=state))
+		state = _("enabled") if documentFormatting.attributesEnabled() else _("disabled")
+		speech.speakMessage(_("Font attributes {state}").format(state=state))
 	script_toggleTextAttributes.__doc__ = _("Enable/disable text attributes")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):

@@ -44,7 +44,7 @@ from . import brailleRegionHelper
 from . import configBE
 from . import dictionaries
 from . import huc
-from .objectPresentation import getPropertiesBraille
+from .objectPresentation import getPropertiesBraille, selectedElementEnabled
 from . import undefinedChars
 from .oneHandMode import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
@@ -147,14 +147,14 @@ def update(self):
 	)
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
 		undefinedChars.undefinedCharProcess(self)
-	if config.conf["brailleExtender"]["attributes"]["enabled"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != configBE.CHOICE_none:
+	if selectedElementEnabled():
 		d = {
 			configBE.CHOICE_dot7: 64,
 			configBE.CHOICE_dot8: 128,
 			configBE.CHOICE_dots78: 192
 		}
-		if config.conf["brailleExtender"]["attributes"]["selectedElement"] in d:
-			addDots = d[config.conf["brailleExtender"]["attributes"]["selectedElement"]]
+		if config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] in d:
+			addDots = d[config.conf["brailleExtender"]["objectPresentation"]["selectedElement"]]
 			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
 				name = self.obj.name
 				if name in self.rawText:

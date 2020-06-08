@@ -10,6 +10,7 @@ addonHandler.initTranslation()
 from logHandler import log
 from .common import *
 from .documentFormatting import CHOICES_LABELS
+from .consts import CHOICE_liblouis, CHOICE_none
 
 # {name} {value} {statesStr} {roleText} {description} {keyboardShortcut} {positionInfoStr} {positionInfoLevelStr} {rowStr} {columnHeaderText} {columnStr} {currentStr} {placeholder} {cellCoordsTextStr}
 
@@ -29,6 +30,9 @@ orderPresentation = [
 	"placeholder",
 	"cellCoordsText"
 ]
+
+def selectedElementEnabled():
+	return config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] != CHOICE_none
 
 def getPropertiesBraille(**propertyValues) -> str:
 	properties = {}
@@ -138,17 +142,13 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		choices = list(CHOICES_LABELS.values())
-		self.selectedElement = sHelper.addLabeledControl(_("Show selected &elements with"), wx.Choice, choices=choices)
-		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
-
-	@staticmethod
-	def getItemToSelect(attribute):
-		try: idx = list(CHOICES_LABELS.keys()).index(config.conf["brailleExtender"]["attributes"][attribute])
-		except BaseException as err:
-			log.error(err)
-			idx = 0
-		return idx
+		self.choices = {k: v for k, v in CHOICES_LABELS.items() if k != CHOICE_liblouis}
+		try:
+			itemToSelect = list(self.choices.keys()).index(config.conf["brailleExtender"]["objectPresentation"]["selectedElement"])
+		except IndexError:
+			itemToSelect = 0
+		self.selectedElement = sHelper.addLabeledControl(_("Show selected &elements with"), wx.Choice, choices=list(self.choices.values()))
+		self.selectedElement.SetSelection(itemToSelect)
 
 	def onSave(self):
-		config.conf["brailleExtender"]["attributes"]["selectedElement"] = list(CHOICES_LABELS.keys())[self.selectedElement.GetSelection()]
+		config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] = list(self.choices.keys())[self.selectedElement.GetSelection()]

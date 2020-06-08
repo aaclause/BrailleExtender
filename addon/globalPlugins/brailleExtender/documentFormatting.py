@@ -105,14 +105,17 @@ def decorator(fn, s):
 			textAlign = textAlign.replace("-moz-", "")
 			pct = {
 				"justified": 0.25,
+				"justify": 0.25,
 				"center": 0.5,
 				"right": 0.75,
 			}
 			displaySize = braille.handler.displaySize
 			sizeBrailleCells = len(self.brailleCells)-1
 			start = None
-			if textAlign == "center" and displaySize-1 > sizeBrailleCells:
-				start = int((displaySize-sizeBrailleCells)/2)
+			if textAlign in ["center", "right"] and displaySize-1 > sizeBrailleCells:
+				if textAlign == "center":
+					start = int((displaySize-sizeBrailleCells)/2)
+				else: start = displaySize-sizeBrailleCells
 			elif textAlign in pct:
 				start = int(pct[textAlign] * braille.handler.displaySize)-1
 			else:

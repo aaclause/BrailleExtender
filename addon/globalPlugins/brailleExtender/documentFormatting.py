@@ -105,9 +105,8 @@ def decorator(fn, s):
 		formatField = self.formatField
 		textAlign = formatField.get("text-align")
 		if textAlign and textAlign not in ["start", "left"]:
-			textAlign = textAlign.replace("-moz-", "")
+			textAlign = textAlign.replace("-moz-", "").replace("justified", "justify")
 			pct = {
-				"justified": 0.25,
 				"justify": 0.25,
 				"center": 0.5,
 				"right": 0.75,
@@ -119,6 +118,8 @@ def decorator(fn, s):
 				if textAlign == "center":
 					start = int((displaySize-sizeBrailleCells)/2)
 				else: start = displaySize-sizeBrailleCells
+			elif textAlign == "justify":
+				start = 3
 			elif textAlign in pct:
 				start = int(pct[textAlign] * braille.handler.displaySize)-1
 			else:

@@ -145,7 +145,7 @@ def update(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
+	if self.parseUndefinedChars == True and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
 		undefinedChars.undefinedCharProcess(self)
 	if selectedElementEnabled():
 		d = {
@@ -517,3 +517,6 @@ globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 braille.getPropertiesBraille = getPropertiesBraille
+
+# This variable tells if braille region should parse undefined characters
+braille.Region.parseUndefinedChars = True

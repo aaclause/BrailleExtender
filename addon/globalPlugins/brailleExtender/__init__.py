@@ -53,6 +53,7 @@ from . import settings
 from .common import *
 from . import undefinedChars
 from . import documentFormatting
+from . import objectPresentation
 
 instanceGP = None
 lang = configBE.lang
@@ -152,6 +153,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedInputMode.initialize()
+		objectPresentation.loadpropertiesOrder()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):

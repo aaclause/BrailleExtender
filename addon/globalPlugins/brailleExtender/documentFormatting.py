@@ -86,17 +86,17 @@ def decorator(fn, s):
 
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
 		conf = formatConfig.copy()
+		keysToEnable = [
+			"reportColor",
+			"reportSpellingErrors",
+			"reportAlignment",
+			# "reportLineNumber",
+			"reportLineIndentation",
+			"reportParagraphIndentation"
+		]
 		if attributesEnabled():
-			keysToEnable = [
-				"reportFontAttributes",
-				"reportColor",
-				"reportSpellingErrors",
-				"reportAlignment",
-				# "reportLineNumber",
-				"reportLineIndentation",
-				"reportParagraphIndentation",
-			]
-			for keyToEnable in keysToEnable:
+			keysToEnable.append("reportFontAttributes")
+		for keyToEnable in keysToEnable:
 				conf[keyToEnable] = True
 		textInfo_ = info.getTextWithFields(conf)
 		formatField = textInfos.FormatField()
@@ -112,28 +112,27 @@ def decorator(fn, s):
 
 	def update(self):
 		fn(self)
-		if not attributesEnabled():
-			return
-		DOT7 = 64
-		DOT8 = 128
-		size = len(self.rawTextTypeforms)
-		for i, j in enumerate(self.rawTextTypeforms):
-			try:
-				start = self.rawToBraillePos[i]
-				end = self.rawToBraillePos[
-					i + 1 if i + 1 < size else (i if i < size else size - 1)
-				]
-			except IndexError as e:
-				log.debug(e)
-				return
-			k = start
-			for k in range(start, end):
-				if j == 78:
-					self.brailleCells[k] |= DOT7 | DOT8
-				if j == 7:
-					self.brailleCells[k] |= DOT7
-				if j == 8:
-					self.brailleCells[k] |= DOT8
+		if attributesEnabled():
+			DOT7 = 64
+			DOT8 = 128
+			size = len(self.rawTextTypeforms)
+			for i, j in enumerate(self.rawTextTypeforms):
+				try:
+					start = self.rawToBraillePos[i]
+					end = self.rawToBraillePos[
+						i + 1 if i + 1 < size else (i if i < size else size - 1)
+					]
+				except IndexError as e:
+					log.debug(e)
+					return
+				k = start
+				for k in range(start, end):
+					if j == 78:
+						self.brailleCells[k] |= DOT7 | DOT8
+					if j == 7:
+						self.brailleCells[k] |= DOT7
+					if j == 8:
+						self.brailleCells[k] |= DOT8
 		formatField = self.formatField
 		textAlign = formatField.get("text-align")
 		if textAlign and textAlign not in ["start", "left"]:

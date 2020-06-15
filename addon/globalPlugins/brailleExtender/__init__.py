@@ -540,7 +540,15 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		utils.refreshBD()
 		state = _("enabled") if documentFormatting.attributesEnabled() else _("disabled")
 		speech.speakMessage(_("Font attributes {state}").format(state=state))
-	script_toggleTextAttributes.__doc__ = _("Enable/disable text attributes")
+	script_toggleTextAttributes.__doc__ = _("Enable/disable font attributes report")
+
+	def script_toggleReportAlignments(self, gesture):
+		newState = not documentFormatting.alignmentsEnabled()
+		documentFormatting.setAlignments(newState)
+		utils.refreshBD()
+		state = _("enabled") if documentFormatting.alignmentsEnabled() else _("disabled")
+		speech.speakMessage(_("Alignments {state}").format(state=state))
+	script_toggleReportAlignments.__doc__ = _("Enable/disable alignments report")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
 		choices = configBE.focusOrReviewChoices

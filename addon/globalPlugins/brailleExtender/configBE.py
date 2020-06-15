@@ -155,8 +155,15 @@ def getConfspec():
 			"propertiesOrder": 'string(default="states,value,name,roleText,description,keyboardShortcut,positionInfo,positionInfoLevel,row,columnHeaderText,column,current,placeholder,cellCoordsText")',
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
 		},
+		"documentFormatting": {
+			"alignments": {
+				"enabled": "boolean(default=True)",
+			},
+			"attributes": {
+				"enabled": "boolean(default=True)",
+			},
+		},
 		"attributes": {
-			"enabled": "boolean(default=True)",
 			"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_dots78})",
 			"italic": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",
 			"underline": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",

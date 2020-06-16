@@ -29,7 +29,7 @@ def initializeRandomChar():
 	global chosenChar
 	chosenChar = random.choice("#$£€=+()*,;:.?!/\"&")
 
-URLHUC = "https://danielmayr.at/huc/en.html"
+URLHUC = "https://danielmayr.at/huc/"
 chosenChar = None
 
 def getFeaturesDoc():
@@ -46,6 +46,7 @@ def getFeaturesDoc():
 
 	braillePattern = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"]
 
+	contextualOption = _("Show punctuation/symbol &name for undefined characters if available").replace('&', '')
 	features = {
 		_("Representation of undefined characters"): [
 			"<p>",
@@ -57,7 +58,7 @@ def getFeaturesDoc():
 			"</p><p>",
 			_("Notes:"),
 			"</p><ul>",
-			"<li>" + _("To distinguish the undefined set of characters while maximizing space, the best combination is the usage of the HUC8 representation without checking the “describe character if possible” option.") + "</li>",
+			"<li>" + _("To distinguish the undefined set of characters while maximizing space, the best combination is the usage of the HUC8 representation without checking the “{contextualOption}” option.").format(contextualOption=contextualOption) + "</li>",
 			"<li>" + _("To learn more about the HUC representation, see {url}").format(url=f"<br />{URLHUC}") + "</li>",
 			"<li>" + _("Keep in mind that definitions in tables and those in your table dictionaries take precedence over character descriptions, which also take precedence over the chosen representation for undefined characters.") + "</li>",
 			"</ul>"
@@ -257,7 +258,7 @@ class AddonDoc:
 				+ _("BrailleExtender has no gesture map yet for your braille display.")
 				+ "<br />"
 				+ _(
-					'However, you can still assign your own gestures in the "Input Gestures" dialog (under Preferences menu).'
+					"However, you can still assign your own gestures in the \"Input Gestures\" dialog (under Preferences menu)."
 				)
 				+ "</p>"
 			)
@@ -288,11 +289,11 @@ class AddonDoc:
 			_("Croatian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>",
 			_("Danish"): "Daniel Gartmann <dg@danielgartmann.dk>",
 			_("English and French"): "Sof <hellosof@gmail.com>, André-Abush Clause <dev@andreabc.net>",
-			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick, Jürgen Schwingshandl <jbs@b-a-c.at>",
+			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick <hozosch@web.de>, Jürgen Schwingshandl <jbs@b-a-c.at>",
 			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
-			_("Polish"): "Zvonimir Stanečić, Dorota Krać",
-			_("Russian"): "Zvonimir Stanečić, Pavel Kaplan <pavel46@gmail.com>",
+			_("Polish"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Dorota Krać",
+			_("Russian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Pavel Kaplan <pavel46@gmail.com>",
 		}
 		doc += (
 			"<h2>" + _("Copyrights and acknowledgements") + "</h2>"
@@ -324,7 +325,7 @@ class AddonDoc:
 				"</ul>",
 				"<p>"
 				+ _("Thanks also to")
-				+ f"{punctuationSeparator}: Daniel Cotto, Corentin, Louis.<br />",
+				+ punctuationSeparator + ": Daniel Cotto, Daniel Mayr, Corentin, Louis...<br />",
 				_("And thank you very much for all your feedback and comments.")
 				+ " ☺</p>",
 			]

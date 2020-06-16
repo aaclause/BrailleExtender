@@ -53,7 +53,7 @@ addon_info = {
 	# version
 	"addon_version": time.strftime("%y.%m.%d:") + hashCommit,
 	# Author(s)
-	"addon_author": "André-Abush Clause <dev@andreabc.net>",
+	"addon_author": "André-Abush Clause <dev@andreabc.net> " + _("and other contributors"),
 	# URL for the add-on documentation support
 	"addon_url": "https://andreabc.net/projects/NVDA_addons/BrailleExtender/",
 	# Documentation file name

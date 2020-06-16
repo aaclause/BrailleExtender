@@ -80,7 +80,7 @@ def getFeaturesDoc():
 			"<p>",
 			_("This feature allows you to enter any character from its HUC8 representation or its hexadecimal/decimal/octal/binary value. Moreover, it allows you to develop abbreviations. To use this function, enter the advanced input mode and then enter the desired pattern. Default gestures: NVDA+Windows+i or ⡊+space (on supported displays). Press the same gesture to exit this mode. Alternatively, an option allows you to automatically exit this mode after entering a single pattern. "),
 			"</p><p>",
-			_("If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 cells, the interpretation will be performed each time 3 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:"),
+			_("If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 or 4 cells, the interpretation will be performed each time 3 or 4 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:"),
 			"</p><ol>",
 			"<li>" + _("Enter {braillePattern}").format(braillePattern=braillePattern) + "</li>",
 			"<li>" + _("Specify the basis as follows") + f"{punctuationSeparator}:",

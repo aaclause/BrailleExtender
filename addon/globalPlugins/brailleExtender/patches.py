@@ -4,6 +4,7 @@
 # This file modify some functions from core.
 
 import os
+import re
 import struct
 import sys
 import time
@@ -103,6 +104,7 @@ def script_braille_routeTo(self, gesture):
 		except IndexError: pass
 
 # braille.Region.update()
+variationSelectorsPattern = lambda: r"([^\ufe00-\ufe0f])[\ufe00-\ufe0f]\u20E3?"
 def update(self):
 	"""Update this region.
 	Subclasses should extend this to update L{rawText}, L{cursorPos}, L{selectionStart} and L{selectionEnd} if necessary.
@@ -113,7 +115,7 @@ def update(self):
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
 	if config.conf["brailleExtender"]["advanced"]["fixCursorPositions"]:
-		pattern = r"([^\ufe00-\ufe0f])[\ufe00-\ufe0f]\u20E3?"
+		pattern = variationSelectorsPattern()
 		matches = re.finditer(pattern, self.rawText)
 		posToRemove = []
 		for match in matches:
@@ -149,6 +151,8 @@ def update(self):
 			addDots = d[config.conf["brailleExtender"]["attributes"]["selectedElement"]]
 			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
 				name = self.obj.name
+				if config.conf["brailleExtender"]["advanced"]["fixCursorPositions"]:
+					name = re.sub(variationSelectorsPattern(), r"\1", name)
 				if name in self.rawText:
 					start = self.rawText.index(name)
 					end = start + len(name)-1

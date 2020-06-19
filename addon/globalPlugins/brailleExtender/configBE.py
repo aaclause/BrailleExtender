@@ -162,6 +162,12 @@ def getConfspec():
 			"attributes": {
 				"enabled": "boolean(default=True)",
 			},
+			"indentations": {
+				"enabled": "boolean(default=True)",
+			},
+			"lists": {
+				"showLevelItem": "boolean(default=True)",
+			},
 		},
 		"attributes": {
 			"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_dots78})",

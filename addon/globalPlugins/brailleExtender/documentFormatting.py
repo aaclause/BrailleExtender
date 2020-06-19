@@ -1,5 +1,5 @@
 # coding: utf-8
-# textAttributes.py
+# documentFormatting.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 import gui
@@ -71,8 +71,15 @@ def setReport(k, v):
 
 setAttributes = lambda e: setReport("attributes", e)
 setAlignments = lambda e: setReport("alignments", e)
+setIndentation = lambda e: setReport("indentations", e)
+
+def setLevelItemsList(e):
+	config.conf["brailleExtender"]["documentFormatting"]["lists"]["showLevelItem"] = e
+
 attributesEnabled = lambda: getReport("attributes")
 alignmentsEnabled = lambda: getReport("alignments")
+indentationsEnabled = lambda: getReport("indentations")
+levelItemsListEnabled = lambda: config.conf["brailleExtender"]["documentFormatting"]["lists"]["showLevelItem"]
 
 def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field, formatConfig=None):
@@ -143,8 +150,22 @@ def decorator(fn, s):
 						self.brailleCells[k] |= DOT7
 					if j == 8:
 						self.brailleCells[k] |= DOT8
+		noAlign = False
+		postReplacements = []
+		if levelItemsListEnabled() and self and hasattr(self.obj, "currentNVDAObject"):
+			curObj = self.obj.currentNVDAObject
+			if curObj:
+				IA2Attributes = curObj.IA2Attributes
+				tag = IA2Attributes.get("tag")
+				if tag == "li":
+					s = (int(IA2Attributes["level"])-1)*2 if IA2Attributes.get("level") else 0
+					noAlign = True
+					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=('⠀' * s)))
 		formatField = self.formatField
-		if alignmentsEnabled():
+		if indentationsEnabled() and not noAlign and formatField.get("left-indent"):
+			leftIndent = formatField.get("left-indent").split('.')
+			postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=('⠀' * abs(int(leftIndent[0])))))
+		elif not noAlign and alignmentsEnabled():
 			textAlign = formatField.get("text-align")
 			if textAlign and textAlign not in ["start", "left"]:
 				textAlign = textAlign.replace("-moz-", "").replace("justified", "justify")
@@ -169,10 +190,8 @@ def decorator(fn, s):
 					log.warning(f"Unknown text-align {textAlign}")
 				if start is not None:
 					s = "⠀" * start
-					repl = brailleRegionHelper.BrailleCellReplacement(
-						start=0, insertBefore=s
-					)
-					brailleRegionHelper.replaceBrailleCells(self, [repl])
+					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s))
+		if postReplacements: brailleRegionHelper.replaceBrailleCells(self, postReplacements)
 
 	if s == "addTextWithFields":
 		return addTextWithFields_edit
@@ -321,24 +340,33 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		sHelper.addItem(wx.StaticText(self, label=self.panelDescription))
-		label = N_("Font attrib&utes")
-		self.reportFontAttributes = sHelper.addItem(
-			wx.CheckBox(self, label=label)
-		)
-		self.reportFontAttributes.SetValue(attributesEnabled())
-		label = N_("&Alignment")
-		self.reportAlignments = sHelper.addItem(
-			wx.CheckBox(self, label=label)
-		)
-		self.reportAlignments.SetValue(alignmentsEnabled())
 
+		label = _("Info to &report")
+		choices = [
+			N_("Font attributes"),
+			N_("Alignment"),
+			_("Indentation"),
+			_("Level of items in a nested list")
+		]
+		self.reportInfo = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=choices)
+		states = (
+			attributesEnabled(),
+			alignmentsEnabled(),
+			indentationsEnabled(),
+			levelItemsListEnabled()
+		)
+		self.reportInfo.CheckedItems = [i for i, state in enumerate(states) if state]
+		self.reportInfo.SetSelection(0)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.attributesBtn = bHelper.addButton(
-			self, label="%s..." % _("Manage a&ttributes")
+			self, label="%s..." % _("Manage &attributes")
 		)
 		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
 		self.alignmentsBtn = bHelper.addButton(
 			self, label="%s..." % _("Manage a&lignments")
+		)
+		self.indentationBtn = bHelper.addButton(
+			self, label="%s..." % _("Manage &indentations")
 		)
 		sHelper.addItem(bHelper)
 
@@ -351,5 +379,13 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.reportFontAttributes.SetFocus()
 
 	def onSave(self):
-		setAttributes(self.reportFontAttributes.IsChecked())
-		setAlignments(self.reportAlignments.IsChecked())
+		checkedItems = self.reportInfo.CheckedItems
+		reportAttributes = 0 in checkedItems
+		reportAlignments = 1 in checkedItems
+		reportIndentations = 2 in checkedItems
+		reportLevelItemsList = 3 in checkedItems
+
+		setAttributes(reportAttributes)
+		setAlignments(reportAlignments)
+		setIndentation(reportIndentations)
+		setLevelItemsList(reportLevelItemsList)

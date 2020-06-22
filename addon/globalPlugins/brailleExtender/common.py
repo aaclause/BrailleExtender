@@ -25,6 +25,8 @@ addonURL = addonHandler.Addon(addonDir).manifest["url"]
 addonGitHubURL = "https://github.com/Andre9642/BrailleExtender/"
 addonAuthor = addonHandler.Addon(addonDir).manifest["author"]
 addonDesc = addonHandler.Addon(addonDir).manifest["description"]
+addonUpdateChannel = addonHandler.Addon(addonDir).manifest["updateChannel"]
+
 lang = languageHandler.getLanguage().split('_')[-1].lower()
 punctuationSeparator = ' ' if 'fr' in lang else ''
 

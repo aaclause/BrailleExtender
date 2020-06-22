@@ -98,12 +98,7 @@ def getConfspec():
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
-		"updateChannel": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
-			CHOICE_none=CHOICE_none,
-			CHANNEL_dev=CHANNEL_dev,
-			CHANNEL_stable=CHANNEL_stable,
-			CHANNEL_testing=CHANNEL_testing
-		),
+		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={addonUpdateChannel})",
 		"lastCheckUpdate": "float(min=0, default=0)",
 		"profile_%s" % curBD: 'string(default="default")',
 		"keyboardLayout_%s" % curBD: "string(default=\"?\")",

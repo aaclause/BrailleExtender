@@ -325,7 +325,7 @@ class AddonDoc:
 				"</ul>",
 				"<p>"
 				+ _("Thanks also to")
-				+ punctuationSeparator + ": Daniel Cotto, Daniel Mayr, Corentin, Louis...<br />",
+				+ punctuationSeparator + ": Daniel Cotto, Daniel Mayr, Dawid Pieper, Corentin, Louis...<br />",
 				_("And thank you very much for all your feedback and comments.")
 				+ " ☺</p>",
 			]

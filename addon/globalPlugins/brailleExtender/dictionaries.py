@@ -65,7 +65,7 @@ def getValidPathsDict(usableIn):
 	valid = lambda path: os.path.exists(path) and os.path.isfile(path) and checkTable(path)
 	return [path for path in paths if valid(path)]
 
-def getPathDict(type_, usableIn):
+def getPathDict(type_, usableIn="io"):
 	groupEnabled = brailleTablesExt.groupEnabled()
 	g = brailleTablesExt.getGroup(usableIn=usableIn)
 	table = os.path.join(configDir, "brailleDicts", config.conf["braille"]["inputTable"]) if usableIn == brailleTablesExt.USABLE_INPUT else config.conf["braille"]["translationTable"]
@@ -80,7 +80,7 @@ def getPathDict(type_, usableIn):
 			if len(g.members) == 1: path = os.path.join(configDir, "brailleDicts", "default")
 			else: path = ''
 		else: path = os.path.join(configDir, "brailleDicts", "default")
-	return "%s.cti" % path
+	return f"{path}.cti"
 
 def getDictionary(type_):
 	path = getPathDict(type_)

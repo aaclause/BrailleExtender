@@ -2,16 +2,11 @@
 # undefinedChars.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
-import codecs
-import json
 import re
-from collections import namedtuple
 
 import wx
 
 import addonHandler
-import brailleInput
-import brailleTables
 import characterProcessing
 import config
 import gui
@@ -177,7 +172,6 @@ def getUndefinedCharSign(method):
 def getReplacement(text, method=None):
 	if not method:
 		method = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
-	out = {}
 	if not text:
 		return ''
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]:

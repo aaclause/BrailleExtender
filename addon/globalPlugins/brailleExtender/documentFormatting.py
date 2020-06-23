@@ -154,7 +154,7 @@ def decorator(fn, s):
 		postReplacements = []
 		if levelItemsListEnabled() and self and hasattr(self.obj, "currentNVDAObject"):
 			curObj = self.obj.currentNVDAObject
-			if curObj:
+			if curObj and hasattr(curObj, "IA2Attributes"):
 				IA2Attributes = curObj.IA2Attributes
 				tag = IA2Attributes.get("tag")
 				if tag == "li":

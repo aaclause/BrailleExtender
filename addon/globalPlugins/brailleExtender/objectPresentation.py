@@ -147,6 +147,10 @@ def getPropertiesBraille(**propertyValues) -> str:
 	if value:
 		properties["value"] = value
 	if states:
+		if selectedElementEnabled():
+			states = states.copy()
+			states.discard(controlTypes.STATE_SELECTED)
+			states.discard(controlTypes.STATE_SELECTABLE)
 		properties["states"] = " ".join(
 			controlTypes.processAndLabelStates(
 				role,

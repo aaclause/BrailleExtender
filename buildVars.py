@@ -59,7 +59,7 @@ addon_info = {
 	# Author(s)
 	"addon_author": "André-Abush Clause <dev@andreabc.net> " + _("and other contributors"),
 	# URL for the add-on documentation support
-	"addon_url": "https://andreabc.net/projects/NVDA_addons/BrailleExtender/",
+	"addon_url": "https://andreabc.net/projects/NVDA_addons/BrailleExtender",
 	# Documentation file name
 	"addon_docFileName": "readme.html",
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)

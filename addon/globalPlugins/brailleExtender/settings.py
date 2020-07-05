@@ -329,6 +329,7 @@ class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["outputTables"] = ','.join(self.oTables)
 		config.conf["brailleExtender"]["inputTables"] = ','.join(self.iTables)
 		config.conf["brailleExtender"]["inputTableShortcuts"] = configBE.tablesUFN[self.inputTableShortcuts.GetSelection()-1] if self.inputTableShortcuts.GetSelection()>0 else '?'
+		configBE.loadPreferedTables()
 		postTableID = self.postTable.GetSelection()
 		postTable = "None" if postTableID == 0 else configBE.tablesFN[postTableID]
 		config.conf["brailleExtender"]["postTable"] = postTable

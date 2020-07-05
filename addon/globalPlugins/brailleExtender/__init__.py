@@ -247,6 +247,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = self.submenu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
+		item = self.submenu.Append(wx.ID_ANY, _("Get the latest template &translation file (.pot)"), _("Opens the URL to download the latest Portable Object Template file of the add-on"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.on_pot_file, item)
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
 
 	def reloadBrailleTables(self):
@@ -903,6 +905,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def onWebsite(evt):
 		return os.startfile(addonURL)
+
+	@staticmethod
+	def on_pot_file(evt):
+		return os.startfile(f"{addonURL}/pot")
+
 
 	def script_reloadAddon(self, gesture): self.onReload()
 	script_reloadAddon.__doc__ = _("Reload %s") % addonName

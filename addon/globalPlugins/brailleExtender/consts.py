@@ -16,3 +16,4 @@ CHOICE_tags = "tags"
 CHOICE_likeSpeech = "l"
 CHOICE_enabled = "y"
 CHOICE_disabled = "n"
+TAG_SEPARATOR = chr(5)

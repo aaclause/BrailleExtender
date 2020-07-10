@@ -44,6 +44,7 @@ from . import brailleRegionHelper
 from . import configBE
 from . import dictionaries
 from . import huc
+from .documentFormatting import getFormatFieldBraille, alignmentsEnabled, attributesEnabled
 from .objectPresentation import getPropertiesBraille, selectedElementEnabled
 from . import undefinedChars
 from .oneHandMode import process as processOneHandMode
@@ -56,7 +57,8 @@ SELECTION_SHAPE = lambda: braille.SELECTION_SHAPE
 origFunc = {
 	"script_braille_routeTo": globalCommands.GlobalCommands.script_braille_routeTo,
 	"update": braille.Region.update,
-	"_createTablesString": louis._createTablesString
+	"_createTablesString": louis._createTablesString,
+	"update_TextInfoRegion": braille.TextInfoRegion.update,
 }
 
 def sayCurrentLine():
@@ -111,7 +113,7 @@ def script_braille_routeTo(self, gesture):
 		except IndexError: pass
 
 # braille.Region.update()
-def update(self):
+def update_region(self):
 	"""Update this region.
 	Subclasses should extend this to update L{rawText}, L{cursorPos}, L{selectionStart} and L{selectionEnd} if necessary.
 	The base class method handles translation of L{rawText} into braille, placing the result in L{brailleCells}.
@@ -161,6 +163,222 @@ def update(self):
 	else:
 		if instanceGP and instanceGP.hideDots78:
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
+
+def update_TextInfoRegion(self):
+	TEXT_SEPARATOR = ' '
+	formatConfig = config.conf["documentFormatting"]
+	unit = self._getReadingUnit()
+	self.rawText = ""
+	self.rawTextTypeforms = []
+	self.cursorPos = None
+	# The output includes text representing fields which isn't part of the real content in the control.
+	# Therefore, maintain a map of positions in the output to positions in the content.
+	self._rawToContentPos = []
+	self._currentContentPos = 0
+	self.selectionStart = self.selectionEnd = None
+	self._isFormatFieldAtStart = True
+	self._skipFieldsNotAtStartOfNode = False
+	self._endsWithField = False
+
+	# Selection has priority over cursor.
+	# HACK: Some TextInfos only support UNIT_LINE properly if they are based on POSITION_CARET,
+	# and copying the TextInfo breaks this ability.
+	# So use the original TextInfo for line and a copy for cursor/selection.
+	self._readingInfo = readingInfo = self._getSelection()
+	sel = readingInfo.copy()
+	if not sel.isCollapsed:
+		# There is a selection.
+		if self.obj.isTextSelectionAnchoredAtStart:
+			# The end of the range is exclusive, so make it inclusive first.
+			readingInfo.move(textInfos.UNIT_CHARACTER, -1, "end")
+		# Collapse the selection to the unanchored end.
+		readingInfo.collapse(end=self.obj.isTextSelectionAnchoredAtStart)
+		# Get the reading unit at the selection.
+		readingInfo.expand(unit)
+		# Restrict the selection to the reading unit.
+		if sel.compareEndPoints(readingInfo, "startToStart") < 0:
+			sel.setEndPoint(readingInfo, "startToStart")
+		if sel.compareEndPoints(readingInfo, "endToEnd") > 0:
+			sel.setEndPoint(readingInfo, "endToEnd")
+	else:
+		# There is a cursor.
+		# Get the reading unit at the cursor.
+		readingInfo.expand(unit)
+
+	# Not all text APIs support offsets, so we can't always get the offset of the selection relative to the start of the reading unit.
+	# Therefore, grab the reading unit in three parts.
+	# First, the chunk from the start of the reading unit to the start of the selection.
+	chunk = readingInfo.copy()
+	chunk.collapse()
+	chunk.setEndPoint(sel, "endToStart")
+	self._addTextWithFields(chunk, formatConfig)
+	# If the user is entering braille, place any untranslated braille before the selection.
+	# Import late to avoid circular import.
+	import brailleInput
+	text = brailleInput.handler.untranslatedBraille
+	if text:
+		rawInputIndStart = len(self.rawText)
+		# _addFieldText adds text to self.rawText and updates other state accordingly.
+		self._addFieldText(INPUT_START_IND + text + INPUT_END_IND, None, separate=False)
+		rawInputIndEnd = len(self.rawText)
+	else:
+		rawInputIndStart = None
+	# Now, the selection itself.
+	self._addTextWithFields(sel, formatConfig, isSelection=True)
+	# Finally, get the chunk from the end of the selection to the end of the reading unit.
+	chunk.setEndPoint(readingInfo, "endToEnd")
+	chunk.setEndPoint(sel, "startToEnd")
+	self._addTextWithFields(chunk, formatConfig)
+
+	# Strip line ending characters.
+	self.rawText = self.rawText.rstrip("\r\n\0\v\f")
+	rawTextLen = len(self.rawText)
+	if rawTextLen < len(self._rawToContentPos):
+		# The stripped text is shorter than the original.
+		self._currentContentPos = self._rawToContentPos[rawTextLen]
+		del self.rawTextTypeforms[rawTextLen:]
+		# Trimming _rawToContentPos doesn't matter,
+		# because we'll only ever ask for indexes valid in rawText.
+		#del self._rawToContentPos[rawTextLen:]
+	if rawTextLen == 0 or not self._endsWithField:
+		# There is no text left after stripping line ending characters,
+		# or the last item added can be navigated with a cursor.
+		# Add a space in case the cursor is at the end of the reading unit.
+		self.rawText += ' '
+		rawTextLen += 1
+		self.rawTextTypeforms.append(louis.plain_text)
+		self._rawToContentPos.append(self._currentContentPos)
+	if self.cursorPos is not None and self.cursorPos >= rawTextLen:
+		self.cursorPos = rawTextLen - 1
+	# The selection end doesn't have to be checked, Region.update() makes sure brailleSelectionEnd is valid.
+
+	# If this is not the start of the object, hide all previous regions.
+	start = readingInfo.obj.makeTextInfo(textInfos.POSITION_FIRST)
+	self.hidePreviousRegions = (start.compareEndPoints(readingInfo, "startToStart") < 0)
+	# Don't touch focusToHardLeft if it is already true
+	# For example, it can be set to True in getFocusContextRegions when this region represents the first new focus ancestor
+	# Alternatively, BrailleHandler._doNewObject can set this to True when this region represents the focus object and the focus ancestry didn't change
+	if not self.focusToHardLeft:
+		# If this is a multiline control, position it at the absolute left of the display when focused.
+		self.focusToHardLeft = self._isMultiline()
+	super(braille.TextInfoRegion, self).update()
+
+	if rawInputIndStart is not None:
+		assert rawInputIndEnd is not None, "rawInputIndStart set but rawInputIndEnd isn't"
+		# These are the start and end of the untranslated input area,
+		# including the start and end indicators.
+		self._brailleInputIndStart = self.rawToBraillePos[rawInputIndStart]
+		self._brailleInputIndEnd = self.rawToBraillePos[rawInputIndEnd]
+		# These are the start and end of the actual untranslated input, excluding indicators.
+		self._brailleInputStart = self._brailleInputIndStart + len(INPUT_START_IND)
+		self._brailleInputEnd = self._brailleInputIndEnd - len(INPUT_END_IND)
+		self.brailleCursorPos = self._brailleInputStart + brailleInput.handler.untranslatedCursorPos
+	else:
+		self._brailleInputIndStart = None
+#: braille.TextInfoRegion._addTextWithFields
+def _addTextWithFields(self, info, formatConfig, isSelection=False):
+	TEXT_SEPARATOR = ' '
+	shouldMoveCursorToFirstContent = not isSelection and self.cursorPos is not None
+	ctrlFields = []
+	typeform = louis.plain_text
+	formatFieldAttributesCache = getattr(info.obj, "_brailleFormatFieldAttributesCache", {})
+	# When true, we are inside a clickable field, and should therefore not report any more new clickable fields
+	inClickable=False
+	for command in info.getTextWithFields(formatConfig=formatConfig):
+		if isinstance(command, str):
+			# Text should break a run of clickables
+			inClickable=False
+			self._isFormatFieldAtStart = False
+			if not command:
+				continue
+			if self._endsWithField:
+				# The last item added was a field,
+				# so add a space before the content.
+				self.rawText += TEXT_SEPARATOR
+				self.rawTextTypeforms.append(louis.plain_text)
+				self._rawToContentPos.append(self._currentContentPos)
+			if isSelection and self.selectionStart is None:
+				# This is where the content begins.
+				self.selectionStart = len(self.rawText)
+			elif shouldMoveCursorToFirstContent:
+				# This is the first piece of content after the cursor.
+				# Position the cursor here, as it may currently be positioned on control field text.
+				self.cursorPos = len(self.rawText)
+				shouldMoveCursorToFirstContent = False
+			self.rawText += command
+			commandLen = len(command)
+			self.rawTextTypeforms.extend((typeform,) * commandLen)
+			endPos = self._currentContentPos + commandLen
+			self._rawToContentPos.extend(range(self._currentContentPos, endPos))
+			self._currentContentPos = endPos
+			if isSelection:
+				# The last time this is set will be the end of the content.
+				self.selectionEnd = len(self.rawText)
+			self._endsWithField = False
+		elif isinstance(command, textInfos.FieldCommand):
+			cmd = command.command
+			field = command.field
+			if cmd == "formatChange":
+				typeform = self._getTypeformFromFormatField(field, formatConfig)
+				text, attrs = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
+				# Map this field text to the start of the field's content.
+				if attrs: self._addFieldText(attrs, self._currentContentPos, False)
+				if not text: continue
+				self._addFieldText(text, self._currentContentPos, not bool(attrs))
+			elif cmd == "controlStart":
+				if self._skipFieldsNotAtStartOfNode and not field.get("_startOfNode"):
+					text = None
+				else:
+					textList=[]
+					if not inClickable and formatConfig['reportClickable']:
+						states=field.get('states')
+						if states and controlTypes.STATE_CLICKABLE in states:
+							# We have entered an outer most clickable or entered a new clickable after exiting a previous one 
+							# Report it if there is nothing else interesting about the field
+							field._presCat=presCat=field.getPresentationCategory(ctrlFields,formatConfig)
+							if not presCat or presCat is field.PRESCAT_LAYOUT:
+								textList.append(braille.positiveStateLabels[controlTypes.STATE_CLICKABLE])
+							inClickable=True
+					text = info.getControlFieldBraille(field, ctrlFields, True, formatConfig)
+					if text:
+						textList.append(text)
+					text=" ".join(textList)
+				# Place this field on a stack so we can access it for controlEnd.
+				ctrlFields.append(field)
+				if not text:
+					continue
+				if getattr(field, "_presCat") == field.PRESCAT_MARKER:
+					# In this case, the field text is what the user cares about,
+					# not the actual content.
+					fieldStart = len(self.rawText)
+					if fieldStart > 0:
+						# There'll be a space before the field text.
+						fieldStart += 1
+					if isSelection and self.selectionStart is None:
+						self.selectionStart = fieldStart
+					elif shouldMoveCursorToFirstContent:
+						self.cursorPos = fieldStart
+						shouldMoveCursorToFirstContent = False
+				# Map this field text to the start of the field's content.
+				self._addFieldText(text, self._currentContentPos)
+			elif cmd == "controlEnd":
+				# Exiting a controlField should break a run of clickables
+				inClickable=False
+				field = ctrlFields.pop()
+				text = info.getControlFieldBraille(field, ctrlFields, False, formatConfig)
+				if not text:
+					continue
+				# Map this field text to the end of the field's content.
+				self._addFieldText(text, self._currentContentPos - 1)
+			self._endsWithField = True
+	if isSelection and self.selectionStart is None:
+		# There is no selection. This is a cursor.
+		self.cursorPos = len(self.rawText)
+	if not self._skipFieldsNotAtStartOfNode:
+		# We only render fields that aren't at the start of their nodes for the first part of the reading unit.
+		# Otherwise, we'll render fields that have already been rendered.
+		self._skipFieldsNotAtStartOfNode = True
+	info.obj._brailleFormatFieldAttributesCache = formatFieldAttributesCache
 
 #: braille.TextInfoRegion.nextLine()
 def nextLine(self):
@@ -488,7 +706,10 @@ def _createTablesString(tablesList):
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
 
 # applying patches
-braille.Region.update = update
+braille.getFormatFieldBraille = getFormatFieldBraille
+braille.Region.update = update_region
+braille.TextInfoRegion._addTextWithFields = _addTextWithFields
+braille.TextInfoRegion.update = update_TextInfoRegion
 braille.TextInfoRegion.previousLine = previousLine
 braille.TextInfoRegion.nextLine = nextLine
 inputCore.InputManager.executeGesture = executeGesture
@@ -504,3 +725,5 @@ braille.getPropertiesBraille = getPropertiesBraille
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
+
+braille.Region.brlex_typeforms = []

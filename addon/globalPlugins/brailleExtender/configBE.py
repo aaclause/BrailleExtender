@@ -17,7 +17,7 @@ import inputCore
 import languageHandler
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
-from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags, CHOICE_likeSpeech, CHOICE_enabled, CHOICE_disabled, CHOICE_liblouis
+from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags, CHOICE_likeSpeech, CHOICE_enabled, CHOICE_disabled, CHOICE_liblouis, TAG_SEPARATOR
 
 Validator = configobj.validate.Validator
 
@@ -174,14 +174,15 @@ def getConfspec():
 			"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
 			"invalid-grammar": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dot8})",
 			"tags": {
-				"selectedElement": "string(default=%s)" % '⣀'.join(["⣏⠎⣹", "⣏⡎⣹"]),
-				"spellingErrors": "string(default=%s)" % '⣀'.join(["⣏⠑⣹", "⣏⡑⣹"]),
-				"bold": "string(default=%s)" % '⣀'.join(["⣏⠃⣹", "⣏⡃⣹"]),
-				"italic": "string(default=%s)" % '⣀'.join(["⣏⠊⣹", "⣏⡊⣹"]),
-				"underline": "string(default=%s)" % '⣀'.join(["⣏⠥⣹", "⣏⡥⣹"]),
-				"strikethrough": "string(default=%s)" % '⣀'.join(["⣏⠅⣹", "⣏⡅⣹"]),
-				"text-position:sub": "string(default=%s)" % '⣀'.join(["_{", "}"]),
-				"text-position:super": "string(default=%s)" % '⣀'.join(["^{", "}"])
+				"selectedElement": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠎⣹", "⣏⡎⣹"]),
+				"invalid-spelling": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠑⣹", "⣏⡑⣹"]),
+				"invalid-grammar": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠛⣹", "⣏⡛⣹"]),
+				"bold": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠃⣹", "⣏⡃⣹"]),
+				"italic": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠊⣹", "⣏⡊⣹"]),
+				"underline": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠥⣹", "⣏⡥⣹"]),
+				"strikethrough": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠅⣹", "⣏⡅⣹"]),
+				"text-position:sub": "string(default=%s)" % TAG_SEPARATOR.join(["_{", "}"]),
+				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
 			},
 		},
 		"quickLaunches": {},

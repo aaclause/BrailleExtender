@@ -163,6 +163,7 @@ def getConfspec():
 			"lists": {
 				"showLevelItem": "boolean(default=True)",
 			},
+			"lineNumber": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
 		},
 		"attributes": {
 			"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_dots78})",

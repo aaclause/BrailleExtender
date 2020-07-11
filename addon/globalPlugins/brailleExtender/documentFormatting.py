@@ -73,6 +73,12 @@ def get_attributes(k, v):
 			return config.conf["brailleExtender"]["attributes"][e]
 	return CHOICE_none
 
+def lineNumberEnabled():
+	lineNumber = config.conf["brailleExtender"]["documentFormatting"]["lineNumber"]
+	if lineNumber == CHOICE_likeSpeech:
+		return config.conf["documentFormatting"]["reportLineNumber"]
+	return lineNumber == CHOICE_enabled
+
 def set_report(k, v):
 	if k not in config.conf["brailleExtender"]["documentFormatting"]:
 		log.error(f"unknown {k} key")
@@ -127,10 +133,11 @@ def decorator(fn, s):
 		keysToEnable = [
 			"reportColor",
 			"reportSpellingErrors",
-			"reportLineNumber",
 			"reportLineIndentation",
 			"reportParagraphIndentation"
 		]
+		if lineNumberEnabled():
+			keysToEnable.append("reportLineNumber")
 		if attributesEnabled():
 			keysToEnable.append("reportFontAttributes")
 		if alignmentsEnabled():
@@ -464,6 +471,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 		self.reportInfo.CheckedItems = [i for i, state in enumerate(states) if state]
 		self.reportInfo.SetSelection(0)
+		choices = list(CHOICES_LABELS_STATES.values())
+		self.reportLineNumber = sHelper.addLabeledControl(
+			_("Report line &number"), wx.Choice, choices=choices
+		)
+		keys = list(CHOICES_LABELS_STATES.keys())
+		self.reportLineNumber.SetSelection(keys.index(config.conf["brailleExtender"]["documentFormatting"]["lineNumber"]))
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.attributesBtn = bHelper.addButton(
 			self, label="%s..." % _("Manage &attributes")
@@ -491,7 +504,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		reportAlignments = 1 in checkedItems
 		reportIndentations = 2 in checkedItems
 		reportLevelItemsList = 3 in checkedItems
-
+		lineNumber = list(CHOICES_LABELS_STATES.keys())[self.reportLineNumber.GetSelection()]
+		config.conf["brailleExtender"]["documentFormatting"]["lineNumber"] = lineNumber
 		setAttributes(reportAttributes)
 		setAlignments(reportAlignments)
 		setIndentation(reportIndentations)

@@ -254,8 +254,8 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# %s is replaced with the level.
 				textList.append(_("h%s")%headingLevel)
 	attrs = ["bold", "italic", "underline", "strikethrough", "text-position", "invalid-spelling", "invalid-grammar"]
-	startTagList = []
-	endTagList = []
+	start_tag_list = []
+	end_tag_list = []
 	for attr in attrs:
 		attr_ = field.get(attr)
 		old_attr_ = fieldCache.get(attr)
@@ -267,10 +267,9 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			tag = get_tag_attribute(key)
 			old_tag = get_tag_attribute(old_key)
 		if tag and attr_ and attr_ != old_attr_:
-			startTagList.append(tag.start)
+			start_tag_list.append(tag.start)
 		if old_tag and old_attr_ and attr_ != old_attr_:
-			endTagList.append(old_tag.end)
-	tagList = endTagList + startTagList
+			end_tag_list.append(old_tag.end)
 	if formatConfig["reportLinks"]:
 		link=field.get("link")
 		oldLink=fieldCache.get("link")
@@ -278,7 +277,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			textList.append(roleLabels[controlTypes.ROLE_LINK])
 	fieldCache.clear()
 	fieldCache.update(field)
-	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(tagList))
+	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(start_tag_list), ''.join(end_tag_list[::-1]))
 
 class ManageAttributes(wx.Dialog):
 	def __init__(

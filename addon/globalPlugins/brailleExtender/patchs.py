@@ -275,6 +275,7 @@ def update_TextInfoRegion(self):
 		self.brailleCursorPos = self._brailleInputStart + brailleInput.handler.untranslatedCursorPos
 	else:
 		self._brailleInputIndStart = None
+
 #: braille.TextInfoRegion._addTextWithFields
 def _addTextWithFields(self, info, formatConfig, isSelection=False):
 	TEXT_SEPARATOR = ' '
@@ -320,11 +321,12 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 			field = command.field
 			if cmd == "formatChange":
 				typeform = self._getTypeformFromFormatField(field, formatConfig)
-				text, attrs = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
+				text, start_tags, end_tags = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
+				if end_tags: self._addFieldText(end_tags, self._currentContentPos, False)
 				# Map this field text to the start of the field's content.
-				if attrs: self._addFieldText(attrs, self._currentContentPos, False)
+				if text: self._addFieldText(text, self._currentContentPos)
+				if start_tags: self._addFieldText(start_tags, self._currentContentPos, bool(text))
 				if not text: continue
-				self._addFieldText(text, self._currentContentPos, not bool(attrs))
 			elif cmd == "controlStart":
 				if self._skipFieldsNotAtStartOfNode and not field.get("_startOfNode"):
 					text = None

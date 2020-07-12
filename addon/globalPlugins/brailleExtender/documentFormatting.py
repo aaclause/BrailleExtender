@@ -57,7 +57,6 @@ CHOICES_LABELS_STATES = {
 	CHOICE_disabled: _("disabled"),
 }
 
-ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
 logTextInfo = False
 
 def get_report(k):
@@ -66,8 +65,9 @@ def get_report(k):
 		return False
 	return config.conf["brailleExtender"]["documentFormatting"][k]["enabled"]
 
-def get_attributes(k, v):
-	l = [k, f"{k}:{v}"]
+def get_attributes(k, v=None):
+	l = [k]
+	if v: l.insert(0, f"{k}:{v}")
 	for e in l:
 		if e in config.conf["brailleExtender"]["attributes"]:
 			return config.conf["brailleExtender"]["attributes"][e]
@@ -109,7 +109,6 @@ def get_liblouis_typeform(typeform):
 def get_typeforms(self, field):
 	l = ["bold", "italic", "underline", "strikethrough", "text-position", "invalid-spelling", "invalid-grammar"]
 	liblouis_typeform = louis.plain_text
-	brlex_typeforms = self.brlex_typeforms
 	for k in l:
 		brlex_typeform = 0
 		v = field.get(k, False)
@@ -260,28 +259,43 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# Translators: Displayed in braille for a heading with a level.
 				# %s is replaced with the level.
 				textList.append(_("h%s")%headingLevel)
-	attrs = ["bold", "italic", "underline", "strikethrough", "text-position", "invalid-spelling", "invalid-grammar"]
-	start_tag_list = []
-	end_tag_list = []
-	for attr in attrs:
-		attr_ = field.get(attr)
-		old_attr_ = fieldCache.get(attr)
-		tag = get_tag_attribute(attr)
-		old_tag = get_tag_attribute(attr)
-		if not tag:
-			key = f"{attr}:{attr_}"
-			old_key = f"{attr}:{old_attr_}"
-			tag = get_tag_attribute(key)
-			old_tag = get_tag_attribute(old_key)
-		if tag and attr_ and attr_ != old_attr_:
-			start_tag_list.append(tag.start)
-		if old_tag and old_attr_ and attr_ != old_attr_:
-			end_tag_list.append(old_tag.end)
 	if formatConfig["reportLinks"]:
 		link=field.get("link")
 		oldLink=fieldCache.get("link")
 		if link and link != oldLink:
 			textList.append(roleLabels[controlTypes.ROLE_LINK])
+
+	start_tag_list = []
+	end_tag_list = []
+	if attributesEnabled():
+		attrs = [attr for attr in [
+			"bold",
+			"italic",
+			"underline",
+			"strikethrough",
+			"text-position:sub",
+			"text-position:super",
+			"invalid-spelling",
+			"invalid-grammar"
+		] if get_attributes(*attr.split(':', 1)) == CHOICE_tags]
+		for attr in attrs:
+			if ':' in attr: attr, v = attr.split(':', 1)
+			else: v = None
+			attr_ = field.get(attr)
+			old_attr_ = fieldCache.get(attr)
+			tag = get_tag_attribute(attr)
+			old_tag = get_tag_attribute(attr)
+			if not tag:
+				key = f"{attr}:{attr_}"
+				old_key = f"{attr}:{old_attr_}"
+				tag = get_tag_attribute(key)
+				old_tag = get_tag_attribute(old_key)
+			if old_tag and old_attr_ and attr_ != old_attr_:
+				if not v or v and old_attr_ != v:
+					end_tag_list.append(old_tag.end)
+			if tag and attr_ and attr_ != old_attr_:
+				if v and attr_ != v: continue
+				start_tag_list.append(tag.start)
 	fieldCache.clear()
 	fieldCache.update(field)
 	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(start_tag_list), ''.join(end_tag_list[::-1]))

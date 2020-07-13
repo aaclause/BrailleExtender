@@ -22,7 +22,8 @@ from .consts import (
 	CHOICE_likeSpeech,
 	CHOICE_enabled,
 	CHOICE_disabled,
-	TAG_SEPARATOR
+	TAG_SEPARATOR,
+	CHOICE_spacing
 )
 from .common import *
 from . import brailleRegionHelper
@@ -40,7 +41,7 @@ CHOICES_LABELS = {
 
 TAG_ATTRIBUTE = namedtuple("TAG_ATTRIBUTE", ("start", "end"))
 
-CHOICES_LABELS_ATTRIBUTES = {
+CHOICES_LABELS_TAGS = {
 	"bold": _("bold"),
 	"italic": _("italic"),
 	"underline": _("underline"),
@@ -49,6 +50,11 @@ CHOICES_LABELS_ATTRIBUTES = {
 	"text-position:super": _("superscript"),
 	"invalid-spelling": _("spelling errors"),
 	"invalid-grammar": _("grammar errors"),
+	"text-align:center": _("center alignment"),
+	"text-align:justified": _("justified alignment"),
+	"text-align:left": _("left alignment"),
+	"text-align:right": _("right alignment"),
+	"text-align:start": _("default alignment"),
 }
 
 CHOICES_LABELS_STATES = {
@@ -58,32 +64,33 @@ CHOICES_LABELS_STATES = {
 }
 
 logTextInfo = False
+conf = config.conf["brailleExtender"]["documentFormatting"]
 
 def get_report(k):
-	if k not in config.conf["brailleExtender"]["documentFormatting"]:
+	if k not in conf:
 		log.error(f"unknown {k} key")
 		return False
-	return config.conf["brailleExtender"]["documentFormatting"][k]["enabled"]
+	return conf[k]["enabled"]
 
 def get_attributes(k, v=None):
 	l = [k]
 	if v: l.insert(0, f"{k}:{v}")
 	for e in l:
-		if e in config.conf["brailleExtender"]["attributes"]:
-			return config.conf["brailleExtender"]["attributes"][e]
+		if e in conf["attributes"]:
+			return conf["attributes"][e]
 	return CHOICE_none
 
 def lineNumberEnabled():
-	lineNumber = config.conf["brailleExtender"]["documentFormatting"]["lineNumber"]
+	lineNumber = conf["lineNumber"]
 	if lineNumber == CHOICE_likeSpeech:
 		return config.conf["documentFormatting"]["reportLineNumber"]
 	return lineNumber == CHOICE_enabled
 
 def set_report(k, v):
-	if k not in config.conf["brailleExtender"]["documentFormatting"]:
+	if k not in conf:
 		log.error(f"unknown {k} key")
 		return False
-	config.conf["brailleExtender"]["documentFormatting"][k]["enabled"] = v
+	conf[k]["enabled"] = v
 	return True
 
 setAttributes = lambda e: set_report("attributes", e)
@@ -91,12 +98,12 @@ setAlignments = lambda e: set_report("alignments", e)
 setIndentation = lambda e: set_report("indentations", e)
 
 def setLevelItemsList(e):
-	config.conf["brailleExtender"]["documentFormatting"]["lists"]["showLevelItem"] = e
+	conf["lists"]["showLevelItem"] = e
 
 attributesEnabled = lambda: get_report("attributes")
 alignmentsEnabled = lambda: get_report("alignments")
 indentationsEnabled = lambda: get_report("indentations")
-levelItemsListEnabled = lambda: config.conf["brailleExtender"]["documentFormatting"]["lists"]["showLevelItem"]
+levelItemsListEnabled = lambda: conf["lists"]["showLevelItem"]
 
 def get_liblouis_typeform(typeform):
 	typeforms = {
@@ -128,7 +135,7 @@ def decorator(fn, s):
 		return get_typeforms(self, field)
 
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
-		conf = formatConfig.copy()
+		formatConfig_ = formatConfig.copy()
 		keysToEnable = [
 			"reportColor",
 			"reportSpellingErrors",
@@ -142,8 +149,8 @@ def decorator(fn, s):
 		if alignmentsEnabled():
 			keysToEnable.append("reportAlignment",)
 		for keyToEnable in keysToEnable:
-			conf[keyToEnable] = True
-		textInfo_ = info.getTextWithFields(conf)
+			formatConfig_[keyToEnable] = True
+		textInfo_ = info.getTextWithFields(formatConfig_)
 		formatField = textInfos.FormatField()
 		for field in textInfo_:
 			if isinstance(field, textInfos.FieldCommand) and isinstance(
@@ -153,7 +160,7 @@ def decorator(fn, s):
 		if logTextInfo:
 			log.info(formatField)
 		self.formatField = formatField
-		fn(self, info, conf, isSelection)
+		fn(self, info, formatConfig_, isSelection)
 
 	def update(self):
 		fn(self)
@@ -176,10 +183,10 @@ def decorator(fn, s):
 			postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=('⠀' * abs(int(leftIndent[0])))))
 		elif not noAlign and alignmentsEnabled():
 			textAlign = formatField.get("text-align")
-			if textAlign and textAlign not in ["start", "left"]:
-				textAlign = textAlign.replace("-moz-", "").replace("justified", "justify")
+			if textAlign and get_method_alignment(textAlign) == CHOICE_spacing and textAlign not in ["start", "left"]:
+				textAlign = normalizeTextAlign(textAlign)
 				pct = {
-					"justify": 0.25,
+					"justified": 0.25,
 					"center": 0.5,
 					"right": 0.75,
 				}
@@ -191,12 +198,12 @@ def decorator(fn, s):
 						start = int((displaySize - sizeBrailleCells) / 2)
 					else:
 						start = displaySize - sizeBrailleCells
-				elif textAlign == "justify":
+				elif textAlign == "justified":
 					start = 3
 				elif textAlign in pct:
 					start = int(pct[textAlign] * braille.handler.displaySize) - 1
 				else:
-					log.warning(f"Unknown text-align {textAlign}")
+					log.error(f"Unknown text-align {textAlign}")
 				if start is not None:
 					s = "⠀" * start
 					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s))
@@ -213,7 +220,7 @@ _tags = {}
 
 def load_tags():
 	global _tags
-	tags = config.conf["brailleExtender"]["attributes"]["tags"].copy()
+	tags = conf["tags"].copy()
 	for k, v in tags.items():
 		if len(v.split(TAG_SEPARATOR)) == 2:
 			v_ = v.split(TAG_SEPARATOR)
@@ -221,13 +228,14 @@ def load_tags():
 
 def save_tags(newTags):
 		tags = {k: f"{v.start}{TAG_SEPARATOR}{v.end}" for k, v in newTags.items()}
-		config.conf["brailleExtender"]["attributes"]["tags"] = tags
+		conf["tags"] = tags
 
-def get_tag_attribute(k, tags=None):
+def get_tags(k, tags=None):
 	if not tags: tags = _tags
 	if not tags: return None
 	if k in tags:
 		return tags[k]
+	else: log.warning(f"{k} not found")
 	return None
 
 def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
@@ -253,6 +261,12 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		linePrefix = field.get("line-prefix")
 		if linePrefix:
 			textList.append(linePrefix)
+		if alignmentsEnabled():
+			textAlign = normalizeTextAlign(field.get("text-align"))
+			old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
+			if textAlign and textAlign != old_textAlign:
+				tag = get_tags(f"text-align:{textAlign}")
+				if tag: textList.append(tag.start)
 		if formatConfig["reportHeadings"]:
 			headingLevel=field.get('heading-level')
 			if headingLevel:
@@ -283,13 +297,13 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			else: v = None
 			attr_ = field.get(attr)
 			old_attr_ = fieldCache.get(attr)
-			tag = get_tag_attribute(attr)
-			old_tag = get_tag_attribute(attr)
+			tag = get_tags(attr)
+			old_tag = get_tags(attr)
 			if not tag:
 				key = f"{attr}:{attr_}"
 				old_key = f"{attr}:{old_attr_}"
-				tag = get_tag_attribute(key)
-				old_tag = get_tag_attribute(old_key)
+				tag = get_tags(key)
+				old_tag = get_tags(old_key)
 			if old_tag and old_attr_ and attr_ != old_attr_:
 				if not v or v and old_attr_ != v:
 					end_tag_list.append(old_tag.end)
@@ -299,6 +313,16 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	fieldCache.clear()
 	fieldCache.update(field)
 	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(start_tag_list), ''.join(end_tag_list[::-1]))
+
+def normalizeTextAlign(desc):
+	if not desc or not isinstance(desc, str): return None
+	desc = desc.replace("-moz-", "").replace("justify", "justified")
+	return desc
+
+def get_method_alignment(desc):
+	sect = conf["alignments"]
+	if desc in sect: return sect[desc]
+	return None
 
 class ManageAttributes(wx.Dialog):
 	def __init__(
@@ -345,8 +369,6 @@ class ManageAttributes(wx.Dialog):
 		self.super.SetSelection(self.getItemToSelect("text-position:super"))
 
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("Manage &tags"))
-		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		sHelper.addItem(bHelper)
 		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK | wx.CANCEL))
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
@@ -355,16 +377,11 @@ class ManageAttributes(wx.Dialog):
 		self.Bind(wx.EVT_BUTTON, self.onOk, id=wx.ID_OK)
 		self.spellingErrors.SetFocus()
 
-	def onTagsBtn(self, evt=None):
-		manageTags = ManageTags(self)
-		manageTags.ShowModal()
-		self.tagsBtn.SetFocus()
-
 	@staticmethod
 	def getItemToSelect(attribute):
 		try:
 			idx = list(CHOICES_LABELS.keys()).index(
-				config.conf["brailleExtender"]["attributes"][attribute]
+				conf["attributes"][attribute]
 			)
 		except BaseException as err:
 			log.error(err)
@@ -372,28 +389,28 @@ class ManageAttributes(wx.Dialog):
 		return idx
 
 	def onOk(self, evt):
-		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = list(
+		conf["attributes"]["invalid-spelling"] = list(
 			CHOICES_LABELS.keys()
 		)[self.spellingErrors.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["invalid-grammar"] = list(
+		conf["attributes"]["invalid-grammar"] = list(
 			CHOICES_LABELS.keys()
 		)[self.grammarError.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["bold"] = list(
+		conf["attributes"]["bold"] = list(
 			CHOICES_LABELS.keys()
 		)[self.bold.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["italic"] = list(
+		conf["attributes"]["italic"] = list(
 			CHOICES_LABELS.keys()
 		)[self.italic.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["underline"] = list(
+		conf["attributes"]["underline"] = list(
 			CHOICES_LABELS.keys()
 		)[self.underline.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["strikethrough"] = list(
+		conf["attributes"]["strikethrough"] = list(
 			CHOICES_LABELS.keys()
 		)[self.strikethrough.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = list(
+		conf["attributes"]["text-position:sub"] = list(
 			CHOICES_LABELS.keys()
 		)[self.sub.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["text-position:super"] = list(
+		conf["attributes"]["text-position:super"] = list(
 			CHOICES_LABELS.keys()
 		)[self.super.GetSelection()]
 		self.Destroy()
@@ -405,36 +422,36 @@ class ManageTags(wx.Dialog):
 		self,
 		parent=None,
 		# Translators: title of a dialog.
-		title=_("Customize attribute tags"),
+		title=_("Customize formatting tags"),
 	):
 		self.tags = _tags.copy()
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
-		choices = list(CHOICES_LABELS_ATTRIBUTES.values())
-		self.attributes = sHelper.addLabeledControl(
-			_("&Attributes"), wx.Choice, choices=choices
+		choices = list(CHOICES_LABELS_TAGS.values())
+		self.formatting = sHelper.addLabeledControl(
+			_("&Formatting"), wx.Choice, choices=choices
 		)
-		self.attributes.SetSelection(0)
-		self.attributes.Bind(wx.EVT_CHOICE, self.onAttributes)
+		self.formatting.SetSelection(0)
+		self.formatting.Bind(wx.EVT_CHOICE, self.onFormatting)
 		self.startTag = sHelper.addLabeledControl(_("&Start tag"), wx.TextCtrl)
 		self.startTag.Bind(wx.EVT_TEXT, self.onTag)
 
 		self.endTag = sHelper.addLabeledControl(_("&End tag"), wx.TextCtrl)
-		self.endTag.Bind(wx.EVT_TEXT, self.onTag)
-		self.onAttributes()
+		self.endTag.Bind(wx.EVT_TEXT, self.onTags)
+		self.onTags()
 
 		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK | wx.CANCEL))
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
 		mainSizer.Fit(self)
 		self.SetSizer(mainSizer)
 		self.Bind(wx.EVT_BUTTON, self.onOk, id=wx.ID_OK)
-		self.attributes.SetFocus()
+		self.formatting.SetFocus()
 
 	def get_key_attribute(self):
-		l = ["bold", "italic", "underline", "strikethrough", "text-position:sub", "text-position:super", "invalid-spelling", "invalid-grammar"]
-		selection = self.attributes.GetSelection()
-		return l[selection]
+		l = list(CHOICES_LABELS_TAGS.keys())
+		selection = self.formatting.GetSelection()
+		return l[selection] if selection < len(l) else 0
 
 	def onTag(self, evt):
 		k = self.get_key_attribute()
@@ -445,11 +462,13 @@ class ManageTags(wx.Dialog):
 		)
 		self.tags[k] = tag
 
-	def onAttributes(self, evt=None):
+	def onFormatting(self, evt=None):
 		k = self.get_key_attribute()
-		tag = get_tag_attribute(k, self.tags)
+		tag = get_tags(k, self.tags)
 		self.startTag.SetValue(tag.start)
 		self.endTag.SetValue(tag.end)
+		if "text-align" in k: self.endTag.Disable()
+		else: self.endTag.Enable()
 
 	def onOk(self, evt):
 		save_tags(self.tags)
@@ -490,24 +509,31 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("Report line &number"), wx.Choice, choices=choices
 		)
 		keys = list(CHOICES_LABELS_STATES.keys())
-		self.reportLineNumber.SetSelection(keys.index(config.conf["brailleExtender"]["documentFormatting"]["lineNumber"]))
+		self.reportLineNumber.SetSelection(keys.index(conf["lineNumber"]))
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.attributesBtn = bHelper.addButton(
-			self, label="%s..." % _("Manage &attributes")
+			self, label="%s..." % _("Representation of &attributes")
 		)
 		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
 		self.alignmentsBtn = bHelper.addButton(
-			self, label="%s..." % _("Manage a&lignments")
+			self, label="%s..." % _("Representation of a&lignments")
 		)
 		self.indentationBtn = bHelper.addButton(
-			self, label="%s..." % _("Manage &indentations")
+			self, label="%s..." % _("Representation of &indentations")
 		)
+		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("Customize &tags"))
+		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		sHelper.addItem(bHelper)
 
 	def onAttributesBtn(self, evt=None):
 		manageAttributes = ManageAttributes(self)
 		manageAttributes.ShowModal()
 		self.attributesBtn.SetFocus()
+
+	def onTagsBtn(self, evt=None):
+		manageTags = ManageTags(self)
+		manageTags.ShowModal()
+		self.tagsBtn.SetFocus()
 
 	def postInit(self):
 		self.reportFontAttributes.SetFocus()
@@ -519,7 +545,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		reportIndentations = 2 in checkedItems
 		reportLevelItemsList = 3 in checkedItems
 		lineNumber = list(CHOICES_LABELS_STATES.keys())[self.reportLineNumber.GetSelection()]
-		config.conf["brailleExtender"]["documentFormatting"]["lineNumber"] = lineNumber
+		conf["lineNumber"] = lineNumber
 		setAttributes(reportAttributes)
 		setAlignments(reportAlignments)
 		setIndentation(reportIndentations)

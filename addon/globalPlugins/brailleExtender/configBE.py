@@ -17,7 +17,7 @@ import inputCore
 import languageHandler
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
-from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags, CHOICE_likeSpeech, CHOICE_enabled, CHOICE_disabled, CHOICE_liblouis, TAG_SEPARATOR
+from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags, CHOICE_likeSpeech, CHOICE_enabled, CHOICE_disabled, CHOICE_liblouis, TAG_SEPARATOR, CHOICE_spacing
 
 Validator = configobj.validate.Validator
 
@@ -153,9 +153,21 @@ def getConfspec():
 		"documentFormatting": {
 			"alignments": {
 				"enabled": "boolean(default=True)",
+				"left": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+				"right": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+				"center": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+				"justified": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
 			},
 			"attributes": {
 				"enabled": "boolean(default=True)",
+				"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"italic": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"underline": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"strikethrough": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"text-position:sub": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"text-position:super": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"invalid-grammar": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
 			},
 			"indentations": {
 				"enabled": "boolean(default=True)",
@@ -163,28 +175,22 @@ def getConfspec():
 			"lists": {
 				"showLevelItem": "boolean(default=True)",
 			},
-			"lineNumber": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
-		},
-		"attributes": {
-			"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_dots78})",
-			"italic": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",
-			"underline": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",
-			"strikethrough": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",
-			"text-position:sub": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",
-			"text-position:super": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_liblouis}, {CHOICE_tags}, default={CHOICE_none})",
-			"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
-			"invalid-grammar": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dot8})",
 			"tags": {
-				"selectedElement": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠎⣹", "⣏⡎⣹"]),
 				"invalid-spelling": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠑⣹", "⣏⡑⣹"]),
 				"invalid-grammar": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠛⣹", "⣏⡛⣹"]),
 				"bold": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠃⣹", "⣏⡃⣹"]),
 				"italic": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠊⣹", "⣏⡊⣹"]),
 				"underline": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠥⣹", "⣏⡥⣹"]),
 				"strikethrough": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠅⣹", "⣏⡅⣹"]),
+				"text-align:center": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ac⣹", ""]),
+				"text-align:justified": "string(default=%s)" % TAG_SEPARATOR.join(["⣏aj⣹", ""]),
+				"text-align:left": "string(default=%s)" % TAG_SEPARATOR.join(["⣏al⣹", ""]),
+				"text-align:right": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ar⣹", ""]),
+				"text-align:start": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ad⣹", ""]),
 				"text-position:sub": "string(default=%s)" % TAG_SEPARATOR.join(["_{", "}"]),
 				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
 			},
+			"lineNumber": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
 		},
 		"quickLaunches": {},
 		"roleLabels": {},

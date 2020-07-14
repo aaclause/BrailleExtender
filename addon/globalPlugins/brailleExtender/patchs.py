@@ -321,9 +321,10 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 			field = command.field
 			if cmd == "formatChange":
 				typeform = self._getTypeformFromFormatField(field, formatConfig)
-				text, start_tags, end_tags = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
+				text, start_tags, end_tags, align = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
 				if end_tags: self._addFieldText(end_tags, self._currentContentPos, False)
 				# Map this field text to the start of the field's content.
+				if align: self._addFieldText(align, self._currentContentPos, False)
 				if text: self._addFieldText(text, self._currentContentPos)
 				if start_tags: self._addFieldText(start_tags, self._currentContentPos, bool(text))
 				if not text: continue

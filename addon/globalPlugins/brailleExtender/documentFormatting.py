@@ -235,7 +235,6 @@ def get_tags(k, tags=None):
 	if not tags: return None
 	if k in tags:
 		return tags[k]
-	else: log.warning(f"{k} not found")
 	return None
 
 def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
@@ -253,6 +252,13 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	"""
 	TEXT_SEPARATOR= ''
 	textList = []
+	align = None
+	if alignmentsEnabled():
+		textAlign = normalizeTextAlign(field.get("text-align"))
+		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
+		if textAlign and textAlign != old_textAlign:
+			tag = get_tags(f"text-align:{textAlign}")
+			if tag: align = tag.start
 	if isAtStart:
 		if formatConfig["reportLineNumber"]:
 			lineNumber = field.get("line-number")
@@ -261,12 +267,6 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		linePrefix = field.get("line-prefix")
 		if linePrefix:
 			textList.append(linePrefix)
-		if alignmentsEnabled():
-			textAlign = normalizeTextAlign(field.get("text-align"))
-			old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
-			if textAlign and textAlign != old_textAlign:
-				tag = get_tags(f"text-align:{textAlign}")
-				if tag: textList.append(tag.start)
 		if formatConfig["reportHeadings"]:
 			headingLevel=field.get('heading-level')
 			if headingLevel:
@@ -312,7 +312,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				start_tag_list.append(tag.start)
 	fieldCache.clear()
 	fieldCache.update(field)
-	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(start_tag_list), ''.join(end_tag_list[::-1]))
+	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(start_tag_list), ''.join(end_tag_list[::-1]), align)
 
 def normalizeTextAlign(desc):
 	if not desc or not isinstance(desc, str): return None

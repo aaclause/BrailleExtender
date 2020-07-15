@@ -170,6 +170,7 @@ def update_TextInfoRegion(self):
 	unit = self._getReadingUnit()
 	self.rawText = ""
 	self.rawTextTypeforms = []
+	self.brlex_typeform = []
 	self.cursorPos = None
 	# The output includes text representing fields which isn't part of the real content in the control.
 	# Therefore, maintain a map of positions in the output to positions in the content.
@@ -320,7 +321,8 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 			cmd = command.command
 			field = command.field
 			if cmd == "formatChange":
-				typeform = self._getTypeformFromFormatField(field, formatConfig)
+				typeform, brlex_typeform = self._getTypeformFromFormatField(field, formatConfig)
+				self.brlex_typeforms[self._currentContentPos] = brlex_typeform
 				text, start_tags, end_tags, align = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
 				if end_tags: self._addFieldText(end_tags, self._currentContentPos, False)
 				# Map this field text to the start of the field's content.
@@ -729,4 +731,4 @@ braille.getPropertiesBraille = getPropertiesBraille
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
 
-braille.Region.brlex_typeforms = []
+braille.Region.brlex_typeforms = {}

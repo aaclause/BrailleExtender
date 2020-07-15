@@ -72,9 +72,9 @@ def get_report(k):
 		return False
 	return conf[k]["enabled"]
 
-def get_attributes(k, v=None):
+def get_attributes(k):
 	l = [k]
-	if v: l.insert(0, f"{k}:{v}")
+	if ':' in k: k = l.append(k.split(':')[0])
 	for e in l:
 		if e in conf["attributes"]:
 			return conf["attributes"][e]
@@ -113,22 +113,31 @@ def get_liblouis_typeform(typeform):
 	}
 	return typeforms[typeform] if typeform in typeforms else louis.plain_text
 
+def get_brlex_typeform(k, v):
+	dot7 = 64
+	dot8 = 128
+	typeform = 0
+	method = get_attributes(k)
+	if method == CHOICE_dot7: typeform = dot7
+	elif method == CHOICE_dot8: typeform = dot8
+	elif method == CHOICE_dots78: typeform = dot7 | dot8
+	return typeform
+
 def get_typeforms(self, field):
+	if not attributesEnabled(): return 0, 0
 	l = ["bold", "italic", "underline", "strikethrough", "text-position", "invalid-spelling", "invalid-grammar"]
 	liblouis_typeform = louis.plain_text
+	brlex_typeform = 0
 	for k in l:
-		brlex_typeform = 0
 		v = field.get(k, False)
 		if v:
 			if isinstance(v, bool): v = '1'
-			method = get_attributes(k, v)
-			if method == CHOICE_none: pass
-			elif method == CHOICE_liblouis:
+			method = get_attributes(f"{k}:{v}")
+			if method == CHOICE_liblouis:
 				liblouis_typeform |= get_liblouis_typeform(k)
-			#else:
-				#brlex_typeform |= get_brlex_typeform(k, v)
-		#brlex_typeforms.append(brlex_typeform)
-	return liblouis_typeform
+			elif method in [CHOICE_dots78, CHOICE_dot7, CHOICE_dot8]:
+				brlex_typeform |= get_brlex_typeform(k, v)
+	return liblouis_typeform, brlex_typeform
 
 def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field, formatConfig=None):
@@ -208,7 +217,18 @@ def decorator(fn, s):
 					s = "⠀" * start
 					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s))
 		if postReplacements: brailleRegionHelper.replaceBrailleCells(self, postReplacements)
-
+		if any(self.brlex_typeforms):
+			brlex_typeforms = self.brlex_typeforms
+			lastTypeform = 0
+			for pos in range(len(self.rawText)):
+				if pos in brlex_typeforms:
+					lastTypeform = brlex_typeforms[pos]
+				if lastTypeform:
+					p = self._rawToContentPos.index(pos) if hasattr(self, "_rawToContentPos") and self._rawToContentPos else pos
+					start, end = brailleRegionHelper.getBraillePosFromRawPos(self, p)
+					for pos_ in range(start, end+1):
+						self.brailleCells[pos_] |= lastTypeform
+		self.brlex_typeforms = {}
 	if s == "addTextWithFields":
 		return addTextWithFields_edit
 	if s == "update":
@@ -235,6 +255,7 @@ def get_tags(k, tags=None):
 	if not tags: return None
 	if k in tags:
 		return tags[k]
+	elif ':' in k and k.split(':')[0] in tags: return tags[k.split(':')[0]]
 	return None
 
 def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
@@ -282,7 +303,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	start_tag_list = []
 	end_tag_list = []
 	if attributesEnabled():
-		attrs = [attr for attr in [
+		tags = [tag for tag in [
 			"bold",
 			"italic",
 			"underline",
@@ -291,24 +312,17 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			"text-position:super",
 			"invalid-spelling",
 			"invalid-grammar"
-		] if get_attributes(*attr.split(':', 1)) == CHOICE_tags]
-		for attr in attrs:
-			if ':' in attr: attr, v = attr.split(':', 1)
-			else: v = None
-			attr_ = field.get(attr)
-			old_attr_ = fieldCache.get(attr)
-			tag = get_tags(attr)
-			old_tag = get_tags(attr)
-			if not tag:
-				key = f"{attr}:{attr_}"
-				old_key = f"{attr}:{old_attr_}"
-				tag = get_tags(key)
-				old_tag = get_tags(old_key)
-			if old_tag and old_attr_ and attr_ != old_attr_:
-				if not v or v and old_attr_ != v:
-					end_tag_list.append(old_tag.end)
-			if tag and attr_ and attr_ != old_attr_:
-				if v and attr_ != v: continue
+		] if get_attributes(tag) == CHOICE_tags]
+		for name_tag in tags:
+			name_field = name_tag.split(':')[0]
+			value_field = name_tag.split(':', 1)[1] if ':' in name_tag else None
+			field_value = field.get(name_field)
+			old_field_value = fieldCache.get(name_field)
+			tag = get_tags(f"{name_field}:{field_value}")
+			old_tag = get_tags(f"{name_field}:{old_field_value}")
+			if value_field != old_field_value and old_tag and old_field_value:
+				if old_field_value != field_value: end_tag_list.append(old_tag.end)
+			if field_value and tag and field_value != value_field and field_value != old_field_value:
 				start_tag_list.append(tag.start)
 	fieldCache.clear()
 	fieldCache.update(field)
@@ -435,7 +449,7 @@ class ManageTags(wx.Dialog):
 		self.formatting.SetSelection(0)
 		self.formatting.Bind(wx.EVT_CHOICE, self.onFormatting)
 		self.startTag = sHelper.addLabeledControl(_("&Start tag"), wx.TextCtrl)
-		self.startTag.Bind(wx.EVT_TEXT, self.onTag)
+		self.startTag.Bind(wx.EVT_TEXT, self.onTags)
 
 		self.endTag = sHelper.addLabeledControl(_("&End tag"), wx.TextCtrl)
 		self.endTag.Bind(wx.EVT_TEXT, self.onTags)
@@ -453,7 +467,7 @@ class ManageTags(wx.Dialog):
 		selection = self.formatting.GetSelection()
 		return l[selection] if selection < len(l) else 0
 
-	def onTag(self, evt):
+	def onTags(self, evt=None):
 		k = self.get_key_attribute()
 		self.tags[k] = self.startTag.GetValue()
 		tag = TAG_ATTRIBUTE(

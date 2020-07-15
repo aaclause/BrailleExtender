@@ -277,7 +277,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		link=field.get("link")
 		oldLink=fieldCache.get("link")
 		if link and link != oldLink:
-			textList.append(roleLabels[controlTypes.ROLE_LINK])
+			textList.append(controlTypes.roleLabels[controlTypes.ROLE_LINK])
 
 	start_tag_list = []
 	end_tag_list = []

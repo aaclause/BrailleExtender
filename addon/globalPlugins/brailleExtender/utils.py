@@ -440,7 +440,7 @@ def getTether():
 
 
 def getCharFromValue(s):
-	if not isinstance(s, str if isPy3 else (str, unicode)): raise TypeError("Wrong type")
+	if not isinstance(s, str): raise TypeError("Wrong type")
 	if not s or len(s) < 2: raise ValueError("Wrong value")
 	supportedBases = {'b': 2, 'd': 10, 'h': 16, 'o': 8, 'x': 16}
 	base, n = s[0].lower(), s[1:]

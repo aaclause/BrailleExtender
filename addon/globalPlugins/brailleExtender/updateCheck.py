@@ -2,19 +2,15 @@
 # updateCheck.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2020 André-Abush Clause, released under GPL.
-from __future__ import unicode_literals
+
 from logHandler import log
 import json
 import os
-import sys
 import time
 import threading
 import tones
-isPy3 = sys.version_info >= (3, 0)
-if isPy3:
-	import urllib.parse
-	import urllib.request
-else: import urllib
+import urllib.parse
+import urllib.request
 
 import gui
 import wx
@@ -31,7 +27,6 @@ import versionInfo
 addonHandler.initTranslation()
 
 baseDir = os.path.dirname(__file__)
-if not isPy3: baseDir = baseDir.decode("mbcs")
 _addonDir = os.path.join(baseDir, "..", "..")
 addonInfos = addonHandler.Addon(_addonDir).manifest
 sectionName = "brailleExtender"
@@ -46,9 +41,9 @@ def paramsDL(): return {
 	"brailledisplay": braille.handler.display.name,
 }
 
-urlencode = urllib.parse.urlencode if isPy3 else urllib.urlencode
-URLopener = urllib.request.URLopener if isPy3 else urllib.URLopener
-urlopen = urllib.request.urlopen if isPy3 else urllib.urlopen
+urlencode = urllib.parse.urlencode
+URLopener = urllib.request.URLopener
+urlopen = urllib.request.urlopen
 
 def checkUpdates(sil = False):
 

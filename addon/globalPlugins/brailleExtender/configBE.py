@@ -3,7 +3,6 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-from __future__ import unicode_literals
 import os
 import globalVars
 from collections import OrderedDict
@@ -14,7 +13,6 @@ import braille
 import config
 import configobj
 import inputCore
-import languageHandler
 from . import brailleTablesExt
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
@@ -90,12 +88,7 @@ def getConfspec():
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
-		"updateChannel": "option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={CHANNEL_stable})".format(
-			CHOICE_none=CHOICE_none,
-			CHANNEL_dev=CHANNEL_dev,
-			CHANNEL_stable=CHANNEL_stable,
-			CHANNEL_testing=CHANNEL_testing
-		),
+		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={addonUpdateChannel})",
 		"lastCheckUpdate": "float(min=0, default=0)",
 		"profile_%s" % curBD: 'string(default="default")',
 		"keyboardLayout_%s" % curBD: "string(default=\"?\")",

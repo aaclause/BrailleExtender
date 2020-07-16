@@ -4,17 +4,13 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
-from __future__ import unicode_literals
 import os
-import re
 import sys
 import time
-import unicodedata
 import struct
 import winUser
 
 import api
-import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
@@ -128,7 +124,7 @@ def update(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
+	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
 		undefinedChars.undefinedCharProcess(self)
 	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != configBE.CHOICE_none:
 		d = {
@@ -500,3 +496,6 @@ brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
+
+# This variable tells if braille region should parse undefined characters
+braille.Region.parseUndefinedChars = True

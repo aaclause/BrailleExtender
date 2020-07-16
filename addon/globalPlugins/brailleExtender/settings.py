@@ -3,14 +3,12 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-from __future__ import unicode_literals
 import glob
 import hashlib
 import os
 import json
 import gui
 import wx
-import re
 import addonHandler
 import braille
 import config

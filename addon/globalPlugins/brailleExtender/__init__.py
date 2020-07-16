@@ -7,16 +7,14 @@
 # Additional third party copyrighted code is included:
 #  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
 #  -> https://github.com/albzan/attribra/
-from __future__ import unicode_literals
+
 from collections import OrderedDict
 from logHandler import log
 
 import os
 import re
 import subprocess
-import sys
 import time
-import urllib
 import gui
 import wx
 
@@ -194,7 +192,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["lastNVDAVersion"] != updateCheck.versionInfo.version:
 			config.conf["brailleExtender"]["lastNVDAVersion"] = updateCheck.versionInfo.version
 			checkingForced = True
-		delayChecking = 86400 if isPy3 or config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
+		delayChecking = 86400 if config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
 		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and (checkingForced or (time.time() - config.conf["brailleExtender"]["lastCheckUpdate"]) > delayChecking):
 			checkUpdates(True)
 			config.conf["brailleExtender"]["lastCheckUpdate"] = time.time()
@@ -300,6 +298,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = self.submenu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)
+		item = self.submenu.Append(wx.ID_ANY, _("Get the latest template &translation file (.pot)"), _("Opens the URL to download the latest Portable Object Template file of the add-on"))
+		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.on_pot_file, item)
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
 
 	def reloadBrailleTables(self):
@@ -307,9 +307,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		dictionaries.notifyInvalidTables()
 		if config.conf["brailleExtender"]["tabSpace"]:
 			liblouisDef = r"always \t " + ("0-" * configBE.getTabSize()).strip('-')
-			if isPy3:
-				patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
-			else: patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef))
+			patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
 		undefinedChars.setUndefinedChar()
 
 	@staticmethod
@@ -961,6 +959,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def onWebsite(evt):
 		return os.startfile(addonURL)
+
+	@staticmethod
+	def on_pot_file(evt):
+		return os.startfile(f"{addonURL}/pot")
+
 
 	def script_reloadAddon(self, gesture): self.onReload()
 	script_reloadAddon.__doc__ = _("Reload %s") % addonName

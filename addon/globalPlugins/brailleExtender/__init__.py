@@ -10,7 +10,6 @@ import os
 import re
 import subprocess
 import time
-import urllib
 import gui
 import wx
 

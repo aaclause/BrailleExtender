@@ -5,15 +5,12 @@
 # This file modify some functions from core.
 
 import os
-import re
 import sys
 import time
-import unicodedata
 import struct
 import winUser
 
 import api
-import appModuleHandler
 import braille
 import brailleInput
 import brailleTables

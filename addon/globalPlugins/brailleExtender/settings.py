@@ -9,7 +9,6 @@ import os
 import json
 import gui
 import wx
-import re
 import addonHandler
 import braille
 import config

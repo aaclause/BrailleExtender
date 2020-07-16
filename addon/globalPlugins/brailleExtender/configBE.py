@@ -13,7 +13,6 @@ import braille
 import config
 import configobj
 import inputCore
-import languageHandler
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 

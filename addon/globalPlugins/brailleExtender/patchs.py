@@ -220,7 +220,7 @@ def update_TextInfoRegion(self):
 	if text:
 		rawInputIndStart = len(self.rawText)
 		# _addFieldText adds text to self.rawText and updates other state accordingly.
-		self._addFieldText(INPUT_START_IND + text + INPUT_END_IND, None, separate=False)
+		self._addFieldText(braille.INPUT_START_IND + text + braille.INPUT_END_IND, None, separate=False)
 		rawInputIndEnd = len(self.rawText)
 	else:
 		rawInputIndStart = None
@@ -271,7 +271,7 @@ def update_TextInfoRegion(self):
 		self._brailleInputIndStart = self.rawToBraillePos[rawInputIndStart]
 		self._brailleInputIndEnd = self.rawToBraillePos[rawInputIndEnd]
 		# These are the start and end of the actual untranslated input, excluding indicators.
-		self._brailleInputStart = self._brailleInputIndStart + len(INPUT_START_IND)
+		self._brailleInputStart = self._brailleInputIndStart + len(braille.INPUT_START_IND)
 		self._brailleInputEnd = self._brailleInputIndEnd - len(INPUT_END_IND)
 		self.brailleCursorPos = self._brailleInputStart + brailleInput.handler.untranslatedCursorPos
 	else:

@@ -4,7 +4,6 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
-from __future__ import unicode_literals
 import os
 import re
 import sys

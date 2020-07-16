@@ -3,7 +3,6 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-from __future__ import unicode_literals
 import os.path as osp
 import re
 import api
@@ -440,7 +439,7 @@ def getTether():
 
 
 def getCharFromValue(s):
-	if not isinstance(s, str if isPy3 else (str, unicode)): raise TypeError("Wrong type")
+	if not isinstance(s, str): raise TypeError("Wrong type")
 	if not s or len(s) < 2: raise ValueError("Wrong value")
 	supportedBases = {'b': 2, 'd': 10, 'h': 16, 'o': 8, 'x': 16}
 	base, n = s[0].lower(), s[1:]

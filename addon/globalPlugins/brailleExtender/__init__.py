@@ -3,15 +3,12 @@
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
 # Copyright (C) 2016-2020 André-Abush Clause <dev@andreabc.net>
-
-from __future__ import unicode_literals
 from collections import OrderedDict
 from logHandler import log
 
 import os
 import re
 import subprocess
-import sys
 import time
 import urllib
 import gui
@@ -139,7 +136,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["lastNVDAVersion"] != updateCheck.versionInfo.version:
 			config.conf["brailleExtender"]["lastNVDAVersion"] = updateCheck.versionInfo.version
 			checkingForced = True
-		delayChecking = 86400 if isPy3 or config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
+		delayChecking = 86400 if config.conf["brailleExtender"]["updateChannel"] != configBE.CHANNEL_stable else 604800
 		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and (checkingForced or (time.time() - config.conf["brailleExtender"]["lastCheckUpdate"]) > delayChecking):
 			checkUpdates(True)
 			config.conf["brailleExtender"]["lastCheckUpdate"] = time.time()
@@ -258,9 +255,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		dictionaries.notifyInvalidTables()
 		if config.conf["brailleExtender"]["tabSpace"]:
 			liblouisDef = r"always \t " + ("0-" * configBE.getTabSize()).strip('-')
-			if isPy3:
-				patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
-			else: patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef))
+			patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
 		undefinedChars.setUndefinedChar()
 
 	@staticmethod

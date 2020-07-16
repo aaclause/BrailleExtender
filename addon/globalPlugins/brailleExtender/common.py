@@ -3,7 +3,6 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-from __future__ import unicode_literals
 import os
 import struct
 

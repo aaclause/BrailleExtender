@@ -7,7 +7,7 @@
 # Additional third party copyrighted code is included:
 #  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
 #  -> https://github.com/albzan/attribra/
-from __future__ import unicode_literals
+
 from collections import OrderedDict
 from logHandler import log
 

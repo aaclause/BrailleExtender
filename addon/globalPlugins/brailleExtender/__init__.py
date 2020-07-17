@@ -285,12 +285,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.QuickLaunchesDlg),
 			item
 		)
-		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
-		gui.mainFrame.sysTrayIcon.Bind(
-			wx.EVT_MENU,
-			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.ProfileEditorDlg),
-			item
-		)
 		item = self.submenu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.script_getTableOverview(None), item)
 		item = self.submenu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))

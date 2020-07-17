@@ -7,6 +7,7 @@ import wx
 
 import addonHandler
 import braille
+import controlTypes
 import config
 import louis
 import textInfos

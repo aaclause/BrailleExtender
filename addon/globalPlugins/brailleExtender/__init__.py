@@ -669,7 +669,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_undefinedCharsDesc.__doc__ = _("Enable/disable description of undefined characters")
 
 	def script_position(self, gesture=None):
-		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
+		curpos, total = utils.getTextPosition()
+		if total:
+			percentage = round((curpos / total * 100), 2)
+			ui.message(f"{percentage}% ({curpos}/{total})")
+		else:
+			ui.message(_("No text"))
 	script_position.__doc__ = _("Get the cursor position of text")
 
 	def script_hourDate(self, gesture=None):

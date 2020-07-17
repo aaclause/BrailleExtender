@@ -85,7 +85,7 @@ rotorItems = [
 	("RadioButton", _("Radio buttons")),
 	("ComboBox", _("Combo boxes")),
 	("CheckBox", _("Check boxes")),
-	("NotLinkBlock", _("Not link blocks")),
+	("NotLinkBlock", _("Non-link blocks")),
 	("Frame", _("Frames")),
 	("Separator", _("Separators")),
 	("EmbeddedObject", _("Embedded objects")),

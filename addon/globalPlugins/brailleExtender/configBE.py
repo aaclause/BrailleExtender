@@ -15,7 +15,6 @@ import configobj
 import inputCore
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
-from .consts import CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags, CHOICE_likeSpeech, CHOICE_enabled, CHOICE_disabled, CHOICE_liblouis, TAG_SEPARATOR, CHOICE_spacing
 
 Validator = configobj.validate.Validator
 

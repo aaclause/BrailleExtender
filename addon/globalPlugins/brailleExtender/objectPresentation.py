@@ -11,9 +11,8 @@ addonHandler.initTranslation()
 from logHandler import log
 import queueHandler
 import ui
-from .common import *
+from .common import N_, CHOICE_liblouis, CHOICE_none
 from .documentFormatting import CHOICES_LABELS
-from .consts import CHOICE_liblouis, CHOICE_none
 
 MOVE_UP = 0
 MOVE_DOWN = 1

@@ -28,4 +28,19 @@ punctuationSeparator = ' ' if 'fr' in lang else ''
 
 
 profilesDir = os.path.join(baseDir, "Profiles")
+
 N_ = lambda s: _(s)
+
+CHOICE_none = "none"
+
+# text attributes
+CHOICE_liblouis = "liblouis"
+CHOICE_dot7 = "dot7"
+CHOICE_dot8 = "dot8"
+CHOICE_dots78 = "dots78"
+CHOICE_tags = "tags"
+CHOICE_spacing = "spacing"
+TAG_SEPARATOR = chr(5)
+CHOICE_likeSpeech = "l"
+CHOICE_enabled = "y"
+CHOICE_disabled = "n"

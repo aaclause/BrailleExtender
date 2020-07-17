@@ -12,7 +12,8 @@ import louis
 import textInfos
 from collections import namedtuple
 from logHandler import log
-from .consts import (
+from .common import (
+	N_,
 	CHOICE_none,
 	CHOICE_dot7,
 	CHOICE_dot8,
@@ -25,7 +26,6 @@ from .consts import (
 	TAG_SEPARATOR,
 	CHOICE_spacing
 )
-from .common import *
 from . import brailleRegionHelper
 
 addonHandler.initTranslation()

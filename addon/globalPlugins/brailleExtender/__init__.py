@@ -258,7 +258,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lambda event: self.script_getHelp(None),
 			item
 		)
-		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Settings"), _("Opens the addons' settings."))
+		item = self.submenu.Append(wx.ID_ANY, _("&Settings..."), _("Opens the addons' settings."))
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU,
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.AddonSettingsDialog),
@@ -273,7 +273,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
-		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("Advanced &input mode dictionary"), _("Advanced input mode configuration"))
+		item = self.submenu.Append(wx.ID_ANY, _("Advanced &input mode dictionary..."), _("Advanced input mode configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(
 			wx.EVT_MENU,
 			lambda event: gui.mainFrame._popupSettingsDialog(advancedInputMode.AdvancedInputModeDlg),
@@ -291,11 +291,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.ProfileEditorDlg),
 			item
 		)
-		item = self.submenu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
+		item = self.submenu.Append(wx.ID_ANY, _("Braille input table &overview"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.script_getTableOverview(None), item)
-		item = self.submenu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
+		item = self.submenu.Append(wx.ID_ANY, _("&Reload add-on"), _("Reload this add-on."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onReload, item)
-		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Check for update"), _("Checks if update is available"))
+		item = self.submenu.Append(wx.ID_ANY, _("Check for &update..."), _("Checks if Braille Extender update is available"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onUpdate, item)
 		item = self.submenu.Append(wx.ID_ANY, _("&Website"), _("Open addon's website."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onWebsite, item)

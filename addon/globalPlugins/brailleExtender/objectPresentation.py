@@ -232,7 +232,7 @@ class ManagePropertiesOrder(wx.Dialog):
 		self,
 		parent=None,
 		# Translators: title of a dialog.
-		title=_("Manage properties order"),
+		title=_("Order Properties"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -358,7 +358,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.selectedElement.SetSelection(itemToSelect)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.propertiesOrderBtn = bHelper.addButton(
-			self, label="%s..." % _("Manage properties &order")
+			self, label="%s..." % _("&Order Properties")
 		)
 		self.propertiesOrderBtn.Bind(wx.EVT_BUTTON, self.onPropertiesOrderBtn)
 		sHelper.addItem(bHelper)

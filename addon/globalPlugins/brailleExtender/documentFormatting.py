@@ -526,16 +526,16 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.reportLineNumber.SetSelection(keys.index(conf["lineNumber"]))
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.attributesBtn = bHelper.addButton(
-			self, label="%s..." % _("Representation of &attributes")
+			self, label="%s..." % _("Font &attributes")
 		)
 		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
 		self.alignmentsBtn = bHelper.addButton(
-			self, label="%s..." % _("Representation of a&lignments")
+			self, label="%s..." % _("A&lignments")
 		)
 		self.indentationBtn = bHelper.addButton(
-			self, label="%s..." % _("Representation of &indentations")
+			self, label="%s..." % _("&Indentations")
 		)
-		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("Customize &tags"))
+		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("&Tags"))
 		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		sHelper.addItem(bHelper)
 

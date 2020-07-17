@@ -228,8 +228,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.inputTableShortcuts = sHelper.addLabeledControl(label, wx.Choice, choices=[currentTableLabel] + listTablesDisplayName(listUncontractedInputTables))
 		self.inputTableShortcuts.SetSelection(selectedItem)
 
-		self.tablesGroupBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("&Groups of tables"), wx.DefaultPosition)
-		self.tablesGroupBtn.Bind(wx.EVT_BUTTON, self.onTablesGroupsBtn)
+		self.tablesGroupBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Table &groups"), wx.DefaultPosition)
+		self.tablesGroupBtn.Bind(wx.EVT_BUTTON, self.onTableGroupsBtn)
 
 		self.customBrailleTablesBtn = bHelper1.addButton(self, wx.NewId(), "%s..." % _("Alternative and &custom braille tables"), wx.DefaultPosition)
 		self.customBrailleTablesBtn.Bind(wx.EVT_BUTTON, self.onCustomBrailleTablesBtn)
@@ -248,9 +248,9 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		if self.tabSpace.IsChecked(): self.tabSize.Enable()
 		else: self.tabSize.Disable()
 
-	def onTablesGroupsBtn(self, evt):
-		tablesGroupsDlg = TablesGroupsDlg(self, multiInstanceAllowed=True)
-		tablesGroupsDlg.ShowModal()
+	def onTableGroupsBtn(self, evt):
+		tableGroupsDlg = TableGroupsDlg(self, multiInstanceAllowed=True)
+		tableGroupsDlg.ShowModal()
 
 	def onCustomBrailleTablesBtn(self, evt):
 		customBrailleTablesDlg = CustomBrailleTablesDlg(self, multiInstanceAllowed=True)
@@ -295,10 +295,10 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		configBE.initializePreferredTables()
 
 
-class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
+class TableGroupsDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = f"{addonName} - %s" % _("Groups of tables")
+	title = f"{addonName} - %s" % _("table groups")
 
 	def makeSettings(self, settingsSizer):
 		self.tmpGroups = getGroups()
@@ -314,19 +314,19 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in groups of tables dialog to add new entries.
+			# Translators: The label for a button in table groups dialog to add new entries.
 			label=_("&Add")
 		).Bind(wx.EVT_BUTTON, self.onAddClick)
 
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in groups of tables dialog to edit existing entries.
+			# Translators: The label for a button in table groups dialog to edit existing entries.
 			label=_("&Edit")
 		).Bind(wx.EVT_BUTTON, self.onEditClick)
 
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in groups of tables dialog to remove existing entries.
+			# Translators: The label for a button in table groups dialog to remove existing entries.
 			label=_("Re&move")
 		).Bind(wx.EVT_BUTTON, self.onRemoveClick)
 
@@ -334,13 +334,13 @@ class TablesGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in groups of tables dialog to open groups of tables file in an editor.
-			label=_("&Open the groups of tables file in an editor")
+			# Translators: The label for a button in table groups dialog to open table groups file in an editor.
+			label=_("&Open the table groups file in an editor")
 		).Bind(wx.EVT_BUTTON, self.onOpenFileClick)
 		bHelper.addButton(
 			parent=self,
-			# Translators: The label for a button in groups of tables dialog to reload groups of tables.
-			label=_("&Reload the groups of tables")
+			# Translators: The label for a button in table groups dialog to reload table groups.
+			label=_("&Reload table groups")
 		).Bind(wx.EVT_BUTTON, self.onReloadClick)
 		sHelper.addItem(bHelper)
 

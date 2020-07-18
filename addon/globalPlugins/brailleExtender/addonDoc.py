@@ -287,7 +287,7 @@ class AddonDoc:
 			_("Arabic"): "Ikrami Ahmad",
 			_("Croatian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>",
 			_("Danish"): "Daniel Gartmann <dg@danielgartmann.dk>",
-			_("English and French"): "Sof <hellosof@gmail.com>, André-Abush Clause <dev@andreabc.net>",
+			_("English and French"): "Sof <hellosof@gmail.com>, Joseph Lee, André-Abush Clause <dev@andreabc.net>",
 			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick <hozosch@web.de>, Jürgen Schwingshandl <jbs@b-a-c.at>",
 			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
@@ -303,7 +303,7 @@ class AddonDoc:
 						"Copyright (C) 2016-2020 André-Abush Clause ",
 						_("and other contributors"),
 						":<br />",
-						"<pre>%s\n%s</pre>" % (addonURL, addonGitHubURL),
+						f"<pre>{addonGitHubURL}\n{addonURL}</pre>",
 						"</p>",
 						"<h3>" + _("Translators") + "</h3><ul>",
 					]
@@ -317,6 +317,12 @@ class AddonDoc:
 				"</ul>",
 				"<h3>" + _("Code contributions and other") + "</h3>",
 				"<p>"
+				+ _("Code maintenance (cleanup, rewrites, optimizations) thanks to:")
+				+ "</p>",
+				"<ul>"
+					+ "<li>Joseph Lee &lt;joseph.lee22590@gmail.com&gt;</li>"
+				+ "</ul>",
+				"<p>"
 				+ _("Additional third party copyrighted code is included:")
 				+ "</p>",
 				"<ul>",
@@ -325,7 +331,7 @@ class AddonDoc:
 				"<p>"
 				+ _("Thanks also to")
 				+ punctuationSeparator + ": Daniel Cotto, Daniel Mayr, Dawid Pieper, Corentin, Louis...<br />",
-				_("And thank you very much for all your feedback and comments.")
+				_("Finally thank you very much for all your feedback and comments.")
 				+ " ☺</p>",
 			]
 		)

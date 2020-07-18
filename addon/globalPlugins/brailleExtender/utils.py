@@ -392,24 +392,12 @@ def isEnd():
 	except BaseException: pass
 	return False
 
-def getPositionPercentage():
+def getTextPosition():
 	try:
 		total = len(getText())
-		if total != 0:
-			return float(len(getTextCarret())) / float(total) * 100
-		else:
-			return 100
+		return len(getTextCarret()), total
 	except BaseException:
-		ui.message(_('No text'))
-	return 100
-
-
-def getPosition():
-	try:
-		total = len(getText())
-		return (len(getTextCarret()), total)
-	except BaseException:
-		ui.message(_('Not text'))
+		return 0, 0
 
 
 def uncapitalize(s): return s[:1].lower() + s[1:] if s else ''

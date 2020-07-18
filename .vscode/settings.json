@@ -1,0 +1,32 @@
+{
+	"editor.accessibilitySupport": "on",
+	"pythonIndent.useTabOnHangingIndent": true,
+	"editor.tabCompletion": "on",
+	"files.eol": "\n",
+	"files.trimTrailingWhitespace": true,
+	"files.exclude": {
+		"**/.git": true,
+		"**/env/**": true,
+		"**/venv/**": true,
+		"**/virtualenv/**": true,
+		"**/__pycache__": true,
+		"**/**/*.pyc": true
+	},
+	"files.watcherExclude": {
+		"**/.git/objects/**": true,
+		"**/__pycache__": true,
+		"**/**/*.pyc": true
+	},
+	"python.formatting.provider": "autopep8",
+	"python.linting.enabled": true,
+	"python.linting.pylintEnabled": true,
+	"python.linting.pylintUseMinimalCheckers": false,
+	"python.linting.pylintArgs": [
+		"-d W0312",
+		"--indent-string='\t'",
+		"--indent-after-paren=1",
+		"--additional-builtins=_", // _ is used for localization
+		"--extension-pkg-whitelist=wx",
+		"--init-hook='import sys; sys.path.append(\"%USERPROFILE%/src/nvaccess/nvda/source\")'"
+	]
+}

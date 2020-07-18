@@ -230,12 +230,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.QuickLaunchesDlg),
 			item
 		)
-		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Profile editor"), _("Profile editor"))
-		gui.mainFrame.sysTrayIcon.Bind(
-			wx.EVT_MENU,
-			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.ProfileEditorDlg),
-			item
-		)
 		item = self.submenu.Append(wx.ID_ANY, _("Overview of the current input braille table"), _("Overview of the current input braille table"))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, lambda event: self.script_getTableOverview(None), item)
 		item = self.submenu.Append(wx.ID_ANY, _("Reload add-on"), _("Reload this add-on."))
@@ -624,7 +618,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_undefinedCharsDesc.__doc__ = _("Enable/disable description of undefined characters")
 
 	def script_position(self, gesture=None):
-		return ui.message('{0}% ({1}/{2})'.format(round(utils.getPositionPercentage(), 2), utils.getPosition()[0], utils.getPosition()[1]))
+		curpos, total = utils.getTextPosition()
+		if total:
+			percentage = round((curpos / total * 100), 2)
+			ui.message(f"{percentage}% ({curpos}/{total})")
+		else:
+			ui.message(_("No text"))
 	script_position.__doc__ = _("Get the cursor position of text")
 
 	def script_hourDate(self, gesture=None):

@@ -225,11 +225,9 @@ def decorator(fn, s):
 				if pos in brlex_typeforms:
 					lastTypeform = brlex_typeforms[pos]
 				if lastTypeform:
-					p = self._rawToContentPos.index(pos) if hasattr(self, "_rawToContentPos") and self._rawToContentPos else pos
-					start, end = brailleRegionHelper.getBraillePosFromRawPos(self, p)
+					start, end = brailleRegionHelper.getBraillePosFromRawPos(self, pos)
 					for pos_ in range(start, end+1):
 						self.brailleCells[pos_] |= lastTypeform
-		self.brlex_typeforms = {}
 	if s == "addTextWithFields":
 		return addTextWithFields_edit
 	if s == "update":

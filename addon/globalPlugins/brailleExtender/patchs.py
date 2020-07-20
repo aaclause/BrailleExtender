@@ -166,7 +166,8 @@ def update_TextInfoRegion(self):
 	unit = self._getReadingUnit()
 	self.rawText = ""
 	self.rawTextTypeforms = []
-	self.brlex_typeform = []
+	self.brlex_typeforms = {}
+	self._len_brlex_typeforms = 0
 	self.cursorPos = None
 	# The output includes text representing fields which isn't part of the real content in the control.
 	# Therefore, maintain a map of positions in the output to positions in the content.
@@ -292,8 +293,8 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 			if self._endsWithField:
 				# The last item added was a field,
 				# so add a space before the content.
-				self.rawText += TEXT_SEPARATOR
-				self.rawTextTypeforms.append(louis.plain_text)
+				#self.rawText += TEXT_SEPARATOR
+				#self.rawTextTypeforms.append(louis.plain_text)
 				self._rawToContentPos.append(self._currentContentPos)
 			if isSelection and self.selectionStart is None:
 				# This is where the content begins.
@@ -318,13 +319,17 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 			field = command.field
 			if cmd == "formatChange":
 				typeform, brlex_typeform = self._getTypeformFromFormatField(field, formatConfig)
-				self.brlex_typeforms[self._currentContentPos] = brlex_typeform
 				text, start_tags, end_tags, align = getFormatFieldBraille(field, formatFieldAttributesCache, self._isFormatFieldAtStart, formatConfig)
-				if end_tags: self._addFieldText(end_tags, self._currentContentPos, False)
-				# Map this field text to the start of the field's content.
-				if align: self._addFieldText(align, self._currentContentPos, False)
-				if text: self._addFieldText(text, self._currentContentPos)
-				if start_tags: self._addFieldText(start_tags, self._currentContentPos, bool(text))
+				if end_tags:
+					self._addFieldText(end_tags, self._currentContentPos, False)
+				if align:
+					self._addFieldText(align, self._currentContentPos, False)
+				if text:
+					self._addFieldText(text, self._currentContentPos, False)
+				if start_tags:
+					self._addFieldText(start_tags, self._currentContentPos, False)
+				self._len_brlex_typeforms += self._rawToContentPos.count(self._currentContentPos)
+				self.brlex_typeforms[self._len_brlex_typeforms + self._currentContentPos] = brlex_typeform
 				if not text: continue
 			elif cmd == "controlStart":
 				if self._skipFieldsNotAtStartOfNode and not field.get("_startOfNode"):
@@ -728,3 +733,4 @@ braille.getPropertiesBraille = getPropertiesBraille
 braille.Region.parseUndefinedChars = True
 
 braille.Region.brlex_typeforms = {}
+braille.Region._len_brlex_typeforms = 0

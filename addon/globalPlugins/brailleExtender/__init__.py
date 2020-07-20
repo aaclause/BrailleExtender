@@ -582,7 +582,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			speech.speakMessage(_("BRF mode enabled"))
 		else:
 			speech.speakMessage(_("BRF mode disabled"))
-	script_toggleBRFMode.__doc__ = _("Enable/disable BRF mode")
+	script_toggleBRFMode.__doc__ = _("Toggles BRF mode")
 
 	def script_toggleLockModifiers(self, gesture):
 		self.modifiersLocked = not self.modifiersLocked

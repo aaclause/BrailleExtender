@@ -42,14 +42,14 @@ dotPatternSample = "6-123456"
 signPatternSample = "??"
 
 CHOICES_LABELS = {
-	CHOICE_tableBehaviour: _("Use braille table behavior") + " (%s)" % _("no description possible"),
+	CHOICE_tableBehaviour: _("Use braille table behavior (no description possible)"),
 	CHOICE_allDots8: _("Dots 1-8 (⣿)"),
 	CHOICE_allDots6: _("Dots 1-6 (⠿)"),
 	CHOICE_emptyCell: _("Empty cell (⠀)"),
 	CHOICE_otherDots: _("Other dot pattern (e.g.: {dotPatternSample})").format(
 		dotPatternSample=dotPatternSample
 	),
-	CHOICE_questionMark: _("Question mark (depending output table)"),
+	CHOICE_questionMark: _("Question mark (depending on output table)"),
 	CHOICE_otherSign: _("Other sign/pattern (e.g.: {signPatternSample})").format(
 		signPatternSample=signPatternSample
 	),
@@ -240,7 +240,7 @@ def undefinedCharProcess(self):
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = _("Representation of undefined characters")
+	title = _("Undefined character representation")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -260,8 +260,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 		self.undefinedCharDesc = sHelper.addItem(
 			wx.CheckBox(self, label=(
-				_("Show punctuation/symbol &name for undefined characters if available")
-				+ " (%s)" % _("can cause a lag")
+				_("Show punctuation/symbol &name for undefined characters if available (can cause a lag)")
 			))
 		)
 		self.undefinedCharDesc.SetValue(

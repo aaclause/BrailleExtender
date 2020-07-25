@@ -93,11 +93,11 @@ def process(self, dots):
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = _("One-hand mode")
+	title = _("One-handed mode")
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("&Enable this feature")))
+		self.featureEnabled = sHelper.addItem(wx.CheckBox(self, label=_("Enable &one-handed mode")))
 		self.featureEnabled.SetValue(config.conf["brailleExtender"]["oneHandedMode"]["enabled"])
 		self.featureEnabled.Bind(wx.EVT_CHECKBOX, self.onFeatureEnabled)
 		choices = list(INPUT_METHODS.values())

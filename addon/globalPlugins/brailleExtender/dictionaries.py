@@ -122,7 +122,7 @@ def notifyInvalidTables():
 			getPathDict("table"): "table",
 			getPathDict("tmp"): "tmp"
 		}
-		msg = _("One or more errors are present in dictionaries tables. Concerned dictionaries: %s. As a result, these dictionaries are not loaded.") % ", ".join([dicts[path] for path in invalidTables if path in dicts])
+		msg = _("One or more errors are present in dictionary tables: %s. As a result, these dictionaries were not loaded.") % ", ".join([dicts[path] for path in invalidTables if path in dicts])
 		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 
 def removeTmpDict():
@@ -309,7 +309,7 @@ class DictionaryEntryDlg(wx.Dialog):
 			# Translators: This is a label for an edit field in add dictionary entry dialog.
 			dictText = _("Dictionary")
 			outTable = brailleTablesExt.fileName2displayName(config.conf["braille"]["translationTable"])
-			dictChoices = [_("Global"), _("Table")+(" (%s)" % outTable), _("Temporary")]
+			dictChoices = [_("Global"), _("Table ({})").format(outTable), _("Temporary")]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
 			bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
@@ -355,7 +355,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 	def onSeeEntriesClick(self, evt):
 		outTable = brailleTablesExt.fileName2displayName(config.conf["braille"]["translationTable"])
-		label = [_("Global dictionary"), _("Table dictionary")+(" (%s)" % outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
+		label = [_("Global dictionary"), _("Table dictionary ({})").format(outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()
 		gui.mainFrame._popupSettingsDialog(DictionaryDlg, label, type_)
@@ -390,7 +390,7 @@ class DictionaryEntryDlg(wx.Dialog):
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.textPatternTextCtrl.SetFocus()
 			if not braillePattern:
-				msg = _("'Braille representation' field is empty, you must specify something with this opcode. E.g.: %s") % egBRLRepr
+				msg = _("'Braille representation' field is empty. You must specify something with this opcode. E.g.: %s") % egBRLRepr
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.braillePatternTextCtrl.SetFocus()
 			if not  re.match("^[0-8\-]+$", braillePattern):

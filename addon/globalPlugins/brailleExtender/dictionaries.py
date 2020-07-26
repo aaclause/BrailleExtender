@@ -6,8 +6,7 @@
 from logHandler import log
 from . import huc
 from . import brailleTablesExt
-from .common import *
-from . import configBE
+from .common import configDir
 from collections import namedtuple
 import louis
 import config

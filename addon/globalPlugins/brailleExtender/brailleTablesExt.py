@@ -10,7 +10,6 @@ import gui
 import wx
 
 import addonHandler
-import brailleTables
 import config
 from collections import namedtuple
 from itertools import permutations

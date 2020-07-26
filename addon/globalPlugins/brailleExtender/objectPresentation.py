@@ -1,5 +1,10 @@
 # coding: utf-8
 # objectPresentation.py
+from .documentFormatting import CHOICES_LABELS
+from .common import N_, CHOICE_liblouis, CHOICE_none
+import ui
+import queueHandler
+from logHandler import log
 import gui
 import wx
 import addonHandler
@@ -8,11 +13,6 @@ import controlTypes
 import config
 
 addonHandler.initTranslation()
-from logHandler import log
-import queueHandler
-import ui
-from .common import N_, CHOICE_liblouis, CHOICE_none
-from .documentFormatting import CHOICES_LABELS
 
 MOVE_UP = 0
 MOVE_DOWN = 1
@@ -120,16 +120,16 @@ def getPropertiesBraille(**propertyValues) -> str:
 			roleText = N_("h%s") % level
 			level = None
 		elif (
-			role == controlTypes.ROLE_LINK
-			and states
-			and controlTypes.STATE_VISITED in states
+				role == controlTypes.ROLE_LINK
+				and states
+				and controlTypes.STATE_VISITED in states
 		):
 			states = states.copy()
 			states.discard(controlTypes.STATE_VISITED)
 			# Translators: Displayed in braille for a link which has been visited.
 			roleText = N_("vlnk")
 		elif (
-			name or cellCoordsText or rowNumber or columnNumber
+				name or cellCoordsText or rowNumber or columnNumber
 		) and role in controlTypes.silentRolesOnFocus:
 			roleText = None
 		else:
@@ -178,7 +178,8 @@ def getPropertiesBraille(**propertyValues) -> str:
 				number=indexInGroup, total=similarItemsInGroup
 			)
 		if level is not None:
-			properties["positionInfoLevel"] = N_("lv %s") % positionInfo["level"]
+			properties["positionInfoLevel"] = N_(
+				"lv %s") % positionInfo["level"]
 	if rowNumber:
 		if includeTableCellCoords and not cellCoordsText:
 			if rowSpan > 1:
@@ -190,7 +191,8 @@ def getPropertiesBraille(**propertyValues) -> str:
 			else:
 				# Translators: Displayed in braille for a table cell row number.
 				# %s is replaced with the row number.
-				properties["row"] = N_("r{rowNumber}").format(rowNumber=rowNumber)
+				properties["row"] = N_("r{rowNumber}").format(
+					rowNumber=rowNumber)
 	if columnNumber:
 		properties["columnHeaderText"] = propertyValues.get("columnHeaderText")
 		if includeTableCellCoords and not cellCoordsText:
@@ -229,25 +231,28 @@ def getPropertiesBraille(**propertyValues) -> str:
 
 class ManagePropertiesOrder(wx.Dialog):
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Order Properties"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Order Properties"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
-		self.propertiesOrder = {k: PROPERTIES_ORDER[k] for k in getPropertiesOrder()}
+		self.propertiesOrder = {
+			k: PROPERTIES_ORDER[k] for k in getPropertiesOrder()}
 		self.propertiesOrderList = sHelper.addLabeledControl(
 			_("Properties"), wx.Choice, choices=self.getProperties()
 		)
-		self.propertiesOrderList.Bind(wx.EVT_CHOICE, self.onPropertiesOrderList)
+		self.propertiesOrderList.Bind(
+			wx.EVT_CHOICE, self.onPropertiesOrderList)
 		self.propertiesOrderList.SetSelection(0)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.moveUpBtn = bHelper.addButton(self, label=_("Move &up"))
 		self.moveUpBtn.Bind(wx.EVT_BUTTON, lambda evt: self.move(evt, MOVE_UP))
 		self.moveDownBtn = bHelper.addButton(self, label=_("Move &down"))
-		self.moveDownBtn.Bind(wx.EVT_BUTTON, lambda evt: self.move(evt, MOVE_DOWN))
+		self.moveDownBtn.Bind(
+			wx.EVT_BUTTON, lambda evt: self.move(evt, MOVE_DOWN))
 		sHelper.addItem(bHelper)
 
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
@@ -265,7 +270,8 @@ class ManagePropertiesOrder(wx.Dialog):
 		)
 		sHelper.addItem(bHelper)
 
-		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK | wx.CANCEL))
+		sHelper.addDialogDismissButtons(
+			self.CreateButtonSizer(wx.OK | wx.CANCEL))
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
 		mainSizer.Fit(self)
 		self.SetSizer(mainSizer)
@@ -343,7 +349,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.choices = {k: v for k, v in CHOICES_LABELS.items() if k != CHOICE_liblouis}
+		self.choices = {k: v for k, v in CHOICES_LABELS.items()
+						if k != CHOICE_liblouis}
 		try:
 			itemToSelect = list(self.choices.keys()).index(
 				config.conf["brailleExtender"]["objectPresentation"]["selectedElement"]

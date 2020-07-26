@@ -148,6 +148,7 @@ def getConfspec():
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
 		},
 		"documentFormatting": {
+			"processLinePerLine": "boolean(default=False)",
 			"alignments": {
 				"enabled": "boolean(default=True)",
 				"left": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
@@ -180,6 +181,7 @@ def getConfspec():
 				"underline": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠥⣹", "⣏⡥⣹"]),
 				"strikethrough": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠅⣹", "⣏⡅⣹"]),
 				"text-align:center": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ac⣹", ""]),
+				"text-align:distribute": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ai⣹", ""]),
 				"text-align:justified": "string(default=%s)" % TAG_SEPARATOR.join(["⣏aj⣹", ""]),
 				"text-align:left": "string(default=%s)" % TAG_SEPARATOR.join(["⣏al⣹", ""]),
 				"text-align:right": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ar⣹", ""]),
@@ -188,6 +190,12 @@ def getConfspec():
 				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
 			},
 			"lineNumber": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
+			"reportBorderStyle": "boolean(default=True)",
+			"reportColor": "boolean(default=True)",
+			"reportFontName": "boolean(default=True)",
+			"reportFontSize": "boolean(default=True)",
+			"reportStyle": "boolean(default=True)",
+			"reportPage": "boolean(default=True)",
 		},
 		"quickLaunches": {},
 		"roleLabels": {},

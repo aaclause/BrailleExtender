@@ -7,6 +7,7 @@ import wx
 
 import addonHandler
 import braille
+import colors
 import controlTypes
 import config
 import louis
@@ -51,7 +52,8 @@ CHOICES_LABELS_TAGS = {
 	"text-position:super": _("superscript"),
 	"invalid-spelling": _("spelling errors"),
 	"invalid-grammar": _("grammar errors"),
-	"text-align:center": _("center alignment"),
+	"text-align:center": _("centered alignment"),
+	"text-align:distribute": _("distributed alignment"),
 	"text-align:justified": _("justified alignment"),
 	"text-align:left": _("left alignment"),
 	"text-align:right": _("right alignment"),
@@ -67,19 +69,23 @@ CHOICES_LABELS_STATES = {
 logTextInfo = False
 conf = config.conf["brailleExtender"]["documentFormatting"]
 
+
 def get_report(k):
 	if k not in conf:
 		log.error(f"unknown {k} key")
 		return False
 	return conf[k]["enabled"]
 
+
 def get_attributes(k):
 	l = [k]
-	if ':' in k: k = l.append(k.split(':')[0])
+	if ':' in k:
+		k = l.append(k.split(':')[0])
 	for e in l:
 		if e in conf["attributes"]:
 			return conf["attributes"][e]
 	return CHOICE_none
+
 
 def lineNumberEnabled():
 	lineNumber = conf["lineNumber"]
@@ -87,24 +93,86 @@ def lineNumberEnabled():
 		return config.conf["documentFormatting"]["reportLineNumber"]
 	return lineNumber == CHOICE_enabled
 
-def set_report(k, v):
+
+def set_report(k, v, sect=True):
 	if k not in conf:
-		log.error(f"unknown {k} key")
+		log.error(f"unknown key/section '{k}'")
 		return False
-	conf[k]["enabled"] = v
+	if sect:
+		if not isinstance(conf[k], config.AggregatedSection):
+			log.error(f"'{k}' is not a section")
+			return False
+		if not "enabled" in conf[k]:
+			log.error(f"'{k}' is not a valid section")
+			return False
+		conf[k]["enabled"] = v
+	else:
+		if isinstance(conf[k], config.AggregatedSection):
+			log.error(f"'{k}' is not a key")
+		conf[k] = v
 	return True
 
-setAttributes = lambda e: set_report("attributes", e)
-setAlignments = lambda e: set_report("alignments", e)
-setIndentation = lambda e: set_report("indentations", e)
+
+def setAttributes(e): return set_report("attributes", e)
+
+
+def setAlignments(e): return set_report("alignments", e)
+
+
+def setIndentation(e): return set_report("indentations", e)
+
+
+def setColor(e): return set_report("reportColor", e, False)
+
+
+def setStyle(e): return set_report("reportStyle", e, False)
+
+
+def setBorderStyle(e): return set_report("reportBorderStyle", e, False)
+
+
+def setFontName(e): return set_report("reportFontName", e, False)
+
+
+def setFontSize(e): return set_report("reportFontSize", e, False)
+
+
+def setPage(e): return set_report("reportPage", e, False)
+
 
 def setLevelItemsList(e):
 	conf["lists"]["showLevelItem"] = e
 
-attributesEnabled = lambda: get_report("attributes")
-alignmentsEnabled = lambda: get_report("alignments")
-indentationsEnabled = lambda: get_report("indentations")
-levelItemsListEnabled = lambda: conf["lists"]["showLevelItem"]
+
+def attributesEnabled(): return get_report("attributes")
+
+
+def alignmentsEnabled(): return get_report("alignments")
+
+
+def indentationsEnabled(): return get_report("indentations")
+
+
+def levelItemsListEnabled(): return conf["lists"]["showLevelItem"]
+
+
+def colorEnabled(): return conf["reportColor"]
+
+
+def styleEnabled(): return conf["reportStyle"]
+
+
+def borderStyleEnabled(): return conf["reportBorderStyle"]
+
+
+def fontNameEnabled(): return conf["reportFontName"]
+
+
+def fontSizeEnabled(): return conf["reportFontSize"]
+
+
+def pageEnabled(): return conf["reportPage"]
+
 
 def get_liblouis_typeform(typeform):
 	typeforms = {
@@ -114,40 +182,44 @@ def get_liblouis_typeform(typeform):
 	}
 	return typeforms[typeform] if typeform in typeforms else louis.plain_text
 
+
 def get_brlex_typeform(k, v):
 	dot7 = 64
 	dot8 = 128
 	typeform = 0
 	method = get_attributes(k)
-	if method == CHOICE_dot7: typeform = dot7
-	elif method == CHOICE_dot8: typeform = dot8
-	elif method == CHOICE_dots78: typeform = dot7 | dot8
+	if method == CHOICE_dot7:
+		typeform = dot7
+	elif method == CHOICE_dot8:
+		typeform = dot8
+	elif method == CHOICE_dots78:
+		typeform = dot7 | dot8
 	return typeform
 
-def get_typeforms(self, field):
-	if not attributesEnabled(): return 0, 0
-	l = ["bold", "italic", "underline", "strikethrough", "text-position", "invalid-spelling", "invalid-grammar"]
-	liblouis_typeform = louis.plain_text
-	brlex_typeform = 0
-	for k in l:
-		v = field.get(k, False)
-		if v:
-			if isinstance(v, bool): v = '1'
-			method = get_attributes(f"{k}:{v}")
-			if method == CHOICE_liblouis:
-				liblouis_typeform |= get_liblouis_typeform(k)
-			elif method in [CHOICE_dots78, CHOICE_dot7, CHOICE_dot8]:
-				brlex_typeform |= get_brlex_typeform(k, v)
-	return liblouis_typeform, brlex_typeform
 
 def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field, formatConfig=None):
-		return get_typeforms(self, field)
+		if not attributesEnabled():
+			return 0, 0
+		l = ["bold", "italic", "underline", "strikethrough",
+			 "text-position", "invalid-spelling", "invalid-grammar"]
+		liblouis_typeform = louis.plain_text
+		brlex_typeform = 0
+		for k in l:
+			v = field.get(k, False)
+			if v:
+				if isinstance(v, bool):
+					v = '1'
+				method = get_attributes(f"{k}:{v}")
+				if method == CHOICE_liblouis:
+					liblouis_typeform |= get_liblouis_typeform(k)
+				elif method in [CHOICE_dots78, CHOICE_dot7, CHOICE_dot8]:
+					brlex_typeform |= get_brlex_typeform(k, v)
+		return liblouis_typeform, brlex_typeform
 
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
 		formatConfig_ = formatConfig.copy()
 		keysToEnable = [
-			"reportColor",
 			"reportSpellingErrors",
 			"reportLineIndentation",
 			"reportParagraphIndentation"
@@ -158,6 +230,18 @@ def decorator(fn, s):
 			keysToEnable.append("reportFontAttributes")
 		if alignmentsEnabled():
 			keysToEnable.append("reportAlignment",)
+		if colorEnabled():
+			keysToEnable.append("reportColor")
+		if styleEnabled():
+			keysToEnable.append("reportStyle")
+		if borderStyleEnabled():
+			keysToEnable.append("reportBorderStyle")
+		if fontNameEnabled():
+			keysToEnable.append("reportFontName")
+		if fontSizeEnabled():
+			keysToEnable.append("reportFontSize")
+		if pageEnabled():
+			keysToEnable.append("reportPage")
 		for keyToEnable in keysToEnable:
 			formatConfig_[keyToEnable] = True
 		textInfo_ = info.getTextWithFields(formatConfig_)
@@ -175,8 +259,6 @@ def decorator(fn, s):
 	def update(self):
 		fn(self)
 		postReplacements = []
-		if attributesEnabled():
-			pass#/postReplacements += get_typeformss(self)
 		noAlign = False
 		if levelItemsListEnabled() and self and hasattr(self.obj, "currentNVDAObject"):
 			curObj = self.obj.currentNVDAObject
@@ -184,13 +266,16 @@ def decorator(fn, s):
 				IA2Attributes = curObj.IA2Attributes
 				tag = IA2Attributes.get("tag")
 				if tag == "li":
-					s = (int(IA2Attributes["level"])-1)*2 if IA2Attributes.get("level") else 0
+					s = (int(IA2Attributes["level"])-1) * \
+						2 if IA2Attributes.get("level") else 0
 					noAlign = True
-					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=('⠀' * s)))
+					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(
+						start=0, insertBefore=('⠀' * s)))
 		formatField = self.formatField
 		if indentationsEnabled() and not noAlign and formatField.get("left-indent"):
 			leftIndent = formatField.get("left-indent").split('.')
-			postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=('⠀' * abs(int(leftIndent[0])))))
+			postReplacements.append(brailleRegionHelper.BrailleCellReplacement(
+				start=0, insertBefore=('⠀' * abs(int(leftIndent[0])))))
 		elif not noAlign and alignmentsEnabled():
 			textAlign = formatField.get("text-align")
 			if textAlign and get_method_alignment(textAlign) == CHOICE_spacing and textAlign not in ["start", "left"]:
@@ -211,13 +296,16 @@ def decorator(fn, s):
 				elif textAlign == "justified":
 					start = 3
 				elif textAlign in pct:
-					start = int(pct[textAlign] * braille.handler.displaySize) - 1
+					start = int(pct[textAlign] *
+								braille.handler.displaySize) - 1
 				else:
 					log.error(f"Unknown text-align {textAlign}")
 				if start is not None:
 					s = "⠀" * start
-					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s))
-		if postReplacements: brailleRegionHelper.replaceBrailleCells(self, postReplacements)
+					postReplacements.append(
+						brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s))
+		if postReplacements:
+			brailleRegionHelper.replaceBrailleCells(self, postReplacements)
 		if any(self.brlex_typeforms):
 			brlex_typeforms = self.brlex_typeforms
 			lastTypeform = 0
@@ -225,7 +313,8 @@ def decorator(fn, s):
 				if pos in brlex_typeforms:
 					lastTypeform = brlex_typeforms[pos]
 				if lastTypeform:
-					start, end = brailleRegionHelper.getBraillePosFromRawPos(self, pos)
+					start, end = brailleRegionHelper.getBraillePosFromRawPos(
+						self, pos)
 					for pos_ in range(start, end+1):
 						self.brailleCells[pos_] |= lastTypeform
 	if s == "addTextWithFields":
@@ -235,7 +324,9 @@ def decorator(fn, s):
 	if s == "_getTypeformFromFormatField":
 		return _getTypeformFromFormatField
 
+
 _tags = {}
+
 
 def load_tags():
 	global _tags
@@ -245,17 +336,23 @@ def load_tags():
 			v_ = v.split(TAG_SEPARATOR)
 			_tags[k] = TAG_ATTRIBUTE(v_[0], v_[1])
 
+
 def save_tags(newTags):
-		tags = {k: f"{v.start}{TAG_SEPARATOR}{v.end}" for k, v in newTags.items()}
-		conf["tags"] = tags
+	tags = {k: f"{v.start}{TAG_SEPARATOR}{v.end}" for k, v in newTags.items()}
+	conf["tags"] = tags
+
 
 def get_tags(k, tags=None):
-	if not tags: tags = _tags
-	if not tags: return None
+	if not tags:
+		tags = _tags
+	if not tags:
+		return None
 	if k in tags:
 		return tags[k]
-	elif ':' in k and k.split(':')[0] in tags: return tags[k.split(':')[0]]
+	elif ':' in k and k.split(':')[0] in tags:
+		return tags[k.split(':')[0]]
 	return None
+
 
 def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	"""Generates the braille text for the given format field.
@@ -270,16 +367,12 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	@param formatConfig: The formatting config.
 	@type formatConfig: {str : bool, ...}
 	"""
-	TEXT_SEPARATOR= ''
+	TEXT_SEPARATOR = ''
 	textList = []
-	align = None
-	if alignmentsEnabled():
-		textAlign = normalizeTextAlign(field.get("text-align"))
-		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
-		if textAlign and textAlign != old_textAlign:
-			tag = get_tags(f"text-align:{textAlign}")
-			if tag: align = tag.start
+
 	if isAtStart:
+		if conf["processLinePerLine"]:
+			fieldCache.clear()
 		if formatConfig["reportLineNumber"]:
 			lineNumber = field.get("line-number")
 			if lineNumber:
@@ -288,19 +381,161 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		if linePrefix:
 			textList.append(linePrefix)
 		if formatConfig["reportHeadings"]:
-			headingLevel=field.get('heading-level')
+			headingLevel = field.get('heading-level')
 			if headingLevel:
 				# Translators: Displayed in braille for a heading with a level.
 				# %s is replaced with the level.
-				textList.append(_("h%s")%headingLevel)
+				textList.append((N_("h%s") % headingLevel)+' ')
+
+	if pageEnabled():
+		pageNumber = field.get("page-number")
+		oldPageNumber = fieldCache.get(
+			"page-number") if fieldCache is not None else None
+		if pageNumber and pageNumber != oldPageNumber:
+			# Translators: Indicates the page number in a document.
+			# %s will be replaced with the page number.
+			text = _("page %s") % pageNumber
+			textList.append("⣏%s⣹" % text)
+		sectionNumber = field.get("section-number")
+		oldSectionNumber = fieldCache.get(
+			"section-number") if fieldCache is not None else None
+		if sectionNumber and sectionNumber != oldSectionNumber:
+			# Translators: Indicates the section number in a document.
+			# %s will be replaced with the section number.
+			text = _("section %s") % sectionNumber
+			textList.append("⣏%s⣹" % text)
+
+		textColumnCount = field.get("text-column-count")
+		oldTextColumnCount = fieldCache.get(
+			"text-column-count") if fieldCache is not None else None
+		textColumnNumber = field.get("text-column-number")
+		oldTextColumnNumber = fieldCache.get(
+			"text-column-number") if fieldCache is not None else None
+
+		# Because we do not want to report the number of columns when a document is just opened and there is only
+		# one column. This would be verbose, in the standard case.
+		# column number has changed, or the columnCount has changed
+		# but not if the columnCount is 1 or less and there is no old columnCount.
+		if (((textColumnNumber and textColumnNumber != oldTextColumnNumber) or
+				(textColumnCount and textColumnCount != oldTextColumnCount)) and not
+				(textColumnCount and int(textColumnCount) <= 1 and oldTextColumnCount == None)):
+			if textColumnNumber and textColumnCount:
+				# Translators: Indicates the text column number in a document.
+				# {0} will be replaced with the text column number.
+				# {1} will be replaced with the number of text columns.
+				text = _("column {0} of {1}").format(
+					textColumnNumber, textColumnCount)
+				textList.append("⣏%s⣹" % text)
+			elif textColumnCount:
+				# Translators: Indicates the text column number in a document.
+				# %s will be replaced with the number of text columns.
+				text = _("%s columns") % (textColumnCount)
+				textList.append("⣏%s⣹" % text)
+
+	if alignmentsEnabled():
+		textAlign = normalizeTextAlign(field.get("text-align"))
+		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
+		if textAlign and textAlign != old_textAlign:
+			tag = get_tags(f"text-align:{textAlign}")
+			if tag:
+				textList.append(tag.start)
+
 	if formatConfig["reportLinks"]:
-		link=field.get("link")
-		oldLink=fieldCache.get("link")
+		link = field.get("link")
+		oldLink = fieldCache.get("link") if fieldCache else None
 		if link and link != oldLink:
-			textList.append(braille.roleLabels[controlTypes.ROLE_LINK])
+			textList.append(braille.roleLabels[controlTypes.ROLE_LINK]+' ')
+
+	if styleEnabled():
+		style = field.get("style")
+		oldStyle = fieldCache.get("style") if fieldCache is not None else None
+		if style != oldStyle:
+			if style:
+				# Translators: Indicates the style of text.
+				# A style is a collection of formatting settings and depends on the application.
+				# %s will be replaced with the name of the style.
+				text = _("style %s") % style
+			else:
+				# Translators: Indicates that text has reverted to the default style.
+				# A style is a collection of formatting settings and depends on the application.
+				text = _("default style")
+			textList.append("⣏%s⣹" % text)
+	if borderStyleEnabled():
+		borderStyle = field.get("border-style")
+		oldBorderStyle = fieldCache.get(
+			"border-style") if fieldCache is not None else None
+		if borderStyle != oldBorderStyle:
+			if borderStyle:
+				text = borderStyle
+			else:
+				# Translators: Indicates that cell does not have border lines.
+				text = _("no border lines")
+			textList.append("⣏%s⣹" % text)
+	if fontNameEnabled():
+		fontFamily = field.get("font-family")
+		oldFontFamily = fieldCache.get(
+			"font-family") if fieldCache is not None else None
+		if fontFamily and fontFamily != oldFontFamily:
+			textList.append("⣏%s⣹" % fontFamily)
+		fontName = field.get("font-name")
+		oldFontName = fieldCache.get(
+			"font-name") if fieldCache is not None else None
+		if fontName and fontName != oldFontName:
+			textList.append("⣏%s⣹" % fontName)
+	if fontSizeEnabled():
+		fontSize = field.get("font-size")
+		oldFontSize = fieldCache.get(
+			"font-size") if fieldCache is not None else None
+		if fontSize and fontSize != oldFontSize:
+			textList.append("⣏%s⣹" % fontSize)
+	if colorEnabled():
+		color = field.get("color")
+		oldColor = fieldCache.get("color") if fieldCache is not None else None
+		backgroundColor = field.get("background-color")
+		oldBackgroundColor = fieldCache.get(
+			"background-color") if fieldCache is not None else None
+		backgroundColor2 = field.get("background-color2")
+		oldBackgroundColor2 = fieldCache.get(
+			"background-color2") if fieldCache is not None else None
+		bgColorChanged = backgroundColor != oldBackgroundColor or backgroundColor2 != oldBackgroundColor2
+		bgColorText = backgroundColor.name if isinstance(
+			backgroundColor, colors.RGB) else backgroundColor
+		if backgroundColor2:
+			bg2Name = backgroundColor2.name if isinstance(
+				backgroundColor2, colors.RGB) else backgroundColor2
+			# Translators: Reported when there are two background colors.
+			# This occurs when, for example, a gradient pattern is applied to a spreadsheet cell.
+			# {color1} will be replaced with the first background color.
+			# {color2} will be replaced with the second background color.
+			bgColorText = N_("{color1} to {color2}").format(
+				color1=bgColorText, color2=bg2Name)
+		if color and backgroundColor and color != oldColor and bgColorChanged:
+			# Translators: Reported when both the text and background colors change.
+			# {color} will be replaced with the text color.
+			# {backgroundColor} will be replaced with the background color.
+			textList.append("⣏%s⣹" % N_("{color} on {backgroundColor}").format(
+				color=color.name if isinstance(color, colors.RGB) else color,
+				backgroundColor=bgColorText))
+		elif color and color != oldColor:
+			# Translators: Reported when the text color changes (but not the background color).
+			# {color} will be replaced with the text color.
+			textList.append("⣏%s⣹" % N_("{color}").format(
+				color=color.name if isinstance(color, colors.RGB) else color))
+		elif backgroundColor and bgColorChanged:
+			# Translators: Reported when the background color changes (but not the text color).
+			# {backgroundColor} will be replaced with the background color.
+			textList.append("⣏%s⣹" % N_("{backgroundColor} background").format(
+				backgroundColor=bgColorText))
+		backgroundPattern = field.get("background-pattern")
+		oldBackgroundPattern = fieldCache.get(
+			"background-pattern") if fieldCache is not None else None
+		if backgroundPattern and backgroundPattern != oldBackgroundPattern:
+			textList.append("⣏%s⣹" % N_("background pattern {pattern}").format(
+				pattern=backgroundPattern))
 
 	start_tag_list = []
 	end_tag_list = []
+
 	if attributesEnabled():
 		tags = [tag for tag in [
 			"bold",
@@ -314,28 +549,38 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		] if get_attributes(tag) == CHOICE_tags]
 		for name_tag in tags:
 			name_field = name_tag.split(':')[0]
-			value_field = name_tag.split(':', 1)[1] if ':' in name_tag else None
+			value_field = name_tag.split(
+				':', 1)[1] if ':' in name_tag else None
 			field_value = field.get(name_field)
-			old_field_value = fieldCache.get(name_field)
+			old_field_value = fieldCache.get(
+				name_field) if fieldCache else None
 			tag = get_tags(f"{name_field}:{field_value}")
 			old_tag = get_tags(f"{name_field}:{old_field_value}")
 			if value_field != old_field_value and old_tag and old_field_value:
-				if old_field_value != field_value: end_tag_list.append(old_tag.end)
+				if old_field_value != field_value:
+					end_tag_list.append(old_tag.end)
 			if field_value and tag and field_value != value_field and field_value != old_field_value:
 				start_tag_list.append(tag.start)
 	fieldCache.clear()
 	fieldCache.update(field)
-	return (TEXT_SEPARATOR.join([x for x in textList if x]), ''.join(start_tag_list), ''.join(end_tag_list[::-1]), align)
+	textList.insert(0, ''.join(end_tag_list[::-1]))
+	textList.append(''.join(start_tag_list))
+	return TEXT_SEPARATOR.join([x for x in textList if x])
+
 
 def normalizeTextAlign(desc):
-	if not desc or not isinstance(desc, str): return None
+	if not desc or not isinstance(desc, str):
+		return None
 	desc = desc.replace("-moz-", "").replace("justify", "justified")
 	return desc
 
+
 def get_method_alignment(desc):
 	sect = conf["alignments"]
-	if desc in sect: return sect[desc]
+	if desc in sect:
+		return sect[desc]
 	return None
+
 
 class ManageAttributes(wx.Dialog):
 	def __init__(
@@ -349,41 +594,43 @@ class ManageAttributes(wx.Dialog):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
 		choices = list(CHOICES_LABELS.values())
 		self.spellingErrors = sHelper.addLabeledControl(
-			_("Show &spelling errors with"), wx.Choice, choices=choices
+			_("&Spelling errors:"), wx.Choice, choices=choices
 		)
-		self.spellingErrors.SetSelection(self.getItemToSelect("invalid-spelling"))
+		self.spellingErrors.SetSelection(
+			self.getItemToSelect("invalid-spelling"))
 		self.grammarError = sHelper.addLabeledControl(
-			_("Show &grammar errors with"), wx.Choice, choices=choices
+			_("&Grammar errors:"), wx.Choice, choices=choices
 		)
 		self.grammarError.SetSelection(self.getItemToSelect("invalid-grammar"))
 		self.bold = sHelper.addLabeledControl(
-			_("Show b&old with"), wx.Choice, choices=choices
+			_("B&old:"), wx.Choice, choices=choices
 		)
 		self.bold.SetSelection(self.getItemToSelect("bold"))
 		self.italic = sHelper.addLabeledControl(
-			_("Show &italic with"), wx.Choice, choices=choices
+			_("&Italic:"), wx.Choice, choices=choices
 		)
 		self.italic.SetSelection(self.getItemToSelect("italic"))
 		self.underline = sHelper.addLabeledControl(
-			_("Show &underline with"), wx.Choice, choices=choices
+			_("&Underline:"), wx.Choice, choices=choices
 		)
 		self.underline.SetSelection(self.getItemToSelect("underline"))
 		self.strikethrough = sHelper.addLabeledControl(
-			_("Show stri&kethrough with"), wx.Choice, choices=choices
+			_("Strike&through:"), wx.Choice, choices=choices
 		)
 		self.strikethrough.SetSelection(self.getItemToSelect("strikethrough"))
 		self.sub = sHelper.addLabeledControl(
-			_("Show su&bscript with"), wx.Choice, choices=choices
+			_("Su&bscripts:"), wx.Choice, choices=choices
 		)
 		self.sub.SetSelection(self.getItemToSelect("text-position:sub"))
 		self.super = sHelper.addLabeledControl(
-			_("Show su&perscript with"), wx.Choice, choices=choices
+			_("Su&perscripts:"), wx.Choice, choices=choices
 		)
 		self.super.SetSelection(self.getItemToSelect("text-position:super"))
 
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		sHelper.addItem(bHelper)
-		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK | wx.CANCEL))
+		sHelper.addDialogDismissButtons(
+			self.CreateButtonSizer(wx.OK | wx.CANCEL))
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
 		mainSizer.Fit(self)
 		self.SetSizer(mainSizer)
@@ -454,7 +701,8 @@ class ManageTags(wx.Dialog):
 		self.endTag.Bind(wx.EVT_TEXT, self.onTags)
 		self.onTags()
 
-		sHelper.addDialogDismissButtons(self.CreateButtonSizer(wx.OK | wx.CANCEL))
+		sHelper.addDialogDismissButtons(
+			self.CreateButtonSizer(wx.OK | wx.CANCEL))
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
 		mainSizer.Fit(self)
 		self.SetSizer(mainSizer)
@@ -480,8 +728,10 @@ class ManageTags(wx.Dialog):
 		tag = get_tags(k, self.tags)
 		self.startTag.SetValue(tag.start)
 		self.endTag.SetValue(tag.end)
-		if "text-align" in k: self.endTag.Disable()
-		else: self.endTag.Enable()
+		if "text-align" in k:
+			self.endTag.Disable()
+		else:
+			self.endTag.Enable()
 
 	def onOk(self, evt):
 		save_tags(self.tags)
@@ -501,21 +751,39 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		sHelper.addItem(wx.StaticText(self, label=self.panelDescription))
 
-		label = _("Info to &report")
+		self.processLinePerLine = sHelper.addItem(wx.CheckBox(
+			self, label=_("Process formatting line per line")))
+		self.processLinePerLine.SetValue(conf["processLinePerLine"])
+
+		label = _("Info to &report:")
 		choices = [
 			N_("Font attributes"),
 			N_("Alignment"),
 			_("Indentation"),
-			_("Level of items in a nested list")
+			_("Level of items in a nested list"),
+			_("Color"),
+			_("Style"),
+			_("Border Style"),
+			_("Font name"),
+			_("Font size"),
+			_("Page number"),
 		]
-		self.reportInfo = sHelper.addLabeledControl(label, gui.nvdaControls.CustomCheckListBox, choices=choices)
+		self.reportInfo = sHelper.addLabeledControl(
+			label, gui.nvdaControls.CustomCheckListBox, choices=choices)
 		states = (
 			attributesEnabled(),
 			alignmentsEnabled(),
 			indentationsEnabled(),
-			levelItemsListEnabled()
+			levelItemsListEnabled(),
+			colorEnabled(),
+			styleEnabled(),
+			borderStyleEnabled(),
+			fontNameEnabled(),
+			fontSizeEnabled(),
+			pageEnabled(),
 		)
-		self.reportInfo.CheckedItems = [i for i, state in enumerate(states) if state]
+		self.reportInfo.CheckedItems = [
+			i for i, state in enumerate(states) if state]
 		self.reportInfo.SetSelection(0)
 		choices = list(CHOICES_LABELS_STATES.values())
 		self.reportLineNumber = sHelper.addLabeledControl(
@@ -523,6 +791,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 		keys = list(CHOICES_LABELS_STATES.keys())
 		self.reportLineNumber.SetSelection(keys.index(conf["lineNumber"]))
+
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.attributesBtn = bHelper.addButton(
 			self, label="%s..." % _("Font &attributes")
@@ -552,14 +821,28 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.reportFontAttributes.SetFocus()
 
 	def onSave(self):
+		conf["processLinePerLine"] = self.processLinePerLine.IsChecked()
 		checkedItems = self.reportInfo.CheckedItems
-		reportAttributes = 0 in checkedItems
+		reportFontAttributes = 0 in checkedItems
 		reportAlignments = 1 in checkedItems
 		reportIndentations = 2 in checkedItems
 		reportLevelItemsList = 3 in checkedItems
-		lineNumber = list(CHOICES_LABELS_STATES.keys())[self.reportLineNumber.GetSelection()]
+		reportColor = 4 in checkedItems
+		reportStyle = 5 in checkedItems
+		reportBorderStyle = 6 in checkedItems
+		reportFontName = 7 in checkedItems
+		reportFontSize = 8 in checkedItems
+		reportPage = 9 in checkedItems
+		lineNumber = list(CHOICES_LABELS_STATES.keys())[
+			self.reportLineNumber.GetSelection()]
 		conf["lineNumber"] = lineNumber
-		setAttributes(reportAttributes)
+		setAttributes(reportFontAttributes)
 		setAlignments(reportAlignments)
 		setIndentation(reportIndentations)
 		setLevelItemsList(reportLevelItemsList)
+		setColor(reportColor)
+		setStyle(reportStyle)
+		setBorderStyle(reportBorderStyle)
+		setFontName(reportFontName)
+		setFontSize(reportFontSize)
+		setPage(reportPage)

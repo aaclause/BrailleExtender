@@ -223,6 +223,9 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		).Bind(wx.EVT_BUTTON, self.onReloadDictClick)
 		sHelper.addItem(bHelper)
 
+	def postInit(self):
+		self.dictList.SetFocus()
+
 	def onSetEntries(self, evt=None):
 		self.dictList.DeleteAllItems()
 		for entry in self.tmpDict:

@@ -420,6 +420,9 @@ class TableGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		).Bind(wx.EVT_BUTTON, self.onReloadClick)
 		sHelper.addItem(bHelper)
 
+	def postInit(self):
+		self.groupsList.SetFocus()
+
 	def onSetEntries(self, evt=None):
 		self.groupsList.DeleteAllItems()
 		for group in self.tmpGroups:

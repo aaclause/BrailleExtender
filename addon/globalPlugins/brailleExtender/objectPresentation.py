@@ -120,16 +120,16 @@ def getPropertiesBraille(**propertyValues) -> str:
 			roleText = N_("h%s") % level
 			level = None
 		elif (
-				role == controlTypes.ROLE_LINK
-				and states
-				and controlTypes.STATE_VISITED in states
+			role == controlTypes.ROLE_LINK
+			and states
+			and controlTypes.STATE_VISITED in states
 		):
 			states = states.copy()
 			states.discard(controlTypes.STATE_VISITED)
 			# Translators: Displayed in braille for a link which has been visited.
 			roleText = N_("vlnk")
 		elif (
-				name or cellCoordsText or rowNumber or columnNumber
+			name or cellCoordsText or rowNumber or columnNumber
 		) and role in controlTypes.silentRolesOnFocus:
 			roleText = None
 		else:
@@ -231,10 +231,10 @@ def getPropertiesBraille(**propertyValues) -> str:
 
 class ManagePropertiesOrder(wx.Dialog):
 	def __init__(
-			self,
-			parent=None,
-			# Translators: title of a dialog.
-			title=_("Order Properties"),
+		self,
+		parent=None,
+		# Translators: title of a dialog.
+		title=_("Order Properties"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)

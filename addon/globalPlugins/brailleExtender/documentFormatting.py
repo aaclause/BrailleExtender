@@ -165,10 +165,12 @@ def styleEnabled(): return conf["reportStyle"]
 def borderStyleEnabled(): return conf["reportBorderStyle"]
 
 
-def fontNameEnabled(): return conf["reportFontName"]
+def fontNameEnabled():
+	return conf["reportFontName"]
 
 
-def fontSizeEnabled(): return conf["reportFontSize"]
+def fontSizeEnabled():
+	return conf["reportFontSize"]
 
 
 def pageEnabled(): return conf["reportPage"]
@@ -248,7 +250,7 @@ def decorator(fn, s):
 		formatField = textInfos.FormatField()
 		for field in textInfo_:
 			if isinstance(field, textInfos.FieldCommand) and isinstance(
-				field.field, textInfos.FormatField
+					field.field, textInfos.FormatField
 			):
 				formatField.update(field.field)
 		if logTextInfo:
@@ -349,7 +351,7 @@ def get_tags(k, tags=None):
 		return None
 	if k in tags:
 		return tags[k]
-	elif ':' in k and k.split(':')[0] in tags:
+	if ':' in k and k.split(':')[0] in tags:
 		return tags[k.split(':')[0]]
 	return None
 
@@ -417,8 +419,8 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		# column number has changed, or the columnCount has changed
 		# but not if the columnCount is 1 or less and there is no old columnCount.
 		if (((textColumnNumber and textColumnNumber != oldTextColumnNumber) or
-				(textColumnCount and textColumnCount != oldTextColumnCount)) and not
-				(textColumnCount and int(textColumnCount) <= 1 and oldTextColumnCount == None)):
+			 (textColumnCount and textColumnCount != oldTextColumnCount)) and not
+				(textColumnCount and int(textColumnCount) <= 1 and oldTextColumnCount is None)):
 			if textColumnNumber and textColumnCount:
 				# Translators: Indicates the text column number in a document.
 				# {0} will be replaced with the text column number.
@@ -538,15 +540,15 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 
 	if attributesEnabled():
 		tags = [tag for tag in [
-			"bold",
-			"italic",
-			"underline",
-			"strikethrough",
-			"text-position:sub",
-			"text-position:super",
-			"invalid-spelling",
-			"invalid-grammar"
-		] if get_attributes(tag) == CHOICE_tags]
+				"bold",
+				"italic",
+				"underline",
+				"strikethrough",
+				"text-position:sub",
+				"text-position:super",
+				"invalid-spelling",
+				"invalid-grammar"
+				] if get_attributes(tag) == CHOICE_tags]
 		for name_tag in tags:
 			name_field = name_tag.split(':')[0]
 			value_field = name_tag.split(
@@ -584,10 +586,10 @@ def get_method_alignment(desc):
 
 class ManageAttributes(wx.Dialog):
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Customize attributes"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Customize attributes"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -679,10 +681,10 @@ class ManageAttributes(wx.Dialog):
 class ManageTags(wx.Dialog):
 
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Customize formatting tags"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Customize formatting tags"),
 	):
 		self.tags = _tags.copy()
 		super().__init__(parent, title=title)

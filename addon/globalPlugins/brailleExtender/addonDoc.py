@@ -1,4 +1,3 @@
-# coding: utf-8
 # addonDoc.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -183,7 +182,7 @@ class AddonDoc:
 			doc += self.translateLst(mW)
 			doc += ("<h3>" + _("Standard NVDA commands") + " (%d)</h3>") % len(mNV)
 			doc += self.translateLst(mNV)
-			doc += "<h3>{0} ({1})</h3>".format(
+			doc += "<h3>{} ({})</h3>".format(
 				_("Modifier keys"), len(configBE.iniProfile["modifierKeys"])
 			)
 			doc += self.translateLst(configBE.iniProfile["modifierKeys"])
@@ -211,13 +210,13 @@ class AddonDoc:
 					]
 				)
 			)
-			doc += "<h3>{0} ({1})</h3>".format(
+			doc += "<h3>{} ({})</h3>".format(
 				_("Shortcuts defined outside add-on"),
 				len(braille.handler.display.gestureMap._map),
 			)
 			doc += "<ul>"
 			for g in braille.handler.display.gestureMap._map:
-				doc += ("<li>{0}{1}: {2}{3};</li>").format(
+				doc += ("<li>{}{}: {}{};</li>").format(
 					utils.beautifulSht(g),
 					punctuationSeparator,
 					utils.uncapitalize(
@@ -271,7 +270,7 @@ class AddonDoc:
 				"kb:volumedown",
 				"kb:volumemute",
 			] and gestures[g] not in ["logFieldsAtCursor"]:
-				doc += ("<li>{0}{1}: {2}{3};</li>").format(
+				doc += ("<li>{}{}: {}{};</li>").format(
 					utils.getKeysTranslation(g),
 					punctuationSeparator,
 					re.sub(
@@ -393,7 +392,7 @@ class AddonDoc:
 				)
 			else:
 				if isinstance(lst[g], list):
-					doc += "<li>{0}{1}: {2}{3};</li>".format(
+					doc += "<li>{}{}: {}{};</li>".format(
 						utils.beautifulSht(lst[g]),
 						punctuationSeparator,
 						re.sub(
@@ -404,7 +403,7 @@ class AddonDoc:
 						punctuationSeparator,
 					)
 				else:
-					doc += "<li>{0}{1}: {2}{3};</li>".format(
+					doc += "<li>{}{}: {}{};</li>".format(
 						utils.beautifulSht(lst[g]),
 						punctuationSeparator,
 						re.sub(

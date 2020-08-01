@@ -1,4 +1,3 @@
-# coding: utf-8
 # settings.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -327,6 +326,7 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
 			configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 
+
 class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
@@ -363,12 +363,12 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 		for gesture, location in zip(self.quickLaunchGestures, self.quickLaunchLocations):
 			config.conf["brailleExtender"]["quickLaunches"][gesture] = location
 		instanceGP.loadQuickLaunchesGes()
-		super(QuickLaunchesDlg, self).onOk(evt)
+		super().onOk(evt)
 
 	def onCancel(self, evt):
 		if inputCore.manager._captureFunc:
 			inputCore.manager._captureFunc = None
-		super(QuickLaunchesDlg, self).onCancel(evt)
+		super().onCancel(evt)
 
 	def captureNow(self):
 		def getCaptured(gesture):
@@ -384,7 +384,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 				inputCore.manager._captureFunc = None
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Out of capture"))
 			elif gesture.normalizedIdentifiers[0].startswith("kb") and not gesture.normalizedIdentifiers[0].endswith(":escape"):
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Please enter a gesture from your {NAME_BRAILLE_DISPLAY} braille display. Press space to cancel.".format(NAME_BRAILLE_DISPLAY=configBE.curBD)))
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(f"Please enter a gesture from your {configBE.curBD} braille display. Press space to cancel."))
 				return False
 			elif not gesture.normalizedIdentifiers[0].endswith(":escape"):
 				self.quickLaunchGestures.append(gesture.normalizedIdentifiers[0])
@@ -418,7 +418,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 			listQuickLaunches = self.getQuickLaunchList()
 			self.quickKeys.SetItems(listQuickLaunches)
 			if len(listQuickLaunches) > 0: self.quickKeys.SetSelection(i-1 if i > 0 else 0)
-			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _('{BRAILLEGESTURE} removed'.format(BRAILLEGESTURE=g)))
+			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(f'{g} removed'))
 			self.onQuickKeys(None)
 		wx.CallAfter(askConfirmation)
 		self.quickKeys.SetFocus()
@@ -487,11 +487,11 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	def __init__(self, parent, initialCategory=None):
 		# Translators: title of add-on settings dialog.
 		self.title = _("Braille Extender settings")
-		super(AddonSettingsDialog,self).__init__(parent, initialCategory)
+		super().__init__(parent, initialCategory)
 
 	def makeSettings(self, settingsSizer):
 		# Ensure that after the settings dialog is created the name is set correctly
-		super(AddonSettingsDialog, self).makeSettings(settingsSizer)
+		super().makeSettings(settingsSizer)
 		self._doOnCategoryChange()
 		global addonSettingsDialogWindowHandle
 		addonSettingsDialogWindowHandle = self.GetHandle()
@@ -505,14 +505,14 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		self.SetTitle(self._getDialogTitle())
 
 	def _getDialogTitle(self):
-		return u"{dialogTitle}: {panelTitle} ({configProfile})".format(
+		return "{dialogTitle}: {panelTitle} ({configProfile})".format(
 			dialogTitle=self.title,
 			panelTitle=self.currentCategory.title,
 			configProfile=addonSettingsDialogActiveConfigProfile
 		)
 
 	def onCategoryChange(self,evt):
-		super(AddonSettingsDialog,self).onCategoryChange(evt)
+		super().onCategoryChange(evt)
 		if evt.Skipped:
 			return
 		self._doOnCategoryChange()

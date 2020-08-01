@@ -1,4 +1,3 @@
-# coding: utf-8
 # brailleTablesExt.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -602,7 +601,7 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			path = "%s/%s" % (baseDir, path)
 			if not os.path.exists(path):
 				return {}
-		f = open(path, "r")
+		f = open(path)
 		return json.load(f)
 
 	def onAddBrailleTablesBtn(self, evt):
@@ -613,7 +612,7 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	def postInit(self): self.inTable.SetFocus()
 
 	def onOk(self, event):
-		super(CustomBrailleTablesDlg, self).onOk(evt)
+		super().onOk(evt)
 
 
 class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
@@ -671,7 +670,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		)
 		k = hashlib.md5(path).hexdigest()[:15]
 		config.conf["brailleExtender"]["brailleTables"][k] = v
-		super(AddBrailleTablesDlg, self).onOk(evt)
+		super().onOk(evt)
 
 	@staticmethod
 	def getAvailableBrailleTables():

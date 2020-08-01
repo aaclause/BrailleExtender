@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# coding: UTF-8
 import re
 import sys
 import struct
@@ -188,7 +187,7 @@ def translate(t, HUC6=False, unicodeBraille=True, debug=False):
 			j = int(l, 16)
 			if i % 2:
 				end = translateHUC8(hexVals[j], debug)
-				cleanCell = ''.join(sorted((beg + end))).replace('0', '')
+				cleanCell = ''.join(sorted(beg + end)).replace('0', '')
 				if not cleanCell:
 					cleanCell = '0'
 				if debug:

@@ -1,4 +1,3 @@
-# coding: utf-8
 # BrailleExtender Addon for NVDA
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
@@ -1175,7 +1174,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:
-			config.conf["brailleExtender"]["viewSaved"] = ''.join(chr((c | 0x2800)) for c in braille.handler.mainBuffer.brailleCells)
+			config.conf["brailleExtender"]["viewSaved"] = ''.join(chr(c | 0x2800) for c in braille.handler.mainBuffer.brailleCells)
 			ui.message(_("Current braille view saved"))
 		else:
 			config.conf["brailleExtender"]["viewSaved"] = configBE.NOVIEWSAVED
@@ -1342,7 +1341,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		dictionaries.removeTmpDict()
 		advancedInputMode.terminate()
-		super(GlobalPlugin, self).terminate()
+		super().terminate()
 
 	def removeMenu(self):
 		gui.mainFrame.sysTrayIcon.menu.DestroyItem(self.submenu_item)

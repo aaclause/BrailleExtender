@@ -1,4 +1,3 @@
-# coding: utf-8
 # utils.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -327,8 +326,8 @@ def beautifulSht(t, curBD="noBraille", model=True, sep=" / "):
 		gesture = re.sub(r'.+:', '', gesture)
 		gesture = '+'.join(sorted(gesture.split('+')))
 		for rep in reps:
-			gesture = re.sub("(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
-			gesture = re.sub("(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
+			gesture = re.sub(r"(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
+			gesture = re.sub(r"(\+|^)%s([0-9]\+|$)" % rep, r"\1%s\2" % reps[rep], gesture)
 		out.append(_('{gesture} on {brailleDisplay}').format(gesture=gesture, brailleDisplay=mdl) if mdl != '' else gesture)
 	return out if not sep else sep.join(out)
 
@@ -402,8 +401,8 @@ def getTextPosition():
 def uncapitalize(s): return s[:1].lower() + s[1:] if s else ''
 
 
-translatePercent = lambda p, q = braille.handler.displaySize - 4: u'⣦%s⣴' % ''.join(
-	[u'⢼' if k <= int(float(p) / 100. * float(q - 2)) - 1 else u'⠤' for k in range(q - 2)])
+translatePercent = lambda p, q = braille.handler.displaySize - 4: '⣦%s⣴' % ''.join(
+	['⢼' if k <= int(float(p) / 100. * float(q - 2)) - 1 else '⠤' for k in range(q - 2)])
 
 def refreshBD():
 	obj = api.getFocusObject()

@@ -1,4 +1,3 @@
-# coding: utf-8
 # advancedInputMode.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -238,13 +237,13 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 	def onOk(self, evt):
 		saveDict(self.tmpDict)
 		setDict(self.tmpDict)
-		super(AdvancedInputModeDlg, self).onOk(evt)
+		super().onOk(evt)
 
 
 class DictionaryEntryDlg(wx.Dialog):
 	# Translators: This is the label for the edit dictionary entry dialog.
 	def __init__(self, parent=None, title=_("Edit Dictionary Entry")):
-		super(DictionaryEntryDlg, self).__init__(parent, title=title)
+		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
 		# Translators: This is a label for an edit field in add dictionary entry dialog.

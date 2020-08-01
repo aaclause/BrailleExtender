@@ -1,4 +1,3 @@
-# coding: utf-8
 # undefinedChars.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -388,8 +387,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		] = self.undefinedCharReprList.GetSelection()
 		repr_ = self.undefinedCharReprEdit.Value
 		if self.undefinedCharReprList.GetSelection() == CHOICE_otherDots:
-			repr_ = re.sub("[^0-8\-]", "", repr_).strip("-")
-			repr_ = re.sub("\-+", "-", repr_)
+			repr_ = re.sub(r"[^0-8\-]", "", repr_).strip("-")
+			repr_ = re.sub(r"\-+", "-", repr_)
 			config.conf["brailleExtender"]["undefinedCharsRepr"][
 				"hardDotPatternValue"
 			] = repr_

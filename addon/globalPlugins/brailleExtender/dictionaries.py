@@ -1,4 +1,3 @@
-# coding: utf-8
 # dictionaries.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -90,7 +89,7 @@ def saveDict(type_, dict_):
 		direction = entry.direction if entry.direction != "both" else ''
 		line = ("%s	%s	%s	%s	%s" % (direction, entry.opcode, entry.textPattern, entry.braillePattern, entry.comment)).strip()+"\n"
 		f.write(line.encode("UTF-8"))
-	f.write('\n'.encode("UTF-8"))
+	f.write(b'\n')
 	f.close()
 	return True
 
@@ -122,7 +121,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		self.title = title
 		self.type_ = type_
 		self.tmpDict = getDictionary(type_)[1]
-		super(DictionaryDlg, self).__init__(parent, hasApplyButton=True)
+		super().__init__(parent, hasApplyButton=True)
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
@@ -207,7 +206,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	@staticmethod
 	def getReprBraillePattern(braillePattern, equiv=True):
-		if equiv and re.match("^[0-8\-]+$", braillePattern):
+		if equiv and re.match(r"^[0-8\-]+$", braillePattern):
 			return "%s (%s)" % (huc.cellDescriptionsToUnicodeBraille(braillePattern), braillePattern)
 		braillePattern = braillePattern.replace(r"\s", " ").replace(r"\t", "	")
 		return braillePattern
@@ -269,7 +268,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		res = saveDict(self.type_, self.tmpDict)
 		setDictTables()
 		braille.handler.setDisplayByName(braille.handler.display.name)
-		if res: super(DictionaryDlg, self).onApply(evt)
+		if res: super().onApply(evt)
 		else: notImplemented("Error during writing file, more info in log.")
 		notifyInvalidTables()
 		self.dictList.SetFocus()
@@ -279,14 +278,14 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		setDictTables()
 		braille.handler.setDisplayByName(braille.handler.display.name)
 		notifyInvalidTables()
-		if res: super(DictionaryDlg, self).onOk(evt)
+		if res: super().onOk(evt)
 		else: notImplemented("Error during writing file, more info in log.")
 		notifyInvalidTables()
 
 class DictionaryEntryDlg(wx.Dialog):
 	# Translators: This is the label for the edit dictionary entry dialog.
 	def __init__(self, parent=None, title=_("Edit Dictionary Entry"), textPattern='', specifyDict=False):
-		super(DictionaryEntryDlg, self).__init__(parent, title=title)
+		super().__init__(parent, title=title)
 		mainSizer=wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
 		if specifyDict:
@@ -377,7 +376,7 @@ class DictionaryEntryDlg(wx.Dialog):
 				msg = _("'Braille representation' field is empty. You must specify something with this opcode. E.g.: %s") % egBRLRepr
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.braillePatternTextCtrl.SetFocus()
-			if not  re.match("^[0-8\-]+$", braillePattern):
+			if not  re.match(r"^[0-8\-]+$", braillePattern):
 				msg = _("Invalid value for 'braille representation' field. You must enter dot patterns with this opcode. E.g.: %s") % egBRLRepr
 				gui.messageBox(msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
 				return self.braillePatternTextCtrl.SetFocus()

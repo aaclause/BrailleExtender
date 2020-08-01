@@ -1,5 +1,4 @@
-# coding: utf-8
-# patchs.py
+# patches.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
@@ -747,10 +746,10 @@ def _translate(self, endWord):
 	assert not self.useContractedForCurrentFocus or endWord, "Must only translate contracted at end of word"
 	if self.useContractedForCurrentFocus:
 		# self.bufferText has been used by _reportContractedCell, so clear it.
-		self.bufferText = u""
+		self.bufferText = ""
 	oldTextLen = len(self.bufferText)
 	pos = self.untranslatedStart + self.untranslatedCursorPos
-	data = u"".join([chr(cell | brailleInput.LOUIS_DOTS_IO_START)
+	data = "".join([chr(cell | brailleInput.LOUIS_DOTS_IO_START)
 					 for cell in self.bufferBraille[:pos]])
 	mode = louis.dotsIO | louis.noUndefinedDots
 	if (not self.currentFocusIsTextObj or self.currentModifiers) and self._table.contracted:
@@ -773,7 +772,7 @@ def _translate(self, endWord):
 			if len(newText) > 1:
 				# Emulation of multiple characters at once is unsupported
 				# Clear newText, so this function returns C{False} if not at end of word
-				newText = u""
+				newText = ""
 			else:
 				self.emulateKey(newText)
 		else:
@@ -783,7 +782,7 @@ def _translate(self, endWord):
 		# We only need to buffer one word.
 		# Clear the previous word (anything before the cursor) from the buffer.
 		del self.bufferBraille[:pos]
-		self.bufferText = u""
+		self.bufferText = ""
 		self.cellsWithText.clear()
 		if not instanceGP.modifiersLocked:
 			self.currentModifiers.clear()

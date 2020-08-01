@@ -1,24 +1,24 @@
-name: pot build
+name: scons pot
 on:
   push:
     branches:
       - master
   
 jobs:
-  build: 
+  scons-pot: 
     runs-on: ubuntu-latest
     steps:
-      - name: checkout repository
+      - name: Check out source repository
         uses: actions/checkout@v2
-      - name: setup python
+      - name: Set up Python environment
         uses: actions/setup-python@v1
         with:
           python-version: 3.7
-      - name: install scons
+      - name: Install scons
         run: pip install scons
-      - name: install gettext
+      - name: Install gettext
         run: sudo apt-get install gettext
-      - name: building addon
+      - name: Generating pot file
         run: scons pot
       - name: upload artifact
         uses: actions/upload-artifact@v2-preview

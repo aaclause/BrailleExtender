@@ -1,4 +1,3 @@
-# coding: utf-8
 # BrailleExtender Addon for NVDA
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
@@ -44,7 +43,7 @@ from .updateCheck import *
 from . import advancedInputMode
 from . import dictionaries
 from . import huc
-from . import patchs
+from . import patches
 from . import settings
 from .common import *
 from . import undefinedChars
@@ -124,7 +123,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def __init__(self):
 		startTime = time.time()
 		super(globalPluginHandler.GlobalPlugin, self).__init__()
-		patchs.instanceGP = self
+		patches.instanceGP = self
 		self.reloadBrailleTables()
 		settings.instanceGP = self
 		configBE.loadConf()
@@ -226,7 +225,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		)
 		item = self.submenu.Append(wx.ID_ANY, "%s..." % _("&Quick launches"), _("Quick launches configuration"))
 		gui.mainFrame.sysTrayIcon.Bind(
-			wx.EVT_MENU, 
+			wx.EVT_MENU,
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.QuickLaunchesDlg),
 			item
 		)
@@ -248,7 +247,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		dictionaries.notifyInvalidTables()
 		if config.conf["brailleExtender"]["tabSpace"]:
 			liblouisDef = r"always \t " + ("0-" * configBE.getTabSize()).strip('-')
-			patchs.louis.compileString(patchs.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
+			patches.louis.compileString(patches.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
 		undefinedChars.setUndefinedChar()
 
 	@staticmethod
@@ -595,14 +594,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_translateInBRU(self, gesture):
 		tm = time.time()
-		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
+		t = utils.getTextInBraille('', patches.getCurrentBrailleTables())
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage("<pre>%s</pre>" % t, _("Unicode Braille conversion") + (" (%.2f s)" % (time.time()-tm)), True)
 	script_translateInBRU.__doc__ = _("Convert the text selection in unicode braille and display it in a browseable message")
 
 	def script_charsToCellDescriptions(self, gesture):
 		tm = time.time()
-		t = utils.getTextInBraille('', patchs.getCurrentBrailleTables())
+		t = utils.getTextInBraille('', patches.getCurrentBrailleTables())
 		t = huc.unicodeBrailleToDescription(t)
 		if not t.strip(): return ui.message(_("No text selection"))
 		ui.browseableMessage(t, _("Braille Unicode to cell descriptions")+(" (%.2f s)" % (time.time()-tm)))
@@ -1126,7 +1125,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:
-			config.conf["brailleExtender"]["viewSaved"] = ''.join(chr((c | 0x2800)) for c in braille.handler.mainBuffer.brailleCells)
+			config.conf["brailleExtender"]["viewSaved"] = ''.join(chr(c | 0x2800) for c in braille.handler.mainBuffer.brailleCells)
 			ui.message(_("Current braille view saved"))
 		else:
 			config.conf["brailleExtender"]["viewSaved"] = configBE.NOVIEWSAVED
@@ -1293,7 +1292,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		dictionaries.removeTmpDict()
 		advancedInputMode.terminate()
-		super(GlobalPlugin, self).terminate()
+		super().terminate()
 
 	def removeMenu(self):
 		gui.mainFrame.sysTrayIcon.menu.DestroyItem(self.submenu_item)

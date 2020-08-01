@@ -1,4 +1,3 @@
-# coding: utf-8
 # objectPresentation.py
 from .documentFormatting import CHOICES_LABELS
 from .common import N_, CHOICE_liblouis, CHOICE_none

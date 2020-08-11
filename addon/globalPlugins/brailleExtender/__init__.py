@@ -611,13 +611,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleSpeechScrollFocusMode.__doc__ = _("Toggles between say current line while scrolling options between none, focus mode, review mode, or both")
 
 	def script_toggleSpeech(self, gesture):
-		if speech.speechMode == 0:
-			speech.speechMode = 2
+		if speech.speechMode == speech.speechMode_off:
+			speech.speechMode = speech.speechMode_talk
 			ui.message(_("Speech on"))
 		else:
-			speech.speechMode = 0
+			speech.speechMode = speech.speechMode_off
 			ui.message(_("Speech off"))
-		return
 	script_toggleSpeech.__doc__ = _("Toggle speech on or off")
 
 	def script_reportExtraInfos(self, gesture):

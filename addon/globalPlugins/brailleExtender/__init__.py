@@ -968,17 +968,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def sendComb(self, sht, gesture = None):
 		inputCore.manager.emulateGesture(keyboardHandler.KeyboardInputGesture.fromName(sht))
 
-	@staticmethod
-	def callScript(cls, f, gesture):
-		for plugin in globalPluginHandler.runningPlugins:
-			if plugin.__module__ == cls:
-				func = getattr(plugin, f, None)
-				if func:
-					func(gesture)
-					return True
-				else:
-					return false
-
 	def getActualModifiers(self, short=True):
 		modifiers = brailleInput.handler.currentModifiers
 		if len(modifiers) == 0:
@@ -1329,4 +1318,3 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def errorMessage(msg):
 		wx.CallAfter(gui.messageBox, msg, _("Braille Extender"), wx.OK|wx.ICON_ERROR)
-

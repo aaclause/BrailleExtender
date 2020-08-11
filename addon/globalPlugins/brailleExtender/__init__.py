@@ -415,12 +415,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			rotorItem = len(rotorItems) - 1
 		self.bindRotorGES()
 		return ui.message(rotorItems[rotorItem][1])
+	script_priorRotor.__doc__ = _("Switches to the previous rotor setting")
 
 	def script_nextRotor(self, gesture):
 		global rotorItem
 		rotorItem = 0 if rotorItem >= len(rotorItems) - 1 else rotorItem + 1
 		self.bindRotorGES()
 		return ui.message(rotorItems[rotorItem][1])
+	script_nextRotor.__doc__ = _("Switches to the next rotor setting")
 
 	@staticmethod
 	def getCurrentSelectionRange(pretty=True, back=False):
@@ -433,32 +435,22 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				_("Page"),
 				_("Document")]
 			return labels[rotorRange]
-		else:
-			keys = [
-				('leftarrow',
-				 'rightarrow'),
-				('control+leftarrow',
-				 'control+rightarrow'),
-				('uparrow',
-				 'downarrow'),
-				('control+uparrow',
-				 'control+downarrow'),
-				('pageup',
-				 'pagedown'),
-				('control+home',
-				 'control+end')]
-			if rotorItems[rotorItem][0] == "textSelection":
-				return 'shift+%s' % (keys[rotorRange]
-									 [0] if back else keys[rotorRange][1])
-			else:
-				return keys[rotorRange][0] if back else keys[rotorRange][1]
+		keys = [
+			('leftarrow', 'rightarrow'),
+			('control+leftarrow', 'control+rightarrow'),
+			('uparrow', 'downarrow'),
+			('control+uparrow', 'control+downarrow'),
+			('pageup', 'pagedown'),
+			('control+home', 'control+end')]
+		if rotorItems[rotorItem][0] == "textSelection":
+			return "shift+%s" % (keys[rotorRange][0] if back else keys[rotorRange][1])
+		return keys[rotorRange][0] if back else keys[rotorRange][1]
 
 	def switchSelectionRange(self, previous=False):
 		global rotorRange
 		if previous: rotorRange = rotorRange - 1 if rotorRange > 0 else 5
 		else: rotorRange = rotorRange + 1 if rotorRange < 5 else 0
 		ui.message(self.getCurrentSelectionRange())
-		return
 
 	@staticmethod
 	def moveTo(direction, gesture = None):
@@ -471,9 +463,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_nextEltRotor(self, gesture):
 		if rotorItems[rotorItem][0] == "default": return self.sendComb('rightarrow', gesture)
-		elif rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
+		if rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
 			return self.sendComb(self.getCurrentSelectionRange(False), gesture)
-		elif rotorItems[rotorItem][0] == "object":
+		if rotorItems[rotorItem][0] == "object":
 			self.sendComb('nvda+shift+rightarrow', gesture)
 		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
@@ -487,33 +479,33 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			else:
 				ui.message(_("Not supported here or not in browse mode"))
 		else: return self.moveTo("next", gesture)
-	script_priorRotor.__doc__ = _("Switches to the previous rotor setting")
-	script_nextRotor.__doc__ = _("Switches to the next rotor setting")
+	script_nextEltRotor.__doc__ = _("Moves to the next item based on rotor setting")
 
 	def script_priorEltRotor(self, gesture):
 		if rotorItems[rotorItem][0] == "default":
 			return self.sendComb('leftarrow', gesture)
-		elif rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
+		if rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
 			return self.sendComb(self.getCurrentSelectionRange(False, True), gesture)
-		elif rotorItems[rotorItem][0] == "object":
-			self.sendComb("nvda+shift+leftarrow", gesture)
-		elif rotorItems[rotorItem][0] == "review":
-			scriptHandler.executeScript(
+		if rotorItems[rotorItem][0] == "object":
+			return self.sendComb("nvda+shift+leftarrow", gesture)
+		if rotorItems[rotorItem][0] == "review":
+			return scriptHandler.executeScript(
 				globalCommands.commands.script_braille_scrollBack, gesture)
-		elif rotorItems[rotorItem][0] == "moveInTable":
-			self.sendComb('control+alt+leftarrow', gesture)
-		elif rotorItems[rotorItem][0] == "spellingErrors":
+		if rotorItems[rotorItem][0] == "moveInTable":
+			return self.sendComb('control+alt+leftarrow', gesture)
+		if rotorItems[rotorItem][0] == "spellingErrors":
 			obj = api.getFocusObject()
 			if obj.treeInterceptor is not None:
 				obj.treeInterceptor.script_previousError(gesture)
 			else:
 				ui.message(_("Not supported here or not in browse mode"))
 		else: return self.moveTo("previous", gesture)
+	script_priorEltRotor.__doc__ = _("Moves to the previous item based on rotor setting")
 
 	def script_nextSetRotor(self, gesture):
 		if rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
 			return self.switchSelectionRange()
-		elif rotorItems[rotorItem][0] == "object":
+		if rotorItems[rotorItem][0] == "object":
 			self.sendComb('nvda+shift+downarrow', gesture)
 		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
@@ -522,32 +514,27 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.sendComb('control+alt+downarrow', gesture)
 		else:
 			return self.sendComb('downarrow', gesture)
+	script_nextSetRotor.__doc__ = _("Moves to the next item based on rotor setting")
 
 	def script_priorSetRotor(self, gesture):
 		if rotorItems[rotorItem][0] in ["moveInText", "textSelection"]:
-			return self.switchSelectionRange(True)
+			self.switchSelectionRange(True)
 		elif rotorItems[rotorItem][0] == "object":
 			self.sendComb('nvda+shift+uparrow', gesture)
-			return
 		elif rotorItems[rotorItem][0] == "review":
 			scriptHandler.executeScript(
 				globalCommands.commands.script_braille_previousLine, gesture)
 		elif rotorItems[rotorItem][0] == "moveInTable":
 			self.sendComb('control+alt+uparrow', gesture)
 		else:
-			return self.sendComb('uparrow', gesture)
-	script_priorEltRotor.__doc__ = _("Moves to the previous item based on rotor setting")
-	script_nextEltRotor.__doc__ = _("Moves to the next item based on rotor setting")
+			self.sendComb('uparrow', gesture)
+	script_priorSetRotor.__doc__ = _("Moves to the previous item based on rotor setting")
 
 	def script_selectElt(self, gesture):
 		if rotorItems[rotorItem][0] == "object":
-			return self.sendComb('NVDA+enter', gesture)
-		else:
-			return self.sendComb('enter', gesture)
+			self.sendComb('NVDA+enter', gesture)
+		self.sendComb('enter', gesture)
 	script_selectElt.__doc__ = _("Selects the item under the braille cursor e.g. doing default action if moving by objects")
-
-	script_priorSetRotor.__doc__ = _("Moves to the previous item based on rotor setting")
-	script_nextSetRotor.__doc__ = _("Moves to the next item based on rotor setting")
 
 	def script_toggleLockBrailleKeyboard(self, gesture):
 		self.brailleKeyboardLocked = not self.brailleKeyboardLocked
@@ -949,10 +936,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"][k] == "last":
 			if config.conf["braille"]["display"] == "noBraille":
 				return ui.message(_("No braille display specified. No reload to do"))
-			else:
-				utils.reload_brailledisplay(config.conf["braille"]["display"])
-				configBE.curBD = braille.handler.display.name
-				utils.refreshBD()
+			utils.reload_brailledisplay(config.conf["braille"]["display"])
+			configBE.curBD = braille.handler.display.name
+			utils.refreshBD()
 		else:
 			utils.reload_brailledisplay(config.conf["brailleExtender"][k])
 			configBE.curBD = config.conf["brailleExtender"][k]

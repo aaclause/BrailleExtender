@@ -296,25 +296,24 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
 	def getOriginalLabel(self, idCategory, idLabel, defaultValue = ''):
 		if "%s:%s" % (idCategory, idLabel) in configBE.backupRoleLabels.keys():
 			return configBE.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
-		else: return self.getLabelFromID(idCategory, idLabel)
-		return defaultValue
+		return self.getLabelFromID(idCategory, idLabel)
 
 	@staticmethod
 	def getIDFromIndexes(idCategory, idLabel):
 		try:
 			if idCategory == 0: return list(braille.roleLabels.keys())[idLabel]
-			elif idCategory == 1: return list(braille.landmarkLabels.keys())[idLabel]
-			elif idCategory == 2: return list(braille.positiveStateLabels.keys())[idLabel]
-			elif idCategory == 3: return list(braille.negativeStateLabels.keys())[idLabel]
-			else: raise ValueError("Invalid value for ID category: %d" % idCategory)
+			if idCategory == 1: return list(braille.landmarkLabels.keys())[idLabel]
+			if idCategory == 2: return list(braille.positiveStateLabels.keys())[idLabel]
+			if idCategory == 3: return list(braille.negativeStateLabels.keys())[idLabel]
+			raise ValueError("Invalid value for ID category: %d" % idCategory)
 		except BaseException: return -1
 
 	def getLabelFromID(self, idCategory, idLabel):
 		if idCategory == 0: return braille.roleLabels[idLabel]
-		elif idCategory == 1: return braille.landmarkLabels[idLabel]
-		elif idCategory == 2: return braille.positiveStateLabels[idLabel]
-		elif idCategory == 3: return braille.negativeStateLabels[idLabel]
-		else: raise ValueError("Invalid value: %d" % idCategory)
+		if idCategory == 1: return braille.landmarkLabels[idLabel]
+		if idCategory == 2: return braille.positiveStateLabels[idLabel]
+		if idCategory == 3: return braille.negativeStateLabels[idLabel]
+		raise ValueError("Invalid value: %d" % idCategory)
 
 	def postInit(self): self.toggleRoleLabels.SetFocus()
 
@@ -623,16 +622,16 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 			if script and hasattr(script, "bypassInputHelp") and script.bypassInputHelp:
 				queueHandler.queueFunction(queueHandler.eventQueue, gesture.script, gesture)
 				return False
-			elif script is not None:
+			if script is not None:
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Unable to associate this gesture. Please enter another gesture"))
 				return False
-			elif gesture.isModifier: return False
-			elif gesture.normalizedIdentifiers[0].endswith(":space"):
-				inputCore.manager._captureFunc = None
-				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Out of capture"))
-			elif gesture.normalizedIdentifiers[0].startswith("kb") and not gesture.normalizedIdentifiers[0].endswith(":escape"):
+			if gesture.isModifier: return False
+			if gesture.normalizedIdentifiers[0].startswith("kb") and not gesture.normalizedIdentifiers[0].endswith(":escape"):
 				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _(f"Please enter a gesture from your {configBE.curBD} braille display. Press space to cancel."))
 				return False
+			if gesture.normalizedIdentifiers[0].endswith(":space"):
+				inputCore.manager._captureFunc = None
+				queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("Out of capture"))
 			elif not gesture.normalizedIdentifiers[0].endswith(":escape"):
 				self.quickLaunchGestures.append(gesture.normalizedIdentifiers[0])
 				self.quickLaunchLocations.append('')

@@ -117,7 +117,7 @@ def getTextSelection():
 		obj = api.getNavigatorObject()
 		text = obj.name
 		return "%s" % text if text else ''
-	else: return info.text
+	return info.text
 
 def getKeysTranslation(n):
 	o = n
@@ -307,7 +307,7 @@ def getSpeechSymbols(text = None):
 def getTether():
 	if hasattr(braille.handler, "getTether"):
 		return braille.handler.getTether()
-	else: return braille.handler.tether
+	return braille.handler.tether
 
 
 def getCharFromValue(s):

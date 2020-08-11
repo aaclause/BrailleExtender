@@ -242,8 +242,7 @@ def isValidHUCInput(s):
 		matchePatterns = [e for e in HUC8_patterns.keys() if e.startswith(s)]
 		if matchePatterns:
 			return HUC_INPUT_INCOMPLETE
-		else:
-			return HUC_INPUT_INVALID
+		return HUC_INPUT_INVALID
 	prefix = s[0:2] if len(s) == 4 else s[0]
 	s = s[2:] if len(s) == 4 else s[1:]
 	size = len(s)
@@ -252,10 +251,10 @@ def isValidHUCInput(s):
 			if prefix+s[0] in HUC8_patterns.keys():
 				return HUC_INPUT_INCOMPLETE
 		return HUC_INPUT_INVALID
+	if size < 2:
+		return HUC_INPUT_INCOMPLETE
 	if size == 2:
 		return HUC_INPUT_COMPLETE
-	elif size < 2:
-		return HUC_INPUT_INCOMPLETE
 	return HUC_INPUT_INVALID
 
 

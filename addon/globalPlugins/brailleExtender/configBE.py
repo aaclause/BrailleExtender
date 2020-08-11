@@ -229,9 +229,9 @@ def loadPreferedTables():
 
 def getLabelFromID(idCategory, idLabel):
 	if idCategory == 0: return braille.roleLabels[int(idLabel)]
-	elif idCategory == 1: return braille.landmarkLabels[idLabel]
-	elif idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
-	elif idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
+	if idCategory == 1: return braille.landmarkLabels[idLabel]
+	if idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
+	if idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
 
 def setLabelFromID(idCategory, idLabel, newLabel):
 	if idCategory == 0: braille.roleLabels[int(idLabel)] = newLabel
@@ -361,7 +361,7 @@ def getKeyboardLayout():
 	if (config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] is not None
 	and config.conf["brailleExtender"]["keyboardLayout_%s" % curBD] in iniProfile['keyboardLayouts'].keys()):
 		return iniProfile['keyboardLayouts'].keys().index(config.conf["brailleExtender"]["keyboardLayout_%s" % curBD])
-	else: return 0
+	return 0
 
 def getCustomBrailleTables():
 	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]

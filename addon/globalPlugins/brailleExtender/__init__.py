@@ -743,45 +743,26 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if utils.isLastLine():
 			self.script_autoScroll(None)
 
-	def script_volumePlus(s, g):
+	def script_volumePlus(self, gesture):
 		keyboardHandler.KeyboardInputGesture.fromName('volumeup').send()
-		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(utils.getVolume(), braille.handler.displaySize - 4))
-		if config.conf["brailleExtender"]["volumeChangeFeedback"] in [configBE.CHOICE_braille, configBE.CHOICE_speechAndBraille]:
-			braille.handler.message(s)
-		if config.conf["brailleExtender"]["volumeChangeFeedback"] in [configBE.CHOICE_speech, configBE.CHOICE_speechAndBraille]:
-			speech.speakMessage(str(utils.getVolume()))
-		return
+		utils.report_volume_level()
 	script_volumePlus.__doc__ = _("Increases the master volume")
+
+	def script_volumeMinus(self, gesture):
+		keyboardHandler.KeyboardInputGesture.fromName('volumedown').send()
+		utils.report_volume_level()
+	script_volumeMinus.__doc__ = _("Decreases the master volume")
+
+	def script_toggleVolume(self, gesture):
+		keyboardHandler.KeyboardInputGesture.fromName('volumemute').send()
+		utils.report_volume_level()
+	script_toggleVolume.__doc__ = _("Toggles sound mute")
 
 	@staticmethod
 	def clearMessageFlash():
 		if config.conf["braille"]["messageTimeout"] != 0:
 			if braille.handler.buffer is braille.handler.messageBuffer:
 				braille.handler._dismissMessage()
-				return
-
-	def script_volumeMinus(s, g):
-		keyboardHandler.KeyboardInputGesture.fromName('volumedown').send()
-		s = '%3d%%%s' % (utils.getVolume(), utils.translatePercent(utils.getVolume(), braille.handler.displaySize - 4))
-		if config.conf["brailleExtender"]["volumeChangeFeedback"] in [configBE.CHOICE_braille, configBE.CHOICE_speechAndBraille]:
-			braille.handler.message(s)
-		if config.conf["brailleExtender"]["volumeChangeFeedback"] in [configBE.CHOICE_speech, configBE.CHOICE_speechAndBraille]:
-			speech.speakMessage(str(utils.getVolume()))
-		return
-	script_volumeMinus.__doc__ = _("Decreases the master volume")
-
-	def script_toggleVolume(s, g):
-		keyboardHandler.KeyboardInputGesture.fromName('volumemute').send()
-		if config.conf["brailleExtender"]["volumeChangeFeedback"] == configBE.CHOICE_none: return
-		if utils.getMute():
-			return braille.handler.message(_("Muted sound"))
-		else:
-			s = _("Unmuted sound (%3d%%)") % utils.getVolume()
-			if config.conf["brailleExtender"]["volumeChangeFeedback"] in [configBE.CHOICE_speech, configBE.CHOICE_speechAndBraille]:
-				speech.speakMessage(s)
-			if config.conf["brailleExtender"]["volumeChangeFeedback"] in [configBE.CHOICE_braille, configBE.CHOICE_speechAndBraille]:
-				braille.handler.message(s)
-	script_toggleVolume.__doc__ = _("Toggles sound mute")
 
 	def script_getHelp(self, g):
 		from . import addonDoc

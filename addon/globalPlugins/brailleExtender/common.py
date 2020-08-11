@@ -27,3 +27,7 @@ punctuationSeparator = ' ' if 'fr' in lang else ''
 
 
 profilesDir = os.path.join(baseDir, "Profiles")
+
+REPLACE_TEXT = 0
+INSERT_AFTER = 1
+INSERT_BEFORE = 2

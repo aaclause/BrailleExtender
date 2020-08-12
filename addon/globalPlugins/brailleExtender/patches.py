@@ -68,7 +68,7 @@ def sayCurrentLine():
 				scriptHandler.executeScript(
 					globalCommands.commands.script_review_currentLine, None)
 			return
-		elif config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
+		if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough:
@@ -684,13 +684,10 @@ def input_(self, dots):
 					return self._reportUntranslated(pos)
 			else:
 				res = huc.isValidHUCInput(advancedInputStr)
-				if res == huc.HUC_INPUT_INCOMPLETE:
-					return self._reportUntranslated(pos)
-				elif res == huc.HUC_INPUT_INVALID:
-					return badInput(self)
-				else:
-					res = huc.backTranslate(advancedInputStr)
-					sendChar(res)
+				if res == huc.HUC_INPUT_INCOMPLETE: return self._reportUntranslated(pos)
+				if res == huc.HUC_INPUT_INVALID: return badInput(self)
+				res = huc.backTranslate(advancedInputStr)
+				sendChar(res)
 			if res and config.conf["brailleExtender"]["advancedInputMode"]["stopAfterOneChar"]:
 				instanceGP.advancedInput = False
 		return

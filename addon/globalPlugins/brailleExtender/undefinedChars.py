@@ -64,10 +64,9 @@ def getHardValue():
 	selected = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	if selected == CHOICE_otherDots:
 		return config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"]
-	elif selected == CHOICE_otherSign:
+	if selected == CHOICE_otherSign:
 		return config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"]
-	else:
-		return ''
+	return ''
 
 
 def setUndefinedChar(t=None):
@@ -101,12 +100,11 @@ def getAlternativeDescChar(c, method):
 	if method in [CHOICE_HUC6, CHOICE_HUC8]:
 		HUC6 = method == CHOICE_HUC6
 		return huc.translate(c, HUC6=HUC6)
-	elif method in [CHOICE_bin, CHOICE_oct, CHOICE_dec, CHOICE_hex]:
+	if method in [CHOICE_bin, CHOICE_oct, CHOICE_dec, CHOICE_hex]:
 		return getTextInBraille("".join(getUnicodeNotation(c)))
-	elif method == CHOICE_liblouis:
+	if method == CHOICE_liblouis:
 		return getTextInBraille(getLiblouisStyle(c))
-	else:
-		return getUndefinedCharSign(method)
+	return getUndefinedCharSign(method)
 
 
 def getDescChar(c, lang="Windows", start="", end=""):
@@ -129,10 +127,9 @@ def getLiblouisStyle(c):
 		raise TypeError("wrong type")
 	if c < 0x10000:
 		return r"\x%.4x" % c
-	elif c <= 0x100000:
+	if c <= 0x100000:
 		return r"\y%.5x" % c
-	else:
-		return r"\z%.6x" % c
+	return r"\z%.6x" % c
 
 
 def getUnicodeNotation(s, notation=None):
@@ -156,16 +153,15 @@ def getUnicodeNotation(s, notation=None):
 def getUndefinedCharSign(method):
 	if method == CHOICE_allDots8:
 		return '⣿'
-	elif method == CHOICE_allDots6:
+	if method == CHOICE_allDots6:
 		return '⠿'
-	elif method == CHOICE_otherDots:
+	if method == CHOICE_otherDots:
 		return huc.cellDescriptionsToUnicodeBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardDotPatternValue"])
-	elif method == CHOICE_questionMark:
+	if method == CHOICE_questionMark:
 		return getTextInBraille('?')
-	elif method == CHOICE_otherSign:
+	if method == CHOICE_otherSign:
 		return getTextInBraille(config.conf["brailleExtender"]["undefinedCharsRepr"]["hardSignPatternValue"])
-	else:
-		return '⠀'
+	return '⠀'
 
 
 def getReplacement(text, method=None):
@@ -188,13 +184,12 @@ def getReplacement(text, method=None):
 			start=start,
 			end=end
 		), table)
-	elif method in [CHOICE_HUC6, CHOICE_HUC8]:
+	if method in [CHOICE_HUC6, CHOICE_HUC8]:
 		HUC6 = method == CHOICE_HUC6
 		return huc.translate(text, HUC6=HUC6)
-	elif method in [CHOICE_bin, CHOICE_oct, CHOICE_dec, CHOICE_hex, CHOICE_liblouis]:
+	if method in [CHOICE_bin, CHOICE_oct, CHOICE_dec, CHOICE_hex, CHOICE_liblouis]:
 		return getUnicodeNotation(text)
-	else:
-		return getUndefinedCharSign(method)
+	return getUndefinedCharSign(method)
 
 
 def undefinedCharProcess(self):
@@ -339,12 +334,11 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			return config.conf["brailleExtender"]["undefinedCharsRepr"][
 				"hardDotPatternValue"
 			]
-		elif selected == CHOICE_otherSign:
+		if selected == CHOICE_otherSign:
 			return config.conf["brailleExtender"]["undefinedCharsRepr"][
 				"hardSignPatternValue"
 			]
-		else:
-			return ""
+		return ""
 
 	def onUndefinedCharDesc(self, evt=None):
 		l = [

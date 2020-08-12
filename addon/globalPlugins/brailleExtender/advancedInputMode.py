@@ -104,10 +104,9 @@ def getReplacements(abreviations, strict=False):
 def translateTable(tableFilename):
 	if tableFilename == "*":
 		return _("all tables")
-	else:
-		for table in brailleTables.listTables():
-			if table.fileName == tableFilename:
-				return table.displayName
+	for table in brailleTables.listTables():
+		if table.fileName == tableFilename:
+			return table.displayName
 	return tableFilename
 
 

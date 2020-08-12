@@ -1,21 +1,29 @@
-# -*- coding: UTF-8 -*-
+import os.path
 import subprocess
 import time
 
 updateChannel = "unknown"
 hashCommit = "unknown"
-outBranchName = subprocess.check_output(["git", "branch", "--show-current"]).strip().decode()
-out = subprocess.check_output(["git", "status", "--porcelain"]).strip().decode()
+outBranchName = subprocess.check_output(
+	["git", "branch", "--show-current"]).strip().decode()
+out = subprocess.check_output(
+	["git", "status", "--porcelain"]).strip().decode()
 if not out.strip():
-	label = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).strip().decode()
-	if len(hashCommit) == 7: hashCommit = label
+	label = subprocess.check_output(
+		["git", "rev-parse", "--short", "HEAD"]).strip().decode()
+	if len(hashCommit) == 7:
+		hashCommit = label
 if outBranchName.strip():
-	updateChannel = "stable" if outBranchName in ["stable", "master"] else "dev"
+	updateChannel = "stable" if outBranchName in [
+		"stable", "master"] else "dev"
 # Build customizations
 # Change this file instead of sconstruct or manifest files, whenever possible.
 
 # Full getext (please don't change)
-_ = lambda x : x
+
+
+def _(x): return x
+
 
 # Add-on information variables
 addon_info = {
@@ -48,7 +56,8 @@ addon_info = {
 		"\n* ", _("display undefined characters from braille tables (including emojis) using altenative representations"), ".",
 		"\n* ", _("enter any character from braille keyboard (including emojis)"), ".",
 		"\n* ", _("and much more!"),
-		"\n\n",_("For some braille displays, it extends the braille display commands to provide"), ":",
+		"\n\n", _(
+			"For some braille displays, it extends the braille display commands to provide"), ":",
 		"\n* ", _("offer complete gesture maps including function keys, multimedia keys, quick navigation, etc."), ";",
 		"\n* ", _("emulate modifier keys, and thus any keyboard shortcut"), ";",
 		"\n* ", _("offer several keyboard configurations concerning the possibility to input dots 7 and 8, enter and backspace"), ";",
@@ -71,12 +80,10 @@ addon_info = {
 }
 
 
-import os.path
-
 # Define the python files that are the sources of your add-on.
 # You can use glob expressions here, they will be expanded.
 pythonSources = [os.path.join("addon", "*.py"),
-os.path.join("addon", "globalPlugins", "brailleExtender", "*.py")]
+				 os.path.join("addon", "globalPlugins", "brailleExtender", "*.py")]
 
 
 # Files that contain strings for translation. Usually your python sources

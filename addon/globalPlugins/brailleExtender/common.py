@@ -43,3 +43,7 @@ TAG_SEPARATOR = chr(5)
 CHOICE_likeSpeech = "l"
 CHOICE_enabled = "y"
 CHOICE_disabled = "n"
+
+REPLACE_TEXT = 0
+INSERT_AFTER = 1
+INSERT_BEFORE = 2

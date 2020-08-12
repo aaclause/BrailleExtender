@@ -24,6 +24,7 @@ from . import configBE
 from . import utils
 from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
 from .oneHandMode import SettingsDlg as OneHandModeDlg
+from .rotor import SettingsDlg as RotorDlg
 from .undefinedChars import SettingsDlg as UndefinedCharsDlg
 from .common import *
 
@@ -728,6 +729,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AdvancedInputModeDlg,
 		OneHandModeDlg,
 		RoleLabelsDlg,
+		RotorDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

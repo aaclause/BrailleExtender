@@ -36,20 +36,20 @@ def set_auto_scroll_delay(delay):
 def increase_auto_scroll_delay(self):
 	cur_delay = get_auto_scroll_delay()
 	if cur_delay:
-		new_delay = cur_delay + 50
+		new_delay = cur_delay + conf["stepDelayChange"]
 	set_auto_scroll_delay(new_delay)
 
 
 def decrease_auto_scroll_delay(self):
 	cur_delay = get_auto_scroll_delay()
 	if cur_delay:
-		new_delay = cur_delay - 50
+		new_delay = cur_delay - conf["stepDelayChange"]
 	set_auto_scroll_delay(new_delay)
 
 
 def report_auto_scroll_delay(self):
 	cur_delay = get_auto_scroll_delay()
-	ui.message(f"{cur_delay} ms")
+	ui.message(_("{delay} ms").format(delay=cur_delay))
 
 
 def toggle_auto_scroll(self, sil=False):
@@ -106,15 +106,25 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			initial=get_auto_scroll_delay()
 		)
 		# Translators: label of a dialog.
-		label = _("Adjust the delay to content")
+		label = _("&Step for delay change (ms):")
+		self.stepDelayChange = sHelper.addLabeledControl(
+			label,
+			gui.nvdaControls.SelectOnFocusSpinCtrl,
+			min=25,
+			max=42000,
+			initial=conf["stepDelayChange"]
+		)
+		# Translators: label of a dialog.
+		label = _("&Adjust the delay to content")
 		self.adjustToContent = sHelper.addItem(wx.CheckBox(self, label=label))
 		self.adjustToContent.SetValue(conf["adjustToContent"])
 		# Translators: label of a dialog.
-		label = _("Ignore blank line")
+		label = _("Ignore &blank line")
 		self.ignoreBlankLine = sHelper.addItem(wx.CheckBox(self, label=label))
 		self.ignoreBlankLine.SetValue(conf["ignoreBlankLine"])
 
 	def onSave(self):
 		set_auto_scroll_delay(self.autoScrollDelay.Value)
+		conf["stepDelayChange"] = self.stepDelayChange.Value
 		conf["adjustToContent"] = self.adjustToContent.IsChecked()
 		conf["ignoreBlankLine"] = self.ignoreBlankLine.IsChecked()

@@ -120,6 +120,7 @@ def getConfspec():
 		"reverseScrollBtns": "boolean(default=False)",
 		"autoScroll": {
 			"delay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
+			"stepDelayChange": "integer(min=25, default=100, max=7000)",
 			"adjustToContent": "boolean(default=False)",
 			"ignoreBlankLine": "boolean(default=True)",
 		},

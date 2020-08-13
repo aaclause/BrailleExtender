@@ -258,30 +258,6 @@ def getLine():
 	info.expand(textInfos.UNIT_LINE)
 	return info.text
 
-def isLastLine():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
-		p1.expand(textInfos.UNIT_LINE)
-		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
-		if p1.compareEndPoints(p2, "endToEnd") == 1: return True
-	except BaseException: return True
-	return False
-
-def isEnd():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
-		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
-		if p1.compareEndPoints(p2, "startToEnd") == 0: return True
-	except BaseException: pass
-	return False
 
 def getTextPosition():
 	try:

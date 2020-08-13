@@ -118,9 +118,11 @@ def getConfspec():
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"reverseScrollBtns": "boolean(default=False)",
-		"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-		"smartDelayScroll": "boolean(default=False)",
-		"ignoreBlankLineScroll": "boolean(default=True)",
+		"autoScroll": {
+			"delay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
+			"smart": "boolean(default=False)",
+			"ignoreBlankLine": "boolean(default=True)",
+		},
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,
 			CHOICE_focus=CHOICE_focus,

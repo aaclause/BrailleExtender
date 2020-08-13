@@ -29,20 +29,20 @@ import speech
 import textInfos
 import treeInterceptorHandler
 import watchdog
-import wx
 from logHandler import log
 
 import addonHandler
 addonHandler.initTranslation()
 
 from . import advancedInputMode
+from . import auto_scroll
 from . import brailleRegionHelper
 from . import configBE
 from . import dictionaries
 from . import huc
 from . import undefinedChars
 from .oneHandMode import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, isLastLine
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
 from .common import *
 
 instanceGP = None
@@ -484,35 +484,6 @@ def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
 
-def toggle_auto_scroll(self, sil=False):
-	if braille.BrailleHandler._enable_auto_scroll:
-		self._auto_scroll_timer.Stop()
-		if not sil:
-			speech.speakMessage(_("Autoscroll stopped"))
-	else:
-		self._auto_scroll_timer = wx.PyTimer(self._auto_scroll)
-		try: self._auto_scroll_timer.Start(int(config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD]))
-		except BaseException as e:
-			log.error("%s | %s" % (config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD], e))
-			ui.message(_("Unable to start autoscroll. More info in NVDA log"))
-			return
-	braille.BrailleHandler._enable_auto_scroll = not braille.BrailleHandler._enable_auto_scroll
-
-def _auto_scroll(self):
-	braille.handler.scrollForward()
-	if isLastLine(): self.toggle_auto_scroll()
-
-def _displayWithCursor(self):
-	if not self._cells:
-		return
-	cells = list(self._cells)
-	if self._cursorPos is not None and self._cursorBlinkUp and not self._enable_auto_scroll:
-		if self.getTether() == self.TETHER_FOCUS:
-			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeFocus"]
-		else:
-			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
-	self._writeCells(cells)
-
 # applying patches
 braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
@@ -531,7 +502,7 @@ script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 braille.Region.parseUndefinedChars = True
 
 braille.BrailleHandler._enable_auto_scroll = False
-braille.BrailleHandler._auto_scroll = _auto_scroll
+braille.BrailleHandler._auto_scroll = auto_scroll._auto_scroll
 braille.BrailleHandler._auto_scroll_timer = None
-braille.BrailleHandler._displayWithCursor = _displayWithCursor
-braille.BrailleHandler.toggle_auto_scroll = toggle_auto_scroll
+braille.BrailleHandler._displayWithCursor = auto_scroll._displayWithCursor
+braille.BrailleHandler.toggle_auto_scroll = auto_scroll.toggle_auto_scroll

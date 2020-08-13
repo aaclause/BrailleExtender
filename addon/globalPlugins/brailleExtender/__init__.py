@@ -235,7 +235,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		if "tabSize_%s" % configBE.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)
-		if braille.BrailleHandler._enable_auto_scroll:
+		if braille.handler._enable_auto_scroll:
 			braille.handler.toggle_auto_scroll()
 		if self.autoTestPlayed: self.script_autoTest(None)
 		if braille.handler is not None and configBE.curBD != braille.handler.display.name:
@@ -674,7 +674,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_position.__doc__ = _("Reports the cursor position of text under the braille cursor")
 
 	def script_hourDate(self, gesture=None):
-		if braille.BrailleHandler._enable_auto_scroll:
+		if braille.handler._enable_auto_scroll:
 			return
 		if self.hourDatePlayed:
 			self.hourDateTimer.Stop()
@@ -792,7 +792,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_increaseDelayAutoScroll(self, gesture):
 		self.increaseDelayAutoScroll()
-		if braille.BrailleHandler._enable_auto_scroll:
+		if braille.handler._enable_auto_scroll:
 			self.script_autoScroll(None, True)
 			self.script_autoScroll(None)
 		else:
@@ -802,7 +802,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_decreaseDelayAutoScroll(self, gesture):
 		self.decreaseDelayAutoScroll()
-		if braille.BrailleHandler._enable_auto_scroll:
+		if braille.handler._enable_auto_scroll:
 			self.script_autoScroll(None, True)
 			self.script_autoScroll(None)
 		else:
@@ -1269,7 +1269,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.hourDateTimer.Stop()
 			if configBE.noMessageTimeout:
 				config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
-		if braille.BrailleHandler._enable_auto_scroll:
+		if braille.handler._enable_auto_scroll:
 			braille.handler.toggle_auto_scroll()
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		dictionaries.removeTmpDict()

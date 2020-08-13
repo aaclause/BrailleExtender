@@ -119,8 +119,8 @@ def getConfspec():
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"reverseScrollBtns": "boolean(default=False)",
 		"autoScroll": {
-			"delay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-			"stepDelayChange": "integer(min=25, default=100, max=7000)",
+			"delay_%s" % curBD: f"integer(min={MIN_AUTO_SCROLL_DELAY}, default={DEFAULT_AUTO_SCROLL_DELAY}, max={MAX_AUTO_SCROLL_DELAY})",
+			"stepDelayChange": f"integer(min={MIN_STEP_DELAY_CHANGE}, default={DEFAULT_STEP_DELAY_CHANGE}, max={MAX_STEP_DELAY_CHANGE})",
 			"adjustToContent": "boolean(default=False)",
 			"ignoreBlankLine": "boolean(default=True)",
 		},

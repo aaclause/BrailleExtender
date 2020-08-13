@@ -10,9 +10,9 @@ import speech
 import ui
 import wx
 from logHandler import log
+from .common import MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
 from .utils import isLastLine
 
-DEFAULT_AUTO_SCROLL_DELAY = 3000
 
 conf = config.conf["brailleExtender"]["autoScroll"]
 
@@ -113,8 +113,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.autoScrollDelay = sHelper.addLabeledControl(
 			label,
 			gui.nvdaControls.SelectOnFocusSpinCtrl,
-			min=125,
-			max=42000,
+			min=MIN_AUTO_SCROLL_DELAY,
+			max=MAX_AUTO_SCROLL_DELAY,
 			initial=get_auto_scroll_delay()
 		)
 		# Translators: label of a dialog.
@@ -122,8 +122,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.stepDelayChange = sHelper.addLabeledControl(
 			label,
 			gui.nvdaControls.SelectOnFocusSpinCtrl,
-			min=25,
-			max=42000,
+			min=MIN_STEP_DELAY_CHANGE,
+			max=MAX_STEP_DELAY_CHANGE,
 			initial=conf["stepDelayChange"]
 		)
 		# Translators: label of a dialog.

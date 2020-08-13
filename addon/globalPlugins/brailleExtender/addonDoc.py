@@ -291,7 +291,7 @@ class AddonDoc:
 			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
 			_("Polish"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Dorota Krać",
-			_("Russian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Pavel Kaplan <pavel46@gmail.com>",
+			_("Russian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Pavel Kaplan <pavel46@gmail.com>", Artem Plaksin <admin@maniyax.ru>",
 		}
 		doc += (
 			"<h2>" + _("Copyrights and acknowledgements") + "</h2>"

@@ -703,9 +703,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		currentHourDate = time.strftime('%X %x (%a, %W/53, %b)', time.localtime())
 		return braille.handler.message(currentHourDate)
 
-	def script_autoScroll(self, gesture, sil=False):
-		if self.hourDatePlayed:
-			return
+	def script_autoScroll(self, gesture):
 		braille.handler.toggle_auto_scroll()
 	script_autoScroll.__doc__ = _("Toggles automatic braille scroll")
 
@@ -783,12 +781,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_increaseDelayAutoScroll(self, gesture):
 		braille.handler.increase_auto_scroll_delay()
-		braille.handler.report_auto_scroll_delay()
+		if not braille.handler._enable_auto_scroll:
+			braille.handler.report_auto_scroll_delay()
 	script_increaseDelayAutoScroll.__doc__ = _("Increases braille autoscroll delay")
 
 	def script_decreaseDelayAutoScroll(self, gesture):
 		braille.handler.decrease_auto_scroll_delay()
-		braille.handler.report_auto_scroll_delay()
+		if not braille.handler._enable_auto_scroll:
+			braille.handler.report_auto_scroll_delay()
 	script_decreaseDelayAutoScroll.__doc__ = _("Decreases braille autoscroll delay")
 
 	def script_switchInputBrailleTable(self, gesture):

@@ -73,7 +73,7 @@ def sayCurrentLine():
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
 def script_braille_routeTo(self, gesture):
-	if braille.handler._enable_auto_scroll:
+	if braille.handler._enable_auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
 		braille.handler.toggle_auto_scroll()
 	obj = obj = api.getNavigatorObject()
 	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
@@ -95,7 +95,7 @@ def script_braille_routeTo(self, gesture):
 		return
 	try: braille.handler.routeTo(gesture.routingIndex)
 	except LookupError: pass
-	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
+	if not braille.handler._enable_auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
 		region = braille.handler.buffer
 		if region.cursorPos is None: return
 		try:
@@ -504,8 +504,9 @@ braille.Region.parseUndefinedChars = True
 braille.BrailleHandler._enable_auto_scroll = False
 braille.BrailleHandler._auto_scroll = auto_scroll._auto_scroll
 braille.BrailleHandler._auto_scroll_timer = None
-braille.BrailleHandler._displayWithCursor = auto_scroll._displayWithCursor
-braille.BrailleHandler.toggle_auto_scroll = auto_scroll.toggle_auto_scroll
-braille.BrailleHandler.increase_auto_scroll_delay = auto_scroll.increase_auto_scroll_delay
+braille.BrailleHandler._post_change_auto_scroll_delay = auto_scroll._post_change_auto_scroll_delay
 braille.BrailleHandler.decrease_auto_scroll_delay = auto_scroll.decrease_auto_scroll_delay
+braille.BrailleHandler.increase_auto_scroll_delay = auto_scroll.increase_auto_scroll_delay
 braille.BrailleHandler.report_auto_scroll_delay = auto_scroll.report_auto_scroll_delay
+braille.BrailleHandler.toggle_auto_scroll = auto_scroll.toggle_auto_scroll
+braille.BrailleHandler._displayWithCursor = auto_scroll._displayWithCursor

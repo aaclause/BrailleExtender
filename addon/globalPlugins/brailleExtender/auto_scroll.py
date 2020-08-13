@@ -38,6 +38,7 @@ def increase_auto_scroll_delay(self):
 	if cur_delay:
 		new_delay = cur_delay + conf["stepDelayChange"]
 	set_auto_scroll_delay(new_delay)
+	self._post_change_auto_scroll_delay()
 
 
 def decrease_auto_scroll_delay(self):
@@ -45,6 +46,13 @@ def decrease_auto_scroll_delay(self):
 	if cur_delay:
 		new_delay = cur_delay - conf["stepDelayChange"]
 	set_auto_scroll_delay(new_delay)
+	self._post_change_auto_scroll_delay()
+
+
+def _post_change_auto_scroll_delay(self):
+	if self._enable_auto_scroll:
+		self.toggle_auto_scroll(True)
+		self.toggle_auto_scroll(True)
 
 
 def report_auto_scroll_delay(self):
@@ -62,6 +70,8 @@ def toggle_auto_scroll(self, sil=False):
 	else:
 		self._auto_scroll_timer = wx.PyTimer(self._auto_scroll)
 		try:
+			if braille.handler.buffer is braille.handler.messageBuffer:
+				braille.handler._dismissMessage()
 			self._auto_scroll_timer.Start(get_auto_scroll_delay())
 		except BaseException as e:
 			log.error("%s | %s" % (get_auto_scroll_delay(), e))
@@ -71,6 +81,8 @@ def toggle_auto_scroll(self, sil=False):
 
 
 def _auto_scroll(self):
+	if braille.handler.buffer is not braille.handler.mainBuffer:
+		return
 	self.scrollForward()
 	if isLastLine():
 		self.toggle_auto_scroll()

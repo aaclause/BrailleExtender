@@ -781,34 +781,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 	script_checkUpdate.__doc__ = _("Checks for Braille Extender updates")
 
-	@staticmethod
-	def increaseDelayAutoScroll():
-		config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] += 25
-
-	@staticmethod
-	def decreaseDelayAutoScroll():
-		if config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] - 25 >= 25:
-			config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] -= 25
-
 	def script_increaseDelayAutoScroll(self, gesture):
-		self.increaseDelayAutoScroll()
-		if braille.handler._enable_auto_scroll:
-			self.script_autoScroll(None, True)
-			self.script_autoScroll(None)
-		else:
-			ui.message('%s ms' %
-					   config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
-		return
+		braille.handler.increase_auto_scroll_delay()
+		braille.handler.report_auto_scroll_delay()
+	script_increaseDelayAutoScroll.__doc__ = _("Increases braille autoscroll delay")
 
 	def script_decreaseDelayAutoScroll(self, gesture):
-		self.decreaseDelayAutoScroll()
-		if braille.handler._enable_auto_scroll:
-			self.script_autoScroll(None, True)
-			self.script_autoScroll(None)
-		else:
-			ui.message('%s ms' % config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD])
-		return
-	script_increaseDelayAutoScroll.__doc__ = _("Increases braille autoscroll delay")
+		braille.handler.decrease_auto_scroll_delay()
+		braille.handler.report_auto_scroll_delay()
 	script_decreaseDelayAutoScroll.__doc__ = _("Decreases braille autoscroll delay")
 
 	def script_switchInputBrailleTable(self, gesture):

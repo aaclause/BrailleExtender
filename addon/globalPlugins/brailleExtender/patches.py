@@ -506,3 +506,6 @@ braille.BrailleHandler._auto_scroll = auto_scroll._auto_scroll
 braille.BrailleHandler._auto_scroll_timer = None
 braille.BrailleHandler._displayWithCursor = auto_scroll._displayWithCursor
 braille.BrailleHandler.toggle_auto_scroll = auto_scroll.toggle_auto_scroll
+braille.BrailleHandler.increase_auto_scroll_delay = auto_scroll.increase_auto_scroll_delay
+braille.BrailleHandler.decrease_auto_scroll_delay = auto_scroll.decrease_auto_scroll_delay
+braille.BrailleHandler.report_auto_scroll_delay = auto_scroll.report_auto_scroll_delay

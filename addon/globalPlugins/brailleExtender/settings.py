@@ -23,6 +23,7 @@ addonHandler.initTranslation()
 from . import configBE
 from . import utils
 from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
+from .auto_scroll import SettingsDlg as AutoScrollDlg
 from .oneHandMode import SettingsDlg as OneHandModeDlg
 from .undefinedChars import SettingsDlg as UndefinedCharsDlg
 from .common import *
@@ -112,8 +113,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.reverseScrollBtns = sHelper.addItem(wx.CheckBox(self, label=_("&Reverse forward and back scroll buttons")))
 		self.reverseScrollBtns.SetValue(config.conf["brailleExtender"]["reverseScrollBtns"])
 
-		# Translators: label of a dialog.
-		self.autoScrollDelay = sHelper.addLabeledControl(_("Autoscroll &delay for the active braille display (ms):"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=125, max=42000, initial=int(config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD]))
 		self.brailleDisplay1 = sHelper.addLabeledControl(_("Preferred &primary braille display:"), wx.Choice, choices=self.bds_v)
 		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Preferred &secondary braille display:"), wx.Choice, choices=self.bds_v)
@@ -136,7 +135,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["updateChannel"] = list(configBE.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(configBE.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]
 
-		config.conf["brailleExtender"]["autoScrollDelay_%s" % configBE.curBD] = self.autoScrollDelay.Value
 		config.conf["brailleExtender"]["rightMarginCells_%s" % configBE.curBD] = self.rightMarginCells.Value
 		config.conf["brailleExtender"]["brailleDisplay1"] = self.bds_k[self.brailleDisplay1.GetSelection()]
 		config.conf["brailleExtender"]["brailleDisplay2"] = self.bds_k[self.brailleDisplay2.GetSelection()]
@@ -722,6 +720,7 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
+		AutoScrollDlg,
 		AttribraDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,

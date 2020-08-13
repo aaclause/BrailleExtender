@@ -120,7 +120,7 @@ def getConfspec():
 		"reverseScrollBtns": "boolean(default=False)",
 		"autoScroll": {
 			"delay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-			"smart": "boolean(default=False)",
+			"adjustToContent": "boolean(default=False)",
 			"ignoreBlankLine": "boolean(default=True)",
 		},
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(

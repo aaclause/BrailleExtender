@@ -4,26 +4,52 @@
 
 import braille
 import config
+import configobj
+import gui
 import speech
+import ui
 import wx
 from logHandler import log
 from .utils import isLastLine
 
 DEFAULT_AUTO_SCROLL_DELAY = 3000
 
-conf = config.conf["brailleExtender"]
+conf = config.conf["brailleExtender"]["autoScroll"]
 
 
 def get_auto_scroll_delay():
 	key = f"delay_{braille.handler.display.name}"
-	if key in conf["autoScroll"]:
-		return conf["autoScroll"][key]
+	if key in conf:
+		return conf[key]
 	return DEFAULT_AUTO_SCROLL_DELAY
 
 
 def set_auto_scroll_delay(delay):
 	key = f"delay_{braille.handler.display.name}"
-	conf["autoScroll"][key] = delay
+	try:
+		conf[key] = delay
+		return True
+	except configobj.validate.VdtValueTooSmallError:
+		return False
+
+
+def increase_auto_scroll_delay(self):
+	cur_delay = get_auto_scroll_delay()
+	if cur_delay:
+		new_delay = cur_delay + 50
+	set_auto_scroll_delay(new_delay)
+
+
+def decrease_auto_scroll_delay(self):
+	cur_delay = get_auto_scroll_delay()
+	if cur_delay:
+		new_delay = cur_delay - 50
+	set_auto_scroll_delay(new_delay)
+
+
+def report_auto_scroll_delay(self):
+	cur_delay = get_auto_scroll_delay()
+	ui.message(f"{cur_delay} ms")
 
 
 def toggle_auto_scroll(self, sil=False):
@@ -60,3 +86,35 @@ def _displayWithCursor(self):
 		else:
 			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
 	self._writeCells(cells)
+
+
+class SettingsDlg(gui.settingsDialogs.SettingsPanel):
+
+	# Translators: title of a dialog.
+	title = _("Auto scroll")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+
+		# Translators: label of a dialog.
+		label = _("Autoscroll &delay for the active braille display (ms):")
+		self.autoScrollDelay = sHelper.addLabeledControl(
+			label,
+			gui.nvdaControls.SelectOnFocusSpinCtrl,
+			min=125,
+			max=42000,
+			initial=get_auto_scroll_delay()
+		)
+		# Translators: label of a dialog.
+		label = _("Adjust the delay to content")
+		self.adjustToContent = sHelper.addItem(wx.CheckBox(self, label=label))
+		self.adjustToContent.SetValue(conf["adjustToContent"])
+		# Translators: label of a dialog.
+		label = _("Ignore blank line")
+		self.ignoreBlankLine = sHelper.addItem(wx.CheckBox(self, label=label))
+		self.ignoreBlankLine.SetValue(conf["ignoreBlankLine"])
+
+	def onSave(self):
+		set_auto_scroll_delay(self.autoScrollDelay.Value)
+		conf["adjustToContent"] = self.adjustToContent.IsChecked()
+		conf["ignoreBlankLine"] = self.ignoreBlankLine.IsChecked()

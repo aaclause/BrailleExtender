@@ -64,6 +64,10 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.stopSpeechScroll.SetValue(config.conf["brailleExtender"]["stopSpeechScroll"])
 
 		# Translators: label of a dialog.
+		self.skipBlankLineScroll = sHelper.addItem(wx.CheckBox(self, label=_("S&kip blank line while scrolling")))
+		self.skipBlankLineScroll.SetValue(config.conf["brailleExtender"]["skipBlankLineScroll"])
+
+		# Translators: label of a dialog.
 		self.stopSpeechUnknown = sHelper.addItem(wx.CheckBox(self, label=_("Speech i&nterrupt for unknown gestures")))
 		self.stopSpeechUnknown.SetValue(config.conf["brailleExtender"]["stopSpeechUnknown"])
 
@@ -129,6 +133,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		else: instanceGP.reverseScrollBtns(None, True)
 		config.conf["brailleExtender"]["reverseScrollBtns"] = self.reverseScrollBtns.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechScroll"] = self.stopSpeechScroll.IsChecked()
+		config.conf["brailleExtender"]["skipBlankLineScroll"] = self.skipBlankLineScroll.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
 		config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"] = self.routingReviewModeWithCursorKeys.IsChecked()

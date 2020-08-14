@@ -178,7 +178,7 @@ def nextLine(self):
 					if braille.handler._enable_auto_scroll:
 						braille.handler.toggle_auto_scroll()
 					return
-			if config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
+			if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
 				dest_ = dest.copy()
 				dest_.expand(textInfos.UNIT_LINE)
 				continue_ = not dest_.text.strip()
@@ -211,7 +211,7 @@ def previousLine(self, start=False):
 						dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
 						dest.expand(unit)
 				else: return
-			if config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
+			if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
 				dest_ = dest.copy()
 				dest_.expand(textInfos.UNIT_LINE)
 				continue_ = not dest_.text.strip()
@@ -530,6 +530,8 @@ braille.BrailleHandler._enable_auto_scroll = False
 braille.BrailleHandler._auto_scroll = auto_scroll._auto_scroll
 braille.BrailleHandler._auto_scroll_timer = None
 braille.BrailleHandler._post_change_auto_scroll_delay = auto_scroll._post_change_auto_scroll_delay
+braille.BrailleHandler.get_auto_scroll_delay = auto_scroll.get_auto_scroll_delay
+braille.BrailleHandler.get_dynamic_auto_scroll_delay = auto_scroll.get_dynamic_auto_scroll_delay
 braille.BrailleHandler.decrease_auto_scroll_delay = auto_scroll.decrease_auto_scroll_delay
 braille.BrailleHandler.increase_auto_scroll_delay = auto_scroll.increase_auto_scroll_delay
 braille.BrailleHandler.report_auto_scroll_delay = auto_scroll.report_auto_scroll_delay

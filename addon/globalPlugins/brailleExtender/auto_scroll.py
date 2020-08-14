@@ -50,8 +50,17 @@ def decrease_auto_scroll_delay(self):
 
 def _post_change_auto_scroll_delay(self):
 	if self._enable_auto_scroll:
-		self.toggle_auto_scroll(True)
-		self.toggle_auto_scroll(True)
+		self._auto_scroll_timer.Start(get_auto_scroll_delay())
+
+
+def get_dynamic_auto_scroll_delay(self):
+	if not any(self._cells): return get_auto_scroll_delay()
+	size_window = self.buffer._get_windowEndPos() - self.buffer.windowStartPos
+	if braille.handler.displaySize and size_window:
+		delay = get_auto_scroll_delay()
+		dynamic_delay = int(size_window / braille.handler.displaySize * delay)
+		return dynamic_delay
+	return get_auto_scroll_delay()
 
 
 def report_auto_scroll_delay(self):
@@ -71,7 +80,9 @@ def toggle_auto_scroll(self, sil=False):
 		try:
 			if braille.handler.buffer is braille.handler.messageBuffer:
 				braille.handler._dismissMessage()
-			self._auto_scroll_timer.Start(get_auto_scroll_delay())
+			oneShot = conf["adjustToContent"]
+			delay = self.get_dynamic_auto_scroll_delay() if oneShot else get_auto_scroll_delay()
+			self._auto_scroll_timer.Start(delay, oneShot)
 		except BaseException as e:
 			log.error("%s | %s" % (get_auto_scroll_delay(), e))
 			ui.message(_("Unable to start autoscroll. More info in NVDA log"))
@@ -83,6 +94,12 @@ def _auto_scroll(self):
 	if braille.handler.buffer is not braille.handler.mainBuffer:
 		return
 	self.scrollForward()
+	if self._auto_scroll_timer and self._enable_auto_scroll and conf["adjustToContent"]:
+		delay = self.get_dynamic_auto_scroll_delay()
+		self._auto_scroll_timer.Start(
+			delay,
+			oneShot=wx.TIMER_ONE_SHOT
+		)
 
 
 def _displayWithCursor(self):

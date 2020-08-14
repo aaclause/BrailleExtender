@@ -49,6 +49,7 @@ def make_progress_bar_from_str(percentage, text, method, positive='⢼', negativ
 	brl_repr = getTextInBraille(text)
 	brl_repr_size = len(brl_repr)
 	display_size = braille.handler.displaySize
+	if display_size < brl_repr_size + 3:  return brl_repr
 	size = display_size if method == REPLACE_TEXT else (display_size - brl_repr_size) % display_size
 	progress_bar = ''
 	if size - 2 > 0:

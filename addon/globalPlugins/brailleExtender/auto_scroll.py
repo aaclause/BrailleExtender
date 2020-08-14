@@ -11,7 +11,6 @@ import ui
 import wx
 from logHandler import log
 from .common import MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
-from .utils import isLastLine
 
 
 conf = config.conf["brailleExtender"]["autoScroll"]
@@ -84,8 +83,6 @@ def _auto_scroll(self):
 	if braille.handler.buffer is not braille.handler.mainBuffer:
 		return
 	self.scrollForward()
-	if isLastLine():
-		self.toggle_auto_scroll()
 
 
 def _displayWithCursor(self):

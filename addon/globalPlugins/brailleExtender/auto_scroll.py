@@ -131,7 +131,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.adjustToContent = sHelper.addItem(wx.CheckBox(self, label=label))
 		self.adjustToContent.SetValue(conf["adjustToContent"])
 		# Translators: label of a dialog.
-		label = _("Ignore &blank line")
+		label = _("Always ignore &blank line")
 		self.ignoreBlankLine = sHelper.addItem(wx.CheckBox(self, label=label))
 		self.ignoreBlankLine.SetValue(conf["ignoreBlankLine"])
 

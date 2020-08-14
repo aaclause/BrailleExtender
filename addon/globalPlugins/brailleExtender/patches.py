@@ -175,7 +175,7 @@ def nextLine(self):
 						continue_ = False
 					else: dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
 				else: return
-			if config.conf["brailleExtender"]["skipBlankLineScroll"]:
+			if config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
 				dest_ = dest.copy()
 				dest_.expand(textInfos.UNIT_LINE)
 				continue_ = not dest_.text.strip()
@@ -208,7 +208,7 @@ def previousLine(self, start=False):
 						dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
 						dest.expand(unit)
 				else: return
-			if config.conf["brailleExtender"]["skipBlankLineScroll"]:
+			if config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
 				dest_ = dest.copy()
 				dest_.expand(textInfos.UNIT_LINE)
 				continue_ = not dest_.text.strip()

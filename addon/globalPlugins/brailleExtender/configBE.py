@@ -124,6 +124,7 @@ def getConfspec():
 			"adjustToContent": "boolean(default=False)",
 			"ignoreBlankLine": "boolean(default=True)",
 		},
+		"skipBlankLineScroll": "boolean(default=False)",
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,
 			CHOICE_focus=CHOICE_focus,

@@ -1213,6 +1213,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryEntryDlg, title=_("Add dictionary entry or see a dictionary"), textPattern=curChar, specifyDict=True)
 	script_addDictionaryEntry.__doc__ = _("Adds an entry in braille dictionary")
 
+	def script_toggle_blank_line_scroll(self, gesture):
+		config.conf["brailleExtender"]["skipBlankLineScroll"] = not config.conf["brailleExtender"]["skipBlankLineScroll"]
+		if config.conf["brailleExtender"]["skipBlankLineScroll"]:
+			ui.message(_("Skip blank line while scrolling enabled"))
+		else:
+			ui.message(_("Skip blank line while scrolling disabled"))
+	script_toggle_blank_line_scroll.__doc__ = _("Toggle blank line while scrolling")
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"

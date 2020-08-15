@@ -189,6 +189,7 @@ def getConfspec():
 				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
 			},
 			"lineNumber": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
+			"tableCellCoords": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
 			"reportBorderStyle": "boolean(default=True)",
 			"reportColor": "boolean(default=True)",
 			"reportFontName": "boolean(default=True)",

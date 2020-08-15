@@ -93,6 +93,12 @@ def lineNumberEnabled():
 	return lineNumber == CHOICE_enabled
 
 
+def tableCellCoordsEnabled():
+	tableCellCoords = conf["tableCellCoords"]
+	if tableCellCoords == CHOICE_likeSpeech:
+		return config.conf["documentFormatting"]["reportTableCellCoords"]
+	return tableCellCoords == CHOICE_enabled
+
 def set_report(k, v, sect=True):
 	if k not in conf:
 		log.error(f"unknown key/section '{k}'")
@@ -227,6 +233,8 @@ def decorator(fn, s):
 		]
 		if lineNumberEnabled():
 			keysToEnable.append("reportLineNumber")
+		if tableCellCoordsEnabled():
+			keysToEnable.append("reportTableCellCoords")
 		if attributesEnabled():
 			keysToEnable.append("reportFontAttributes")
 		if alignmentsEnabled():
@@ -793,6 +801,11 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		keys = list(CHOICES_LABELS_STATES.keys())
 		self.reportLineNumber.SetSelection(keys.index(conf["lineNumber"]))
 
+		self.reportTableCellCoords = sHelper.addLabeledControl(
+			_("Cell c&oordinates:"), wx.Choice, choices=choices
+		)
+		self.reportTableCellCoords.SetSelection(keys.index(conf["tableCellCoords"]))
+
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.attributesBtn = bHelper.addButton(
 			self, label="%s..." % _("Font &attributes")
@@ -837,6 +850,11 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		lineNumber = list(CHOICES_LABELS_STATES.keys())[
 			self.reportLineNumber.GetSelection()]
 		conf["lineNumber"] = lineNumber
+
+		tableCellCoords = list(CHOICES_LABELS_STATES.keys())[
+			self.reportTableCellCoords.GetSelection()]
+		conf["tableCellCoords"] = tableCellCoords
+
 		setAttributes(reportFontAttributes)
 		setAlignments(reportAlignments)
 		setIndentation(reportIndentations)

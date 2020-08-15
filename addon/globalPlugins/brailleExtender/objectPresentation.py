@@ -1,5 +1,5 @@
 # objectPresentation.py
-from .documentFormatting import CHOICES_LABELS
+from .documentFormatting import CHOICES_LABELS, tableCellCoordsEnabled
 from .common import N_, CHOICE_liblouis, CHOICE_none
 import ui
 import queueHandler
@@ -110,7 +110,7 @@ def getPropertiesBraille(**propertyValues) -> str:
 	# After all, a table cell that has no rowspan implemented is assumed to span one row.
 	rowSpan = propertyValues.get("rowSpan") or 1
 	columnSpan = propertyValues.get("columnSpan") or 1
-	includeTableCellCoords = propertyValues.get("includeTableCellCoords", True)
+	includeTableCellCoords = tableCellCoordsEnabled() and propertyValues.get("includeTableCellCoords", True)
 	positionInfoLevelStr = None
 	if role is not None and not roleText:
 		if role == controlTypes.ROLE_HEADING and level:

@@ -10,6 +10,7 @@ import colors
 import controlTypes
 import config
 import louis
+import speech
 import textInfos
 from collections import namedtuple
 from logHandler import log
@@ -65,120 +66,107 @@ CHOICES_LABELS_STATES = {
 	CHOICE_disabled: _("disabled"),
 }
 
+REPORTS_LABELS = {
+	"fontAttributes": _("Font &attributes:"),
+	"superscriptsAndSubscripts": _("Superscripts and subscripts:"),
+	"emphasis": _("&Emphasis:"),
+	"highlight": _("Mar&ked (highlighted text):"),
+	"spellingErrors": _("Spelling and grammar errors"),
+	"alignment": _("Ali&gnment:"),
+	"color": _("&Color:"),
+	"style": _("&Style:"),
+	"borderColor": _("&Border color:"),
+	"borderStyle": _("&Border Style:"),
+	"fontName": _("Font &name:"),
+	"fontSize": _("Font &size:"),
+	"page": _("&Page number:"),
+	"lineNumber": _("&Line number:"),
+	"links": _("Lin&ks:"),
+	"headings": _("Headings:"),
+	"graphics": _("Graphics:"),
+	"lists": _("Lists:"),
+	"blockQuotes": _("&Quotes:"),
+	"groupings": _("Groupings:"),
+	"landmarks": _("Landmarks:"),
+	"articles": _("Articles:"),
+	"frames": _("Frames:"),
+	"clickable": _("Clickable:"),
+	"comments": _("Comments:"),
+	"tables": _("&Tables:"),
+	"tableHeaders": _("Row/column h&eaders:"),
+	"tableCellCoords": _("Cell coor&dinates:")
+}
+
 logTextInfo = False
 conf = config.conf["brailleExtender"]["documentFormatting"]
 
 
-def get_report(k):
-	if k not in conf:
-		log.error(f"unknown {k} key")
-		return False
-	return conf[k]["enabled"]
+def normalize_report_key(key):
+	return "report" + key[0].upper() + key[1:]
 
 
-def get_attributes(k):
-	l = [k]
-	if ':' in k:
-		k = l.append(k.split(':')[0])
-	for e in l:
-		if e in conf["attributes"]:
-			return conf["attributes"][e]
-	return CHOICE_none
+def get_report(key, simple=True):
+	if key in conf["reports"]:
+		val = conf["reports"][key]
+		if not simple:
+			return val
+		if val == CHOICE_likeSpeech:
+			return config.conf["documentFormatting"][
+				normalize_report_key(key)
+			]
+		return val == CHOICE_enabled
+	if key not in conf:
+		log.error(f"unknown {key} key")
+		return None
+	if isinstance(conf[key], config.AggregatedSection) and "enabled" in conf[key]:
+		return conf[key]["enabled"]
+	return conf[key]
 
 
-def lineNumberEnabled():
-	lineNumber = conf["lineNumber"]
-	if lineNumber == CHOICE_likeSpeech:
-		return config.conf["documentFormatting"]["reportLineNumber"]
-	return lineNumber == CHOICE_enabled
-
-
-def tableCellCoordsEnabled():
-	tableCellCoords = conf["tableCellCoords"]
-	if tableCellCoords == CHOICE_likeSpeech:
-		return config.conf["documentFormatting"]["reportTableCellCoords"]
-	return tableCellCoords == CHOICE_enabled
-
-def set_report(k, v, sect=True):
-	if k not in conf:
+def set_report(k, v, sect=False):
+	if k not in conf["reports"]:
 		log.error(f"unknown key/section '{k}'")
 		return False
 	if sect:
-		if not isinstance(conf[k], config.AggregatedSection):
+		if not isinstance(conf["reports"][k], config.AggregatedSection):
 			log.error(f"'{k}' is not a section")
 			return False
-		if not "enabled" in conf[k]:
+		if not "enabled" in conf["reports"][k]:
 			log.error(f"'{k}' is not a valid section")
 			return False
 		conf[k]["enabled"] = v
 	else:
-		if isinstance(conf[k], config.AggregatedSection):
+		if isinstance(conf["reports"][k], config.AggregatedSection):
 			log.error(f"'{k}' is not a key")
-		conf[k] = v
+		conf["reports"][k] = v
 	return True
 
 
-def setAttributes(e): return set_report("attributes", e)
+def toggle_report(report):
+	cur = get_report(report)
+	if cur:
+		set_report(report, CHOICE_disabled)
+	else:
+		set_report(report, CHOICE_enabled)
 
 
-def setAlignments(e): return set_report("alignments", e)
+def report_formatting(report):
+	cur = get_report(report)
+	label = REPORTS_LABELS[report].replace('&', '')
+	if cur:
+		speech.speakMessage(_(f"{label} enabled"))
+	else:
+		speech.speakMessage(f"{label} disabled")
 
 
-def setIndentation(e): return set_report("indentations", e)
-
-
-def setColor(e): return set_report("reportColor", e, False)
-
-
-def setStyle(e): return set_report("reportStyle", e, False)
-
-
-def setBorderStyle(e): return set_report("reportBorderStyle", e, False)
-
-
-def setFontName(e): return set_report("reportFontName", e, False)
-
-
-def setFontSize(e): return set_report("reportFontSize", e, False)
-
-
-def setPage(e): return set_report("reportPage", e, False)
-
-
-def setLevelItemsList(e):
-	conf["lists"]["showLevelItem"] = e
-
-
-def attributesEnabled(): return get_report("attributes")
-
-
-def alignmentsEnabled(): return get_report("alignments")
-
-
-def indentationsEnabled(): return get_report("indentations")
-
-
-def levelItemsListEnabled(): return conf["lists"]["showLevelItem"]
-
-
-def colorEnabled(): return conf["reportColor"]
-
-
-def styleEnabled(): return conf["reportStyle"]
-
-
-def borderStyleEnabled(): return conf["reportBorderStyle"]
-
-
-def fontNameEnabled():
-	return conf["reportFontName"]
-
-
-def fontSizeEnabled():
-	return conf["reportFontSize"]
-
-
-def pageEnabled(): return conf["reportPage"]
+def get_method(k):
+	l = [k]
+	if ':' in k:
+		k = l.append(k.split(':')[0])
+	for e in l:
+		if e in conf["methods"]:
+			return conf["methods"][e]
+	return CHOICE_none
 
 
 def get_liblouis_typeform(typeform):
@@ -194,7 +182,7 @@ def get_brlex_typeform(k, v):
 	dot7 = 64
 	dot8 = 128
 	typeform = 0
-	method = get_attributes(k)
+	method = get_method(k)
 	if method == CHOICE_dot7:
 		typeform = dot7
 	elif method == CHOICE_dot8:
@@ -206,7 +194,7 @@ def get_brlex_typeform(k, v):
 
 def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field, formatConfig=None):
-		if not attributesEnabled():
+		if not get_report("fontAttributes"):
 			return 0, 0
 		l = ["bold", "italic", "underline", "strikethrough",
 			 "text-position", "invalid-spelling", "invalid-grammar"]
@@ -217,7 +205,7 @@ def decorator(fn, s):
 			if v:
 				if isinstance(v, bool):
 					v = '1'
-				method = get_attributes(f"{k}:{v}")
+				method = get_method(f"{k}:{v}")
 				if method == CHOICE_liblouis:
 					liblouis_typeform |= get_liblouis_typeform(k)
 				elif method in [CHOICE_dots78, CHOICE_dot7, CHOICE_dot8]:
@@ -226,38 +214,14 @@ def decorator(fn, s):
 
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
 		formatConfig_ = formatConfig.copy()
-		keysToEnable = [
-			"reportSpellingErrors",
-			"reportLineIndentation",
-			"reportParagraphIndentation"
-		]
-		if lineNumberEnabled():
-			keysToEnable.append("reportLineNumber")
-		if tableCellCoordsEnabled():
-			keysToEnable.append("reportTableCellCoords")
-		if attributesEnabled():
-			keysToEnable.append("reportFontAttributes")
-		if alignmentsEnabled():
-			keysToEnable.append("reportAlignment",)
-		if colorEnabled():
-			keysToEnable.append("reportColor")
-		if styleEnabled():
-			keysToEnable.append("reportStyle")
-		if borderStyleEnabled():
-			keysToEnable.append("reportBorderStyle")
-		if fontNameEnabled():
-			keysToEnable.append("reportFontName")
-		if fontSizeEnabled():
-			keysToEnable.append("reportFontSize")
-		if pageEnabled():
-			keysToEnable.append("reportPage")
-		for keyToEnable in keysToEnable:
-			formatConfig_[keyToEnable] = True
+		keysToEnable = []
+		for e in REPORTS_LABELS.keys():
+			formatConfig_[normalize_report_key(e)] = get_report(e)
 		textInfo_ = info.getTextWithFields(formatConfig_)
 		formatField = textInfos.FormatField()
 		for field in textInfo_:
 			if isinstance(field, textInfos.FieldCommand) and isinstance(
-					field.field, textInfos.FormatField
+				field.field, textInfos.FormatField
 			):
 				formatField.update(field.field)
 		if logTextInfo:
@@ -269,7 +233,7 @@ def decorator(fn, s):
 		fn(self)
 		postReplacements = []
 		noAlign = False
-		if levelItemsListEnabled() and self and hasattr(self.obj, "currentNVDAObject"):
+		if conf["lists"]["showLevelItem"] and self and hasattr(self.obj, "currentNVDAObject"):
 			curObj = self.obj.currentNVDAObject
 			if curObj and hasattr(curObj, "IA2Attributes"):
 				IA2Attributes = curObj.IA2Attributes
@@ -281,11 +245,13 @@ def decorator(fn, s):
 					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(
 						start=0, insertBefore=('⠀' * s)))
 		formatField = self.formatField
-		if indentationsEnabled() and not noAlign and formatField.get("left-indent"):
+		"""
+		if get_report("indentations") and not noAlign and formatField.get("left-indent"):
 			leftIndent = formatField.get("left-indent").split('.')
 			postReplacements.append(brailleRegionHelper.BrailleCellReplacement(
 				start=0, insertBefore=('⠀' * abs(int(leftIndent[0])))))
-		elif not noAlign and alignmentsEnabled():
+		"""
+		if not noAlign and get_report("alignments"):
 			textAlign = formatField.get("text-align")
 			if textAlign and get_method_alignment(textAlign) == CHOICE_spacing and textAlign not in ["start", "left"]:
 				textAlign = normalizeTextAlign(textAlign)
@@ -396,7 +362,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# %s is replaced with the level.
 				textList.append((N_("h%s") % headingLevel)+' ')
 
-	if pageEnabled():
+	if get_report("page"):
 		pageNumber = field.get("page-number")
 		oldPageNumber = fieldCache.get(
 			"page-number") if fieldCache is not None else None
@@ -441,7 +407,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				text = _("%s columns") % (textColumnCount)
 				textList.append("⣏%s⣹" % text)
 
-	if alignmentsEnabled():
+	if get_report("alignments"):
 		textAlign = normalizeTextAlign(field.get("text-align"))
 		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
 		if textAlign and textAlign != old_textAlign:
@@ -455,7 +421,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		if link and link != oldLink:
 			textList.append(braille.roleLabels[controlTypes.ROLE_LINK]+' ')
 
-	if styleEnabled():
+	if get_report("style"):
 		style = field.get("style")
 		oldStyle = fieldCache.get("style") if fieldCache is not None else None
 		if style != oldStyle:
@@ -469,7 +435,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# A style is a collection of formatting settings and depends on the application.
 				text = _("default style")
 			textList.append("⣏%s⣹" % text)
-	if borderStyleEnabled():
+	if get_report("borderStyle"):
 		borderStyle = field.get("border-style")
 		oldBorderStyle = fieldCache.get(
 			"border-style") if fieldCache is not None else None
@@ -480,7 +446,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# Translators: Indicates that cell does not have border lines.
 				text = _("no border lines")
 			textList.append("⣏%s⣹" % text)
-	if fontNameEnabled():
+	if get_report("fontName"):
 		fontFamily = field.get("font-family")
 		oldFontFamily = fieldCache.get(
 			"font-family") if fieldCache is not None else None
@@ -491,13 +457,13 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			"font-name") if fieldCache is not None else None
 		if fontName and fontName != oldFontName:
 			textList.append("⣏%s⣹" % fontName)
-	if fontSizeEnabled():
+	if get_report("fontSize"):
 		fontSize = field.get("font-size")
 		oldFontSize = fieldCache.get(
 			"font-size") if fieldCache is not None else None
 		if fontSize and fontSize != oldFontSize:
 			textList.append("⣏%s⣹" % fontSize)
-	if colorEnabled():
+	if get_report("color"):
 		color = field.get("color")
 		oldColor = fieldCache.get("color") if fieldCache is not None else None
 		backgroundColor = field.get("background-color")
@@ -545,17 +511,17 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	start_tag_list = []
 	end_tag_list = []
 
-	if attributesEnabled():
+	if get_report("fontAttributes"):
 		tags = [tag for tag in [
-				"bold",
-				"italic",
-				"underline",
-				"strikethrough",
-				"text-position:sub",
-				"text-position:super",
-				"invalid-spelling",
-				"invalid-grammar"
-				] if get_attributes(tag) == CHOICE_tags]
+			"bold",
+			"italic",
+			"underline",
+			"strikethrough",
+			"text-position:sub",
+			"text-position:super",
+			"invalid-spelling",
+			"invalid-grammar"
+		] if get_method(tag) == CHOICE_tags]
 		for name_tag in tags:
 			name_field = name_tag.split(':')[0]
 			value_field = name_tag.split(
@@ -591,12 +557,12 @@ def get_method_alignment(desc):
 	return None
 
 
-class ManageAttributes(wx.Dialog):
+class ManageMethods(wx.Dialog):
 	def __init__(
-			self,
-			parent=None,
-			# Translators: title of a dialog.
-			title=_("Customize attributes"),
+		self,
+		parent=None,
+		# Translators: title of a dialog.
+		title=_("Formatting Method"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -650,7 +616,7 @@ class ManageAttributes(wx.Dialog):
 	def getItemToSelect(attribute):
 		try:
 			idx = list(CHOICES_LABELS.keys()).index(
-				conf["attributes"][attribute]
+				conf["methods"][attribute]
 			)
 		except BaseException as err:
 			log.error(err)
@@ -658,28 +624,28 @@ class ManageAttributes(wx.Dialog):
 		return idx
 
 	def onOk(self, evt):
-		conf["attributes"]["invalid-spelling"] = list(
+		conf["methods"]["invalid-spelling"] = list(
 			CHOICES_LABELS.keys()
 		)[self.spellingErrors.GetSelection()]
-		conf["attributes"]["invalid-grammar"] = list(
+		conf["methods"]["invalid-grammar"] = list(
 			CHOICES_LABELS.keys()
 		)[self.grammarError.GetSelection()]
-		conf["attributes"]["bold"] = list(
+		conf["methods"]["bold"] = list(
 			CHOICES_LABELS.keys()
 		)[self.bold.GetSelection()]
-		conf["attributes"]["italic"] = list(
+		conf["methods"]["italic"] = list(
 			CHOICES_LABELS.keys()
 		)[self.italic.GetSelection()]
-		conf["attributes"]["underline"] = list(
+		conf["methods"]["underline"] = list(
 			CHOICES_LABELS.keys()
 		)[self.underline.GetSelection()]
-		conf["attributes"]["strikethrough"] = list(
+		conf["methods"]["strikethrough"] = list(
 			CHOICES_LABELS.keys()
 		)[self.strikethrough.GetSelection()]
-		conf["attributes"]["text-position:sub"] = list(
+		conf["methods"]["text-position:sub"] = list(
 			CHOICES_LABELS.keys()
 		)[self.sub.GetSelection()]
-		conf["attributes"]["text-position:super"] = list(
+		conf["methods"]["text-position:super"] = list(
 			CHOICES_LABELS.keys()
 		)[self.super.GetSelection()]
 		self.Destroy()
@@ -688,10 +654,10 @@ class ManageAttributes(wx.Dialog):
 class ManageTags(wx.Dialog):
 
 	def __init__(
-			self,
-			parent=None,
-			# Translators: title of a dialog.
-			title=_("Customize formatting tags"),
+		self,
+		parent=None,
+		# Translators: title of a dialog.
+		title=_("Customize formatting tags"),
 	):
 		self.tags = _tags.copy()
 		super().__init__(parent, title=title)
@@ -760,71 +726,46 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		sHelper.addItem(wx.StaticText(self, label=self.panelDescription))
 
-		self.processLinePerLine = sHelper.addItem(wx.CheckBox(
-			self, label=_("Process formatting line per line")))
+		label = _("Process formatting line per line")
+		self.processLinePerLine = sHelper.addItem(
+			wx.CheckBox(self, label=label))
 		self.processLinePerLine.SetValue(conf["processLinePerLine"])
 
 		label = _("Info to &report:")
-		choices = [
-			N_("Font attributes"),
-			N_("Alignment"),
-			_("Indentation"),
-			_("Level of items in a nested list"),
-			_("Color"),
-			_("Style"),
-			_("Border Style"),
-			_("Font name"),
-			_("Font size"),
-			_("Page number"),
-		]
-		self.reportInfo = sHelper.addLabeledControl(
-			label, gui.nvdaControls.CustomCheckListBox, choices=choices)
-		states = (
-			attributesEnabled(),
-			alignmentsEnabled(),
-			indentationsEnabled(),
-			levelItemsListEnabled(),
-			colorEnabled(),
-			styleEnabled(),
-			borderStyleEnabled(),
-			fontNameEnabled(),
-			fontSizeEnabled(),
-			pageEnabled(),
-		)
-		self.reportInfo.CheckedItems = [
-			i for i, state in enumerate(states) if state]
-		self.reportInfo.SetSelection(0)
-		choices = list(CHOICES_LABELS_STATES.values())
-		self.reportLineNumber = sHelper.addLabeledControl(
-			_("Report line &number"), wx.Choice, choices=choices
-		)
 		keys = list(CHOICES_LABELS_STATES.keys())
-		self.reportLineNumber.SetSelection(keys.index(conf["lineNumber"]))
+		choices = list(CHOICES_LABELS_STATES.values())
+		self.dynamic_options = []
+		for key, val in REPORTS_LABELS.items():
+			self.dynamic_options.append(sHelper.addLabeledControl(
+				val,
+				wx.Choice,
+				choices=choices
+			))
+			self.dynamic_options[-1].SetSelection(keys.index(
+				get_report(key, 0)
+			))
 
-		self.reportTableCellCoords = sHelper.addLabeledControl(
-			_("Cell c&oordinates:"), wx.Choice, choices=choices
-		)
-		self.reportTableCellCoords.SetSelection(keys.index(conf["tableCellCoords"]))
+		label = _("Cell &formula (Excel only for now)")
+		self.cellFormula = sHelper.addItem(wx.CheckBox(self, label=label))
+		self.cellFormula.SetValue(conf["cellFormula"])
+
+		label = _("Le&vel of items in a nested list")
+		self.levelItemsList = sHelper.addItem(wx.CheckBox(self, label=label))
+		self.levelItemsList.SetValue(conf["lists"]["showLevelItem"])
 
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.attributesBtn = bHelper.addButton(
-			self, label="%s..." % _("Font &attributes")
+		self.methodsBtn = bHelper.addButton(
+			self, label=_("&Methods...")
 		)
-		self.attributesBtn.Bind(wx.EVT_BUTTON, self.onAttributesBtn)
-		self.alignmentsBtn = bHelper.addButton(
-			self, label="%s..." % _("A&lignments")
-		)
-		self.indentationBtn = bHelper.addButton(
-			self, label="%s..." % _("&Indentations")
-		)
+		self.methodsBtn.Bind(wx.EVT_BUTTON, self.onMethodsBtn)
 		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("&Tags"))
 		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		sHelper.addItem(bHelper)
 
-	def onAttributesBtn(self, evt=None):
-		manageAttributes = ManageAttributes(self)
-		manageAttributes.ShowModal()
-		self.attributesBtn.SetFocus()
+	def onMethodsBtn(self, evt=None):
+		manageMethods = ManageMethods(self)
+		manageMethods.ShowModal()
+		self.methodsBtn.SetFocus()
 
 	def onTagsBtn(self, evt=None):
 		manageTags = ManageTags(self)
@@ -836,32 +777,10 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onSave(self):
 		conf["processLinePerLine"] = self.processLinePerLine.IsChecked()
-		checkedItems = self.reportInfo.CheckedItems
-		reportFontAttributes = 0 in checkedItems
-		reportAlignments = 1 in checkedItems
-		reportIndentations = 2 in checkedItems
-		reportLevelItemsList = 3 in checkedItems
-		reportColor = 4 in checkedItems
-		reportStyle = 5 in checkedItems
-		reportBorderStyle = 6 in checkedItems
-		reportFontName = 7 in checkedItems
-		reportFontSize = 8 in checkedItems
-		reportPage = 9 in checkedItems
-		lineNumber = list(CHOICES_LABELS_STATES.keys())[
-			self.reportLineNumber.GetSelection()]
-		conf["lineNumber"] = lineNumber
+		conf["lists"]["showLevelItem"] = self.levelItemsList.IsChecked()
 
-		tableCellCoords = list(CHOICES_LABELS_STATES.keys())[
-			self.reportTableCellCoords.GetSelection()]
-		conf["tableCellCoords"] = tableCellCoords
-
-		setAttributes(reportFontAttributes)
-		setAlignments(reportAlignments)
-		setIndentation(reportIndentations)
-		setLevelItemsList(reportLevelItemsList)
-		setColor(reportColor)
-		setStyle(reportStyle)
-		setBorderStyle(reportBorderStyle)
-		setFontName(reportFontName)
-		setFontSize(reportFontSize)
-		setPage(reportPage)
+		for i, key in enumerate(REPORTS_LABELS.keys()):
+			val = list(CHOICES_LABELS_STATES.keys())[
+				self.dynamic_options[i].GetSelection()
+			]
+			set_report(key, val)

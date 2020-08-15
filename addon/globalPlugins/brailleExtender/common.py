@@ -40,9 +40,9 @@ CHOICE_dots78 = "dots78"
 CHOICE_tags = "tags"
 CHOICE_spacing = "spacing"
 TAG_SEPARATOR = chr(5)
-CHOICE_likeSpeech = "l"
-CHOICE_enabled = "y"
-CHOICE_disabled = "n"
+CHOICE_likeSpeech = '0'
+CHOICE_enabled = '1'
+CHOICE_disabled = '2'
 
 REPLACE_TEXT = 0
 INSERT_AFTER = 1

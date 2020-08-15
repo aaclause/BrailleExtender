@@ -1,5 +1,5 @@
 # objectPresentation.py
-from .documentFormatting import CHOICES_LABELS, tableCellCoordsEnabled
+from .documentFormatting import CHOICES_LABELS, get_report
 from .common import N_, CHOICE_liblouis, CHOICE_none
 import ui
 import queueHandler
@@ -87,6 +87,7 @@ def selectedElementEnabled():
 		!= CHOICE_none
 	)
 
+
 def update_NVDAObjectRegion(self):
 	obj = self.obj
 	presConfig = config.conf["presentation"]
@@ -103,12 +104,13 @@ def update_NVDAObjectRegion(self):
 		roleText=obj.roleTextBraille,
 		current=obj.isCurrent,
 		placeholder=placeholderValue,
-		value=obj.value if not braille.NVDAObjectHasUsefulText(obj) else None ,
+		value=obj.value if not braille.NVDAObjectHasUsefulText(obj) else None,
 		states=obj.states,
 		description=obj.description if presConfig["reportObjectDescriptions"] else None,
 		keyboardShortcut=obj.keyboardShortcut if presConfig["reportKeyboardShortcuts"] else None,
 		positionInfo=obj.positionInfo if presConfig["reportObjectPositionInformation"] else None,
-		cellCoordsText=obj.cellCoordsText if config.conf["documentFormatting"]["reportTableCellCoords"] else None,
+		cellCoordsText=obj.cellCoordsText if config.conf[
+			"documentFormatting"]["reportTableCellCoords"] else None,
 		cellInfo=cellInfo
 	)
 	if role == controlTypes.ROLE_MATH:
@@ -148,7 +150,8 @@ def getPropertiesBraille(**propertyValues) -> str:
 	# After all, a table cell that has no rowspan implemented is assumed to span one row.
 	rowSpan = propertyValues.get("rowSpan") or 1
 	columnSpan = propertyValues.get("columnSpan") or 1
-	includeTableCellCoords = tableCellCoordsEnabled() and propertyValues.get("includeTableCellCoords", True)
+	includeTableCellCoords = get_report(
+		"tableCellCoords") and propertyValues.get("includeTableCellCoords", True)
 	positionInfoLevelStr = None
 	if role is not None and not roleText:
 		if role == controlTypes.ROLE_HEADING and level:
@@ -157,20 +160,20 @@ def getPropertiesBraille(**propertyValues) -> str:
 			roleText = N_("h%s") % level
 			level = None
 		elif (
-			role == controlTypes.ROLE_LINK
-			and states
-			and controlTypes.STATE_VISITED in states
+				role == controlTypes.ROLE_LINK
+				and states
+				and controlTypes.STATE_VISITED in states
 		):
 			states = states.copy()
 			states.discard(controlTypes.STATE_VISITED)
 			# Translators: Displayed in braille for a link which has been visited.
 			roleText = N_("vlnk")
-		elif not description and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo, "formula") and cellInfo.formula:
+		elif not description and config.conf["brailleExtender"]["documentFormatting"]["cellFormula"] and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo, "formula") and cellInfo.formula:
 			states = states.copy()
 			states.discard(controlTypes.STATE_HASFORMULA)
 			description = cellInfo.formula
 		elif (
-			name or cellCoordsText or rowNumber or columnNumber
+				name or cellCoordsText or rowNumber or columnNumber
 		) and role in controlTypes.silentRolesOnFocus:
 			roleText = None
 		else:
@@ -271,10 +274,10 @@ def getPropertiesBraille(**propertyValues) -> str:
 
 class ManagePropertiesOrder(wx.Dialog):
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Order Properties"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Order Properties"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -398,7 +401,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		except IndexError:
 			itemToSelect = 0
 		self.selectedElement = sHelper.addLabeledControl(
-			_("Show selected &elements with"),
+			_("Selected &elements:"),
 			wx.Choice,
 			choices=list(self.choices.values()),
 		)

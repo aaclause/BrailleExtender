@@ -8,7 +8,7 @@ from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue
 from .oneHandMode import process as processOneHandMode
 from . import undefinedChars
 from .objectPresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
-from .documentFormatting import getFormatFieldBraille, alignmentsEnabled, attributesEnabled
+from .documentFormatting import getFormatFieldBraille
 from . import huc
 from . import dictionaries
 from . import configBE
@@ -324,8 +324,8 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 				continue
 			if self._endsWithField:
 				# The last item added was a field,
-				# so add a space before the content.
-				#self.rawText += TEXT_SEPARATOR
+				#? so add a space before the content.
+				self.rawText += TEXT_SEPARATOR
 				# self.rawTextTypeforms.append(louis.plain_text)
 				self._rawToContentPos.append(self._currentContentPos)
 			if isSelection and self.selectionStart is None:

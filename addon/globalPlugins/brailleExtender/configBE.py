@@ -79,6 +79,8 @@ def getValidBrailleDisplayPrefered():
 def getConfspec():
 	global curBD
 	curBD = braille.handler.display.name
+	REPORT_CHOICES = f'option({CHOICE_likeSpeech}, {CHOICE_disabled}, {CHOICE_enabled}, default={CHOICE_likeSpeech})'
+	REPORT_CHOICES_E = f'option({CHOICE_likeSpeech}, {CHOICE_disabled}, {CHOICE_enabled}, default={CHOICE_enabled})'
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
@@ -155,8 +157,8 @@ def getConfspec():
 				"center": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
 				"justified": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
 			},
-			"attributes": {
-				"enabled": "boolean(default=True)",
+			"cellFormula": "boolean(default=True)",
+			"methods": {
 				"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
 				"italic": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
 				"underline": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
@@ -166,11 +168,42 @@ def getConfspec():
 				"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
 				"invalid-grammar": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
 			},
-			"indentations": {
-				"enabled": "boolean(default=True)",
-			},
 			"lists": {
 				"showLevelItem": "boolean(default=True)",
+			},
+			"reports": {
+				"alignment": REPORT_CHOICES,
+				"borderColor": REPORT_CHOICES,
+				"borderStyle": REPORT_CHOICES,
+				"color": REPORT_CHOICES,
+				"emphasis": REPORT_CHOICES,
+				"fontAttributes": REPORT_CHOICES,
+				"fontName": REPORT_CHOICES,
+				"fontSize": REPORT_CHOICES,
+				"highlight": REPORT_CHOICES,
+				"layoutTables": REPORT_CHOICES,
+				"lineIndentation": REPORT_CHOICES,
+				"lineNumber": REPORT_CHOICES,
+				"lineSpacing": REPORT_CHOICES,
+				"page": REPORT_CHOICES,
+				"paragraphIndentation": REPORT_CHOICES,
+				"spellingErrors": REPORT_CHOICES_E,
+				"style": REPORT_CHOICES,
+				"superscriptsAndSubscripts": REPORT_CHOICES_E,
+				"tables": REPORT_CHOICES,
+				"tableCellCoords": REPORT_CHOICES,
+				"tableHeaders": REPORT_CHOICES,
+				"links": REPORT_CHOICES,
+				"graphics": REPORT_CHOICES,
+				"headings": REPORT_CHOICES,
+				"lists": REPORT_CHOICES,
+				"blockQuotes": REPORT_CHOICES,
+				"groupings": REPORT_CHOICES,
+				"landmarks": REPORT_CHOICES,
+				"articles": REPORT_CHOICES,
+				"frames": REPORT_CHOICES,
+				"clickable": REPORT_CHOICES,
+				"comments": REPORT_CHOICES
 			},
 			"tags": {
 				"invalid-spelling": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠑⣹", "⣏⡑⣹"]),
@@ -187,15 +220,7 @@ def getConfspec():
 				"text-align:start": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ad⣹", ""]),
 				"text-position:sub": "string(default=%s)" % TAG_SEPARATOR.join(["_{", "}"]),
 				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
-			},
-			"lineNumber": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
-			"tableCellCoords": f'option("{CHOICE_likeSpeech}", "{CHOICE_enabled}", "{CHOICE_disabled}", default="{CHOICE_likeSpeech}")',
-			"reportBorderStyle": "boolean(default=True)",
-			"reportColor": "boolean(default=True)",
-			"reportFontName": "boolean(default=True)",
-			"reportFontSize": "boolean(default=True)",
-			"reportStyle": "boolean(default=True)",
-			"reportPage": "boolean(default=True)",
+			}
 		},
 		"quickLaunches": {},
 		"roleLabels": {},

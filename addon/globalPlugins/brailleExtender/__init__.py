@@ -524,19 +524,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleLockModifiers.__doc__ = _("Toggles locking modifier keys when using braille input")
 
 	def script_toggleTextAttributes(self, gesture):
-		newState = not documentFormatting.attributesEnabled()
-		documentFormatting.setAttributes(newState)
+		key = "fontAttributes"
+		documentFormatting.toggle_report(key)
+		documentFormatting.report_formatting(key)
 		utils.refreshBD()
-		state = _("enabled") if documentFormatting.attributesEnabled() else _("disabled")
-		speech.speakMessage(_("Font attributes {state}").format(state=state))
 	script_toggleTextAttributes.__doc__ = _("Toggles font attributes report")
 
 	def script_toggleReportAlignments(self, gesture):
-		newState = not documentFormatting.alignmentsEnabled()
-		documentFormatting.setAlignments(newState)
+		key = "alignment"
+		documentFormatting.toggle_report(key)
+		documentFormatting.report_formatting(key)
 		utils.refreshBD()
-		state = _("enabled") if documentFormatting.alignmentsEnabled() else _("disabled")
-		speech.speakMessage(_("Alignments {state}").format(state=state))
 	script_toggleReportAlignments.__doc__ = _("Toggles alignments report")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):

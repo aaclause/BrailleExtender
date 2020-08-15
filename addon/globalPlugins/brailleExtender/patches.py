@@ -7,7 +7,7 @@ from .common import *
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
 from .oneHandMode import process as processOneHandMode
 from . import undefinedChars
-from .objectPresentation import getPropertiesBraille, selectedElementEnabled
+from .objectPresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .documentFormatting import getFormatFieldBraille, alignmentsEnabled, attributesEnabled
 from . import huc
 from . import dictionaries
@@ -817,6 +817,7 @@ brailleInput.BrailleInputHandler.sendChars = sendChars
 globalCommands.GlobalCommands.script_braille_routeTo = script_braille_routeTo
 louis._createTablesString = _createTablesString
 script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
+braille.NVDAObjectRegion.update = update_NVDAObjectRegion
 braille.getPropertiesBraille = getPropertiesBraille
 
 # This variable tells if braille region should parse undefined characters

@@ -87,6 +87,42 @@ def selectedElementEnabled():
 		!= CHOICE_none
 	)
 
+def update_NVDAObjectRegion(self):
+	obj = self.obj
+	presConfig = config.conf["presentation"]
+	role = obj.role
+	placeholderValue = obj.placeholder
+	if placeholderValue and not obj._isTextEmpty:
+		placeholderValue = None
+	cellInfo = None
+	if hasattr(obj, "excelCellInfo"):
+		cellInfo = obj.excelCellInfo
+	text = getPropertiesBraille(
+		name=obj.name,
+		role=role,
+		roleText=obj.roleTextBraille,
+		current=obj.isCurrent,
+		placeholder=placeholderValue,
+		value=obj.value if not braille.NVDAObjectHasUsefulText(obj) else None ,
+		states=obj.states,
+		description=obj.description if presConfig["reportObjectDescriptions"] else None,
+		keyboardShortcut=obj.keyboardShortcut if presConfig["reportKeyboardShortcuts"] else None,
+		positionInfo=obj.positionInfo if presConfig["reportObjectPositionInformation"] else None,
+		cellCoordsText=obj.cellCoordsText if config.conf["documentFormatting"]["reportTableCellCoords"] else None,
+		cellInfo=cellInfo
+	)
+	if role == controlTypes.ROLE_MATH:
+		import mathPres
+		mathPres.ensureInit()
+		if mathPres.brailleProvider:
+			try:
+				text += braille.TEXT_SEPARATOR + mathPres.brailleProvider.getBrailleForMathMl(
+					obj.mathMl)
+			except (NotImplementedError, LookupError):
+				pass
+	self.rawText = text + self.appendText
+	super(braille.NVDAObjectRegion, self).update()
+
 
 def getPropertiesBraille(**propertyValues) -> str:
 	properties = {}
@@ -97,12 +133,14 @@ def getPropertiesBraille(**propertyValues) -> str:
 	name = propertyValues.get("name")
 	if name:
 		properties["name"] = name
+	description = propertyValues.get("description")
 	states = propertyValues.get("states")
 	role = propertyValues.get("role")
 	roleText = propertyValues.get("roleText")
 	positionInfo = propertyValues.get("positionInfo")
 	level = positionInfo.get("level") if positionInfo else None
 	cellCoordsText = propertyValues.get("cellCoordsText")
+	cellInfo = propertyValues.get("cellInfo")
 	rowNumber = propertyValues.get("rowNumber")
 	columnNumber = propertyValues.get("columnNumber")
 	# When fetching row and column span
@@ -127,6 +165,10 @@ def getPropertiesBraille(**propertyValues) -> str:
 			states.discard(controlTypes.STATE_VISITED)
 			# Translators: Displayed in braille for a link which has been visited.
 			roleText = N_("vlnk")
+		elif not description and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo, "formula") and cellInfo.formula:
+			states = states.copy()
+			states.discard(controlTypes.STATE_HASFORMULA)
+			description = cellInfo.formula
 		elif (
 			name or cellCoordsText or rowNumber or columnNumber
 		) and role in controlTypes.silentRolesOnFocus:
@@ -160,7 +202,6 @@ def getPropertiesBraille(**propertyValues) -> str:
 				negativeStateLabels,
 			)
 		)
-	description = propertyValues.get("description")
 	if description:
 		properties["description"] = description
 	keyboardShortcut = propertyValues.get("keyboardShortcut")

@@ -784,3 +784,4 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 				self.dynamic_options[i].GetSelection()
 			]
 			set_report(key, val)
+		conf["cellFormula"] = self.cellFormula.IsChecked()

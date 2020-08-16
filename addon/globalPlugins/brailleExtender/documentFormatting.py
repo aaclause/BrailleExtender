@@ -10,7 +10,7 @@ import colors
 import controlTypes
 import config
 import louis
-import speech
+import ui
 import textInfos
 from collections import namedtuple
 from logHandler import log
@@ -43,7 +43,7 @@ CHOICES_LABELS = {
 
 TAG_ATTRIBUTE = namedtuple("TAG_ATTRIBUTE", ("start", "end"))
 
-CHOICES_LABELS_TAGS = {
+LABELS_TAGS = {
 	"bold": _("bold"),
 	"italic": _("italic"),
 	"underline": _("underline"),
@@ -60,41 +60,41 @@ CHOICES_LABELS_TAGS = {
 	"text-align:start": _("default alignment"),
 }
 
-CHOICES_LABELS_STATES = {
+LABELS_STATES = {
 	CHOICE_likeSpeech: _("like speech"),
 	CHOICE_enabled: _("enabled"),
 	CHOICE_disabled: _("disabled"),
 }
 
-REPORTS_LABELS = {
-	"fontAttributes": _("Font &attributes:"),
-	"superscriptsAndSubscripts": _("Superscripts and sub&scripts:"),
-	"emphasis": _("&Emphasis:"),
-	"highlight": _("Mar&ked (highlighted text):"),
+LABELS_REPORTS = {
+	"fontAttributes": N_("Font attrib&utes"),
+	"superscriptsAndSubscripts": N_("Su&perscripts and subscripts"),
+	"emphasis": N_("E&mphasis"),
+	"highlight": N_("Marked (highlighted text)"),
 	"spellingErrors": _("Spelling and grammar &errors"),
-	"alignment": _("Ali&gnment:"),
-	"color": _("&Color:"),
-	"style": _("&Style:"),
-	"borderColor": _("Border &color:"),
-	"borderStyle": _("Border &Style:"),
-	"fontName": _("Font &name:"),
-	"fontSize": _("Font &size:"),
-	"page": _("&Page number:"),
-	"lineNumber": _("&Line number:"),
-	"links": _("Lin&ks:"),
-	"headings": _("&Headings:"),
-	"graphics": _("&Graphics:"),
-	"lists": _("&Lists:"),
-	"blockQuotes": _("&Quotes:"),
-	"groupings": _("Grou&pings:"),
-	"landmarks": _("Lan&dmarks:"),
-	"articles": _("&Articles:"),
-	"frames": _("Fra&mes:"),
-	"clickable": _("Clic&kable:"),
-	"comments": _("Co&mments:"),
-	"tables": _("&Tables:"),
-	"tableHeaders": _("Row/column h&eaders:"),
-	"tableCellCoords": _("Cell coor&dinates:")
+	"alignment": N_("&Alignment"),
+	"color": N_("&Colors"),
+	"style": N_("St&yle"),
+	"borderColor": _("Border &color"),
+	"borderStyle": N_("Border St&yle"),
+	"fontName": N_("&Font name"),
+	"fontSize": N_("Font &size"),
+	"page": N_("&Pages"),
+	"lineNumber": N_("Line &numbers"),
+	"links": N_("Lin&ks"),
+	"headings": N_("&Headings"),
+	"graphics": N_("&Graphics"),
+	"lists": N_("&Lists"),
+	"blockQuotes": N_("Block &quotes"),
+	"groupings": N_("&Groupings"),
+	"landmarks": N_("Lan&dmarks and regions"),
+	"articles": N_("Arti&cles"),
+	"frames": N_("Fra&mes"),
+	"clickable": N_("&Clickable"),
+	"comments": N_("Co&mments"),
+	"tables": N_("&Tables"),
+	"tableHeaders": N_("Row/column h&eaders"),
+	"tableCellCoords": N_("Cell c&oordinates")
 }
 
 logTextInfo = False
@@ -147,20 +147,21 @@ def set_report(k, v, sect=False):
 
 
 def toggle_report(report):
-	cur = get_report(report)
-	if cur:
-		set_report(report, CHOICE_disabled)
-	else:
-		set_report(report, CHOICE_enabled)
-
+	cur = get_report(report, 0)
+	if not cur:
+		cur = CHOICE_likeSpeech
+	l = list(LABELS_STATES.keys())
+	cur_index = l.index(cur)
+	new_index = (cur_index + 1) % len(l)
+	set_report(report, l[new_index])
 
 def report_formatting(report):
-	cur = get_report(report)
-	label = REPORTS_LABELS[report].replace('&', '')
-	if cur:
-		speech.speakMessage(_(f"{label} enabled"))
-	else:
-		speech.speakMessage(f"{label} disabled")
+	cur = get_report(report, 0)
+	label_report = LABELS_REPORTS[report].replace('&', '')
+	label_state = LABELS_STATES.get(cur)
+	if not label_state:
+		label_state = _("unknown")
+	ui.message(_("{}: {}").format(label_report, label_state))
 
 
 def get_method(k):
@@ -219,7 +220,7 @@ def decorator(fn, s):
 	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
 		formatConfig_ = formatConfig.copy()
 		keysToEnable = []
-		for e in REPORTS_LABELS.keys():
+		for e in LABELS_REPORTS.keys():
 			normalized_key = normalize_report_key(e)
 			if normalized_key:
 				formatConfig_[normalized_key] = get_report(e)
@@ -669,7 +670,7 @@ class ManageTags(wx.Dialog):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
-		choices = list(CHOICES_LABELS_TAGS.values())
+		choices = list(LABELS_TAGS.values())
 		self.formatting = sHelper.addLabeledControl(
 			_("&Formatting"), wx.Choice, choices=choices
 		)
@@ -691,7 +692,7 @@ class ManageTags(wx.Dialog):
 		self.formatting.SetFocus()
 
 	def get_key_attribute(self):
-		l = list(CHOICES_LABELS_TAGS.keys())
+		l = list(LABELS_TAGS.keys())
 		selection = self.formatting.GetSelection()
 		return l[selection] if selection < len(l) else 0
 
@@ -738,12 +739,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.processLinePerLine.SetValue(conf["processLinePerLine"])
 
 		label = _("Info to &report:")
-		keys = list(CHOICES_LABELS_STATES.keys())
-		choices = list(CHOICES_LABELS_STATES.values())
+		keys = list(LABELS_STATES.keys())
+		choices = list(LABELS_STATES.values())
 		self.dynamic_options = []
-		for key, val in REPORTS_LABELS.items():
+		for key, val in LABELS_REPORTS.items():
 			self.dynamic_options.append(sHelper.addLabeledControl(
-				val,
+				_("{label}:").format(label=val),
 				wx.Choice,
 				choices=choices
 			))
@@ -785,8 +786,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		conf["processLinePerLine"] = self.processLinePerLine.IsChecked()
 		conf["lists"]["showLevelItem"] = self.levelItemsList.IsChecked()
 
-		for i, key in enumerate(REPORTS_LABELS.keys()):
-			val = list(CHOICES_LABELS_STATES.keys())[
+		for i, key in enumerate(LABELS_REPORTS.keys()):
+			val = list(LABELS_STATES.keys())[
 				self.dynamic_options[i].GetSelection()
 			]
 			set_report(key, val)

@@ -114,7 +114,8 @@ def get_report(key, simple=True):
 			return val
 		if val == CHOICE_likeSpeech:
 			normalized_key = normalize_report_key(key)
-			if not normalized_key: return
+			if not normalized_key:
+				return
 			return config.conf["documentFormatting"][
 				normalized_key
 			]
@@ -154,6 +155,7 @@ def toggle_report(report):
 	cur_index = l.index(cur)
 	new_index = (cur_index + 1) % len(l)
 	set_report(report, l[new_index])
+
 
 def report_formatting(report):
 	cur = get_report(report, 0)
@@ -228,7 +230,7 @@ def decorator(fn, s):
 		formatField = textInfos.FormatField()
 		for field in textInfo_:
 			if isinstance(field, textInfos.FieldCommand) and isinstance(
-				field.field, textInfos.FormatField
+					field.field, textInfos.FormatField
 			):
 				formatField.update(field.field)
 		if logTextInfo:
@@ -414,7 +416,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				text = _("%s columns") % (textColumnCount)
 				textList.append("⣏%s⣹" % text)
 
-	if get_report("alignments"):
+	if get_report("alignment"):
 		textAlign = normalizeTextAlign(field.get("text-align"))
 		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
 		if textAlign and textAlign != old_textAlign:
@@ -520,15 +522,15 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 
 	if get_report("fontAttributes"):
 		tags = [tag for tag in [
-			"bold",
-			"italic",
-			"underline",
-			"strikethrough",
-			"text-position:sub",
-			"text-position:super",
-			"invalid-spelling",
-			"invalid-grammar"
-		] if get_method(tag) == CHOICE_tags]
+				"bold",
+				"italic",
+				"underline",
+				"strikethrough",
+				"text-position:sub",
+				"text-position:super",
+				"invalid-spelling",
+				"invalid-grammar"
+				] if get_method(tag) == CHOICE_tags]
 		for name_tag in tags:
 			name_field = name_tag.split(':')[0]
 			value_field = name_tag.split(
@@ -566,10 +568,10 @@ def get_method_alignment(desc):
 
 class ManageMethods(wx.Dialog):
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Formatting Method"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Formatting Method"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -661,10 +663,10 @@ class ManageMethods(wx.Dialog):
 class ManageTags(wx.Dialog):
 
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Customize formatting tags"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Customize formatting tags"),
 	):
 		self.tags = _tags.copy()
 		super().__init__(parent, title=title)

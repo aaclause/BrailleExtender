@@ -102,7 +102,9 @@ conf = config.conf["brailleExtender"]["documentFormatting"]
 
 
 def normalize_report_key(key):
-	return "report" + key[0].upper() + key[1:]
+	key_ = "report" + key[0].upper() + key[1:]
+	if key_ in config.conf["documentFormatting"]:
+		return key_
 
 
 def get_report(key, simple=True):
@@ -111,8 +113,10 @@ def get_report(key, simple=True):
 		if not simple:
 			return val
 		if val == CHOICE_likeSpeech:
+			normalized_key = normalize_report_key(key)
+			if not normalized_key: return
 			return config.conf["documentFormatting"][
-				normalize_report_key(key)
+				normalized_key
 			]
 		return val == CHOICE_enabled
 	if key not in conf:
@@ -216,7 +220,9 @@ def decorator(fn, s):
 		formatConfig_ = formatConfig.copy()
 		keysToEnable = []
 		for e in REPORTS_LABELS.keys():
-			formatConfig_[normalize_report_key(e)] = get_report(e)
+			normalized_key = normalize_report_key(e)
+			if normalized_key:
+				formatConfig_[normalized_key] = get_report(e)
 		textInfo_ = info.getTextWithFields(formatConfig_)
 		formatField = textInfos.FormatField()
 		for field in textInfo_:

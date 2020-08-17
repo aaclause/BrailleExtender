@@ -177,7 +177,11 @@ def nextLine(self):
 				if braille.handler._auto_scroll:
 					braille.handler.toggle_auto_scroll()
 				return
-		if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
+		if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (
+			braille.handler._auto_scroll and (
+				config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]
+				or config.conf["brailleExtender"]["autoScroll"]["adjustToContent"])
+		):
 			dest_ = dest.copy()
 			dest_.expand(textInfos.UNIT_LINE)
 			continue_ = not dest_.text.strip()

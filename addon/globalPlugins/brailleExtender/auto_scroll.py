@@ -22,19 +22,24 @@ class AutoScroll(threading.Thread):
 	_continue = True
 
 	def _next_delay(self):
-		initial_buffer = braille.handler.buffer
 		if conf["adjustToContent"]:
 			return get_dynamic_auto_scroll_delay()
 		return get_auto_scroll_delay()
 
 	def run(self):
 		while self._continue:
+			if braille.handler.buffer is not braille.handler.mainBuffer:
+				time.sleep(0.2)
+				continue
 			next_delay = self._next_delay() / 1000
 			if next_delay < 0:
 				next_delay = 0
 			time.sleep(next_delay)
 			if self._continue:
-				braille.handler.scrollForward()
+				try:
+					braille.handler.scrollForward()
+				except wx._core.wxAssertionError:
+					pass
 				# HACK: windowStartPos and windowEndPos take a some time to refresh
 				time.sleep(0.1)
 
@@ -70,7 +75,7 @@ def set_auto_scroll_delay(delay):
 		return False
 
 
-def increase_auto_scroll_delay():
+def increase_auto_scroll_delay(self):
 	cur_delay = get_auto_scroll_delay()
 	if cur_delay:
 		new_delay = cur_delay + conf["stepDelayChange"]
@@ -90,16 +95,13 @@ def report_auto_scroll_delay(self):
 
 
 def toggle_auto_scroll(self):
-	if self._enable_auto_scroll:
-		if self._auto_scroll:
-			self._auto_scroll.stop()
-			self._auto_scroll = None
-		self._enable_auto_scroll = False
+	if self._auto_scroll:
+		self._auto_scroll.stop()
+		self._auto_scroll = None
 		tones.beep(100, 100)
 	else:
 		self._auto_scroll = self.AutoScroll()
 		self._auto_scroll.start()
-		self._enable_auto_scroll = True
 		tones.beep(300, 100)
 
 
@@ -107,7 +109,7 @@ def _displayWithCursor(self):
 	if not self._cells:
 		return
 	cells = list(self._cells)
-	if self._cursorPos is not None and self._cursorBlinkUp and not self._enable_auto_scroll:
+	if self._cursorPos is not None and self._cursorBlinkUp and not self._auto_scroll:
 		if self.getTether() == self.TETHER_FOCUS:
 			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeFocus"]
 		else:

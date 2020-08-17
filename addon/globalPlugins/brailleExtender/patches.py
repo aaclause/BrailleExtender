@@ -56,7 +56,7 @@ origFunc = {
 
 def sayCurrentLine():
 	global instanceGP
-	if not braille.handler._enable_auto_scroll:
+	if not braille.handler._auto_scroll:
 		if getTether() == braille.handler.TETHER_REVIEW:
 			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
 				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
@@ -73,7 +73,7 @@ def sayCurrentLine():
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
 def script_braille_routeTo(self, gesture):
-	if braille.handler._enable_auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
+	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
 		braille.handler.toggle_auto_scroll()
 	obj = obj = api.getNavigatorObject()
 	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
@@ -95,7 +95,7 @@ def script_braille_routeTo(self, gesture):
 		return
 	try: braille.handler.routeTo(gesture.routingIndex)
 	except LookupError: pass
-	if not braille.handler._enable_auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
+	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
 		region = braille.handler.buffer
 		if region.cursorPos is None: return
 		try:
@@ -174,10 +174,10 @@ def nextLine(self):
 					continue_ = False
 				else: dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
 			else:
-				if braille.handler._enable_auto_scroll:
+				if braille.handler._auto_scroll:
 					braille.handler.toggle_auto_scroll()
 				return
-		if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
+		if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (braille.handler._auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
 			dest_ = dest.copy()
 			dest_.expand(textInfos.UNIT_LINE)
 			continue_ = not dest_.text.strip()
@@ -207,7 +207,7 @@ def previousLine(self, start=False):
 					dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
 					dest.expand(unit)
 			else: return
-		if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (self._enable_auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
+		if continue_ and config.conf["brailleExtender"]["skipBlankLineScroll"] or (self._auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
 			dest_ = dest.copy()
 			dest_.expand(textInfos.UNIT_LINE)
 			continue_ = not dest_.text.strip()
@@ -521,8 +521,8 @@ script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
 
-braille.BrailleHandler._enable_auto_scroll = False
 braille.BrailleHandler.AutoScroll = auto_scroll.AutoScroll
+braille.BrailleHandler._auto_scroll = None
 braille.BrailleHandler.get_auto_scroll_delay = auto_scroll.get_auto_scroll_delay
 braille.BrailleHandler.get_dynamic_auto_scroll_delay = auto_scroll.get_dynamic_auto_scroll_delay
 braille.BrailleHandler.decrease_auto_scroll_delay = auto_scroll.decrease_auto_scroll_delay

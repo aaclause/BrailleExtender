@@ -6,14 +6,52 @@ import braille
 import config
 import configobj
 import gui
-import speech
+import tones
+import threading
+import time
 import ui
 import wx
-from logHandler import log
 from .common import MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
 
 
 conf = config.conf["brailleExtender"]["autoScroll"]
+
+
+class AutoScroll(threading.Thread):
+
+	_continue = True
+
+	def _next_delay(self):
+		initial_buffer = braille.handler.buffer
+		if conf["adjustToContent"]:
+			return get_dynamic_auto_scroll_delay()
+		return get_auto_scroll_delay()
+
+	def run(self):
+		while self._continue:
+			next_delay = self._next_delay() / 1000
+			if next_delay < 0:
+				next_delay = 0
+			time.sleep(next_delay)
+			if self._continue:
+				braille.handler.scrollForward()
+				# HACK: windowStartPos and windowEndPos take a some time to refresh
+				time.sleep(0.1)
+
+	def stop(self):
+		self._continue = False
+
+
+def get_dynamic_auto_scroll_delay(buffer=None):
+	if not buffer:
+		buffer = braille.handler.buffer
+	size_window = buffer.windowEndPos - buffer.windowStartPos
+	display_size = braille.handler.displaySize
+	if display_size and size_window:
+		delay = get_auto_scroll_delay()
+		dynamic_delay = int(size_window / display_size * delay)
+		return dynamic_delay
+	return get_auto_scroll_delay()
 
 
 def get_auto_scroll_delay():
@@ -32,12 +70,11 @@ def set_auto_scroll_delay(delay):
 		return False
 
 
-def increase_auto_scroll_delay(self):
+def increase_auto_scroll_delay():
 	cur_delay = get_auto_scroll_delay()
 	if cur_delay:
 		new_delay = cur_delay + conf["stepDelayChange"]
 	set_auto_scroll_delay(new_delay)
-	self._post_change_auto_scroll_delay()
 
 
 def decrease_auto_scroll_delay(self):
@@ -45,22 +82,6 @@ def decrease_auto_scroll_delay(self):
 	if cur_delay:
 		new_delay = cur_delay - conf["stepDelayChange"]
 	set_auto_scroll_delay(new_delay)
-	self._post_change_auto_scroll_delay()
-
-
-def _post_change_auto_scroll_delay(self):
-	if self._enable_auto_scroll:
-		self._auto_scroll_timer.Start(get_auto_scroll_delay())
-
-
-def get_dynamic_auto_scroll_delay(self):
-	if not any(self._cells): return get_auto_scroll_delay()
-	size_window = self.buffer._get_windowEndPos() - self.buffer.windowStartPos
-	if braille.handler.displaySize and size_window:
-		delay = get_auto_scroll_delay()
-		dynamic_delay = int(size_window / braille.handler.displaySize * delay)
-		return dynamic_delay
-	return get_auto_scroll_delay()
 
 
 def report_auto_scroll_delay(self):
@@ -68,38 +89,18 @@ def report_auto_scroll_delay(self):
 	ui.message(_("{delay} ms").format(delay=cur_delay))
 
 
-def toggle_auto_scroll(self, sil=False):
+def toggle_auto_scroll(self):
 	if self._enable_auto_scroll:
-		if self._auto_scroll_timer:
-			self._auto_scroll_timer.Stop()
-			self._auto_scroll_timer = None
-		if not sil:
-			speech.speakMessage(_("Autoscroll stopped"))
+		if self._auto_scroll:
+			self._auto_scroll.stop()
+			self._auto_scroll = None
+		self._enable_auto_scroll = False
+		tones.beep(100, 100)
 	else:
-		self._auto_scroll_timer = wx.PyTimer(self._auto_scroll)
-		try:
-			if braille.handler.buffer is braille.handler.messageBuffer:
-				braille.handler._dismissMessage()
-			oneShot = conf["adjustToContent"]
-			delay = self.get_dynamic_auto_scroll_delay() if oneShot else get_auto_scroll_delay()
-			self._auto_scroll_timer.Start(delay, oneShot)
-		except BaseException as e:
-			log.error("%s | %s" % (get_auto_scroll_delay(), e))
-			ui.message(_("Unable to start autoscroll. More info in NVDA log"))
-			return
-	self._enable_auto_scroll = not self._enable_auto_scroll
-
-
-def _auto_scroll(self):
-	if braille.handler.buffer is not braille.handler.mainBuffer:
-		return
-	self.scrollForward()
-	if self._auto_scroll_timer and self._enable_auto_scroll and conf["adjustToContent"]:
-		delay = self.get_dynamic_auto_scroll_delay()
-		self._auto_scroll_timer.Start(
-			delay,
-			oneShot=wx.TIMER_ONE_SHOT
-		)
+		self._auto_scroll = self.AutoScroll()
+		self._auto_scroll.start()
+		self._enable_auto_scroll = True
+		tones.beep(300, 100)
 
 
 def _displayWithCursor(self):

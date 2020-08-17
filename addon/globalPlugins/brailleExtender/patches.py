@@ -139,7 +139,7 @@ def update_region(self):
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
 		mode |= louis.compbrlAtCursor
 	self.brailleCells, self.brailleToRawPos, self.rawToBraillePos, self.brailleCursorPos = louisHelper.translate(
-		getCurrentBrailleTables(brf=False if instanceGP else False),
+		getCurrentBrailleTables(brf=instanceGP.BRFMode),
 		self.rawText,
 		typeform=self.rawTextTypeforms,
 		mode=mode,

@@ -148,7 +148,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedInputMode.initialize()
-		objectPresentation.loadpropertiesOrder()
+		objectPresentation.loadOrderProperties()
 		documentFormatting.load_tags()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 

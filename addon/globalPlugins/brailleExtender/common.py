@@ -47,3 +47,5 @@ CHOICE_disabled = '2'
 REPLACE_TEXT = 0
 INSERT_AFTER = 1
 INSERT_BEFORE = 2
+
+ADDON_ORDER_PROPERTIES = "states,cellCoordsText,value,name,roleText,description,keyboardShortcut,positionInfo,positionInfoLevel,row,columnHeaderText,column,current,placeholder"

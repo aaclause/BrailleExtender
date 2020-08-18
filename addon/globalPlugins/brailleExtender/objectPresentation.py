@@ -1,6 +1,6 @@
 # objectPresentation.py
 from .documentFormatting import CHOICES_LABELS, get_report
-from .common import N_, CHOICE_liblouis, CHOICE_none
+from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES
 import ui
 import queueHandler
 from logHandler import log
@@ -10,6 +10,7 @@ import addonHandler
 import braille
 import controlTypes
 import config
+from . import configBE
 
 addonHandler.initTranslation()
 
@@ -36,48 +37,46 @@ PROPERTIES_ORDER = {
 }
 
 
-def getDefaultPropertiesOrder(addon=False):
+def getDefaultOrderProperties(addon=False):
 	if addon:
-		return "states,value,name,roleText,description,keyboardShortcut,positionInfo,positionInfoLevel,row,columnHeaderText,column,current,placeholder,cellCoordsText".split(
-			","
-		)
+		return ADDON_ORDER_PROPERTIES.split(',')
 	else:
 		return list(PROPERTIES_ORDER.keys())
 
 
-def loadpropertiesOrder():
-	global propertiesOrder
-	propertiesOrder = getPropertiesOrderFromConfig()
+def loadOrderProperties():
+	global orderProperties
+	orderProperties = getOrderPropertiesFromConfig()
 
 
-def getPropertiesOrderFromConfig():
-	defaultPropertiesOrder = getDefaultPropertiesOrder()
-	propertiesOrder = config.conf["brailleExtender"]["objectPresentation"][
-		"propertiesOrder"
+def getOrderPropertiesFromConfig():
+	defaultOrderProperties = getDefaultOrderProperties()
+	orderProperties = config.conf["brailleExtender"]["objectPresentation"][
+		"orderProperties"
 	].split(",")
-	if len(defaultPropertiesOrder) != len(propertiesOrder):
+	if len(defaultOrderProperties) != len(orderProperties):
 		log.error("Missing one or more elements")
-		return defaultPropertiesOrder
-	for e in propertiesOrder:
-		if e not in defaultPropertiesOrder:
+		return defaultOrderProperties
+	for e in orderProperties:
+		if e not in defaultOrderProperties:
 			log.error(f"Unknown '{e}'")
-			return defaultPropertiesOrder
-	return propertiesOrder
+			return defaultOrderProperties
+	return orderProperties
 
 
-propertiesOrder = getDefaultPropertiesOrder()
+orderProperties = getDefaultOrderProperties()
 
 
-def getPropertiesOrder():
-	return propertiesOrder
+def getOrderProperties():
+	return orderProperties
 
 
-def setPropertiesOrder(newOrder, save=False):
-	global propertiesOrder
-	propertiesOrder = newOrder
+def setOrderProperties(newOrder, save=False):
+	global orderProperties
+	orderProperties = newOrder
 	if save:
 		config.conf["brailleExtender"]["objectPresentation"][
-			"propertiesOrder"
+			"orderProperties"
 		] = ",".join(newOrder)
 
 
@@ -266,30 +265,27 @@ def getPropertiesBraille(**propertyValues) -> str:
 	if includeTableCellCoords and cellCoordsText:
 		properties["cellCoordsText"] = cellCoordsText
 	finalStr = []
-	for k in propertiesOrder:
+	for k in orderProperties:
 		if k in properties and properties[k]:
 			finalStr.append(properties[k])
 	return TEXT_SEPARATOR.join(finalStr)
 
 
-class ManagePropertiesOrder(wx.Dialog):
-	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Order Properties"),
-	):
-		super().__init__(parent, title=title)
-		mainSizer = wx.BoxSizer(wx.VERTICAL)
+class ManageOrderProperties(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = _("Order Properties")
+
+	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
-		self.propertiesOrder = {
-			k: PROPERTIES_ORDER[k] for k in getPropertiesOrder()}
-		self.propertiesOrderList = sHelper.addLabeledControl(
+		self.orderProperties = {
+			k: PROPERTIES_ORDER[k] for k in getOrderProperties()}
+		self.orderPropertiesList = sHelper.addLabeledControl(
 			_("Properties"), wx.Choice, choices=self.getProperties()
 		)
-		self.propertiesOrderList.Bind(
-			wx.EVT_CHOICE, self.onPropertiesOrderList)
-		self.propertiesOrderList.SetSelection(0)
+		self.orderPropertiesList.Bind(
+			wx.EVT_CHOICE, self.onOrderPropertiesList)
+		self.orderPropertiesList.SetSelection(0)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.moveUpBtn = bHelper.addButton(self, label=_("Move &up"))
 		self.moveUpBtn.Bind(wx.EVT_BUTTON, lambda evt: self.move(evt, MOVE_UP))
@@ -313,21 +309,12 @@ class ManagePropertiesOrder(wx.Dialog):
 		)
 		sHelper.addItem(bHelper)
 
-		sHelper.addDialogDismissButtons(
-			self.CreateButtonSizer(wx.OK | wx.CANCEL))
-		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
-		mainSizer.Fit(self)
-		self.SetSizer(mainSizer)
-		self.Bind(wx.EVT_BUTTON, self.onOk, id=wx.ID_OK)
-		self.onPropertiesOrderList()
-		self.propertiesOrderList.SetFocus()
-
-	def onPropertiesOrderList(self, evt=None):
-		curPos = self.propertiesOrderList.GetSelection()
+	def onOrderPropertiesList(self, evt=None):
+		curPos = self.orderPropertiesList.GetSelection()
 		if not curPos:
 			self.moveUpBtn.Disable()
 			self.moveDownBtn.Enable()
-		elif curPos >= len(self.propertiesOrder) - 1:
+		elif curPos >= len(self.orderProperties) - 1:
 			self.moveDownBtn.Disable()
 			self.moveUpBtn.Enable()
 		else:
@@ -336,17 +323,17 @@ class ManagePropertiesOrder(wx.Dialog):
 
 	def assign(self, evt, name):
 		if name == NVDA_ORDER:
-			order = self.propertiesOrder = getDefaultPropertiesOrder()
+			order = self.orderProperties = getDefaultOrderProperties()
 		else:
-			order = getDefaultPropertiesOrder(True)
-		self.propertiesOrder = {e: PROPERTIES_ORDER[e] for e in order}
-		setPropertiesOrder(self.getPropertiesKeys())
+			order = getDefaultOrderProperties(True)
+		self.orderProperties = {e: PROPERTIES_ORDER[e] for e in order}
+		setOrderProperties(self.getPropertiesKeys())
 		self.refresh()
-		self.propertiesOrderList.SetSelection(0)
-		self.propertiesOrderList.SetFocus()
+		self.orderPropertiesList.SetSelection(0)
+		self.orderPropertiesList.SetFocus()
 
 	def move(self, evt, direction):
-		firstPos = self.propertiesOrderList.GetSelection()
+		firstPos = self.orderPropertiesList.GetSelection()
 		secondPos = firstPos + (1 if direction == MOVE_DOWN else -1)
 		if secondPos < 0 or secondPos > len(self.getProperties()) - 1:
 			return
@@ -359,10 +346,10 @@ class ManagePropertiesOrder(wx.Dialog):
 		l = [
 			k if not k in toReplace else toReplace[k] for k in self.getPropertiesKeys()
 		]
-		self.propertiesOrder = {e: PROPERTIES_ORDER[e] for e in l}
-		setPropertiesOrder(self.getPropertiesKeys())
+		self.orderProperties = {e: PROPERTIES_ORDER[e] for e in l}
+		setOrderProperties(self.getPropertiesKeys())
 		self.refresh()
-		self.propertiesOrderList.SetSelection(secondPos)
+		self.orderPropertiesList.SetSelection(secondPos)
 		directionLabel = _("after") if direction == MOVE_DOWN else _("before")
 		queueHandler.queueFunction(
 			queueHandler.eventQueue,
@@ -371,20 +358,156 @@ class ManagePropertiesOrder(wx.Dialog):
 		)
 
 	def refresh(self):
-		self.propertiesOrderList.SetItems(self.getProperties())
-		self.onPropertiesOrderList()
-		self.propertiesOrderList.SetFocus()
+		self.orderPropertiesList.SetItems(self.getProperties())
+		self.onOrderPropertiesList()
 
 	def getPropertiesKeys(self):
-		return list(self.propertiesOrder.keys())
+		return list(self.orderProperties.keys())
 
 	def getProperties(self):
-		return list(self.propertiesOrder.values())
+		return list(self.orderProperties.values())
+
+	def postInit(self):
+		self.onOrderPropertiesList()
+		self.orderPropertiesList.SetFocus()
 
 	def onOk(self, evt):
-		setPropertiesOrder(list(self.getPropertiesKeys()), True)
-		self.Destroy()
+		setOrderProperties(list(self.getPropertiesKeys()), True)
+		loadOrderProperties()
+		super().onOk(evt)
 
+
+class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
+
+	# Translators: title of a dialog.
+	title = _("Role labels")
+
+	roleLabels  = {}
+
+	def makeSettings(self, settingsSizer):
+		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		self.toggleRoleLabels = sHelper.addItem(wx.CheckBox(self, label=_("Use custom braille &role labels")))
+		self.toggleRoleLabels.SetValue(config.conf["brailleExtender"]["features"]["roleLabels"])
+		self.categories = sHelper.addLabeledControl(_("Role &category:"), wx.Choice, choices=[_("General"), _("Landmark"), _("Positive state"), _("Negative state")])
+		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)
+		self.categories.SetSelection(0)
+		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
+		self.labels = sHelper2.addLabeledControl(_("&Role:"), wx.Choice, choices=[controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()])
+		self.labels.Bind(wx.EVT_CHOICE, self.onLabels)
+		self.label = sHelper2.addLabeledControl(_("Braille &label"), wx.TextCtrl)
+		self.label.Bind(wx.EVT_TEXT, self.onLabel)
+		sHelper.addItem(sHelper2)
+		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
+		self.resetLabelBtn = bHelper.addButton(self, wx.NewId(), _("&Reset this role label"), wx.DefaultPosition)
+		self.resetLabelBtn.Bind(wx.EVT_BUTTON, self.onResetLabelBtn)
+		self.resetAllLabelsBtn = bHelper.addButton(self, wx.NewId(), _("Reset all role labels"), wx.DefaultPosition)
+		self.resetAllLabelsBtn.Bind(wx.EVT_BUTTON, self.onResetAllLabelsBtn)
+		sHelper.addItem(bHelper)
+		self.onCategories(None)
+
+	def onCategories(self, event):
+		idCategory = self.categories.GetSelection()
+		if idCategory == 0:
+			labels = [controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()]
+		elif idCategory == 1:
+			labels = list(braille.landmarkLabels.keys())
+		elif idCategory == 2:
+			labels = [controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()]
+		elif idCategory == 3:
+			labels = [controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()]
+		else: labels = []
+		for iLabel, label in enumerate(labels):
+			idLabel = self.getIDFromIndexes(idCategory, iLabel)
+			actualLabel = self.getLabelFromID(idCategory, idLabel)
+			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
+			labels[iLabel] = "{}: {}".format(labels[iLabel], actualLabel)
+			if actualLabel != originalLabel: labels[iLabel] += " (%s)" % originalLabel
+		self.labels.SetItems(labels)
+		if idCategory > -1 and idCategory < 4: self.labels.SetSelection(0)
+		self.onLabels(None)
+
+	def onLabels(self, event):
+		idCategory = self.categories.GetSelection()
+		idLabel = self.getIDFromIndexes(idCategory, self.labels.GetSelection())
+		key = "%d:%s" % (idCategory, idLabel)
+		if key in self.roleLabels.keys(): self.label.SetValue(self.roleLabels[key])
+		else: self.label.SetValue(self.getOriginalLabel(idCategory, idLabel))
+
+	def onLabel(self, evt):
+		idCategory = self.categories.GetSelection()
+		iLabel = self.labels.GetSelection()
+		idLabel = self.getIDFromIndexes(idCategory, iLabel)
+		key = "%d:%s" % (idCategory, idLabel)
+		label = self.label.GetValue()
+		if idCategory >= 0 and iLabel >= 0:
+			if self.getOriginalLabel(idCategory, idLabel, chr(4)) == label:
+				if key in self.roleLabels.keys():
+					self.roleLabels.pop(key)
+					log.debug("Key %s deleted" % key)
+				else: log.info("Key %s not present" % key)
+			else: self.roleLabels[key] = label
+			actualLabel = self.getLabelFromID(idCategory, idLabel)
+			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
+			if label != originalLabel: self.resetLabelBtn.Enable()
+			else: self.resetLabelBtn.Disable()
+
+	def onResetLabelBtn(self, event):
+		idCategory = self.categories.GetSelection()
+		iLabel = self.labels.GetSelection()
+		idLabel = self.getIDFromIndexes(idCategory, iLabel)
+		key = "%d:%s" % (idCategory, idLabel)
+		actualLabel = self.getLabelFromID(idCategory, idLabel)
+		originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
+		self.label.SetValue(originalLabel)
+		self.onLabel(None)
+		self.label.SetFocus()
+
+	def onResetAllLabelsBtn(self, event):
+		nbCustomizedLabels = len(self.roleLabels)
+		if not nbCustomizedLabels:
+			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("You have no customized role labels."))
+			return
+		res = gui.messageBox(
+			_("You have %d customized role labels defined. Do you want to reset all labels?") % nbCustomizedLabels,
+			_("Reset role labels"),
+			wx.YES|wx.NO|wx.ICON_INFORMATION)
+		if res == wx.YES:
+			self.roleLabels = {}
+			config.conf["brailleExtender"]["roleLabels"] = {}
+			self.onCategories(None)
+
+	def getOriginalLabel(self, idCategory, idLabel, defaultValue = ''):
+		if "%s:%s" % (idCategory, idLabel) in configBE.backupRoleLabels.keys():
+			return configBE.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
+		return self.getLabelFromID(idCategory, idLabel)
+
+	@staticmethod
+	def getIDFromIndexes(idCategory, idLabel):
+		try:
+			if idCategory == 0: return list(braille.roleLabels.keys())[idLabel]
+			if idCategory == 1: return list(braille.landmarkLabels.keys())[idLabel]
+			if idCategory == 2: return list(braille.positiveStateLabels.keys())[idLabel]
+			if idCategory == 3: return list(braille.negativeStateLabels.keys())[idLabel]
+			raise ValueError("Invalid value for ID category: %d" % idCategory)
+		except BaseException: return -1
+
+	def getLabelFromID(self, idCategory, idLabel):
+		if idCategory == 0: return braille.roleLabels[idLabel]
+		if idCategory == 1: return braille.landmarkLabels[idLabel]
+		if idCategory == 2: return braille.positiveStateLabels[idLabel]
+		if idCategory == 3: return braille.negativeStateLabels[idLabel]
+		raise ValueError("Invalid value: %d" % idCategory)
+
+	def postInit(self): self.toggleRoleLabels.SetFocus()
+
+	def onOk(self, evt):
+		config.conf["brailleExtender"]["features"]["roleLabels"] = self.toggleRoleLabels.IsChecked()
+		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
+		configBE.discardRoleLabels()
+		if config.conf["brailleExtender"]["features"]["roleLabels"]:
+			configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+			super().onOk(evt)
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 	# Translators: title of a dialog.
@@ -407,18 +530,28 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		)
 		self.selectedElement.SetSelection(itemToSelect)
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.propertiesOrderBtn = bHelper.addButton(
-			self, label="%s..." % _("&Order Properties")
+		self.orderPropertiesBtn = bHelper.addButton(
+			self, label="&Order Properties..."
 		)
-		self.propertiesOrderBtn.Bind(wx.EVT_BUTTON, self.onPropertiesOrderBtn)
+		self.orderPropertiesBtn.Bind(wx.EVT_BUTTON, self.onOrderPropertiesBtn)
+
+		self.roleLabelsBtn = bHelper.addButton(
+			self, label=_("&Role labels...")
+		)
+		self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
+
 		sHelper.addItem(bHelper)
 
-	def onPropertiesOrderBtn(self, evt):
-		managePropertiesOrder = ManagePropertiesOrder(self)
-		managePropertiesOrder.ShowModal()
-		managePropertiesOrder.Destroy()
-		loadpropertiesOrder()
-		self.propertiesOrderBtn.SetFocus()
+	def onOrderPropertiesBtn(self, evt):
+		manageOrderProperties = ManageOrderProperties(self)
+		manageOrderProperties.ShowModal()
+		manageOrderProperties.Destroy()
+		self.orderPropertiesBtn.SetFocus()
+
+	def onRoleLabelsBtn(self, evt):
+		manageRoleLabels = ManageRoleLabels(self)
+		manageRoleLabels.ShowModal()
+		self.roleLabelsBtn.SetFocus()
 
 	def onSave(self):
 		config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] = list(

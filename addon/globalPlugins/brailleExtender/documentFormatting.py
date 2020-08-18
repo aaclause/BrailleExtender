@@ -41,9 +41,9 @@ CHOICES_LABELS = {
 	CHOICE_tags: _("tags"),
 }
 
-TAG_ATTRIBUTE = namedtuple("TAG_ATTRIBUTE", ("start", "end"))
+TAG_FORMATTING = namedtuple("TAG_FORMATTING", ("start", "end"))
 
-LABELS_TAGS = {
+LABELS_FORMATTING = {
 	"bold": _("bold"),
 	"italic": _("italic"),
 	"underline": _("underline"),
@@ -75,7 +75,7 @@ LABELS_REPORTS = {
 	"alignment": N_("&Alignment"),
 	"color": N_("&Colors"),
 	"style": N_("St&yle"),
-	"borderColor": _("Border &color"),
+	"borderColor": N_("Border &color"),
 	"borderStyle": N_("Border St&yle"),
 	"fontName": N_("&Font name"),
 	"fontSize": N_("Font &size"),
@@ -162,7 +162,7 @@ def report_formatting(report):
 	label_report = LABELS_REPORTS[report].replace('&', '')
 	label_state = LABELS_STATES.get(cur)
 	if not label_state:
-		label_state = _("unknown")
+		label_state = N_("unknown")
 	ui.message(_("{}: {}").format(label_report, label_state))
 
 
@@ -203,8 +203,10 @@ def decorator(fn, s):
 	def _getTypeformFromFormatField(self, field, formatConfig=None):
 		if not get_report("fontAttributes"):
 			return 0, 0
-		l = ["bold", "italic", "underline", "strikethrough",
-			 "text-position", "invalid-spelling", "invalid-grammar"]
+		l = [
+			"bold", "italic", "underline", "strikethrough",
+			"text-position", "invalid-spelling", "invalid-grammar"
+		]
 		liblouis_typeform = louis.plain_text
 		brlex_typeform = 0
 		for k in l:
@@ -318,7 +320,7 @@ def load_tags():
 	for k, v in tags.items():
 		if len(v.split(TAG_SEPARATOR)) == 2:
 			v_ = v.split(TAG_SEPARATOR)
-			_tags[k] = TAG_ATTRIBUTE(v_[0], v_[1])
+			_tags[k] = TAG_FORMATTING(v_[0], v_[1])
 
 
 def save_tags(newTags):
@@ -378,7 +380,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		if pageNumber and pageNumber != oldPageNumber:
 			# Translators: Indicates the page number in a document.
 			# %s will be replaced with the page number.
-			text = _("page %s") % pageNumber
+			text = N_("page %s") % pageNumber
 			textList.append("⣏%s⣹" % text)
 		sectionNumber = field.get("section-number")
 		oldSectionNumber = fieldCache.get(
@@ -386,7 +388,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		if sectionNumber and sectionNumber != oldSectionNumber:
 			# Translators: Indicates the section number in a document.
 			# %s will be replaced with the section number.
-			text = _("section %s") % sectionNumber
+			text = N_("section %s") % sectionNumber
 			textList.append("⣏%s⣹" % text)
 
 		textColumnCount = field.get("text-column-count")
@@ -407,13 +409,13 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# Translators: Indicates the text column number in a document.
 				# {0} will be replaced with the text column number.
 				# {1} will be replaced with the number of text columns.
-				text = _("column {0} of {1}").format(
+				text = N_("column {0} of {1}").format(
 					textColumnNumber, textColumnCount)
 				textList.append("⣏%s⣹" % text)
 			elif textColumnCount:
 				# Translators: Indicates the text column number in a document.
 				# %s will be replaced with the number of text columns.
-				text = _("%s columns") % (textColumnCount)
+				text = N_("%s columns") % (textColumnCount)
 				textList.append("⣏%s⣹" % text)
 
 	if get_report("alignment"):
@@ -438,11 +440,11 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# Translators: Indicates the style of text.
 				# A style is a collection of formatting settings and depends on the application.
 				# %s will be replaced with the name of the style.
-				text = _("style %s") % style
+				text = N_("style %s") % style
 			else:
 				# Translators: Indicates that text has reverted to the default style.
 				# A style is a collection of formatting settings and depends on the application.
-				text = _("default style")
+				text = N_("default style")
 			textList.append("⣏%s⣹" % text)
 	if get_report("borderStyle"):
 		borderStyle = field.get("border-style")
@@ -453,7 +455,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				text = borderStyle
 			else:
 				# Translators: Indicates that cell does not have border lines.
-				text = _("no border lines")
+				text = N_("no border lines")
 			textList.append("⣏%s⣹" % text)
 	if get_report("fontName"):
 		fontFamily = field.get("font-family")
@@ -672,7 +674,7 @@ class ManageTags(wx.Dialog):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
-		choices = list(LABELS_TAGS.values())
+		choices = list(LABELS_FORMATTING.values())
 		self.formatting = sHelper.addLabeledControl(
 			_("&Formatting"), wx.Choice, choices=choices
 		)
@@ -683,7 +685,7 @@ class ManageTags(wx.Dialog):
 
 		self.endTag = sHelper.addLabeledControl(_("&End tag"), wx.TextCtrl)
 		self.endTag.Bind(wx.EVT_TEXT, self.onTags)
-		self.onTags()
+		self.onFormatting()
 
 		sHelper.addDialogDismissButtons(
 			self.CreateButtonSizer(wx.OK | wx.CANCEL))
@@ -694,14 +696,14 @@ class ManageTags(wx.Dialog):
 		self.formatting.SetFocus()
 
 	def get_key_attribute(self):
-		l = list(LABELS_TAGS.keys())
+		l = list(LABELS_FORMATTING.keys())
 		selection = self.formatting.GetSelection()
-		return l[selection] if selection < len(l) else 0
+		return l[selection] if 0 <= selection < len(l) else 0
 
 	def onTags(self, evt=None):
 		k = self.get_key_attribute()
 		self.tags[k] = self.startTag.GetValue()
-		tag = TAG_ATTRIBUTE(
+		tag = TAG_FORMATTING(
 			self.startTag.GetValue(),
 			self.endTag.GetValue()
 		)
@@ -740,7 +742,6 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			wx.CheckBox(self, label=label))
 		self.processLinePerLine.SetValue(conf["processLinePerLine"])
 
-		label = _("Info to &report:")
 		keys = list(LABELS_STATES.keys())
 		choices = list(LABELS_STATES.values())
 		self.dynamic_options = []

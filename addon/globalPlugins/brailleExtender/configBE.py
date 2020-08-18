@@ -145,7 +145,7 @@ def getConfspec():
 			"roleLabels": "boolean(default=True)"
 		},
 		"objectPresentation": {
-			"propertiesOrder": 'string(default="states,cellCoordsText,value,name,roleText,description,keyboardShortcut,positionInfo,positionInfoLevel,row,columnHeaderText,column,current,placeholder")',
+			"orderProperties": f'string(default="{ADDON_ORDER_PROPERTIES}")',
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
 		},
 		"documentFormatting": {

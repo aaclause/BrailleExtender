@@ -26,7 +26,7 @@ from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
 from .oneHandMode import SettingsDlg as OneHandModeDlg
 from .objectPresentation import SettingsDlg as ObjectPresentationDlg
 from .undefinedChars import SettingsDlg as UndefinedCharsDlg
-from .documentFormatting import SettingsDlg as documentFormattingDlg
+from .documentFormatting import SettingsDlg as DocumentFormattingDlg
 from .common import *
 
 instanceGP = None
@@ -147,138 +147,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = list(configBE.outputMessage.keys())[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = list(configBE.outputMessage.keys())[self.modifierKeysFeedback.GetSelection()]
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
-
-class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
-
-	# Translators: title of a dialog.
-	title = _("Role labels")
-
-	roleLabels  = {}
-
-	def makeSettings(self, settingsSizer):
-		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.toggleRoleLabels = sHelper.addItem(wx.CheckBox(self, label=_("Use custom braille &role labels")))
-		self.toggleRoleLabels.SetValue(config.conf["brailleExtender"]["features"]["roleLabels"])
-		self.categories = sHelper.addLabeledControl(_("Role &category:"), wx.Choice, choices=[_("General"), _("Landmark"), _("Positive state"), _("Negative state")])
-		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)
-		self.categories.SetSelection(0)
-		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
-		self.labels = sHelper2.addLabeledControl(_("&Role:"), wx.Choice, choices=[controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()])
-		self.labels.Bind(wx.EVT_CHOICE, self.onLabels)
-		self.label = sHelper2.addLabeledControl(_("Braille &label"), wx.TextCtrl)
-		self.label.Bind(wx.EVT_TEXT, self.onLabel)
-		sHelper.addItem(sHelper2)
-		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.resetLabelBtn = bHelper.addButton(self, wx.NewId(), _("&Reset this role label"), wx.DefaultPosition)
-		self.resetLabelBtn.Bind(wx.EVT_BUTTON, self.onResetLabelBtn)
-		self.resetAllLabelsBtn = bHelper.addButton(self, wx.NewId(), _("Reset all role labels"), wx.DefaultPosition)
-		self.resetAllLabelsBtn.Bind(wx.EVT_BUTTON, self.onResetAllLabelsBtn)
-		sHelper.addItem(bHelper)
-		self.onCategories(None)
-
-	def onCategories(self, event):
-		idCategory = self.categories.GetSelection()
-		if idCategory == 0:
-			labels = [controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()]
-		elif idCategory == 1:
-			labels = list(braille.landmarkLabels.keys())
-		elif idCategory == 2:
-			labels = [controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()]
-		elif idCategory == 3:
-			labels = [controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()]
-		else: labels = []
-		for iLabel, label in enumerate(labels):
-			idLabel = self.getIDFromIndexes(idCategory, iLabel)
-			actualLabel = self.getLabelFromID(idCategory, idLabel)
-			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-			labels[iLabel] += "%s: %s" % (punctuationSeparator, actualLabel)
-			if actualLabel != originalLabel: labels[iLabel] += " (%s)" % originalLabel
-		self.labels.SetItems(labels)
-		if idCategory > -1 and idCategory < 4: self.labels.SetSelection(0)
-		self.onLabels(None)
-
-	def onLabels(self, event):
-		idCategory = self.categories.GetSelection()
-		idLabel = self.getIDFromIndexes(idCategory, self.labels.GetSelection())
-		key = "%d:%s" % (idCategory, idLabel)
-		if key in self.roleLabels.keys(): self.label.SetValue(self.roleLabels[key])
-		else: self.label.SetValue(self.getOriginalLabel(idCategory, idLabel))
-
-	def onLabel(self, evt):
-		idCategory = self.categories.GetSelection()
-		iLabel = self.labels.GetSelection()
-		idLabel = self.getIDFromIndexes(idCategory, iLabel)
-		key = "%d:%s" % (idCategory, idLabel)
-		label = self.label.GetValue()
-		if idCategory >= 0 and iLabel >= 0:
-			if self.getOriginalLabel(idCategory, idLabel, chr(4)) == label:
-				if key in self.roleLabels.keys():
-					self.roleLabels.pop(key)
-					log.debug("Key %s deleted" % key)
-				else: log.info("Key %s not present" % key)
-			else: self.roleLabels[key] = label
-			actualLabel = self.getLabelFromID(idCategory, idLabel)
-			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-			if label != originalLabel: self.resetLabelBtn.Enable()
-			else: self.resetLabelBtn.Disable()
-
-	def onResetLabelBtn(self, event):
-		idCategory = self.categories.GetSelection()
-		iLabel = self.labels.GetSelection()
-		idLabel = self.getIDFromIndexes(idCategory, iLabel)
-		key = "%d:%s" % (idCategory, idLabel)
-		actualLabel = self.getLabelFromID(idCategory, idLabel)
-		originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-		self.label.SetValue(originalLabel)
-		self.onLabel(None)
-		self.label.SetFocus()
-
-	def onResetAllLabelsBtn(self, event):
-		nbCustomizedLabels = len(self.roleLabels)
-		if not nbCustomizedLabels:
-			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("You have no customized role labels."))
-			return
-		res = gui.messageBox(
-			_("You have %d customized role labels defined. Do you want to reset all labels?") % nbCustomizedLabels,
-			_("Reset role labels"),
-			wx.YES|wx.NO|wx.ICON_INFORMATION)
-		if res == wx.YES:
-			self.roleLabels = {}
-			config.conf["brailleExtender"]["roleLabels"] = {}
-			self.onCategories(None)
-
-	def getOriginalLabel(self, idCategory, idLabel, defaultValue = ''):
-		if "%s:%s" % (idCategory, idLabel) in configBE.backupRoleLabels.keys():
-			return configBE.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
-		return self.getLabelFromID(idCategory, idLabel)
-
-	@staticmethod
-	def getIDFromIndexes(idCategory, idLabel):
-		try:
-			if idCategory == 0: return list(braille.roleLabels.keys())[idLabel]
-			if idCategory == 1: return list(braille.landmarkLabels.keys())[idLabel]
-			if idCategory == 2: return list(braille.positiveStateLabels.keys())[idLabel]
-			if idCategory == 3: return list(braille.negativeStateLabels.keys())[idLabel]
-			raise ValueError("Invalid value for ID category: %d" % idCategory)
-		except BaseException: return -1
-
-	def getLabelFromID(self, idCategory, idLabel):
-		if idCategory == 0: return braille.roleLabels[idLabel]
-		if idCategory == 1: return braille.landmarkLabels[idLabel]
-		if idCategory == 2: return braille.positiveStateLabels[idLabel]
-		if idCategory == 3: return braille.negativeStateLabels[idLabel]
-		raise ValueError("Invalid value: %d" % idCategory)
-
-	def postInit(self): self.toggleRoleLabels.SetFocus()
-
-	def onSave(self):
-		config.conf["brailleExtender"]["features"]["roleLabels"] = self.toggleRoleLabels.IsChecked()
-		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
-		configBE.discardRoleLabels()
-		if config.conf["brailleExtender"]["features"]["roleLabels"]:
-			configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
-
 class BrailleTablesDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
@@ -677,13 +545,12 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
-		documentFormattingDlg,
+		DocumentFormattingDlg,
 		ObjectPresentationDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,
 		OneHandModeDlg,
-		RoleLabelsDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

@@ -1,6 +1,6 @@
 name: flake8 Lint
 
-on: [push, pull_request]
+on: push
 
 jobs:
   flake8-lint:
@@ -16,4 +16,4 @@ jobs:
       - name: flake8 Lint
         uses: py-actions/flake8@v1
         with:
-          args: "--ignore=W191,E126 --builtins=_ ."
+          args: "--count --show-source --statistics --ignore=W191,E126 --builtins=_ ."

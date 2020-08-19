@@ -8,7 +8,6 @@ from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue
 from .oneHandMode import process as processOneHandMode
 from . import undefinedChars
 from .objectPresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
-from .documentFormatting import getFormatFieldBraille
 from . import huc
 from . import dictionaries
 from . import configBE
@@ -24,6 +23,7 @@ import api
 import braille
 import brailleInput
 import brailleTables
+import config
 import controlTypes
 import config
 import core
@@ -41,6 +41,7 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
+from .documentFormatting import get_method, get_report, get_tags, N_
 
 import addonHandler
 addonHandler.initTranslation()
@@ -48,6 +49,8 @@ addonHandler.initTranslation()
 
 instanceGP = None
 
+roleLabels = braille.roleLabels
+landmarkLabels = braille.landmarkLabels
 
 def SELECTION_SHAPE(): return braille.SELECTION_SHAPE
 
@@ -303,9 +306,339 @@ def update_TextInfoRegion(self):
 	else:
 		self._brailleInputIndStart = None
 
+def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
+	presCat = field.getPresentationCategory(ancestors, formatConfig)
+	# Cache this for later use.
+	field._presCat = presCat
+	role = field.get("role", controlTypes.ROLE_UNKNOWN)
+	if reportStart:
+		# If this is a container, only report it if this is the start of the node.
+		if presCat == field.PRESCAT_CONTAINER and not field.get("_startOfNode"):
+			return None
+	else:
+		# We only report ends for containers that are not landmarks/regions
+		# and only if this is the end of the node.
+		if (
+				not field.get("_endOfNode")
+				or presCat != field.PRESCAT_CONTAINER
+				#or role == controlTypes.ROLE_LANDMARK
+		):
+			return None
+
+	states = field.get("states", set())
+	value = field.get('value', None)
+	childControlCount = int(field.get('_childcontrolcount',"0"))
+	current = field.get('current', None)
+	placeholder = field.get('placeholder', None)
+	roleText = field.get('roleTextBraille', field.get('roleText'))
+	roleTextPost = None
+	landmark = field.get("landmark")
+	if not roleText and role == controlTypes.ROLE_LANDMARK and landmark:
+		roleText = f"{roleLabels[controlTypes.ROLE_LANDMARK]} {landmarkLabels[landmark]}"
+	content = field.get("content")
+
+	if childControlCount and role == controlTypes.ROLE_LIST:
+		roleTextPost = "(%s)" % childControlCount
+	if childControlCount and role == controlTypes.ROLE_TABLE:
+		row_count = field.get("table-rowcount", 0)
+		column_count = field.get("table-columncount", 0)
+		roleTextPost = f"({row_count},{column_count})"
+	if presCat == field.PRESCAT_LAYOUT:
+		text = []
+		if current:
+			text.append(getPropertiesBraille(current=current))
+		if role == controlTypes.ROLE_GRAPHIC and content:
+			text.append(content)
+		return TEXT_SEPARATOR.join(text) if len(text) != 0 else None
+
+	if role in (controlTypes.ROLE_TABLECELL, controlTypes.ROLE_TABLECOLUMNHEADER, controlTypes.ROLE_TABLEROWHEADER) and field.get("table-id"):
+		# Table cell.
+		reportTableHeaders = formatConfig["reportTableHeaders"]
+		reportTableCellCoords = formatConfig["reportTableCellCoords"]
+		props = {
+			"states": states,
+			"rowNumber": (field.get("table-rownumber-presentational") or field.get("table-rownumber")),
+			"columnNumber": (field.get("table-columnnumber-presentational") or field.get("table-columnnumber")),
+			"rowSpan": field.get("table-rowsspanned"),
+			"columnSpan": field.get("table-columnsspanned"),
+			"includeTableCellCoords": reportTableCellCoords,
+			"current": current,
+		}
+		if reportTableHeaders:
+			props["columnHeaderText"] = field.get("table-columnheadertext")
+		return getPropertiesBraille(**props)
+
+	if reportStart:
+		props = {
+			# Don't report the role for math here.
+			# However, we still need to pass it (hence "_role").
+			"_role" if role == controlTypes.ROLE_MATH else "role": role,
+			"states": states,
+			"value": value,
+			"current": current,
+			"placeholder": placeholder,
+			"roleText": roleText,
+			"roleTextPost": roleTextPost
+		}
+		if field.get("alwaysReportName", False):
+			# Ensure that the name of the field gets presented even if normally it wouldn't.
+			name = field.get("name")
+			if name:
+				props["name"] = name
+		if config.conf["presentation"]["reportKeyboardShortcuts"]:
+			kbShortcut = field.get("keyboardShortcut")
+			if kbShortcut:
+				props["keyboardShortcut"] = kbShortcut
+		level = field.get("level")
+		if level:
+			props["positionInfo"] = {"level": level}
+		text = getPropertiesBraille(**props)
+		if content:
+			if text:
+				text += TEXT_SEPARATOR
+			text += content
+		elif role == controlTypes.ROLE_MATH:
+			import mathPres
+			mathPres.ensureInit()
+			if mathPres.brailleProvider:
+				try:
+					if text:
+						text += TEXT_SEPARATOR
+					text += mathPres.brailleProvider.getBrailleForMathMl(
+						info.getMathMl(field))
+				except (NotImplementedError, LookupError):
+					pass
+		return text
+
+	return N_("%s end") % getPropertiesBraille(
+		role=role,
+		roleText=roleText,
+	)
+
+
+def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
+	"""Generates the braille text for the given format field.
+	@param field: The format field to examine.
+	@type field: {str : str, ...}
+	@param fieldCache: The format field of the previous run; i.e. the cached format field.
+	@type fieldCache: {str : str, ...}
+	@param isAtStart: True if this format field precedes any text in the line/paragraph.
+	This is useful to restrict display of information which should only appear at the start of the line/paragraph;
+	e.g. the line number or line prefix (list bullet/number).
+	@type isAtStart: bool
+	@param formatConfig: The formatting config.
+	@type formatConfig: {str : bool, ...}
+	"""
+	TEXT_SEPARATOR = ''
+	textList = []
+
+	if isAtStart:
+		if config.conf["brailleExtender"]["documentFormatting"]["processLinePerLine"]:
+			fieldCache.clear()
+		if formatConfig["reportLineNumber"]:
+			lineNumber = field.get("line-number")
+			if lineNumber:
+				textList.append("%s" % lineNumber)
+		linePrefix = field.get("line-prefix")
+		if linePrefix:
+			textList.append(linePrefix)
+		if formatConfig["reportHeadings"]:
+			headingLevel = field.get('heading-level')
+			if headingLevel:
+				# Translators: Displayed in braille for a heading with a level.
+				# %s is replaced with the level.
+				textList.append((N_("h%s") % headingLevel)+' ')
+
+	if get_report("page"):
+		pageNumber = field.get("page-number")
+		oldPageNumber = fieldCache.get(
+			"page-number") if fieldCache is not None else None
+		if pageNumber and pageNumber != oldPageNumber:
+			# Translators: Indicates the page number in a document.
+			# %s will be replaced with the page number.
+			text = N_("page %s") % pageNumber
+			textList.append("⣏%s⣹" % text)
+		sectionNumber = field.get("section-number")
+		oldSectionNumber = fieldCache.get(
+			"section-number") if fieldCache is not None else None
+		if sectionNumber and sectionNumber != oldSectionNumber:
+			# Translators: Indicates the section number in a document.
+			# %s will be replaced with the section number.
+			text = N_("section %s") % sectionNumber
+			textList.append("⣏%s⣹" % text)
+
+		textColumnCount = field.get("text-column-count")
+		oldTextColumnCount = fieldCache.get(
+			"text-column-count") if fieldCache is not None else None
+		textColumnNumber = field.get("text-column-number")
+		oldTextColumnNumber = fieldCache.get(
+			"text-column-number") if fieldCache is not None else None
+
+		# Because we do not want to report the number of columns when a document is just opened and there is only
+		# one column. This would be verbose, in the standard case.
+		# column number has changed, or the columnCount has changed
+		# but not if the columnCount is 1 or less and there is no old columnCount.
+		if (((textColumnNumber and textColumnNumber != oldTextColumnNumber) or
+			 (textColumnCount and textColumnCount != oldTextColumnCount)) and not
+				(textColumnCount and int(textColumnCount) <= 1 and oldTextColumnCount is None)):
+			if textColumnNumber and textColumnCount:
+				# Translators: Indicates the text column number in a document.
+				# {0} will be replaced with the text column number.
+				# {1} will be replaced with the number of text columns.
+				text = N_("column {0} of {1}").format(
+					textColumnNumber, textColumnCount)
+				textList.append("⣏%s⣹" % text)
+			elif textColumnCount:
+				# Translators: Indicates the text column number in a document.
+				# %s will be replaced with the number of text columns.
+				text = N_("%s columns") % (textColumnCount)
+				textList.append("⣏%s⣹" % text)
+
+	if get_report("alignment"):
+		textAlign = normalizeTextAlign(field.get("text-align"))
+		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
+		if textAlign and textAlign != old_textAlign:
+			tag = get_tags(f"text-align:{textAlign}")
+			if tag:
+				textList.append(tag.start)
+
+	if formatConfig["reportLinks"]:
+		link = field.get("link")
+		oldLink = fieldCache.get("link") if fieldCache else None
+		if link and link != oldLink:
+			textList.append(braille.roleLabels[controlTypes.ROLE_LINK]+' ')
+
+	if get_report("style"):
+		style = field.get("style")
+		oldStyle = fieldCache.get("style") if fieldCache is not None else None
+		if style != oldStyle:
+			if style:
+				# Translators: Indicates the style of text.
+				# A style is a collection of formatting settings and depends on the application.
+				# %s will be replaced with the name of the style.
+				text = N_("style %s") % style
+			else:
+				# Translators: Indicates that text has reverted to the default style.
+				# A style is a collection of formatting settings and depends on the application.
+				text = N_("default style")
+			textList.append("⣏%s⣹" % text)
+	if get_report("borderStyle"):
+		borderStyle = field.get("border-style")
+		oldBorderStyle = fieldCache.get(
+			"border-style") if fieldCache is not None else None
+		if borderStyle != oldBorderStyle:
+			if borderStyle:
+				text = borderStyle
+			else:
+				# Translators: Indicates that cell does not have border lines.
+				text = N_("no border lines")
+			textList.append("⣏%s⣹" % text)
+	if get_report("fontName"):
+		fontFamily = field.get("font-family")
+		oldFontFamily = fieldCache.get(
+			"font-family") if fieldCache is not None else None
+		if fontFamily and fontFamily != oldFontFamily:
+			textList.append("⣏%s⣹" % fontFamily)
+		fontName = field.get("font-name")
+		oldFontName = fieldCache.get(
+			"font-name") if fieldCache is not None else None
+		if fontName and fontName != oldFontName:
+			textList.append("⣏%s⣹" % fontName)
+	if get_report("fontSize"):
+		fontSize = field.get("font-size")
+		oldFontSize = fieldCache.get(
+			"font-size") if fieldCache is not None else None
+		if fontSize and fontSize != oldFontSize:
+			textList.append("⣏%s⣹" % fontSize)
+	if get_report("color"):
+		color = field.get("color")
+		oldColor = fieldCache.get("color") if fieldCache is not None else None
+		backgroundColor = field.get("background-color")
+		oldBackgroundColor = fieldCache.get(
+			"background-color") if fieldCache is not None else None
+		backgroundColor2 = field.get("background-color2")
+		oldBackgroundColor2 = fieldCache.get(
+			"background-color2") if fieldCache is not None else None
+		bgColorChanged = backgroundColor != oldBackgroundColor or backgroundColor2 != oldBackgroundColor2
+		bgColorText = backgroundColor.name if isinstance(
+			backgroundColor, colors.RGB) else backgroundColor
+		if backgroundColor2:
+			bg2Name = backgroundColor2.name if isinstance(
+				backgroundColor2, colors.RGB) else backgroundColor2
+			# Translators: Reported when there are two background colors.
+			# This occurs when, for example, a gradient pattern is applied to a spreadsheet cell.
+			# {color1} will be replaced with the first background color.
+			# {color2} will be replaced with the second background color.
+			bgColorText = N_("{color1} to {color2}").format(
+				color1=bgColorText, color2=bg2Name)
+		if color and backgroundColor and color != oldColor and bgColorChanged:
+			# Translators: Reported when both the text and background colors change.
+			# {color} will be replaced with the text color.
+			# {backgroundColor} will be replaced with the background color.
+			textList.append("⣏%s⣹" % N_("{color} on {backgroundColor}").format(
+				color=color.name if isinstance(color, colors.RGB) else color,
+				backgroundColor=bgColorText))
+		elif color and color != oldColor:
+			# Translators: Reported when the text color changes (but not the background color).
+			# {color} will be replaced with the text color.
+			textList.append("⣏%s⣹" % N_("{color}").format(
+				color=color.name if isinstance(color, colors.RGB) else color))
+		elif backgroundColor and bgColorChanged:
+			# Translators: Reported when the background color changes (but not the text color).
+			# {backgroundColor} will be replaced with the background color.
+			textList.append("⣏%s⣹" % N_("{backgroundColor} background").format(
+				backgroundColor=bgColorText))
+		backgroundPattern = field.get("background-pattern")
+		oldBackgroundPattern = fieldCache.get(
+			"background-pattern") if fieldCache is not None else None
+		if backgroundPattern and backgroundPattern != oldBackgroundPattern:
+			textList.append("⣏%s⣹" % N_("background pattern {pattern}").format(
+				pattern=backgroundPattern))
+
+	start_tag_list = []
+	end_tag_list = []
+
+	tags = []
+	if get_report("fontAttributes"):
+		tags += [tag for tag in [
+			"bold",
+			"italic",
+			"underline",
+			"strikethrough"] if get_method(tag) == CHOICE_tags
+		]
+	if get_report("superscriptsAndSubscripts"):
+		tags += [tag for tag in [
+			"text-position:sub",
+			"text-position:super"] if get_method(tag) == CHOICE_tags
+		]
+	if get_report("spellingErrors"):
+		tags += [tag for tag in [
+			"invalid-spelling",
+			"invalid-grammar"] if get_method(tag) == CHOICE_tags
+		]
+
+		for name_tag in tags:
+			name_field = name_tag.split(':')[0]
+			value_field = name_tag.split(
+				':', 1)[1] if ':' in name_tag else None
+			field_value = field.get(name_field)
+			old_field_value = fieldCache.get(
+				name_field) if fieldCache else None
+			tag = get_tags(f"{name_field}:{field_value}")
+			old_tag = get_tags(f"{name_field}:{old_field_value}")
+			if value_field != old_field_value and old_tag and old_field_value:
+				if old_field_value != field_value:
+					end_tag_list.append(old_tag.end)
+			if field_value and tag and field_value != value_field and field_value != old_field_value:
+				start_tag_list.append(tag.start)
+	fieldCache.clear()
+	fieldCache.update(field)
+	textList.insert(0, ''.join(end_tag_list[::-1]))
+	textList.append(''.join(start_tag_list))
+	return TEXT_SEPARATOR.join([x for x in textList if x])
+
+
 #: braille.TextInfoRegion._addTextWithFields
-
-
 def _addTextWithFields(self, info, formatConfig, isSelection=False):
 	TEXT_SEPARATOR = ' '
 	shouldMoveCursorToFirstContent = not isSelection and self.cursorPos is not None
@@ -326,7 +659,7 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 				# The last item added was a field,
 				#? so add a space before the content.
 				self.rawText += TEXT_SEPARATOR
-				# self.rawTextTypeforms.append(louis.plain_text)
+				self.rawTextTypeforms.append(louis.plain_text)
 				self._rawToContentPos.append(self._currentContentPos)
 			if isSelection and self.selectionStart is None:
 				# This is where the content begins.
@@ -360,7 +693,7 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 				self._len_brlex_typeforms += self._rawToContentPos.count(
 					self._currentContentPos)
 				self.brlex_typeforms[self._len_brlex_typeforms +
-									 self._currentContentPos] = brlex_typeform
+					self._currentContentPos] = brlex_typeform
 				if not text:
 					continue
 			elif cmd == "controlStart":
@@ -401,7 +734,7 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 						self.cursorPos = fieldStart
 						shouldMoveCursorToFirstContent = False
 				# Map this field text to the start of the field's content.
-				self._addFieldText(text, self._currentContentPos)
+				self._addFieldText(text, self._currentContentPos,)
 			elif cmd == "controlEnd":
 				# Exiting a controlField should break a run of clickables
 				inClickable = False
@@ -802,6 +1135,7 @@ def _createTablesString(tablesList):
 
 
 # applying patches
+braille.getControlFieldBraille = getControlFieldBraille
 braille.getFormatFieldBraille = getFormatFieldBraille
 braille.Region.update = update_region
 braille.TextInfoRegion._addTextWithFields = _addTextWithFields

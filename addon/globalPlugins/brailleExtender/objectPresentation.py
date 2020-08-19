@@ -28,9 +28,6 @@ PROPERTIES_ORDER = {
 	"keyboardShortcut": _("keyboard shortcut"),
 	"positionInfo": _("position info"),
 	"positionInfoLevel": _("position info level"),
-	"row": _("row text"),
-	"columnHeaderText": _("column header text"),
-	"column": _("column text"),
 	"current": _("current labels"),
 	"placeholder": _("place-holder"),
 	"cellCoordsText": _("cell coordinates text"),
@@ -54,12 +51,14 @@ def getOrderPropertiesFromConfig():
 	orderProperties = config.conf["brailleExtender"]["objectPresentation"][
 		"orderProperties"
 	].split(",")
-	if len(defaultOrderProperties) != len(orderProperties):
+	if len(defaultOrderProperties) >len(orderProperties):
 		log.error("Missing one or more elements")
+		setOrderProperties(defaultOrderProperties, True)
 		return defaultOrderProperties
 	for e in orderProperties:
 		if e not in defaultOrderProperties:
-			log.error(f"Unknown '{e}'")
+			log.warning(f"Unknown '{e}'")
+			setOrderProperties(defaultOrderProperties, True)
 			return defaultOrderProperties
 	return orderProperties
 
@@ -108,8 +107,7 @@ def update_NVDAObjectRegion(self):
 		description=obj.description if presConfig["reportObjectDescriptions"] else None,
 		keyboardShortcut=obj.keyboardShortcut if presConfig["reportKeyboardShortcuts"] else None,
 		positionInfo=obj.positionInfo if presConfig["reportObjectPositionInformation"] else None,
-		cellCoordsText=obj.cellCoordsText if config.conf[
-			"documentFormatting"]["reportTableCellCoords"] else None,
+		cellCoordsText=obj.cellCoordsText if get_report("tableCellCoords") else None,
 		cellInfo=cellInfo
 	)
 	if role == controlTypes.ROLE_MATH:
@@ -138,6 +136,7 @@ def getPropertiesBraille(**propertyValues) -> str:
 	states = propertyValues.get("states")
 	role = propertyValues.get("role")
 	roleText = propertyValues.get("roleText")
+	roleTextPost = propertyValues.get("roleTextPost")
 	positionInfo = propertyValues.get("positionInfo")
 	level = positionInfo.get("level") if positionInfo else None
 	cellCoordsText = propertyValues.get("cellCoordsText")
@@ -149,13 +148,10 @@ def getPropertiesBraille(**propertyValues) -> str:
 	# After all, a table cell that has no rowspan implemented is assumed to span one row.
 	rowSpan = propertyValues.get("rowSpan") or 1
 	columnSpan = propertyValues.get("columnSpan") or 1
-	includeTableCellCoords = get_report(
-		"tableCellCoords") and propertyValues.get("includeTableCellCoords", True)
+	includeTableCellCoords = get_report("tableCellCoords") and propertyValues.get("includeTableCellCoords", True)
 	positionInfoLevelStr = None
 	if role is not None and not roleText:
 		if role == controlTypes.ROLE_HEADING and level:
-			# Translators: Displayed in braille for a heading with a level.
-			# %s is replaced with the level.
 			roleText = N_("h%s") % level
 			level = None
 		elif (
@@ -165,7 +161,6 @@ def getPropertiesBraille(**propertyValues) -> str:
 		):
 			states = states.copy()
 			states.discard(controlTypes.STATE_VISITED)
-			# Translators: Displayed in braille for a link which has been visited.
 			roleText = N_("vlnk")
 		elif not description and config.conf["brailleExtender"]["documentFormatting"]["cellFormula"] and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo, "formula") and cellInfo.formula:
 			states = states.copy()
@@ -179,6 +174,8 @@ def getPropertiesBraille(**propertyValues) -> str:
 			roleText = roleLabels.get(role, controlTypes.roleLabels[role])
 	elif role is None:
 		role = propertyValues.get("_role")
+	if roleText and roleTextPost:
+		roleText += roleTextPost
 	if roleText:
 		properties["roleText"] = roleText
 	value = (
@@ -213,43 +210,46 @@ def getPropertiesBraille(**propertyValues) -> str:
 		indexInGroup = positionInfo.get("indexInGroup")
 		similarItemsInGroup = positionInfo.get("similarItemsInGroup")
 		if indexInGroup and similarItemsInGroup:
-			# Translators: Brailled to indicate the position of an item in a group of items (such as a list).
-			# {number} is replaced with the number of the item in the group.
-			# {total} is replaced with the total number of items in the group.
 			properties["positionInfo"] = "{number}/{total}".format(
 				number=indexInGroup, total=similarItemsInGroup
 			)
 		if level is not None:
 			properties["positionInfoLevel"] = N_(
 				"lv %s") % positionInfo["level"]
+
+	rowCoordinate = ""
+	columnCoordinate = ""
+	columnHeaderText = ""
 	if rowNumber:
 		if includeTableCellCoords and not cellCoordsText:
 			if rowSpan > 1:
-				# Translators: Displayed in braille for the table cell row numbers when a cell spans multiple rows.
-				# Occurences of %s are replaced with the corresponding row numbers.
-				properties["row"] = N_("r{rowNumber}-{rowSpan}").format(
+				rowCoordinate = N_("r{rowNumber}-{rowSpan}").format(
 					rowNumber=rowNumber, rowSpan=rowNumber + rowSpan - 1
 				)
 			else:
-				# Translators: Displayed in braille for a table cell row number.
-				# %s is replaced with the row number.
-				properties["row"] = N_("r{rowNumber}").format(
+				rowCoordinate = N_("r{rowNumber}").format(
 					rowNumber=rowNumber)
 	if columnNumber:
-		properties["columnHeaderText"] = propertyValues.get("columnHeaderText")
+		columnHeaderText = propertyValues.get("columnHeaderText")
 		if includeTableCellCoords and not cellCoordsText:
 			if columnSpan > 1:
-				# Translators: Displayed in braille for the table cell column numbers when a cell spans multiple columns.
-				# Occurences of %s are replaced with the corresponding column numbers.
-				properties["column"] = N_("c{columnNumber}-{columnSpan}").format(
+				columnCoordinate = N_("c{columnNumber}-{columnSpan}").format(
 					columnNumber=columnNumber, columnSpan=columnNumber + columnSpan - 1
 				)
 			else:
-				# Translators: Displayed in braille for a table cell column number.
-				# %s is replaced with the column number.
-				properties["column"] = N_("c{columnNumber}").format(
+				columnCoordinate = N_("c{columnNumber}").format(
 					columnNumber=columnNumber
 				)
+	if not cellCoordsText and columnHeaderText or rowCoordinate or columnCoordinate:
+		includeTableCellCoords = True
+		if rowCoordinate and columnCoordinate:
+			cellCoordsText = rowCoordinate + columnCoordinate
+			if columnHeaderText:
+				cellCoordsText += "(%s)" % columnHeaderText
+		elif rowCoordinate:
+			cellCoordsText = rowCoordinate
+		elif columnCoordinate:
+			cellCoordsText = columnHeaderText
 	current = propertyValues.get("current", False)
 	if current:
 		try:
@@ -261,7 +261,6 @@ def getPropertiesBraille(**propertyValues) -> str:
 	placeholder = propertyValues.get("placeholder", None)
 	if placeholder:
 		properties["placeholder"] = placeholder
-	cellCoordsTextStr = None
 	if includeTableCellCoords and cellCoordsText:
 		properties["cellCoordsText"] = cellCoordsText
 	finalStr = []
@@ -380,7 +379,7 @@ class ManageOrderProperties(gui.settingsDialogs.SettingsDialog):
 class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = _("Role labels")
+	title = _("Role/state labels")
 
 	roleLabels  = {}
 
@@ -536,7 +535,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.orderPropertiesBtn.Bind(wx.EVT_BUTTON, self.onOrderPropertiesBtn)
 
 		self.roleLabelsBtn = bHelper.addButton(
-			self, label=_("&Role labels...")
+			self, label=_("&Role/state labels...")
 		)
 		self.roleLabelsBtn.Bind(wx.EVT_BUTTON, self.onRoleLabelsBtn)
 

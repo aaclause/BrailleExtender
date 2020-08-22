@@ -349,7 +349,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 			text.append(getPropertiesBraille(current=current))
 		if role == controlTypes.ROLE_GRAPHIC and content:
 			text.append(content)
-		return TEXT_SEPARATOR.join(text) if len(text) != 0 else None
+		return braille.TEXT_SEPARATOR.join(text) if len(text) != 0 else None
 
 	if role in (controlTypes.ROLE_TABLECELL, controlTypes.ROLE_TABLECOLUMNHEADER, controlTypes.ROLE_TABLEROWHEADER) and field.get("table-id"):
 		# Table cell.

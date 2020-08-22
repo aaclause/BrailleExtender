@@ -41,7 +41,7 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
-from .documentFormatting import get_method, get_report, get_tags, N_
+from .documentFormatting import get_method, get_report, get_tags, N_, normalizeTextAlign
 
 import addonHandler
 addonHandler.initTranslation()

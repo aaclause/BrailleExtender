@@ -188,7 +188,6 @@ def update_region(self):
 
 
 def update_TextInfoRegion(self):
-	TEXT_SEPARATOR = ' '
 	formatConfig = config.conf["documentFormatting"]
 	unit = self._getReadingUnit()
 	self.rawText = ""
@@ -395,7 +394,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		text = getPropertiesBraille(**props)
 		if content:
 			if text:
-				text += TEXT_SEPARATOR
+				text += braille.TEXT_SEPARATOR
 			text += content
 		elif role == controlTypes.ROLE_MATH:
 			import mathPres
@@ -403,7 +402,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 			if mathPres.brailleProvider:
 				try:
 					if text:
-						text += TEXT_SEPARATOR
+						text += braille.TEXT_SEPARATOR
 					text += mathPres.brailleProvider.getBrailleForMathMl(
 						info.getMathMl(field))
 				except (NotImplementedError, LookupError):
@@ -429,7 +428,6 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	@param formatConfig: The formatting config.
 	@type formatConfig: {str : bool, ...}
 	"""
-	TEXT_SEPARATOR = ''
 	textList = []
 
 	if isAtStart:
@@ -635,12 +633,11 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	fieldCache.update(field)
 	textList.insert(0, ''.join(end_tag_list[::-1]))
 	textList.append(''.join(start_tag_list))
-	return TEXT_SEPARATOR.join([x for x in textList if x])
+	return braille.TEXT_SEPARATOR.join([x for x in textList if x])
 
 
 #: braille.TextInfoRegion._addTextWithFields
 def _addTextWithFields(self, info, formatConfig, isSelection=False):
-	TEXT_SEPARATOR = ' '
 	shouldMoveCursorToFirstContent = not isSelection and self.cursorPos is not None
 	ctrlFields = []
 	typeform = louis.plain_text
@@ -658,7 +655,7 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 			if self._endsWithField:
 				# The last item added was a field,
 				#? so add a space before the content.
-				self.rawText += TEXT_SEPARATOR
+				self.rawText += braille.TEXT_SEPARATOR
 				self.rawTextTypeforms.append(louis.plain_text)
 				self._rawToContentPos.append(self._currentContentPos)
 			if isSelection and self.selectionStart is None:

@@ -514,10 +514,14 @@ def _displayWithCursor(self):
 		return
 	cells = list(self._cells)
 	if self._cursorPos is not None and self._cursorBlinkUp and not self._auto_scroll:
+		cursorShape = 0
 		if self.getTether() == self.TETHER_FOCUS:
-			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeFocus"]
+			cursorShape = config.conf["braille"]["cursorShapeFocus"]
 		else:
-			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
+			cursorShape = config.conf["braille"]["cursorShapeReview"]
+		cells[self._cursorPos] |= cursorShape
+		if self._cursorPos and config.conf["brailleExtender"]["cursorShapesCells"]:
+			cells[self._cursorPos-1] |= cursorShape
 	self._writeCells(cells)
 
 

@@ -80,6 +80,11 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.routingReviewModeWithCursorKeys = sHelper.addItem(wx.CheckBox(self, label=_("&Use cursor keys to route cursor in review mode")))
 		self.routingReviewModeWithCursorKeys.SetValue(config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"])
 
+		self.cursorShapesCells = sHelper.addItem(wx.CheckBox(self,
+			# Translators: label of a dialog.
+			label=_("Cursor sh&apes on 2 cells")))
+		self.cursorShapesCells.SetValue(config.conf["brailleExtender"]["cursorShapesCells"])
+
 		# Translators: label of a dialog.
 		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("&Display time and date infinitely")))
 		self.hourDynamic.SetValue(config.conf["brailleExtender"]["hourDynamic"])
@@ -136,6 +141,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
 		config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"] = self.routingReviewModeWithCursorKeys.IsChecked()
+		config.conf["brailleExtender"]["cursorShapesCells"] = self.cursorShapesCells.IsChecked()
 
 		config.conf["brailleExtender"]["updateChannel"] = list(configBE.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(configBE.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]

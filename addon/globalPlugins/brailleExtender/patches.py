@@ -508,6 +508,19 @@ def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
 
+
+def _displayWithCursor(self):
+	if not self._cells:
+		return
+	cells = list(self._cells)
+	if self._cursorPos is not None and self._cursorBlinkUp and not self._auto_scroll:
+		if self.getTether() == self.TETHER_FOCUS:
+			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeFocus"]
+		else:
+			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
+	self._writeCells(cells)
+
+
 # applying patches
 braille.Region.update = update
 braille.TextInfoRegion.previousLine = previousLine
@@ -533,4 +546,4 @@ braille.BrailleHandler.decrease_auto_scroll_delay = auto_scroll.decrease_auto_sc
 braille.BrailleHandler.increase_auto_scroll_delay = auto_scroll.increase_auto_scroll_delay
 braille.BrailleHandler.report_auto_scroll_delay = auto_scroll.report_auto_scroll_delay
 braille.BrailleHandler.toggle_auto_scroll = auto_scroll.toggle_auto_scroll
-braille.BrailleHandler._displayWithCursor = auto_scroll._displayWithCursor
+braille.BrailleHandler._displayWithCursor = _displayWithCursor

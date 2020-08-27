@@ -105,18 +105,6 @@ def toggle_auto_scroll(self):
 		tones.beep(300, 100)
 
 
-def _displayWithCursor(self):
-	if not self._cells:
-		return
-	cells = list(self._cells)
-	if self._cursorPos is not None and self._cursorBlinkUp and not self._auto_scroll:
-		if self.getTether() == self.TETHER_FOCUS:
-			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeFocus"]
-		else:
-			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
-	self._writeCells(cells)
-
-
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.

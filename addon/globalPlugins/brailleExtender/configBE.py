@@ -203,7 +203,8 @@ def getConfspec():
 				"articles": REPORT_CHOICES,
 				"frames": REPORT_CHOICES,
 				"clickable": REPORT_CHOICES,
-				"comments": REPORT_CHOICES
+				"comments": REPORT_CHOICES,
+				"revisions": REPORT_CHOICES
 			},
 			"tags": {
 				"invalid-spelling": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠑⣹", "⣏⡑⣹"]),
@@ -220,6 +221,9 @@ def getConfspec():
 				"text-align:start": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ad⣹", ""]),
 				"text-position:sub": "string(default=%s)" % TAG_SEPARATOR.join(["_{", "}"]),
 				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
+				"revision-insertion": "string(default=%s)" % TAG_SEPARATOR.join(["⣏+⣹", "⣏/⣹"]),
+				"revision-deletion": "string(default=%s)" % TAG_SEPARATOR.join(["⣏-⣹", "⣏/⣹"]),
+				"comments": "string(default=%s)" % TAG_SEPARATOR.join(["⣏com⣹", "⣏/⣹"]),
 			}
 		},
 		"quickLaunches": {},

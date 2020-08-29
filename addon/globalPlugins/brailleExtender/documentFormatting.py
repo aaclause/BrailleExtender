@@ -57,6 +57,9 @@ LABELS_FORMATTING = {
 	"text-align:left": _("left alignment"),
 	"text-align:right": _("right alignment"),
 	"text-align:start": _("default alignment"),
+	"revision-insertion": _("inserted revision"),
+	"revision-deletion": _("deleted revision"),
+	"comments": _("notes and comments"),
 }
 
 LABELS_STATES = {
@@ -90,7 +93,8 @@ LABELS_REPORTS = {
 	"articles": N_("Arti&cles"),
 	"frames": N_("Fra&mes"),
 	"clickable": N_("&Clickable"),
-	"comments": N_("Co&mments"),
+	"comments": N_("No&tes and comments"),
+	"revisions": N_("&Editor revisions"),
 	"tables": N_("&Tables"),
 	"tableHeaders": N_("Row/column h&eaders"),
 	"tableCellCoords": N_("Cell c&oordinates")
@@ -550,10 +554,10 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.methodsBtn = bHelper.addButton(
-			self, label=_("&Methods...")
+			self, label=_("Met&hods...")
 		)
 		self.methodsBtn.Bind(wx.EVT_BUTTON, self.onMethodsBtn)
-		self.tagsBtn = bHelper.addButton(self, label="%s..." % _("&Tags"))
+		self.tagsBtn = bHelper.addButton(self, label="Tag&s...")
 		self.tagsBtn.Bind(wx.EVT_BUTTON, self.onTagsBtn)
 		sHelper.addItem(bHelper)
 

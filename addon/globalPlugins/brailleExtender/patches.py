@@ -593,6 +593,32 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			textList.append("⣏%s⣹" % N_("background pattern {pattern}").format(
 				pattern=backgroundPattern))
 
+	if get_report("revisions"):
+		revision_insertion = field.get("revision-insertion")
+		old_revision_insertion = fieldCache.get("revision-insertion")
+		tag_revision_deletion = get_tags(f"revision-deletion")
+		tag_revision_insertion = get_tags(f"revision-insertion")
+		if not old_revision_insertion and revision_insertion:
+			textList.append(tag_revision_insertion.start)
+		elif old_revision_insertion and not revision_insertion:
+			textList.append(tag_revision_insertion.end)
+
+		revision_deletion = field.get("revision-deletion")
+		old_revision_deletion = fieldCache.get("revision-deletion")
+		if not old_revision_deletion and revision_deletion:
+			textList.append(tag_revision_deletion.start)
+		elif old_revision_deletion and not revision_deletion:
+			textList.append(tag_revision_deletion.end)
+
+	if get_report("comments"):
+		comment = field.get("comment")
+		old_comment = fieldCache.get("comment")
+		tag = get_tags("comments")
+		if not old_comment and comment:
+			textList.append(tag.start)
+		elif old_comment and not comment:
+			textList.append(tag.end)
+
 	start_tag_list = []
 	end_tag_list = []
 

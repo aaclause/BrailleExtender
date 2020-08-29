@@ -115,6 +115,8 @@ def get_report(key, simple=True):
 		val = conf["reports"][key]
 		if not simple:
 			return val
+		if conf["plainText"]:
+			return False
 		if val == CHOICE_likeSpeech:
 			normalized_key = normalize_report_key(key)
 			if not normalized_key:
@@ -235,7 +237,7 @@ def decorator(fn, s):
 		formatField = textInfos.FormatField()
 		for field in textInfo_:
 			if isinstance(field, textInfos.FieldCommand) and isinstance(
-				field.field, textInfos.FormatField
+					field.field, textInfos.FormatField
 			):
 				formatField.update(field.field)
 		if logTextInfo:
@@ -359,10 +361,10 @@ def get_method_alignment(desc):
 
 class ManageMethods(wx.Dialog):
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Formatting Method"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Formatting Method"),
 	):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
@@ -454,10 +456,10 @@ class ManageMethods(wx.Dialog):
 class ManageTags(wx.Dialog):
 
 	def __init__(
-		self,
-		parent=None,
-		# Translators: title of a dialog.
-		title=_("Customize formatting tags"),
+			self,
+			parent=None,
+			# Translators: title of a dialog.
+			title=_("Customize formatting tags"),
 	):
 		self.tags = _tags.copy()
 		super().__init__(parent, title=title)
@@ -526,6 +528,11 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		sHelper.addItem(wx.StaticText(self, label=self.panelDescription))
 
+		label = _("Plain text mode (disable all text formatting)")
+		self.plainText = sHelper.addItem(
+			wx.CheckBox(self, label=label))
+		self.plainText.SetValue(conf["plainText"])
+
 		label = _("Process formatting line per line")
 		self.processLinePerLine = sHelper.addItem(
 			wx.CheckBox(self, label=label))
@@ -575,6 +582,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		self.reportFontAttributes.SetFocus()
 
 	def onSave(self):
+		conf["plainText"] = self.plainText.IsChecked()
 		conf["processLinePerLine"] = self.processLinePerLine.IsChecked()
 		conf["lists"]["showLevelItem"] = self.levelItemsList.IsChecked()
 

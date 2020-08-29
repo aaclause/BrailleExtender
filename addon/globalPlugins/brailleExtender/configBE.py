@@ -149,6 +149,7 @@ def getConfspec():
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
 		},
 		"documentFormatting": {
+			"plainText": "boolean(default=False)",
 			"processLinePerLine": "boolean(default=False)",
 			"alignments": {
 				"enabled": "boolean(default=True)",

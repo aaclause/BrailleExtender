@@ -528,14 +528,25 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		documentFormatting.toggle_report(key)
 		documentFormatting.report_formatting(key)
 		utils.refreshBD()
-	script_toggleTextAttributes.__doc__ = _("Toggles font attributes report")
+	script_toggleTextAttributes.__doc__ = _("Toggle font attributes report")
 
 	def script_toggleReportAlignments(self, gesture):
 		key = "alignment"
 		documentFormatting.toggle_report(key)
 		documentFormatting.report_formatting(key)
 		utils.refreshBD()
-	script_toggleReportAlignments.__doc__ = _("Toggles alignments report")
+	script_toggleReportAlignments.__doc__ = _("Toggle alignments report")
+
+	def script_toggle_plain_text(self, gesture):
+		cur = config.conf["brailleExtender"]["documentFormatting"]["plainText"]
+		config.conf["brailleExtender"]["documentFormatting"]["plainText"] = not cur
+		cur = config.conf["brailleExtender"]["documentFormatting"]["plainText"]
+		if cur:
+			ui.message(_("Plain text mode enabled"))
+		else:
+			ui.message(_("Plain text mode disabled"))
+		utils.refreshBD()
+	script_toggle_plain_text.__doc__ = _("Toggle plain text mode")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
 		choices = configBE.focusOrReviewChoices

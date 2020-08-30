@@ -23,6 +23,7 @@ import api
 import braille
 import brailleInput
 import brailleTables
+import colors
 import config
 import controlTypes
 import config

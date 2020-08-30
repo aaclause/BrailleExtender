@@ -6,7 +6,6 @@ import wx
 
 import addonHandler
 import braille
-import colors
 import controlTypes
 import config
 import louis

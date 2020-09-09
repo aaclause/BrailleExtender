@@ -542,7 +542,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("Braille keyboard locked"))
 		else:
 			ui.message(_("Braille keyboard unlocked"))
-	script_toggleLockBrailleKeyboard.__doc__ = _("Toggles braille keyboard lock")
+	script_toggleLockBrailleKeyboard.__doc__ = _("Toggle braille keyboard lock")
 
 	def script_toggleOneHandMode(self, gesture):
 		config.conf["brailleExtender"]["oneHandedMode"]["enabled"] = not config.conf["brailleExtender"]["oneHandedMode"]["enabled"]
@@ -550,7 +550,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("One-handed mode enabled"))
 		else:
 			ui.message(_("One handed mode disabled"))
-	script_toggleOneHandMode.__doc__ = _("Toggles one-handed mode")
+	script_toggleOneHandMode.__doc__ = _("Toggle one-handed mode")
 
 	def script_toggleDots78(self, gesture):
 		self.hideDots78 = not self.hideDots78
@@ -559,7 +559,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			speech.speakMessage(_("Dots 7 and 8 enabled"))
 		utils.refreshBD()
-	script_toggleDots78.__doc__ = _("Toggles showing or hiding dots 7 and 8")
+	script_toggleDots78.__doc__ = _("Toggle showing or hiding dots 7 and 8")
 
 	def script_toggleBRFMode(self, gesture):
 		self.BRFMode = not self.BRFMode
@@ -568,7 +568,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			speech.speakMessage(_("BRF mode enabled"))
 		else:
 			speech.speakMessage(_("BRF mode disabled"))
-	script_toggleBRFMode.__doc__ = _("Toggles BRF mode")
+	script_toggleBRFMode.__doc__ = _("Toggle BRF mode")
 
 	def script_toggleLockModifiers(self, gesture):
 		self.modifiersLocked = not self.modifiersLocked
@@ -576,7 +576,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("Modifier keys locked"))
 		else:
 			ui.message(_("Modifier keys unlocked"))
-	script_toggleLockModifiers.__doc__ = _("Toggles locking modifier keys when using braille input")
+	script_toggleLockModifiers.__doc__ = _("Toggle locking modifier keys when using braille input")
 
 	def script_toggleAttribra(self, gesture):
 		config.conf["brailleExtender"]["features"]["attributes"] = not attribraEnabled()
@@ -585,7 +585,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			speech.speakMessage("Attribra enabled")
 		else:
 			speech.speakMessage("Attribra disabled")
-	script_toggleAttribra.__doc__ = _("Toggles Attribra")
+	script_toggleAttribra.__doc__ = _("Toggle font attributes report")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
 		choices = configBE.focusOrReviewChoices
@@ -595,7 +595,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		newChoice = list(choices.keys())[newChoiceID]
 		config.conf["brailleExtender"]["speakScroll"] = newChoice
 		ui.message(list(choices.values())[newChoiceID].capitalize())
-	script_toggleSpeechScrollFocusMode.__doc__ = _("Toggles between say current line while scrolling options between none, focus mode, review mode, or both")
+	script_toggleSpeechScrollFocusMode.__doc__ = _("Toggle between say current line while scrolling options between none, focus mode, review mode, or both")
 
 	def script_toggleSpeech(self, gesture):
 		if speech.speechMode == speech.speechMode_off:
@@ -655,7 +655,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			speech.speakMessage(_("Advanced braille input mode enabled"))
 		else:
 			speech.speakMessage(_("Advanced braille input mode disabled"))
-	script_advancedInput.__doc__ = _("Toggles advanced input mode")
+	script_advancedInput.__doc__ = _("Toggle advanced input mode")
 
 	def script_undefinedCharsDesc(self, gesture):
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] = not config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"]
@@ -664,7 +664,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			speech.speakMessage(_("Describe undefined characters disabled"))
 		utils.refreshBD()
-	script_undefinedCharsDesc.__doc__ = _("Toggles description of undefined characters")
+	script_undefinedCharsDesc.__doc__ = _("Toggle description of undefined characters")
 
 	def script_position(self, gesture=None):
 		curpos, total = utils.getTextPosition()
@@ -723,7 +723,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.backupShowCursor = config.conf["braille"]["showCursor"]
 			config.conf["braille"]["showCursor"] = False
 		self.autoScrollRunning = not self.autoScrollRunning
-	script_autoScroll.__doc__ = _("Toggles automatic braille scroll")
+	script_autoScroll.__doc__ = _("Toggle automatic braille scroll")
 
 	def autoScroll(self):
 		braille.handler.scrollForward()
@@ -743,7 +743,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_toggleVolume(self, gesture):
 		keyboardHandler.KeyboardInputGesture.fromName('volumemute').send()
 		utils.report_volume_level()
-	script_toggleVolume.__doc__ = _("Toggles sound mute")
+	script_toggleVolume.__doc__ = _("Toggle sound mute")
 
 	@staticmethod
 	def clearMessageFlash():

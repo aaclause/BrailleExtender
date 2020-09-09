@@ -785,24 +785,30 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 def nextLine(self):
 	try:
 		dest = self._readingInfo.copy()
-		moved = dest.move(self._getReadingUnit(), 1)
-		if not moved:
-			if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
-				try:
-					dest.obj.turnPage()
-				except RuntimeError:
-					pass
-				else:
-					dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
+		continue_ = True
+		while continue_:
+			moved = dest.move(self._getReadingUnit(), 1)
+			if not moved:
+				if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
+					try: dest.obj.turnPage()
+					except RuntimeError as err:
+						log.error(err)
+						continue_ = False
+					else: dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
+				else: return
+			if config.conf["brailleExtender"]["skipBlankLinesScroll"]:
+				dest_ = dest.copy()
+				dest_.expand(textInfos.UNIT_LINE)
+				continue_ = not dest_.text.strip()
 			else:
-				return
+				continue_ = False
 		dest.collapse()
 		self._setCursor(dest)
 		queueHandler.queueFunction(
 			queueHandler.eventQueue, speech.cancelSpeech)
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
-	except BaseException:
-		pass
+	except BaseException as err:
+		log.error(err)
 
 #: braille.TextInfoRegion.previousLine()
 
@@ -811,29 +817,34 @@ def previousLine(self, start=False):
 	try:
 		dest = self._readingInfo.copy()
 		dest.collapse()
-		if start:
-			unit = self._getReadingUnit()
-		else:
-			unit = textInfos.UNIT_CHARACTER
-		moved = dest.move(unit, -1)
-		if not moved:
-			if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
-				try:
-					dest.obj.turnPage(previous=True)
-				except RuntimeError:
-					pass
-				else:
-					dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
-					dest.expand(unit)
+		if start: unit = self._getReadingUnit()
+		else: unit = textInfos.UNIT_CHARACTER
+		continue_ = True
+		while continue_:
+			moved = dest.move(unit, -1)
+			if not moved:
+				if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
+					try: dest.obj.turnPage(previous=True)
+					except RuntimeError as err:
+						log.error(err)
+						continue_ = False
+					else:
+						dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
+						dest.expand(unit)
+				else: return
+			if config.conf["brailleExtender"]["skipBlankLinesScroll"]:
+				dest_ = dest.copy()
+				dest_.expand(textInfos.UNIT_LINE)
+				continue_ = not dest_.text.strip()
 			else:
-				return
+				continue_ = False
 		dest.collapse()
 		self._setCursor(dest)
 		queueHandler.queueFunction(
 			queueHandler.eventQueue, speech.cancelSpeech)
 		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
-	except BaseException:
-		pass
+	except BaseException as err:
+		log.error(err)
 
 #: inputCore.InputManager.executeGesture
 

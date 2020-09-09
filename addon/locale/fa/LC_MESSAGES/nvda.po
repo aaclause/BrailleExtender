@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-09-06 13:15+0300\n"
-"PO-Revision-Date: 2020-09-06 13:20+0300\n"
+"POT-Creation-Date: 2020-09-09 11:17+0200\n"
+"PO-Revision-Date: 2020-09-09 11:37+0100\n"
 "Last-Translator: Mohammadreza Rashad <mohammadreza5712@gmail.com>\n"
 "Language-Team: \n"
 "Language: fa\n"
@@ -375,7 +375,7 @@ msgstr "صفحه‌کلیدِ بریلِ %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:545
 #, fuzzy
-msgid "Toggles braille keyboard lock"
+msgid "Toggle braille keyboard lock"
 msgstr "قفل کردنِ صفحه‌کلیدِ بریل"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:550
@@ -387,8 +387,9 @@ msgid "One handed mode disabled"
 msgstr ""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:553
-msgid "Toggles one-handed mode"
-msgstr ""
+#, fuzzy
+msgid "Toggle one-handed mode"
+msgstr "حالتِ BRF را فعال یا غیرِ فعال میکند"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:558
 #, fuzzy
@@ -402,7 +403,7 @@ msgstr "نقطه‌های 7 و 8: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:562
 #, fuzzy
-msgid "Toggles showing or hiding dots 7 and 8"
+msgid "Toggle showing or hiding dots 7 and 8"
 msgstr "مخفی کردن یا نشان دادَنِ نقطه‌های 7 و 8"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:568
@@ -417,7 +418,7 @@ msgstr "حالتِ BRF: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:571
 #, fuzzy
-msgid "Toggles BRF mode"
+msgid "Toggle BRF mode"
 msgstr "حالتِ BRF را فعال یا غیرِ فعال میکند"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:576
@@ -431,18 +432,18 @@ msgid "Modifier keys unlocked"
 msgstr "کلیدهای مبدل"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:579
-msgid "Toggles locking modifier keys when using braille input"
+msgid "Toggle locking modifier keys when using braille input"
 msgstr ""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:588
 #, fuzzy
-msgid "Toggles Attribra"
-msgstr "فعال کردنِ آتریبرا"
+msgid "Toggle font attributes report"
+msgstr "&ویژگی‌های متن"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:598
 #, fuzzy
 msgid ""
-"Toggles between say current line while scrolling options between none, focus "
+"Toggle between say current line while scrolling options between none, focus "
 "mode, review mode, or both"
 msgstr "خواندنِ خطِّ جاری هنگامِ مرور در حالت بازبینی، حالتِ فرمان‌پذیری یا هردو"
 
@@ -540,8 +541,9 @@ msgid "Advanced braille input mode disabled"
 msgstr "یک جدول بریل اضافه کنید"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:658
-msgid "Toggles advanced input mode"
-msgstr ""
+#, fuzzy
+msgid "Toggle advanced input mode"
+msgstr "قانون‌های پیشرفته"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:663
 #, fuzzy
@@ -553,8 +555,9 @@ msgid "Describe undefined characters disabled"
 msgstr ""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:667
-msgid "Toggles description of undefined characters"
-msgstr ""
+#, fuzzy
+msgid "Toggle description of undefined characters"
+msgstr "جلوگیری از نویسه‌های تعریف‌نشده با مقدارِ یونیکُدِ بر مبنای شانزده"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:675
 msgid "No text"
@@ -578,8 +581,9 @@ msgid "Unable to start autoscroll. More info in NVDA log"
 msgstr "نمیتوانم مرورِ خودکار را شروع کنم. اطلاعاتِ بیشتر در لاگِ NVDA"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:726
-msgid "Toggles automatic braille scroll"
-msgstr ""
+#, fuzzy
+msgid "Toggle automatic braille scroll"
+msgstr "بازنشانیِ همه‌ی برچسب‌های نقش‌ها"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:736
 #, fuzzy
@@ -592,8 +596,9 @@ msgid "Decreases the master volume"
 msgstr "صدا را کم میکند"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:746
-msgid "Toggles sound mute"
-msgstr ""
+#, fuzzy
+msgid "Toggle sound mute"
+msgstr "حالتِ BRF را فعال یا غیرِ فعال میکند"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:757
 #, fuzzy
@@ -829,16 +834,28 @@ msgstr "یک ورودیِ دیکشنری اضافه کنید یا دیکشنری
 msgid "Adds an entry in braille dictionary"
 msgstr "یک ورودی به دیکشنریِ بریل اضافه کنید"
 
+#: addon/globalPlugins/brailleExtender/__init__.py:1260
+msgid "Skip blank lines enabled"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1262
+msgid "Skip blank lines disabled"
+msgstr ""
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1263
+msgid "Toggle blank lines during text scrolling"
+msgstr ""
+
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
-#: addon/globalPlugins/brailleExtender/__init__.py:1306
+#: addon/globalPlugins/brailleExtender/__init__.py:1314
 #: addon/globalPlugins/brailleExtender/dictionaries.py:109
 #: addon/globalPlugins/brailleExtender/dictionaries.py:366
 #: addon/globalPlugins/brailleExtender/dictionaries.py:373
 #: addon/globalPlugins/brailleExtender/dictionaries.py:377
 #: addon/globalPlugins/brailleExtender/dictionaries.py:381
 #: addon/globalPlugins/brailleExtender/settings.py:36
-#: addon/globalPlugins/brailleExtender/settings.py:384 buildVars.py:36
+#: addon/globalPlugins/brailleExtender/settings.py:389 buildVars.py:36
 msgid "Braille Extender"
 msgstr "BrailleExtender"
 
@@ -1257,7 +1274,7 @@ msgid "Copyrights and acknowledgements"
 msgstr "حقوقِ تألیف و قدردانی‌ها"
 
 #. Author(s)
-#: addon/globalPlugins/brailleExtender/addonDoc.py:303 buildVars.py:69
+#: addon/globalPlugins/brailleExtender/addonDoc.py:303 buildVars.py:70
 msgid "and other contributors"
 msgstr ""
 
@@ -1415,7 +1432,7 @@ msgstr ""
 #: addon/globalPlugins/brailleExtender/configBE.py:37
 #: addon/globalPlugins/brailleExtender/configBE.py:44
 #: addon/globalPlugins/brailleExtender/configBE.py:58
-#: addon/globalPlugins/brailleExtender/settings.py:422
+#: addon/globalPlugins/brailleExtender/settings.py:427
 msgid "none"
 msgstr "هیچ‌کدام"
 
@@ -1638,7 +1655,7 @@ msgid "Input &method"
 msgstr "تنها ورودی"
 
 #. Translators: Reported when translation didn't succeed due to unsupported input.
-#: addon/globalPlugins/brailleExtender/patches.py:395
+#: addon/globalPlugins/brailleExtender/patches.py:417
 msgid "Unsupported input"
 msgstr ""
 
@@ -1649,7 +1666,7 @@ msgstr "پیاده‌سازیِ این ویژگی در جریان است. از �
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:41
-#: addon/globalPlugins/brailleExtender/settings.py:208
+#: addon/globalPlugins/brailleExtender/settings.py:213
 msgid "General"
 msgstr "عمومی"
 
@@ -1678,277 +1695,282 @@ msgstr "توقف در گفتار هنگامِ مرورِ همان خط"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:67
+msgid "S&kip blank lines during text scrolling"
+msgstr ""
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:71
 #, fuzzy
 msgid "Speech i&nterrupt for unknown gestures"
 msgstr "توقف در گفتار برای فرمان‌های نامشخص"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:71
+#: addon/globalPlugins/brailleExtender/settings.py:75
 #, fuzzy
 msgid "Announce character when &routing braille cursor"
 msgstr "اعلامِ نویسه هنگامِ حرکت با دکمه‌های جانمایی"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:75
+#: addon/globalPlugins/brailleExtender/settings.py:79
 #, fuzzy
 msgid "&Use cursor keys to route cursor in review mode"
 msgstr "استفاده از کلیدهای مکان‌نما برای حرکتِ مکان‌نما در حالتِ بازبینی"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:79
+#: addon/globalPlugins/brailleExtender/settings.py:83
 #, fuzzy
 msgid "&Display time and date infinitely"
 msgstr "نمایشِ ساعت و تاریخ بطور بینهایت"
 
-#: addon/globalPlugins/brailleExtender/settings.py:81
+#: addon/globalPlugins/brailleExtender/settings.py:85
 msgid ""
 "Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, "
 "PowerShell Maxima…)"
 msgstr ""
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:85
+#: addon/globalPlugins/brailleExtender/settings.py:89
 msgid "Announce &volume changes:"
 msgstr ""
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:93
+#: addon/globalPlugins/brailleExtender/settings.py:97
 #, fuzzy
 msgid "Announce m&odifier key presses:"
 msgstr "قفل یا رها کردنِ کلیدهای مبدل"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:99
+#: addon/globalPlugins/brailleExtender/settings.py:103
 #, fuzzy
 msgid "Play &beeps for modifier keys"
 msgstr "پخشِ بوق برای کلیدهای مبدل"
 
-#: addon/globalPlugins/brailleExtender/settings.py:104
+#: addon/globalPlugins/brailleExtender/settings.py:108
 #, fuzzy
 msgid "&Right margin on cells for the active braille display"
 msgstr "برای نمایشگرِ بریلِ فعلی"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:108
+#: addon/globalPlugins/brailleExtender/settings.py:112
 #, fuzzy
 msgid "Braille &keyboard configuration:"
 msgstr "پیکره‌بَندیِ صفحه‌کلیدِ بریل"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:112
+#: addon/globalPlugins/brailleExtender/settings.py:116
 #, fuzzy
 msgid "&Reverse forward and back scroll buttons"
 msgstr "معکوس کردنِ دکمه‌های جلو بردن و عقب بردن"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:116
+#: addon/globalPlugins/brailleExtender/settings.py:120
 #, fuzzy
 msgid "Autoscroll &delay for the active braille display (ms):"
 msgstr "برای نمایشگرِ بریلِ فعلی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:117
+#: addon/globalPlugins/brailleExtender/settings.py:121
 #, fuzzy
 msgid "Preferred &primary braille display:"
 msgstr "میانبری از نمایشگرِ بریل اجرا نشد"
 
-#: addon/globalPlugins/brailleExtender/settings.py:119
+#: addon/globalPlugins/brailleExtender/settings.py:123
 #, fuzzy
 msgid "Preferred &secondary braille display:"
 msgstr "برای نمایشگرِ بریلِ فعلی"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:152
+#: addon/globalPlugins/brailleExtender/settings.py:157
 #, fuzzy
 msgid "Text attributes"
 msgstr "&ویژگی‌های متن"
 
-#: addon/globalPlugins/brailleExtender/settings.py:156
+#: addon/globalPlugins/brailleExtender/settings.py:161
 msgid "Indicate text attributes in braille with &Attribra"
 msgstr ""
 
-#: addon/globalPlugins/brailleExtender/settings.py:158
+#: addon/globalPlugins/brailleExtender/settings.py:163
 msgid "&Selected elements:"
 msgstr ""
 
-#: addon/globalPlugins/brailleExtender/settings.py:160
+#: addon/globalPlugins/brailleExtender/settings.py:165
 #, fuzzy
 msgid "Spelling &errors:"
 msgstr "خطاهای املایی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:162
+#: addon/globalPlugins/brailleExtender/settings.py:167
 #, fuzzy
 msgid "&Bold:"
 msgstr "درشت‌نوشته"
 
-#: addon/globalPlugins/brailleExtender/settings.py:164
+#: addon/globalPlugins/brailleExtender/settings.py:169
 #, fuzzy
 msgid "&Italic:"
 msgstr "کج‌نوشته"
 
-#: addon/globalPlugins/brailleExtender/settings.py:166
+#: addon/globalPlugins/brailleExtender/settings.py:171
 #, fuzzy
 msgid "&Underline:"
 msgstr "تعریف‌نشده"
 
-#: addon/globalPlugins/brailleExtender/settings.py:168
+#: addon/globalPlugins/brailleExtender/settings.py:173
 #, fuzzy
 msgid "Strike&through:"
 msgstr "نمایشِ خط‌خورده با"
 
-#: addon/globalPlugins/brailleExtender/settings.py:170
+#: addon/globalPlugins/brailleExtender/settings.py:175
 msgid "Su&bscripts:"
 msgstr ""
 
-#: addon/globalPlugins/brailleExtender/settings.py:172
+#: addon/globalPlugins/brailleExtender/settings.py:177
 #, fuzzy
 msgid "Su&perscripts:"
 msgstr "نمایشِ بالانوشت با"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:199
+#: addon/globalPlugins/brailleExtender/settings.py:204
 msgid "Role labels"
 msgstr "برچسب‌های نقش"
 
-#: addon/globalPlugins/brailleExtender/settings.py:206
+#: addon/globalPlugins/brailleExtender/settings.py:211
 #, fuzzy
 msgid "Use custom braille &role labels"
 msgstr "بازنشانیِ همه‌ی برچسب‌های نقش‌ها"
 
-#: addon/globalPlugins/brailleExtender/settings.py:208
+#: addon/globalPlugins/brailleExtender/settings.py:213
 #, fuzzy
 msgid "Role &category:"
 msgstr "دسته‌ی نقش‌ها"
 
-#: addon/globalPlugins/brailleExtender/settings.py:208
+#: addon/globalPlugins/brailleExtender/settings.py:213
 msgid "Landmark"
 msgstr "بخش"
 
-#: addon/globalPlugins/brailleExtender/settings.py:208
+#: addon/globalPlugins/brailleExtender/settings.py:213
 msgid "Positive state"
 msgstr "وضعیتِ مثبت"
 
-#: addon/globalPlugins/brailleExtender/settings.py:208
+#: addon/globalPlugins/brailleExtender/settings.py:213
 msgid "Negative state"
 msgstr "وضعیتِ منفی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:212
+#: addon/globalPlugins/brailleExtender/settings.py:217
 #, fuzzy
 msgid "&Role:"
 msgstr "نقش"
 
-#: addon/globalPlugins/brailleExtender/settings.py:214
+#: addon/globalPlugins/brailleExtender/settings.py:219
 #, fuzzy
 msgid "Braille &label"
 msgstr "&جدول‌های بریل"
 
-#: addon/globalPlugins/brailleExtender/settings.py:218
+#: addon/globalPlugins/brailleExtender/settings.py:223
 msgid "&Reset this role label"
 msgstr "&بازنشانیِ این برچسبِ نقش"
 
-#: addon/globalPlugins/brailleExtender/settings.py:220
+#: addon/globalPlugins/brailleExtender/settings.py:225
 msgid "Reset all role labels"
 msgstr "بازنشانیِ همه‌ی برچسب‌های نقش‌ها"
 
-#: addon/globalPlugins/brailleExtender/settings.py:285
+#: addon/globalPlugins/brailleExtender/settings.py:290
 #, fuzzy
 msgid "You have no customized role labels."
 msgstr "شما برچسبِ سفارشی‌شده‌ای ندارید."
 
-#: addon/globalPlugins/brailleExtender/settings.py:288
+#: addon/globalPlugins/brailleExtender/settings.py:293
 #, python-format
 msgid ""
 "You have %d customized role labels defined. Do you want to reset all labels?"
 msgstr ""
 
-#: addon/globalPlugins/brailleExtender/settings.py:289
+#: addon/globalPlugins/brailleExtender/settings.py:294
 #, fuzzy
 msgid "Reset role labels"
 msgstr "بازنشانیِ همه‌ی برچسب‌های نقش‌ها"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:330
+#: addon/globalPlugins/brailleExtender/settings.py:335
 #, fuzzy
 msgid "Braille tables"
 msgstr "&جدول‌های بریل"
 
-#: addon/globalPlugins/brailleExtender/settings.py:335
+#: addon/globalPlugins/brailleExtender/settings.py:340
 msgid "Use the current input table"
 msgstr "استفاده از جدولِ ورودیِ فعلی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:344
+#: addon/globalPlugins/brailleExtender/settings.py:349
 #, fuzzy
 msgid "Prefered braille &tables (press F1 for help):"
 msgstr "جدول‌های بریلِ ترجیحی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:348
+#: addon/globalPlugins/brailleExtender/settings.py:353
 #, fuzzy
 msgid "Input braille table for &keyboard shortcut keys:"
 msgstr "جدول‌های ورودیِ بریل برای کلیدهای میانبر"
 
-#: addon/globalPlugins/brailleExtender/settings.py:350
+#: addon/globalPlugins/brailleExtender/settings.py:355
 msgid "None"
 msgstr "هیچ‌کدام"
 
-#: addon/globalPlugins/brailleExtender/settings.py:353
+#: addon/globalPlugins/brailleExtender/settings.py:358
 #, fuzzy
 msgid "&Secondary output table:"
 msgstr "جدولِ خروجیِ ثانویه برای استفاده"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:357
+#: addon/globalPlugins/brailleExtender/settings.py:362
 #, fuzzy
 msgid "Display &tabs as spaces"
 msgstr "نمایشِ علامت‌های تب به شکلِ فاصله"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:361
+#: addon/globalPlugins/brailleExtender/settings.py:366
 #, fuzzy
 msgid "&Spaces per tab for the active braille display:"
 msgstr "برای نمایشگرِ بریلِ فعلی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:362
+#: addon/globalPlugins/brailleExtender/settings.py:367
 #, fuzzy
 msgid "Alternative and &custom braille tables..."
 msgstr "جدول‌های بریلِ جایگزین و &سفارشی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:383
+#: addon/globalPlugins/brailleExtender/settings.py:388
 msgid ""
 "NVDA must be restarted for changes to take effect. Would you like to restart "
 "now?"
 msgstr ""
 
-#: addon/globalPlugins/brailleExtender/settings.py:421
+#: addon/globalPlugins/brailleExtender/settings.py:426
 msgid "input and output"
 msgstr "ورودی و خروجی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:423
+#: addon/globalPlugins/brailleExtender/settings.py:428
 msgid "input only"
 msgstr "تنها ورودی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:424
+#: addon/globalPlugins/brailleExtender/settings.py:429
 msgid "output only"
 msgstr "تنها خروجی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:455
+#: addon/globalPlugins/brailleExtender/settings.py:460
 #, python-format
 msgid "Table name: %s"
 msgstr "نامِ جدول: %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:456
+#: addon/globalPlugins/brailleExtender/settings.py:461
 #, python-format
 msgid "File name: %s"
 msgstr "نامِ فایل: %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:457
+#: addon/globalPlugins/brailleExtender/settings.py:462
 #, python-format
 msgid "In switches: %s"
 msgstr "در سوییچ‌های: %s"
 
-#: addon/globalPlugins/brailleExtender/settings.py:458
+#: addon/globalPlugins/brailleExtender/settings.py:463
 msgid "About this table"
 msgstr "درباره‌ی این جدول"
 
-#: addon/globalPlugins/brailleExtender/settings.py:461
+#: addon/globalPlugins/brailleExtender/settings.py:466
 #, fuzzy
 msgid ""
 "Braille tables usable from NVDA are listed. Press space, left arrow, or "
@@ -1961,137 +1983,137 @@ msgstr ""
 "همچنین میتوانید از کلیدِ comma برای دریافتِ نامِ فایلِ جدولِ انتخاب‌شده، و کلیدِ "
 "semicolon برای دیدنِ دیگر اطلاعاتِ جدولِ انتخاب‌شده استفاده کنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:463
+#: addon/globalPlugins/brailleExtender/settings.py:468
 msgid "Contextual help"
 msgstr "راهنمای مربوط"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:479
+#: addon/globalPlugins/brailleExtender/settings.py:484
 msgid "Custom braille tables"
 msgstr "جدول‌های سفارشیِ بریل"
 
-#: addon/globalPlugins/brailleExtender/settings.py:489
+#: addon/globalPlugins/brailleExtender/settings.py:494
 #, fuzzy
 msgid "Use a custom table as &input table"
 msgstr "استفاده از یک جدولِ سفارشی به عنوانِ جدولِ ورودی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:490
+#: addon/globalPlugins/brailleExtender/settings.py:495
 #, fuzzy
 msgid "Use a custom table as &output table"
 msgstr "استفاده از یک جدولِ سفارشی به جایِ جدول خروجی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:491
+#: addon/globalPlugins/brailleExtender/settings.py:496
 #, fuzzy
 msgid "&Add a braille table..."
 msgstr "&افزودنِ جدولِ بریل"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:515
+#: addon/globalPlugins/brailleExtender/settings.py:520
 msgid "Add a braille table"
 msgstr "یک جدول بریل اضافه کنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:521
+#: addon/globalPlugins/brailleExtender/settings.py:526
 #, fuzzy
 msgid "Display &name"
 msgstr "نامِ نمایشی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:522
+#: addon/globalPlugins/brailleExtender/settings.py:527
 #, fuzzy
 msgid "&Description"
 msgstr "توضیح"
 
-#: addon/globalPlugins/brailleExtender/settings.py:523
+#: addon/globalPlugins/brailleExtender/settings.py:528
 #, fuzzy
 msgid "&Path"
 msgstr "مسیر"
 
-#: addon/globalPlugins/brailleExtender/settings.py:524
-#: addon/globalPlugins/brailleExtender/settings.py:595
+#: addon/globalPlugins/brailleExtender/settings.py:529
+#: addon/globalPlugins/brailleExtender/settings.py:600
 #, fuzzy
 msgid "&Browse..."
 msgstr "&گشتن"
 
-#: addon/globalPlugins/brailleExtender/settings.py:527
+#: addon/globalPlugins/brailleExtender/settings.py:532
 #, fuzzy
 msgid "This is a &contracted (grade 2) braille table"
 msgstr "جدولِ بریلِ کوتاهنویسی (درجه‌ی ۲)"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:529
+#: addon/globalPlugins/brailleExtender/settings.py:534
 #, fuzzy
 msgid "&Available for:"
 msgstr "در دسترس برای"
 
-#: addon/globalPlugins/brailleExtender/settings.py:529
+#: addon/globalPlugins/brailleExtender/settings.py:534
 msgid "Input and output"
 msgstr "ورودی و خروجی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:529
+#: addon/globalPlugins/brailleExtender/settings.py:534
 msgid "Input only"
 msgstr "تنها ورودی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:529
+#: addon/globalPlugins/brailleExtender/settings.py:534
 msgid "Output only"
 msgstr "تنها خروجی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:535
+#: addon/globalPlugins/brailleExtender/settings.py:540
 #, fuzzy
 msgid "Choose a braille table file"
 msgstr "یک فایلِ جدول انتخاب کنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:535
+#: addon/globalPlugins/brailleExtender/settings.py:540
 msgid "Liblouis table files"
 msgstr "فایل‌های جدولِ لیبلویی"
 
-#: addon/globalPlugins/brailleExtender/settings.py:547
+#: addon/globalPlugins/brailleExtender/settings.py:552
 msgid "Please specify a display name."
 msgstr "لطفا یک نامِ نمایشی تعیین کنید."
 
-#: addon/globalPlugins/brailleExtender/settings.py:547
+#: addon/globalPlugins/brailleExtender/settings.py:552
 msgid "Invalid display name"
 msgstr "نامِ نمایشی معتبر نیست"
 
-#: addon/globalPlugins/brailleExtender/settings.py:551
+#: addon/globalPlugins/brailleExtender/settings.py:556
 #, python-format
 msgid "The specified path is not valid (%s)."
 msgstr "مسیرِ تعیین‌شده معتبر نیست (%s)."
 
-#: addon/globalPlugins/brailleExtender/settings.py:551
+#: addon/globalPlugins/brailleExtender/settings.py:556
 msgid "Invalid path"
 msgstr "مسیرِ نامعتبر"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:579
+#: addon/globalPlugins/brailleExtender/settings.py:584
 #, fuzzy
 msgid "Braille Extender - Quick launches"
 msgstr "BrailleExtender"
 
-#: addon/globalPlugins/brailleExtender/settings.py:590
+#: addon/globalPlugins/brailleExtender/settings.py:595
 #, fuzzy
 msgid "&Gestures:"
 msgstr "&فرمان‌ها"
 
-#: addon/globalPlugins/brailleExtender/settings.py:593
+#: addon/globalPlugins/brailleExtender/settings.py:598
 #, fuzzy
 msgid "&Location (file path, URL or command)"
 msgstr "محل (مسیرِ فایل، نشانیِ اینترنتی یا فرمان)"
 
-#: addon/globalPlugins/brailleExtender/settings.py:596
+#: addon/globalPlugins/brailleExtender/settings.py:601
 msgid "&Remove this gesture"
 msgstr "&حذف این کلید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:597
+#: addon/globalPlugins/brailleExtender/settings.py:602
 msgid "&Add a quick launch"
 msgstr "&افزودنِ راه‌اندازِ سریع"
 
-#: addon/globalPlugins/brailleExtender/settings.py:626
+#: addon/globalPlugins/brailleExtender/settings.py:631
 #, fuzzy
 msgid "Unable to associate this gesture. Please enter another gesture"
 msgstr ""
 "نمیتوانم این کلید را به این فرمان اختصاص بدهم. لطفا حالا کلیدِ دیگری را وارد "
 "کنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:630
+#: addon/globalPlugins/brailleExtender/settings.py:635
 #, fuzzy, python-brace-format
 msgid ""
 "Please enter a gesture from your {configBE.curBD} braille display. Press "
@@ -2100,31 +2122,31 @@ msgstr ""
 "لطفا فرمانی را از نمایشگرِ بریلِ {NAME_BRAILLE_DISPLAY} خود وارد کنید. برای "
 "خروج escape را فشار دهید."
 
-#: addon/globalPlugins/brailleExtender/settings.py:634
+#: addon/globalPlugins/brailleExtender/settings.py:639
 msgid "Out of capture"
 msgstr "خارج از دریافت"
 
-#: addon/globalPlugins/brailleExtender/settings.py:641
+#: addon/globalPlugins/brailleExtender/settings.py:646
 #, fuzzy, python-format
 msgid "The gesture captured is %s"
 msgstr "خُب. کلیدِ دریافت‌شده، %s است"
 
-#: addon/globalPlugins/brailleExtender/settings.py:658
+#: addon/globalPlugins/brailleExtender/settings.py:663
 #, fuzzy
 msgid "Are you sure you wish to delete this shortcut?"
 msgstr "مطمئنید که میخواهید این میانبر را حذف کنید؟"
 
-#: addon/globalPlugins/brailleExtender/settings.py:658
+#: addon/globalPlugins/brailleExtender/settings.py:663
 #, fuzzy
 msgid "Remove shortcut"
 msgstr "میانبرهای معمول"
 
-#: addon/globalPlugins/brailleExtender/settings.py:667
+#: addon/globalPlugins/brailleExtender/settings.py:672
 #, python-brace-format
 msgid "{g} removed"
 msgstr ""
 
-#: addon/globalPlugins/brailleExtender/settings.py:678
+#: addon/globalPlugins/brailleExtender/settings.py:683
 msgid ""
 "Please enter the desired gesture for the new quick launch. Press \"space bar"
 "\" to cancel"
@@ -2132,31 +2154,31 @@ msgstr ""
 "لطفا فرمانِ موردِ نظرتان را برای راه‌اندازِ سریعِ جدید وارد کنید. برای لغو، فاصله "
 "را فشار دهید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:681
+#: addon/globalPlugins/brailleExtender/settings.py:686
 msgid "Don't add a quick launch"
 msgstr "راه‌اندازِ سریع اضافه نکنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:707
+#: addon/globalPlugins/brailleExtender/settings.py:712
 #, python-brace-format
 msgid "Choose a file for {0}"
 msgstr "یک فایل برای {0} انتخاب کنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:720
+#: addon/globalPlugins/brailleExtender/settings.py:725
 msgid "Please create or select a quick launch first"
 msgstr "لطفا اول یک راه‌انداز، ایجاد یا انتخاب کنید"
 
-#: addon/globalPlugins/brailleExtender/settings.py:720
+#: addon/globalPlugins/brailleExtender/settings.py:725
 msgid "Error"
 msgstr "خطا"
 
 #. Translators: title of add-on settings dialog.
-#: addon/globalPlugins/brailleExtender/settings.py:735
+#: addon/globalPlugins/brailleExtender/settings.py:740
 #, fuzzy
 msgid "Braille Extender settings"
 msgstr "منوی تنظیماتِ BrailleExtender"
 
 #. Translators: The profile name for normal configuration
-#: addon/globalPlugins/brailleExtender/settings.py:750
+#: addon/globalPlugins/brailleExtender/settings.py:755
 #, fuzzy
 msgid "normal configuration"
 msgstr "پیکره‌بَندیِ عمومی"
@@ -2445,17 +2467,21 @@ msgid "enter any character from braille keyboard (including emojis)"
 msgstr ""
 
 #: buildVars.py:58
+msgid "skip blank lines during text scrolling"
+msgstr ""
+
+#: buildVars.py:59
 msgid "and much more!"
 msgstr "و بیشتر از این‌ها!"
 
-#: buildVars.py:60
+#: buildVars.py:61
 msgid ""
 "For some braille displays, it extends the braille display commands to provide"
 msgstr ""
 "برای برخی نمایشگرهای بریل، فرمان‌های نمایشگرِ بریل را گسترش میدهد تا موارد زیر "
 "را فراهم کند"
 
-#: buildVars.py:61
+#: buildVars.py:62
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
@@ -2463,11 +2489,11 @@ msgstr ""
 "ارائه‌ی نقشه‌ی کاملی از فرمان‌ها شامل کلید‌های کاربردی (F)، کلیدهای چندرسانه‌ای، "
 "پیمایشِ سریع و غیره"
 
-#: buildVars.py:62
+#: buildVars.py:63
 msgid "emulate modifier keys, and thus any keyboard shortcut"
 msgstr "شبیه‌سازیِ کلیدهای مبدل و همچنین کلیدهای میانبر"
 
-#: buildVars.py:63
+#: buildVars.py:64
 msgid ""
 "offer several keyboard configurations concerning the possibility to input "
 "dots 7 and 8, enter and backspace"
@@ -2475,10 +2501,14 @@ msgstr ""
 "عرضه‌ی چندین پیکربندیِ صفحه‌کلیدی، نظر به امکانِ ورودِ نقطه‌های ۷ و ۸، Enter و "
 "Backspace"
 
-#: buildVars.py:64
+#: buildVars.py:65
 #, fuzzy
 msgid "add actions and quick navigation through a rotor"
 msgstr "عملیات و پیمایشِ سریع از طریق یک گردونه (Rotor)"
+
+#, fuzzy
+#~ msgid "Toggles Attribra"
+#~ msgstr "فعال کردنِ آتریبرا"
 
 #~ msgid "Headings at level 1"
 #~ msgstr "سرنوشتارهای سطحِ ۱"

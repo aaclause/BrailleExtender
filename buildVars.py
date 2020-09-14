@@ -55,6 +55,7 @@ addon_info = {
 		"\n* ", _("type with one-hand from braille keyboard"), ".",
 		"\n* ", _("display undefined characters from braille tables (including emojis) using altenative representations"), ".",
 		"\n* ", _("enter any character from braille keyboard (including emojis)"), ".",
+		"\n* ", _("skip blank lines during text scrolling"), ".",
 		"\n* ", _("and much more!"),
 		"\n\n", _(
 			"For some braille displays, it extends the braille display commands to provide"), ":",

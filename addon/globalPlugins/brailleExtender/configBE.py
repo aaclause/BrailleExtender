@@ -113,6 +113,7 @@ def getConfspec():
 		"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
 		"smartDelayScroll": "boolean(default=False)",
 		"ignoreBlankLineScroll": "boolean(default=True)",
+		"skipBlankLinesScroll": "boolean(default=False)",
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,
 			CHOICE_focus=CHOICE_focus,

@@ -51,4 +51,4 @@ INSERT_BEFORE = 2
 ADDON_ORDER_PROPERTIES = "states,cellCoordsText,value,name,roleText,description,keyboardShortcut,positionInfo,positionInfoLevel,current,placeholder"
 
 ROLE_LABEL = 0
-TAG_LABEL = 1
+FORMATTING_LABEL = 1

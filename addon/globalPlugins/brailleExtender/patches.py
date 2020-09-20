@@ -42,7 +42,7 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
-from .documentFormatting import get_method, get_report, get_tags, N_, normalizeTextAlign
+from .documentFormatting import get_method, get_tags, N_, normalizeTextAlign
 
 import addonHandler
 addonHandler.initTranslation()
@@ -434,6 +434,24 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	if isAtStart:
 		if config.conf["brailleExtender"]["documentFormatting"]["processLinePerLine"]:
 			fieldCache.clear()
+		if formatConfig["reportParagraphIndentation"]:
+			indentLabels = {
+				"left-indent": (N_("left indent"), N_("no left indent")),
+				"right-indent": (N_("right indent"), N_("no right indent")),
+				"hanging-indent": (N_("hanging indent"), N_("no hanging indent")),
+				"first-line-indent": (N_("first line indent"), N_("no first line indent")),
+			}
+			text = []
+			for attr,(label, noVal) in indentLabels.items():
+				newVal = field.get(attr)
+				oldVal = fieldCache.get(attr) if fieldCache else None
+				if (newVal or oldVal is not None) and newVal != oldVal:
+					if newVal:
+						text.append("%s %s" % (label, newVal))
+					else:
+						text.append(noVal)
+			if text:
+				textList.append("⣏%s⣹" % ", ".join(text))
 		if formatConfig["reportLineNumber"]:
 			lineNumber = field.get("line-number")
 			if lineNumber:
@@ -448,7 +466,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# %s is replaced with the level.
 				textList.append((N_("h%s") % headingLevel)+' ')
 
-	if get_report("page"):
+	if formatConfig["reportPage"]:
 		pageNumber = field.get("page-number")
 		oldPageNumber = fieldCache.get(
 			"page-number") if fieldCache is not None else None
@@ -493,7 +511,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				text = N_("%s columns") % (textColumnCount)
 				textList.append("⣏%s⣹" % text)
 
-	if get_report("alignment"):
+	if formatConfig["reportAlignment"]:
 		textAlign = normalizeTextAlign(field.get("text-align"))
 		old_textAlign = normalizeTextAlign(fieldCache.get("text-align"))
 		if textAlign and textAlign != old_textAlign:
@@ -507,7 +525,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		if link and link != oldLink:
 			textList.append(braille.roleLabels[controlTypes.ROLE_LINK]+' ')
 
-	if get_report("style"):
+	if formatConfig["reportStyle"]:
 		style = field.get("style")
 		oldStyle = fieldCache.get("style") if fieldCache is not None else None
 		if style != oldStyle:
@@ -521,7 +539,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# A style is a collection of formatting settings and depends on the application.
 				text = N_("default style")
 			textList.append("⣏%s⣹" % text)
-	if get_report("borderStyle"):
+	if formatConfig["reportBorderStyle"]:
 		borderStyle = field.get("border-style")
 		oldBorderStyle = fieldCache.get(
 			"border-style") if fieldCache is not None else None
@@ -532,7 +550,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# Translators: Indicates that cell does not have border lines.
 				text = N_("no border lines")
 			textList.append("⣏%s⣹" % text)
-	if get_report("fontName"):
+	if formatConfig["reportFontName"]:
 		fontFamily = field.get("font-family")
 		oldFontFamily = fieldCache.get(
 			"font-family") if fieldCache is not None else None
@@ -543,13 +561,13 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			"font-name") if fieldCache is not None else None
 		if fontName and fontName != oldFontName:
 			textList.append("⣏%s⣹" % fontName)
-	if get_report("fontSize"):
+	if formatConfig["reportFontSize"]:
 		fontSize = field.get("font-size")
 		oldFontSize = fieldCache.get(
 			"font-size") if fieldCache is not None else None
 		if fontSize and fontSize != oldFontSize:
 			textList.append("⣏%s⣹" % fontSize)
-	if get_report("color"):
+	if formatConfig["reportColor"]:
 		color = field.get("color")
 		oldColor = fieldCache.get("color") if fieldCache is not None else None
 		backgroundColor = field.get("background-color")
@@ -594,7 +612,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			textList.append("⣏%s⣹" % N_("background pattern {pattern}").format(
 				pattern=backgroundPattern))
 
-	if get_report("revisions"):
+	if formatConfig["reportRevisions"]:
 		revision_insertion = field.get("revision-insertion")
 		old_revision_insertion = fieldCache.get("revision-insertion")
 		tag_revision_deletion = get_tags(f"revision-deletion")
@@ -611,7 +629,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		elif old_revision_deletion and not revision_deletion:
 			textList.append(tag_revision_deletion.end)
 
-	if get_report("comments"):
+	if formatConfig["reportComments"]:
 		comment = field.get("comment")
 		old_comment = fieldCache.get("comment")
 		tag = get_tags("comments")
@@ -624,19 +642,19 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	end_tag_list = []
 
 	tags = []
-	if get_report("fontAttributes"):
+	if formatConfig["reportFontAttributes"]:
 		tags += [tag for tag in [
 			"bold",
 			"italic",
 			"underline",
 			"strikethrough"] if get_method(tag) == CHOICE_tags
 		]
-	if get_report("superscriptsAndSubscripts"):
+	if formatConfig["reportSuperscriptsAndSubscripts"]:
 		tags += [tag for tag in [
 			"text-position:sub",
 			"text-position:super"] if get_method(tag) == CHOICE_tags
 		]
-	if get_report("spellingErrors"):
+	if formatConfig["reportSpellingErrors"]:
 		tags += [tag for tag in [
 			"invalid-spelling",
 			"invalid-grammar"] if get_method(tag) == CHOICE_tags

@@ -82,6 +82,7 @@ LABELS_REPORTS = {
 	"fontSize": N_("Font &size"),
 	"page": N_("&Pages"),
 	"lineNumber": N_("Line &numbers"),
+	"paragraphIndentation": N_("&Paragraph indentation"),
 	"links": N_("Lin&ks"),
 	"headings": N_("&Headings"),
 	"graphics": N_("&Graphics"),

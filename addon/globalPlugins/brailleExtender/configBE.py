@@ -12,7 +12,6 @@ import braille
 import config
 import configobj
 import inputCore
-from . import brailleTablesExt
 from .common import *
 from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
@@ -276,15 +275,9 @@ def loadConf():
 	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
 	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
 		braille.handler.displaySize = backupDisplaySize-limitCellsRight
-	if config.conf["brailleExtender"]["tables"]["shortcuts"] not in brailleTablesExt.listTablesFileName(brailleTablesExt.listUncontractedTables()): config.conf["brailleExtender"]["tables"]["shortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
-	initializePreferredTables()
 	return True
-
-def initializePreferredTables():
-	global inputTables, outputTables
-	inputTables, outputTables = brailleTablesExt.getPreferredTables()
 
 def loadGestures():
 	if gesturesFileExists:

@@ -31,6 +31,7 @@ import speech
 import tones
 import ui
 import virtualBuffers
+import vision
 import wx
 from logHandler import log
 
@@ -242,6 +243,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		nextHandler()
 		return
+
+	def event_nameChange(self, obj, nextHandler):
+		if config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"]:
+			obj = api.getForegroundObject()
+			braille.handler.handleUpdate(obj)
+			vision.handler.handleUpdate(obj, property="name")
+		nextHandler()
 
 	def createMenu(self):
 		self.submenu = wx.Menu()

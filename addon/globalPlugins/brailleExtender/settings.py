@@ -726,6 +726,21 @@ class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 	def askCreateQuickLaunch():
 		gui.messageBox(_("Please create or select a quick launch first"), '%s – %s' % (addonName, _("Error")), wx.OK|wx.ICON_ERROR)
 
+
+class AdvancedDlg(gui.settingsDialogs.SettingsPanel):
+
+	# Translators: title of a dialog.
+	title = _("Advanced")
+
+	def makeSettings(self, settingsSizer):
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		self.refreshForegroundObjNameChange = sHelper.addItem(wx.CheckBox(self, label="event_nameChange: " + _("refresh braille region related to &foreground object")))
+		self.refreshForegroundObjNameChange.SetValue(config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"])
+
+	def onSave(self):
+		config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"] = self.refreshForegroundObjNameChange.IsChecked()
+
+
 class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
@@ -735,6 +750,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AdvancedInputModeDlg,
 		OneHandModeDlg,
 		RoleLabelsDlg,
+		AdvancedDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

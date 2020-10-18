@@ -26,6 +26,7 @@ import speech
 import tones
 import ui
 import virtualBuffers
+import vision
 import wx
 from logHandler import log
 
@@ -193,6 +194,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				braille.handler.message(string)
 		except BaseException as e:
 			log.error(e)
+		nextHandler()
+
+	def event_nameChange(self, obj, nextHandler):
+		if config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"]:
+			obj = api.getForegroundObject()
+			braille.handler.handleUpdate(obj)
+			vision.handler.handleUpdate(obj, property="name")
 		nextHandler()
 
 	def createMenu(self):

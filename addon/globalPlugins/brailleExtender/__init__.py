@@ -246,9 +246,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def event_nameChange(self, obj, nextHandler):
 		if config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"]:
-			obj = api.getForegroundObject()
-			braille.handler.handleUpdate(obj)
-			vision.handler.handleUpdate(obj, property="name")
+			fg = api.getForegroundObject()
+			visibleRegions = list(braille.handler.mainBuffer.visibleRegions)
+			if len(visibleRegions) > 1 and visibleRegions[0].obj is not api.getFocusObject() and visibleRegions[0].obj is not fg:
+				visibleRegions[0].obj = fg
+			braille.handler.handleUpdate(fg)
+			vision.handler.handleUpdate(fg, property="name")
 		nextHandler()
 
 	def createMenu(self):

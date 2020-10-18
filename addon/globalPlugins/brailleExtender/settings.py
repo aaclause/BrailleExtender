@@ -734,7 +734,7 @@ class AdvancedDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.refreshForegroundObjNameChange = sHelper.addItem(wx.CheckBox(self, label="event_nameChange: " + _("refresh braille region related to &foreground object")))
+		self.refreshForegroundObjNameChange = sHelper.addItem(wx.CheckBox(self, label="event_nameChange: " + _("force the refresh of braille region related to &foreground object")))
 		self.refreshForegroundObjNameChange.SetValue(config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"])
 
 	def onSave(self):

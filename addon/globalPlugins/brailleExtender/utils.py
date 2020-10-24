@@ -22,12 +22,13 @@ import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
-from . import brailleTablesExt
+from . import tablegroups
 from .configBE import CHOICE_braille,CHOICE_speech , CHOICE_speechAndBraille
 from .common import INSERT_AFTER, INSERT_BEFORE, REPLACE_TEXT, baseDir
 from . import huc
-from . import dictionaries
+from . import tabledictionaries
 from . import volume_helper
+from logHandler import log
 
 get_mute = volume_helper.get_mute
 get_volume_level = volume_helper.get_volume_level
@@ -143,6 +144,9 @@ def getTextInBraille(t=None, table=[]):
 	if not t.strip(): return ''
 	if not table or "current" in table:
 		table = getCurrentBrailleTables()
+	for i, e in enumerate(table):
+		if '\\' not in e and '/' not in e:
+			table[i] = "%s\\%s" % (brailleTables.TABLES_DIR, e)
 	nt = []
 	res = ''
 	t = t.split("\n")
@@ -332,13 +336,13 @@ def getCurrentBrailleTables(input_=False, brf=False):
 	else:
 		tables = []
 		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.inputTables if input_ else dictionaries.outputTables
+		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += tabledictionaries.inputTables if input_ else tabledictionaries.outputTables
 		if input_:
 			mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
-			group = brailleTablesExt.getGroup(usableIn='i')
+			group = tablegroups.getGroup(usageIn=tablegroups.USAGE_OUTPUT)
 		else:
 			mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-			group = brailleTablesExt.getGroup(usableIn='o')
+			group = tablegroups.getGroup(usageIn=tablegroups.USAGE_OUTPUT)
 		if group:
 			group = group.members
 			group = [f if '\\' in f else os.path.join(r"louis\tables", f) for f in group]

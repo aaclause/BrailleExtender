@@ -10,13 +10,12 @@ import wx
 
 import addonHandler
 import config
-from collections import namedtuple
 from itertools import permutations
 from typing import Optional, List, Tuple
 from brailleTables import listTables
 from logHandler import log
 from . import configBE
-from .common import addonName, baseDir, configDir
+from .common import baseDir, configDir
 
 addonHandler.initTranslation()
 
@@ -25,127 +24,25 @@ POSITION_PREVIOUS = "p"
 POSITION_NEXT = "n"
 POSITIONS = [POSITION_CURRENT, POSITION_PREVIOUS, POSITION_NEXT]
 
-USABLE_INPUT = 0
-USABLE_OUTPUT = 1
-USABLE_BOTH = 2
-USABLE_LIST = [USABLE_INPUT, USABLE_OUTPUT, USABLE_BOTH]
+USAGE_INPUT = 0
+USAGE_OUTPUT = 1
+USAGE_BOTH = 2
+USAGES = [USAGE_INPUT, USAGE_OUTPUT, USAGE_BOTH]
 
-USABLE_LIST_LABELS = {
-	USABLE_INPUT: _("input only"),
-	USABLE_OUTPUT: _("output only"),
-	USABLE_BOTH: _("input and output")
+USAGE_LABELS = {
+	USAGE_INPUT: _("input only"),
+	USAGE_OUTPUT: _("output only"),
+	USAGE_BOTH: _("input and output")
 }
-GroupTables = namedtuple("GroupTables", (
-	"name", "members", "usableIn"))
 
-conf = config.conf["brailleExtender"]["tables"]
-
-def listContractedTables(tables=None):
-	return [table for table in (
-		tables or listTables()) if table.contracted]
+class GroupTable:
+	name = None
+	members: list = []
+	usageIn = None
 
 
-def listUncontractedTables(tables=None):
-	return [table for table in (
-		tables or listTables()) if not table.contracted]
-
-
-def listInputTables(tables=None):
-	return [
-		table for table in (tables or listTables()) if table.input]
-
-
-listUncontractedInputTables = listInputTables(listUncontractedTables())
-
-
-def listOutputTables(tables=None):
-	return [
-		table for table in (tables or listTables()) if table.output]
-
-
-def listTablesFileName(tables=None):
-	return [
-		table.fileName for table in (tables or listTables())]
-
-
-def listTablesDisplayName(tables=None):
-	return [
-		table.displayName for table in (tables or listTables())]
-
-
-def fileName2displayName(l):
-	allTablesFileName = listTablesFileName()
-	o = []
-	for e in l:
-		if e in allTablesFileName:
-			o.append(allTablesFileName.index(e))
-	return [listTables()[e].displayName for e in o]
-
-
-def listTablesIndexes(l, tables):
-	if not tables:
-		tables = listTables()
-	tables = listTablesFileName(tables)
-	return [tables.index(e) for e in l if e in tables]
-
-
-def getPreferredTables() -> Tuple[List[str]]:
-	allInputTablesFileName = listTablesFileName(listInputTables())
-	allOutputTablesFileName = listTablesFileName(listOutputTables())
-	preferredInputTablesFileName = conf["preferredInput"].split(
-		'|')
-	preferredOutputTablesFileName = conf["preferredOutput"].split(
-		'|')
-	inputTables = [
-		fn for fn in preferredInputTablesFileName if fn in allInputTablesFileName]
-	outputTables = [
-		fn for fn in preferredOutputTablesFileName if fn in allOutputTablesFileName]
-	return inputTables, outputTables
-
-
-def getPreferredTablesIndexes() -> List[int]:
-	preferredInputTables, preferredOutputTables = getPreferredTables()
-	inputTables = listTablesFileName(listInputTables())
-	outputTables = listTablesFileName(listOutputTables())
-	o = []
-	for a, b in [(preferredInputTables, inputTables), (preferredOutputTables, outputTables)]:
-		o_ = []
-		for e in a:
-			if e in b:
-				o_.append(b.index(e))
-		o.append(o_)
-	return o
-
-
-def getCustomBrailleTables():
-	return [config.conf["brailleExtender"]["brailleTables"][k].split('|', 3) for k in config.conf["brailleExtender"]["brailleTables"]]
-
-
-def isContractedTable(fileName):
-	return fileName in listTablesFileName(listContractedTables())
-
-
-def getTable(fileName, tables=None):
-	if not tables:
-		tables = listTables()
-	for table in tables:
-		if table.fileName == fileName:
-			return table
-	return None
-
-
-def getTablesFilenameByID(l: List[int], tables=None) -> List[int]:
-	tablesFileName = [table.fileName for table in (tables or listTables())]
-	o = []
-	size = len(tablesFileName)
-	for i in l:
-		if i < size:
-			o.append(tablesFileName[i])
-	return o
-
-
-def translateUsableIn(s):
-	labels = USABLE_LIST_LABELS
+def translateUsageIn(s):
+	labels = USAGE_LABELS
 	return labels[s] if s in labels.keys() else _("None")
 
 
@@ -168,7 +65,7 @@ def initializeGroups():
 	for entry in json_:
 		_groups.append(
 			GroupTables(
-				entry["name"], entry["members"], entry["usableIn"]
+				entry["name"], entry["members"], entry["usageIn"]
 			)
 		)
 
@@ -180,7 +77,7 @@ def saveGroups(entries=None):
 		{
 			"name": entry.name,
 			"members": entry.members,
-			"usableIn": entry.usableIn,
+			"usageIn": entry.usageIn,
 		}
 		for entry in entries
 	]
@@ -192,28 +89,29 @@ def getGroups(plain=True):
 	if plain:
 		return _groups if _groups else []
 	groups = getGroups()
-	i = [group for group in groups if group.usableIn in ['i', 'io']]
-	o = [group for group in groups if group.usableIn in ['o', 'io']]
+	i = [group for group in groups if group.usageIn in [USAGE_INPUT, USAGE_BOTH]]
+	o = [group for group in groups if group.usageIn in [USAGE_OUTPUT, USAGE_BOTH]]
 	return i, o
 
 
-def getAllGroups(usableIn):
-	usableInIndex = USABLE_LIST.index(usableIn)
-	return [None] + tablesToGroups(getPreferredTables()[usableInIndex], usableIn=usableIn) + getGroups(0)[usableInIndex]
+def getAllGroups(usageIn):
+	return [None]
+	usageInIndex = USAGES.index(usageIn)
+	return [None] + tablesToGroups(getPreferredTables()[usageInIndex], usageIn=usageIn) + getGroups(0)[usageInIndex]
 
 
 def getGroup(
-	usableIn,
+	usageIn,
 	position=POSITION_CURRENT,
 	choices=None
 ):
 	global _currentGroup
-	if position not in POSITIONS or usableIn not in USABLE_LIST:
+	if position not in POSITIONS or usageIn not in USAGES:
 		return None
-	usableInIndex = USABLE_LIST.index(usableIn)
-	currentGroup = _currentGroup[usableInIndex]
+	usageInIndex = USAGES.index(usageIn)
+	currentGroup = _currentGroup[usageInIndex]
 	if not choices:
-		choices = getAllGroups(usableIn)
+		choices = getAllGroups(usageIn)
 	if currentGroup not in choices:
 		currentGroup = choices[0]
 	curPos = choices.index(currentGroup)
@@ -225,25 +123,25 @@ def getGroup(
 	return choices[newPos % len(choices)]
 
 
-def setTableOrGroup(usableIn, e, choices=None):
+def setTableOrGroup(usageIn, e, choices=None):
 	global _currentGroup
-	if not usableIn in USABLE_LIST:
+	if not usageIn in USAGES:
 		return False
-	usableInIndex = USABLE_LIST.index(usableIn)
-	choices = getAllGroups(usableIn)
+	usageInIndex = USAGES.index(usageIn)
+	choices = getAllGroups(usageIn)
 	if not e in choices:
 		return False
-	_currentGroup[usableInIndex] = e
+	_currentGroup[usageInIndex] = e
 	return True
 
 
-def tablesToGroups(tables, usableIn):
+def tablesToGroups(tables, usageIn):
 	groups = []
 	for table in tables:
 		groups.append(GroupTables(
-			", ".join(fileName2displayName([table])),
+			", ".join(get_file_name_by_display_name([table])),
 			[table],
-			usableIn
+			usageIn
 		))
 	return groups
 
@@ -286,12 +184,14 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		label = _("Input braille table to use for keyboard shortcuts")
 		try:
 			selectedItem = 0 if conf["shortcuts"] == '?' else listTablesFileName(
-				listUncontractedInputTables
+				get_tables(input=True, contracted=False)
 			).index(conf["shortcuts"]) + 1
 		except ValueError:
 			selectedItem = 0
 		self.inputTableShortcuts = sHelper.addLabeledControl(label, wx.Choice, choices=[
-			currentTableLabel] + listTablesDisplayName(listUncontractedInputTables))
+			currentTableLabel] + get_display_names(
+				get_tables(contracted=False, input=True)
+			))
 		self.inputTableShortcuts.SetSelection(selectedItem)
 
 		self.tablesGroupBtn = bHelper1.addButton(
@@ -345,19 +245,19 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		return super().isValid()
 
 	def onSave(self):
-		inputTables = '|'.join(getTablesFilenameByID(
+		inputTables = '|'.join(get_tables_file_name_by_id(
 			self.inputTables.CheckedItems,
-			listInputTables()
+			get_tables(input=True)
 		))
 		outputTables = '|'.join(
-			getTablesFilenameByID(
+			get_tables_file_name_by_id(
 				self.outputTables.CheckedItems,
-				listOutputTables()
+				get_tables(output=True)
 			)
 		)
-		tablesShortcuts = getTablesFilenameByID(
+		tablesShortcuts = get_tables_file_name_by_id(
 			[self.inputTableShortcuts.GetSelection()-1],
-			listUncontractedInputTables
+			get_tables(contracted=False, input=True)
 		)[0] if self.inputTableShortcuts.GetSelection() > 0 else '?'
 		conf["preferredInput"] = inputTables
 		conf["preferredOutput"] = outputTables
@@ -372,7 +272,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 class TableGroupsDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = f"{addonName} - %s" % _("table groups")
+	title = _("Table groups")
 
 	def makeSettings(self, settingsSizer):
 		self.tmpGroups = getGroups()
@@ -427,8 +327,8 @@ class TableGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		for group in self.tmpGroups:
 			self.groupsList.Append((
 				group.name,
-				", ".join(fileName2displayName(group.members)),
-				translateUsableIn(group.usableIn)
+				", ".join(FileName2displayName(group.members)),
+				translateUsageIn(group.usageIn)
 			))
 
 	def onAddClick(self, event):
@@ -437,8 +337,8 @@ class TableGroupsDlg(gui.settingsDialogs.SettingsDialog):
 			entry = entryDialog.groupEntry
 			self.tmpGroups.append(entry)
 			self.groupsList.Append(
-				(entry.name, ", ".join(fileName2displayName(entry.members)),
-				 translateUsableIn(entry.usableIn))
+				(entry.name, ", ".join(FileName2displayName(entry.members)),
+				 translateUsageIn(entry.usageIn))
 			)
 			index = self.groupsList.GetFirstSelected()
 			while index >= 0:
@@ -457,25 +357,25 @@ class TableGroupsDlg(gui.settingsDialogs.SettingsDialog):
 		entryDialog = GroupEntryDlg(self)
 		entryDialog.name.SetValue(self.tmpGroups[editIndex].name)
 		entryDialog.members.CheckedItems = listTablesIndexes(
-			self.tmpGroups[editIndex].members, listUncontractedInputTables)
+			self.tmpGroups[editIndex].members, get_tables(contracted=False, input=True))
 		entryDialog.refreshOrders()
 		selectedItem = 0
 		try:
 			selectedItem = list(entryDialog.orderPermutations.keys()).index(tuple(
-				listTablesIndexes(self.tmpGroups[editIndex].members, listUncontractedTables())))
+				listTablesIndexes(self.tmpGroups[editIndex].members, get_tables(contracted=False))))
 			entryDialog.order.SetSelection(selectedItem)
 		except ValueError:
 			pass
-		entryDialog.usableIn.CheckedItems = translateUsableInIndexes(
-			self.tmpGroups[editIndex].usableIn)
+		entryDialog.usageIn.CheckedItems = translateUsageInIndexes(
+			self.tmpGroups[editIndex].usageIn)
 		if entryDialog.ShowModal() == wx.ID_OK:
 			entry = entryDialog.groupEntry
 			self.tmpGroups[editIndex] = entry
 			self.groupsList.SetItem(editIndex, 0, entry.name)
 			self.groupsList.SetItem(editIndex, 1, ", ".join(
-				fileName2displayName(entry.members)))
+				FileName2displayName(entry.members)))
 			self.groupsList.SetItem(
-				editIndex, 2, translateUsableIn(entry.usableIn))
+				editIndex, 2, translateUsageIn(entry.usageIn))
 			self.groupsList.SetFocus()
 			entryDialog.Destroy()
 
@@ -515,21 +415,23 @@ class GroupEntryDlg(wx.Dialog):
 		super().__init__(parent, title=title)
 		mainSizer = wx.BoxSizer(wx.VERTICAL)
 		sHelper = gui.guiHelper.BoxSizerHelper(self, orientation=wx.VERTICAL)
-		self.name = sHelper.addLabeledControl(_("Group &name"), wx.TextCtrl)
+		self.name = sHelper.addLabeledControl(_("Group &name:"), wx.TextCtrl)
 		label = _("Group &members")
 		self.members = sHelper.addLabeledControl(
-			label, gui.nvdaControls.CustomCheckListBox, choices=listTablesDisplayName(listUncontractedTables()))
+			label, gui.nvdaControls.CustomCheckListBox, choices=get_display_names(
+				get_tables(contracted=False)
+			))
 		self.members.SetSelection(0)
 		self.members.Bind(wx.EVT_CHECKLISTBOX, lambda s: self.refreshOrders())
-		label = _("Table &order")
+		label = _("Table &order:")
 		self.order = sHelper.addLabeledControl(
 			label, wx.Choice, choices=[])
 		self.refreshOrders()
-		label = _("&Usable in")
-		choices = list(USABLE_LIST_LABELS.values())
-		self.usableIn = sHelper.addItem(wx.RadioBox(self,
+		label = _("&Usable in:")
+		choices = list(USAGE_LABELS.values())
+		self.usageIn = sHelper.addItem(wx.RadioBox(self,
 			label=label, choices=choices))
-		self.usableIn.SetSelection(1)
+		self.usageIn.SetSelection(1)
 		sHelper.addDialogDismissButtons(
 			self.CreateButtonSizer(wx.OK | wx.CANCEL))
 		mainSizer.Add(sHelper.sizer, border=20, flag=wx.ALL)
@@ -539,9 +441,8 @@ class GroupEntryDlg(wx.Dialog):
 		self.name.SetFocus()
 
 	def refreshOrders(self, evt=None):
-		tables = listUncontractedTables()
-		self.orderPermutations = {e: fileName2displayName(getTablesFilenameByID(
-			e, tables)) for e in permutations(self.members.CheckedItems) if e}
+		tables = get_tables(contracted=False)
+		self.orderPermutations = {e: FileName2displayName(get_tables_file_name_by_id(e, tables)) for e in permutations(self.members.CheckedItems) if e}
 		self.order.SetItems([", ".join(e)
 							 for e in self.orderPermutations.values()])
 		self.order.SetSelection(0)
@@ -550,10 +451,10 @@ class GroupEntryDlg(wx.Dialog):
 		name = self.name.Value
 		if not self.orderPermutations:
 			return
-		members = getTablesFilenameByID(list(self.orderPermutations.keys())[
-			self.order.GetSelection()], listUncontractedTables())
-		matches = ['i', 'o']
-		usableIn = ''.join([matches[e] for e in self.usableIn.CheckedItems])
+		members = get_tables_file_name_by_id(list(self.orderPermutations.keys())[
+			self.order.GetSelection()], get_tables(contracted=False))
+		matches = USAGE_LABELS.keys()
+		usageIn = ''.join([matches[e] for e in self.usageIn.CheckedItems])
 		if not name:
 			gui.messageBox(
 				_("Please specify a group name"),
@@ -570,14 +471,14 @@ class GroupEntryDlg(wx.Dialog):
 				self
 			)
 			return self.members.SetFocus()
-		self.groupEntry = GroupTables(name, members, usableIn)
+		self.groupEntry = GroupTables(name, members, usageIn)
 		evt.Skip()
 
 
 class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
-	title = f"{addonName} - %s" % _("Custom braille tables")
+	title = _("Custom braille tables")
 	providedTablesPath = "%s/res/json" % baseDir
 	userTablesPath = "%s/json" % configDir
 
@@ -648,7 +549,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 		if dlg.ShowModal() != wx.ID_OK:
 			dlg.Destroy()
 			return self.path.SetFocus()
-		self.path.SetValue(dlg.GetDirectory() + '\\' + dlg.GetFilename())
+		self.path.SetValue(dlg.GetDirectory() + '\\' + dlg.GetFileName())
 		dlg.Destroy()
 		self.path.SetFocus()
 

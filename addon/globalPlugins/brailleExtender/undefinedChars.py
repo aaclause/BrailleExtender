@@ -6,7 +6,7 @@ import re
 import wx
 
 import addonHandler
-from . import brailleTablesExt
+from . import tablehelper
 import characterProcessing
 import config
 import gui
@@ -309,8 +309,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("&Language"), wx.Choice, choices=values
 		)
 		self.undefinedCharLang.SetSelection(undefinedCharLangID)
-		values = [_("Use the current output table")] + brailleTablesExt.listTablesDisplayName(brailleTablesExt.listOutputTables())
-		keys = ["current"] + brailleTablesExt.listTablesFileName(brailleTablesExt.listOutputTables())
+		values = [_("Use the current output table")] + tablehelper.get_display_names(tablehelper.get_tables(output=True))
+		keys = ["current"] + tablehelper.get_file_names(tablehelper.get_tables(output=True))
 		undefinedCharTable = config.conf["brailleExtender"]["undefinedCharsRepr"][
 			"table"
 		]
@@ -404,7 +404,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			0
 		]
 		undefinedCharTable = self.undefinedCharTable.GetSelection()
-		keys = ["current"] + brailleTablesExt.listTablesFileName(brailleTablesExt.listOutputTables())
+		keys = ["current"] + tablehelper.get_file_names(tablehelper.get_tables(output=True))
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["table"] = keys[
 			undefinedCharTable
 		]

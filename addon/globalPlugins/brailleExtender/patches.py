@@ -37,7 +37,6 @@ addonHandler.initTranslation()
 from . import advancedInputMode
 from . import brailleRegionHelper
 from . import configBE
-from . import dictionaries
 from . import huc
 from . import undefinedChars
 from .oneHandMode import process as processOneHandMode

@@ -46,8 +46,8 @@ config.conf.spec["brailleExtender"] = configBE.getConfspec()
 from . import utils
 from .updateCheck import *
 from . import advancedInputMode
-from . import brailleTablesExt
-from . import dictionaries
+from . import tabledictionaries
+from . import tablegroups
 from . import huc
 from . import patches
 from . import settings
@@ -204,7 +204,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedInputMode.initialize()
-		brailleTablesExt.initializeGroups()
+		tablegroups.initializeGroups()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):
@@ -262,13 +262,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lambda event: wx.CallAfter(gui.mainFrame._popupSettingsDialog, settings.AddonSettingsDialog),
 			item
 		)
-		dictionariesMenu = wx.Menu()
-		self.submenu.AppendSubMenu(dictionariesMenu, _("Table &dictionaries"), _("'Braille dictionaries' menu"))
-		item = dictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
+		tabledictionariesMenu = wx.Menu()
+		self.submenu.AppendSubMenu(tabledictionariesMenu, _("Table &dictionaries"), _("'Braille dictionaries' menu"))
+		item = tabledictionariesMenu.Append(wx.ID_ANY, _("&Global dictionary"), _("A dialog where you can set global dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onDefaultDictionary, item)
-		item = dictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
+		item = tabledictionariesMenu.Append(wx.ID_ANY, _("&Table dictionary"), _("A dialog where you can set table-specific dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTableDictionary, item)
-		item = dictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
+		item = tabledictionariesMenu.Append(wx.ID_ANY, _("Te&mporary dictionary"), _("A dialog where you can set temporary dictionary by adding dictionary entries to the list."))
 		gui.mainFrame.sysTrayIcon.Bind(wx.EVT_MENU, self.onTemporaryDictionary, item)
 
 		item = self.submenu.Append(wx.ID_ANY, _("Advanced &input mode dictionary..."), _("Advanced input mode configuration"))
@@ -296,8 +296,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.InsertMenu(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
 
 	def reloadBrailleTables(self):
-		dictionaries.setDictTables()
-		dictionaries.notifyInvalidTables()
+		tabledictionaries.setDictTables()
+		tabledictionaries.notifyInvalidTables()
 		if config.conf["brailleExtender"]["tabSpace"]:
 			liblouisDef = r"always \t " + ("0-" * configBE.getTabSize()).strip('-')
 			patches.louis.compileString(patches.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
@@ -305,16 +305,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def onDefaultDictionary(evt):
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Global dictionary"), "default")
+		gui.mainFrame._popupSettingsDialog(tabledictionaries.DictionaryDlg, _("Global dictionary"), "default")
 
 	@staticmethod
 	def onTableDictionary(evt):
-		outTable = brailleTablesExt.listTablesDisplayName()[brailleTablesExt.listTablesFileName().index(config.conf["braille"]["translationTable"])]
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Table dictionary ({})").format(outTable), "table")
+		outTable = tablegroups.listTablesDisplayName()[tablegroups.listTablesFileName().index(config.conf["braille"]["translationTable"])]
+		gui.mainFrame._popupSettingsDialog(tabledictionaries.DictionaryDlg, _("Table dictionary ({})").format(outTable), "table")
 
 	@staticmethod
 	def onTemporaryDictionary(evt):
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryDlg, _("Temporary dictionary"), "tmp")
+		gui.mainFrame._popupSettingsDialog(tabledictionaries.DictionaryDlg, _("Temporary dictionary"), "tmp")
 
 	def restorReviewCursorTethering(self):
 		if not self.switchedMode: return
@@ -618,7 +618,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_getTableOverview(self, gesture):
 		inTable = brailleInput.handler.table.displayName
-		ouTable = brailleTablesExt.listTablesDisplayName()[brailleTablesExt.listTablesFileName().index(config.conf["braille"]["translationTable"])]
+		ouTable = tablegroups.listTablesDisplayName()[tablegroups.listTablesFileName().index(config.conf["braille"]["translationTable"])]
 		t = (_(" Input table")+": %s\n"+_("Output table")+": %s\n\n") % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
 		t += utils.getTableOverview()
 		ui.browseableMessage("<pre>%s</pre>" % t, _("Table overview (%s)" % brailleInput.handler.table.displayName), True)
@@ -831,19 +831,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_decreaseDelayAutoScroll.__doc__ = _("Decreases braille autoscroll delay")
 
 	def script_switchInputBrailleTable(self, gesture):
-		usableIn = brailleTablesExt.USABLE_INPUT
-		choices = brailleTablesExt.getPreferredTables()[0] + brailleTablesExt.getGroups(0)[0]
+		usageIn = tablegroups.USAGE_INPUT
+		choices = tablegroups.getPreferredTables()[0] + tablegroups.getGroups(0)[0]
 		if len(choices) < 2:
 			return ui.message(_("Please fill at least two tables and/or groups of tables for this feature first"))
-		newGroup = brailleTablesExt.getGroup(
-			position=brailleTablesExt.POSITION_NEXT,
-			usableIn=usableIn
+		newGroup = tablegroups.getGroup(
+			position=tablegroups.POSITION_NEXT,
+			usageIn=usageIn
 		)
-		res = brailleTablesExt.setTableOrGroup(
-			usableIn=usableIn,
+		res = tablegroups.setTableOrGroup(
+			usageIn=usageIn,
 			e=newGroup
 		)
-		table = brailleTablesExt.getTable(newGroup.members[0] if newGroup else config.conf["braille"]["inputTable"])
+		table = tablegroups.get_table_by_file_name(newGroup.members[0] if newGroup else config.conf["braille"]["inputTable"])
 		if table: brailleInput.handler._table = table
 		if not res: raise RuntimeError("error")
 		self.reloadBrailleTables()
@@ -854,23 +854,23 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_switchInputBrailleTable.__doc__ = _("Switch between your favorite input braille tables including groups")
 
 	def script_switchOutputBrailleTable(self, gesture):
-		usableIn = brailleTablesExt.USABLE_OUTPUT
-		choices = brailleTablesExt.getPreferredTables()[1] + brailleTablesExt.getGroups(0)[1]
+		usageIn = tablegroups.USAGE_OUTPUT
+		choices = tablegroups.getPreferredTables()[1] + tablegroups.getGroups(0)[1]
 		if len(choices) < 2:
 			return ui.message(_("Please fill at least two tables and/or groups of tables for this feature first"))
-		newGroup = brailleTablesExt.getGroup(
-			position=brailleTablesExt.POSITION_NEXT,
-			usableIn=usableIn
+		newGroup = tablegroups.getGroup(
+			position=tablegroups.POSITION_NEXT,
+			usageIn=usageIn
 		)
-		res = brailleTablesExt.setTableOrGroup(
-			usableIn=usableIn,
+		res = tablegroups.setTableOrGroup(
+			usageIn=usageIn,
 			e=newGroup
 		)
 		if not res: raise RuntimeError("error")
 		self.reloadBrailleTables()
 		utils.refreshBD()
 		dictionaries.setDictTables()
-		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else (_("Default") + " (%s)" % brailleTablesExt.fileName2displayName([config.conf["braille"]["translationTable"]])[0]))
+		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else (_("Default") + " (%s)" % tablegroups.fileName2displayName([config.conf["braille"]["translationTable"]])[0]))
 		ui.message(_("Output: %s") % desc)
 
 	script_switchOutputBrailleTable.__doc__ = _("Switch between your favorite output braille tables including groups")
@@ -878,13 +878,13 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_currentBrailleTable(self, gesture):
 		inTable = None
 		ouTable = None
-		if brailleTablesExt.groupEnabled():
-			i = brailleTablesExt.getGroup(brailleTablesExt.USABLE_INPUT)
-			o = brailleTablesExt.getGroup(brailleTablesExt.USABLE_OUTPUT)
+		if tablegroups.groupEnabled():
+			i = tablegroups.getGroup(tablegroups.USAGE_INPUT)
+			o = tablegroups.getGroup(tablegroups.USAGE_OUTPUT)
 			if i: inTable = i.name
 			if o: ouTable = o.name
 		if not inTable: inTable = brailleInput.handler.table.displayName
-		if not ouTable: ouTable = brailleTablesExt.listTablesDisplayName()[brailleTablesExt.listTablesFileName().index(config.conf["braille"]["translationTable"])]
+		if not ouTable: ouTable = tablegroups.listTablesDisplayName()[tablegroups.listTablesFileName().index(config.conf["braille"]["translationTable"])]
 		if ouTable == inTable:
 			braille.handler.message(_("I⣿O:{I}").format(I=inTable, O=ouTable))
 			speech.speakMessage(_("Input and output: {I}.").format(I=inTable, O=ouTable))
@@ -1268,7 +1268,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_addDictionaryEntry(self, gesture):
 		curChar = utils.getCurrentChar()
-		gui.mainFrame._popupSettingsDialog(dictionaries.DictionaryEntryDlg, title=_("Add dictionary entry or see a dictionary"), textPattern=curChar, specifyDict=True)
+		gui.mainFrame._popupSettingsDialog(tabledictionaries.DictionaryEntryDlg, title=_("Add dictionary entry or see a dictionary"), textPattern=curChar, specifyDict=True)
 	script_addDictionaryEntry.__doc__ = _("Adds an entry in braille dictionary")
 
 	def script_toggle_blank_line_scroll(self, gesture):
@@ -1318,7 +1318,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.autoScrollTimer.Stop()
 			config.conf["braille"]["showCursor"] = self.backupShowCursor
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
-		dictionaries.removeTmpDict()
+		tabledictionaries.removeTmpDict()
 		advancedInputMode.terminate()
 		super().terminate()
 

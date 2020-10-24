@@ -20,7 +20,7 @@ import scriptHandler
 import ui
 addonHandler.initTranslation()
 
-from .brailleTablesExt import SettingsDlg as BrailleTablesDlg
+from .tablegroups import SettingsDlg as BrailleTablesDlg
 from . import configBE
 from . import utils
 from .advancedInputMode import SettingsDlg as AdvancedInputModeDlg
@@ -481,7 +481,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
 		AttribraDlg,
-		BrailleTablesDlg,
+		#BrailleTablesDlg,
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,
 		OneHandModeDlg,

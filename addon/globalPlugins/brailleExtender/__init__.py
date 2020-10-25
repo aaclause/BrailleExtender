@@ -54,7 +54,6 @@ from .common import *
 from . import undefinedchars
 
 instanceGP = None
-lang = addoncfg.lang
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
 logTextInfo = False
 rotorItems = [

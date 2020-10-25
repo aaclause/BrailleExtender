@@ -1,4 +1,4 @@
-# dictionaries.py
+# tabledictionaries.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
@@ -15,7 +15,7 @@ import config
 import louis
 
 from collections import namedtuple
-from . import configBE
+from . import addoncfg
 from .common import *
 from . import huc
 
@@ -291,7 +291,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		if specifyDict:
 			# Translators: This is a label for an edit field in add dictionary entry dialog.
 			dictText = _("Dictionary")
-			outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+			outTable = addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])]
 			dictChoices = [_("Global"), _("Table ({})").format(outTable), _("Temporary")]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
@@ -337,7 +337,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 
 	def onSeeEntriesClick(self, evt):
-		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		outTable = addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])]
 		label = [_("Global dictionary"), _("Table dictionary ({})").format(outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()

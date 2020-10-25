@@ -22,14 +22,14 @@ import addonHandler
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
-from .configBE import CHOICE_braille,CHOICE_speech , CHOICE_speechAndBraille
+from .addoncfg import CHOICE_braille,CHOICE_speech , CHOICE_speechAndBraille
 from .common import INSERT_AFTER, INSERT_BEFORE, REPLACE_TEXT, baseDir
 from . import huc
-from . import dictionaries
-from . import volume_helper
+from . import tabledictionaries
+from . import volumehelper
 
-get_mute = volume_helper.get_mute
-get_volume_level = volume_helper.get_volume_level
+get_mute = volumehelper.get_mute
+get_volume_level = volumehelper.get_volume_level
 
 
 def report_volume_level():
@@ -330,7 +330,7 @@ def getCurrentBrailleTables(input_=False, brf=False):
 	else:
 		tables = []
 		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += dictionaries.dictTables
+		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += tabledictionaries.dictTables
 		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
 		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
 		tables += [

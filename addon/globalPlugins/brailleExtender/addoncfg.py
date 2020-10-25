@@ -1,4 +1,4 @@
-# configBE.py
+# addoncfg.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
@@ -13,7 +13,7 @@ import config
 import configobj
 import inputCore
 from .common import *
-from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
+from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 Validator = configobj.validate.Validator
 

@@ -138,9 +138,11 @@ def getTextInBraille(t=None, table=[]):
 	if not t: t = getTextSelection()
 	if not t.strip(): return ''
 	if not table or "current" in table:
-		currentTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		if "current" in table: table[table.index("current")] = currentTable
-		else: table.append(currentTable)
+		table = getCurrentBrailleTables()
+	else:
+		for i, e in enumerate(table):
+			if '\\' not in e and '/' not in e:
+				table[i] = "%s\\%s" % (brailleTables.TABLES_DIR, e)
 	nt = []
 	res = ''
 	t = t.split("\n")

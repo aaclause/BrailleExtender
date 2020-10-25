@@ -1,4 +1,4 @@
-# volume_helper.py
+# volumehelper.py
 # Borrowed from Tim Roberts => See https://mail.python.org/pipermail/python-win32/2014-March/013080.html
 from comtypes import *
 import comtypes.client

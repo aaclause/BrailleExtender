@@ -5,14 +5,13 @@
 
 from .common import *
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
-from .oneHandMode import process as processOneHandMode
-from . import undefinedChars
-from .objectPresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
+from .onehand import process as processOneHandMode
+from . import undefinedchars
 from . import huc
-from . import dictionaries
-from . import configBE
-from . import brailleRegionHelper
-from . import advancedInputMode
+from . import tabledictionaries
+from . import addoncfg
+from . import regionhelper
+from . import advancedinput
 import os
 import sys
 import time
@@ -42,7 +41,8 @@ import textInfos
 import treeInterceptorHandler
 import watchdog
 from logHandler import log
-from .documentFormatting import get_method, get_tags, N_, normalizeTextAlign
+from .documentformatting import get_method, get_tags, N_, normalizeTextAlign
+from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 
 import addonHandler
 addonHandler.initTranslation()
@@ -68,11 +68,11 @@ def sayCurrentLine():
 	global instanceGP
 	if not instanceGP.autoScrollRunning:
 		if getTether() == braille.handler.TETHER_REVIEW:
-			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
+			if config.conf["brailleExtender"]["speakScroll"] in [addoncfg.CHOICE_focusAndReview, addoncfg.CHOICE_review]:
 				scriptHandler.executeScript(
 					globalCommands.commands.script_review_currentLine, None)
 			return
-		if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
+		if config.conf["brailleExtender"]["speakScroll"] in [addoncfg.CHOICE_focusAndReview, addoncfg.CHOICE_focus]:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough:
@@ -118,7 +118,7 @@ def script_braille_routeTo(self, gesture):
 		try:
 			start = region.brailleToRawPos[braille.handler.buffer.windowStartPos +
 										   gesture.routingIndex]
-			_, endBraillePos = brailleRegionHelper.getBraillePosFromRawPos(
+			_, endBraillePos = regionhelper.getBraillePosFromRawPos(
 				region, start)
 			end = region.brailleToRawPos[endBraillePos+1]
 			ch = region.rawText[start:end]
@@ -149,13 +149,13 @@ def update_region(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
-		undefinedChars.undefinedCharProcess(self)
+	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour:
+		undefinedchars.undefinedCharProcess(self)
 	if selectedElementEnabled():
 		d = {
-			configBE.CHOICE_dot7: 64,
-			configBE.CHOICE_dot8: 128,
-			configBE.CHOICE_dots78: 192
+			addoncfg.CHOICE_dot7: 64,
+			addoncfg.CHOICE_dot8: 128,
+			addoncfg.CHOICE_dots78: 192
 		}
 		if config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] in d:
 			addDots = d[config.conf["brailleExtender"]
@@ -165,9 +165,9 @@ def update_region(self):
 				if name in self.rawText:
 					start = self.rawText.index(name)
 					end = start + len(name)-1
-					startBraillePos, _ = brailleRegionHelper.getBraillePosFromRawPos(
+					startBraillePos, _ = regionhelper.getBraillePosFromRawPos(
 						self, start)
-					_, endBraillePos = brailleRegionHelper.getBraillePosFromRawPos(
+					_, endBraillePos = regionhelper.getBraillePosFromRawPos(
 						self, end)
 					self.brailleCells = [cell | addDots if startBraillePos <= pos <=
 										 endBraillePos else cell for pos, cell in enumerate(self.brailleCells)]
@@ -1040,7 +1040,7 @@ def input_(self, dots):
 									for cell in self.bufferBraille[:pos]])
 		if advancedInputStr:
 			res = ''
-			abreviations = advancedInputMode.getReplacements(
+			abreviations = advancedinput.getReplacements(
 				[advancedInputStr])
 			startUnicodeValue = "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭"
 			if not abreviations and advancedInputStr[0] in startUnicodeValue:
@@ -1103,7 +1103,7 @@ def input_(self, dots):
 
 def sendChar(char):
 	nvwave.playWaveFile(os.path.join(
-		configBE.baseDir, "res/sounds/keyPress.wav"))
+		addoncfg.baseDir, "res/sounds/keyPress.wav"))
 	core.callLater(0, brailleInput.handler.sendChars, char)
 	if len(char) == 1:
 		core.callLater(100, speech.speakSpelling, char)

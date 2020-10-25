@@ -1,4 +1,4 @@
-# documentFormatting.py
+# documentformatting.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 import gui
@@ -27,7 +27,7 @@ from .common import (
 	TAG_SEPARATOR,
 	CHOICE_spacing
 )
-from . import brailleRegionHelper
+from . import regionhelper
 addonHandler.initTranslation()
 
 CHOICES_LABELS = {
@@ -258,13 +258,13 @@ def decorator(fn, s):
 					s = (int(IA2Attributes["level"])-1) * \
 						2 if IA2Attributes.get("level") else 0
 					noAlign = True
-					postReplacements.append(brailleRegionHelper.BrailleCellReplacement(
+					postReplacements.append(regionhelper.BrailleCellReplacement(
 						start=0, insertBefore=('⠀' * s)))
 		formatField = self.formatField
 		"""
 		if get_report("indentations") and not noAlign and formatField.get("left-indent"):
 			leftIndent = formatField.get("left-indent").split('.')
-			postReplacements.append(brailleRegionHelper.BrailleCellReplacement(
+			postReplacements.append(regionhelper.BrailleCellReplacement(
 				start=0, insertBefore=('⠀' * abs(int(leftIndent[0])))))
 		"""
 		if not noAlign and get_report("alignments"):
@@ -294,9 +294,9 @@ def decorator(fn, s):
 				if start is not None:
 					s = "⠀" * start
 					postReplacements.append(
-						brailleRegionHelper.BrailleCellReplacement(start=0, insertBefore=s))
+						regionhelper.BrailleCellReplacement(start=0, insertBefore=s))
 		if postReplacements:
-			brailleRegionHelper.replaceBrailleCells(self, postReplacements)
+			regionhelper.replaceBrailleCells(self, postReplacements)
 		if any(self.brlex_typeforms):
 			brlex_typeforms = self.brlex_typeforms
 			lastTypeform = 0
@@ -304,7 +304,7 @@ def decorator(fn, s):
 				if pos in brlex_typeforms:
 					lastTypeform = brlex_typeforms[pos]
 				if lastTypeform:
-					start, end = brailleRegionHelper.getBraillePosFromRawPos(
+					start, end = regionhelper.getBraillePosFromRawPos(
 						self, pos)
 					for pos_ in range(start, end+1):
 						self.brailleCells[pos_] |= lastTypeform

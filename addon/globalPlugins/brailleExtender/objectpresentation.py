@@ -1,5 +1,5 @@
-# objectPresentation.py
-from .documentFormatting import CHOICES_LABELS, get_report
+# objectpresentation.py
+from .documentformatting import CHOICES_LABELS, get_report
 from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES
 import ui
 import queueHandler
@@ -10,7 +10,7 @@ import addonHandler
 import braille
 import controlTypes
 import config
-from . import configBE
+from . import addoncfg
 
 addonHandler.initTranslation()
 
@@ -477,8 +477,8 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 			self.onCategories(None)
 
 	def getOriginalLabel(self, idCategory, idLabel, defaultValue = ''):
-		if "%s:%s" % (idCategory, idLabel) in configBE.backupRoleLabels.keys():
-			return configBE.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
+		if "%s:%s" % (idCategory, idLabel) in addoncfg.backupRoleLabels.keys():
+			return addoncfg.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
 		return self.getLabelFromID(idCategory, idLabel)
 
 	@staticmethod
@@ -503,9 +503,9 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["features"]["roleLabels"] = self.toggleRoleLabels.IsChecked()
 		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
-		configBE.discardRoleLabels()
+		addoncfg.discardRoleLabels()
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
-			configBE.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+			addoncfg.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 			super().onOk(evt)
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):

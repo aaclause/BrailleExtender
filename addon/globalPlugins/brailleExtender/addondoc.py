@@ -1,4 +1,4 @@
-# addonDoc.py
+# addondoc.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
@@ -7,14 +7,14 @@ import addonHandler
 
 addonHandler.initTranslation()
 import braille
-from . import configBE
+from . import addoncfg
 from collections import OrderedDict
 import config
 import cursorManager
 import globalCommands
 import ui
 import random
-from .undefinedChars import CHOICES_LABELS
+from .undefinedchars import CHOICES_LABELS
 from . import utils
 from .common import *
 
@@ -156,8 +156,8 @@ class AddonDoc:
 		doc += "<h2>" + _("Let's explore some features") + "</h2>"
 		doc += getFeaturesDoc()
 		doc += "<h2>" + _("Profile gestures") + "</h2>"
-		if configBE.gesturesFileExists:
-			brailleDisplayDriverName = configBE.curBD.capitalize()
+		if addoncfg.gesturesFileExists:
+			brailleDisplayDriverName = addoncfg.curBD.capitalize()
 			profileName = "default"
 			doc += ''.join([
 				"<p>",
@@ -168,14 +168,14 @@ class AddonDoc:
 			mKB = OrderedDict()
 			mNV = OrderedDict()
 			mW = OrderedDict()
-			for g in configBE.iniGestures["globalCommands.GlobalCommands"].keys():
+			for g in addoncfg.iniGestures["globalCommands.GlobalCommands"].keys():
 				if "kb:" in g:
 					if "+" in g:
-						mW[g] = configBE.iniGestures["globalCommands.GlobalCommands"][g]
+						mW[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 					else:
-						mKB[g] = configBE.iniGestures["globalCommands.GlobalCommands"][g]
+						mKB[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 				else:
-					mNV[g] = configBE.iniGestures["globalCommands.GlobalCommands"][g]
+					mNV[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 			doc += ("<h3>" + _("Simple keys") + " (%d)</h3>") % len(mKB)
 			doc += self.translateLst(mKB)
 			doc += ("<h3>" + _("Usual shortcuts") + " (%d)</h3>") % len(mW)
@@ -183,29 +183,29 @@ class AddonDoc:
 			doc += ("<h3>" + _("Standard NVDA commands") + " (%d)</h3>") % len(mNV)
 			doc += self.translateLst(mNV)
 			doc += "<h3>{} ({})</h3>".format(
-				_("Modifier keys"), len(configBE.iniProfile["modifierKeys"])
+				_("Modifier keys"), len(addoncfg.iniProfile["modifierKeys"])
 			)
-			doc += self.translateLst(configBE.iniProfile["modifierKeys"])
+			doc += self.translateLst(addoncfg.iniProfile["modifierKeys"])
 			doc += "<h3>" + _("Quick navigation keys") + "</h3>"
 			doc += self.translateLst(
-				configBE.iniGestures["cursorManager.CursorManager"]
+				addoncfg.iniGestures["cursorManager.CursorManager"]
 			)
 			doc += "<h3>" + _("Rotor feature") + "</h3>"
 			doc += self.translateLst(
 				{
-					k: configBE.iniProfile["miscs"][k]
-					for k in configBE.iniProfile["miscs"]
+					k: addoncfg.iniProfile["miscs"][k]
+					for k in addoncfg.iniProfile["miscs"]
 					if "rotor" in k.lower()
 				}
-			) + self.translateLst(configBE.iniProfile["rotor"])
+			) + self.translateLst(addoncfg.iniProfile["rotor"])
 			doc += ("<h3>" + _("Gadget commands") + " (%d)</h3>") % (
-				len(configBE.iniProfile["miscs"]) - 2
+                    len(addoncfg.iniProfile["miscs"]) - 2
 			)
 			doc += self.translateLst(
 				OrderedDict(
 					[
-						(k, configBE.iniProfile["miscs"][k])
-						for k in configBE.iniProfile["miscs"]
+						(k, addoncfg.iniProfile["miscs"][k])
+						for k in addoncfg.iniProfile["miscs"]
 						if k not in ["nextRotor", "priorRotor"]
 					]
 				)
@@ -236,7 +236,7 @@ class AddonDoc:
 			# list keyboard layouts
 			if (
 				not instanceGP.noKeyboarLayout()
-				and "keyboardLayouts" in configBE.iniProfile
+				and "keyboardLayouts" in addoncfg.iniProfile
 			):
 				lb = instanceGP.getKeyboardLayouts()
 				doc += "<h3>{}</h3>".format(_("Keyboard configurations provided"))

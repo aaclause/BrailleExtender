@@ -14,7 +14,7 @@ from itertools import permutations
 from typing import Optional, List, Tuple
 from brailleTables import listTables
 from logHandler import log
-from . import configBE
+from . import addoncfg
 from .common import baseDir, configDir
 
 addonHandler.initTranslation()
@@ -211,7 +211,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 		# Translators: label of a dialog.
 		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"),
-												 gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % configBE.curBD]))
+												 gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % addoncfg.curBD]))
 		sHelper.addItem(bHelper1)
 		self.onTabSpace()
 
@@ -263,7 +263,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		conf["preferredOutput"] = outputTables
 		conf["shortcuts"] = tablesShortcuts
 		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
-		config.conf["brailleExtender"][f"tabSize_{configBE.curBD}"] = self.tabSize.Value
+		config.conf["brailleExtender"][f"tabSize_{addoncfg.curBD}"] = self.tabSize.Value
 
 	def postSave(self):
 		pass #initializePreferredTables()
@@ -578,12 +578,12 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	@staticmethod
 	def getAvailableBrailleTables():
 		out = []
-		brailleTablesDir = configBE.TABLES_DIR
+		brailleTablesDir = addoncfg.TABLES_DIR
 		ls = glob.glob(brailleTablesDir+'\\*.ctb')+glob.glob(brailleTablesDir +
 															 '\\*.cti')+glob.glob(brailleTablesDir+'\\*.utb')
 		for i, e in enumerate(ls):
 			e = str(e.split('\\')[-1])
-			if e in configBE.tablesFN or e.lower() in configBE.tablesFN:
+			if e in addoncfg.tablesFN or e.lower() in addoncfg.tablesFN:
 				del ls[i]
 			else:
 				out.append(e.lower())

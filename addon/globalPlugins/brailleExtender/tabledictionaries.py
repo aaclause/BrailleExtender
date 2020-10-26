@@ -1,12 +1,10 @@
-# dictionaries.py
+# tabledictionaries.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-from logHandler import log
-from . import huc
-from . import tablegroups
-from .common import configDir
 from collections import namedtuple
+from logHandler import log
+from . import tablegroups
 import louis
 import config
 import braille
@@ -19,7 +17,10 @@ import unicodedata
 import addonHandler
 addonHandler.initTranslation()
 
+from .common import configDir
+from . import huc
 
+dictTables = []
 TableDictEntry = namedtuple(
 	"TableDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
 OPCODE_SIGN = "sign"

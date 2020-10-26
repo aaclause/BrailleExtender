@@ -1,4 +1,4 @@
-# undefinedChars.py
+# undefinedchars.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 import re
@@ -12,10 +12,10 @@ import config
 import gui
 import louis
 
-from . import huc
+from . import addoncfg, huc
 from .common import *
 from .utils import getCurrentBrailleTables, getTextInBraille
-from . import brailleRegionHelper
+from . import regionhelper
 
 addonHandler.initTranslation()
 
@@ -194,7 +194,7 @@ def getReplacement(text, method=None):
 
 
 def undefinedCharProcess(self):
-	Repl = brailleRegionHelper.BrailleCellReplacement
+	Repl = regionhelper.BrailleCellReplacement
 	fullExtendedDesc = config.conf["brailleExtender"]["undefinedCharsRepr"]["fullExtendedDesc"]
 	startTag = config.conf["brailleExtender"]["undefinedCharsRepr"]["start"]
 	endTag = config.conf["brailleExtender"]["undefinedCharsRepr"]["end"]
@@ -204,7 +204,7 @@ def undefinedCharProcess(self):
 		endTag = getTextInBraille(endTag)
 	lang = config.conf["brailleExtender"]["undefinedCharsRepr"]["lang"]
 	table = [config.conf["brailleExtender"]["undefinedCharsRepr"]["table"]]
-	undefinedCharsPos = [e for e in brailleRegionHelper.findBrailleCellsPattern(
+	undefinedCharsPos = [e for e in regionhelper.findBrailleCellsPattern(
 		self, undefinedCharPattern)]
 	extendedSymbolsRawText = {}
 	if config.conf["brailleExtender"]["undefinedCharsRepr"]["desc"] and config.conf["brailleExtender"]["undefinedCharsRepr"]["extendedDesc"]:
@@ -228,7 +228,7 @@ def undefinedCharProcess(self):
 					for pos in undefinedCharsPos] + replacements
 	if not replacements:
 		return
-	brailleRegionHelper.replaceBrailleCells(self, replacements)
+	regionhelper.replaceBrailleCells(self, replacements)
 
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):

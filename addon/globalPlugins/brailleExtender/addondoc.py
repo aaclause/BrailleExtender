@@ -3,6 +3,7 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 import re
+
 import addonHandler
 
 addonHandler.initTranslation()
@@ -16,7 +17,7 @@ import ui
 import random
 from .undefinedchars import CHOICES_LABELS
 from . import utils
-from .common import *
+from .common import addonDesc, addonGitHubURL, addonName, addonSummary, addonURL, addonVersion, punctuationSeparator
 
 def escape(text):
 	chars = {"&": "&amp;", '"': "&quot;", "'": "&apos;", "<": "&lt;", ">": "&gt;"}

@@ -4,21 +4,23 @@
 
 import os
 import re
+
+import addonHandler
 import api
 import appModuleHandler
 import braille
 import brailleInput
 import brailleTables
 import characterProcessing
-import louis
 import config
 import languageHandler
-import ui
+import louis
 import scriptHandler
 import speech
 import textInfos
+import ui
 from keyboardHandler import KeyboardInputGesture
-import addonHandler
+
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata

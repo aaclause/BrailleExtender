@@ -3,18 +3,19 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 import re
 
-import wx
-
 import addonHandler
 import characterProcessing
 import config
 import gui
+import languageHandler
 import louis
+import wx
+from logHandler import log
 
 from . import addoncfg, huc
-from .common import *
-from .utils import getCurrentBrailleTables, getTextInBraille
 from . import regionhelper
+# from .common import
+from .utils import getCurrentBrailleTables, getTextInBraille
 
 addonHandler.initTranslation()
 
@@ -81,7 +82,7 @@ def setUndefinedChar(t=None):
 def getExtendedSymbolsForString(s: str, lang) -> dict:
 	global extendedSymbols, localesFail
 	if lang in localesFail: lang = "en"
-	if not lang in extendedSymbols.keys():
+	if lang not in extendedSymbols.keys():
 		try:
 			extendedSymbols[lang] = getExtendedSymbols(lang)
 		except LookupError:

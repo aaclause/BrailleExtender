@@ -2,26 +2,24 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2020 André-Abush Clause, released under GPL.
 
-from logHandler import log
 import json
 import os
-import time
 import threading
-import tones
+import time
 import urllib.parse
 import urllib.request
 
-import gui
-import wx
-
 import addonHandler
 import braille
-import core
 import config
+import core
 import globalVars
+import gui
 import languageHandler
 import ui
 import versionInfo
+import wx
+from logHandler import log
 
 addonHandler.initTranslation()
 

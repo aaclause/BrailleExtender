@@ -4,17 +4,16 @@
 # This file modify some functions from core.
 
 import os
+import struct
 import sys
 import time
-import struct
-import winUser
 
+import addonHandler
 import api
 import braille
 import brailleInput
-import brailleTables
-import controlTypes
 import config
+import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -29,20 +28,19 @@ import speech
 import textInfos
 import treeInterceptorHandler
 import watchdog
+import winUser
 from logHandler import log
 
-import addonHandler
-addonHandler.initTranslation()
-
-from . import advancedinput
-from . import regionhelper
 from . import addoncfg
-from . import tabledictionaries
+from . import advancedinput
 from . import huc
+from . import regionhelper
 from . import undefinedchars
+from .common import baseDir
 from .onehand import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
-from .common import *
+
+addonHandler.initTranslation()
 
 instanceGP = None
 
@@ -157,7 +155,7 @@ def update(self):
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 
 
-#: braille.TextInfoRegion.nextLine()
+# braille.TextInfoRegion.nextLine()
 def nextLine(self):
 	try:
 		dest = self._readingInfo.copy()
@@ -185,7 +183,7 @@ def nextLine(self):
 	except BaseException as err:
 		log.error(err)
 
-#: braille.TextInfoRegion.previousLine()
+# braille.TextInfoRegion.previousLine()
 def previousLine(self, start=False):
 	try:
 		dest = self._readingInfo.copy()
@@ -218,7 +216,7 @@ def previousLine(self, start=False):
 	except BaseException as err:
 		log.error(err)
 
-#: inputCore.InputManager.executeGesture
+# inputCore.InputManager.executeGesture
 def executeGesture(self, gesture):
 		"""Perform the action associated with a gesture.
 		@param gesture: The gesture to execute.
@@ -302,7 +300,7 @@ def executeGesture(self, gesture):
 			return
 
 		raise NoInputGestureAction
-#: brailleInput.BrailleInputHandler.sendChars()
+# brailleInput.BrailleInputHandler.sendChars()
 def sendChars(self, chars):
 	"""Sends the provided unicode characters to the system.
 	@param chars: The characters to send to the system.
@@ -326,7 +324,7 @@ def sendChars(self, chars):
 		for ch in chars:
 			focusObj.event_typedCharacter(ch=ch)
 
-#: brailleInput.BrailleInputHandler.emulateKey()
+# brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
 	"""Emulates a key using the keyboard emulation system.
 	If emulation fails (e.g. because of an unknown key), a debug warning is logged
@@ -349,7 +347,7 @@ def emulateKey(self, key, withModifiers=True):
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 
-#: brailleInput.BrailleInputHandler.input()
+# brailleInput.BrailleInputHandler.input()
 def input_(self, dots):
 	"""Handle one cell of braille input.
 	"""
@@ -422,11 +420,11 @@ def input_(self, dots):
 	else:
 		self._reportUntranslated(pos)
 
-#: brailleInput.BrailleInputHandler._translate()
+# brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
 
 def sendChar(char):
-	nvwave.playWaveFile(os.path.join(addoncfg.baseDir, "res/sounds/keyPress.wav"))
+	nvwave.playWaveFile(os.path.join(baseDir, "res/sounds/keyPress.wav"))
 	core.callLater(0, brailleInput.handler.sendChars, char)
 	if len(char) == 1:
 		core.callLater(100, speech.speakSpelling, char)
@@ -498,7 +496,7 @@ def _translate(self, endWord):
 
 	return False
 
-#: louis._createTablesString()
+# louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])

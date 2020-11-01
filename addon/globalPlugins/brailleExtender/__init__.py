@@ -35,6 +35,7 @@ import wx
 from logHandler import log
 
 from . import addoncfg
+config.conf.spec["brailleExtender"] = addoncfg.getConfspec()
 from . import advancedinput
 from . import huc
 from . import patches
@@ -46,7 +47,6 @@ from . import utils
 from .common import addonName, addonURL, addonVersion, punctuationSeparator
 
 addonHandler.initTranslation()
-config.conf.spec["brailleExtender"] = addoncfg.getConfspec()
 
 instanceGP = None
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()

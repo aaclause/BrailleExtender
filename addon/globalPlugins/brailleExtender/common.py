@@ -3,12 +3,10 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 import os
-import struct
 
 import addonHandler
 import globalVars
 import languageHandler
-from logHandler import log
 
 configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
 baseDir = os.path.dirname(__file__)

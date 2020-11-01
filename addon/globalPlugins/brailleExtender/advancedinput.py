@@ -3,17 +3,18 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 import codecs
 import json
+import os
 from collections import namedtuple
-
-import wx
 
 import addonHandler
 import brailleInput
 import brailleTables
 import config
 import gui
+import ui
+import wx
 
-from .common import *
+from .common import configDir
 from .utils import getTextInBraille
 
 addonHandler.initTranslation()

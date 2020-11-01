@@ -2,32 +2,34 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-import glob
 import hashlib
-import os
 import json
-import gui
-import wx
+import os
+
 import addonHandler
 import braille
 import config
 import controlTypes
 import core
+import glob
+import gui
 import inputCore
-import keyLabels
 import queueHandler
 import scriptHandler
 import ui
-addonHandler.initTranslation()
+import wx
+from logHandler import log
 
 from . import addoncfg
 from . import utils
 from .advancedinput import SettingsDlg as AdvancedInputModeDlg
+from .common import addonName, baseDir, punctuationSeparator
 from .documentformatting import SettingsDlg as DocumentFormattingDlg
 from .objectpresentation import SettingsDlg as ObjectPresentationDlg
 from .onehand import SettingsDlg as OneHandModeDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
-from .common import *
+
+addonHandler.initTranslation()
 
 instanceGP = None
 addonSettingsDialogActiveConfigProfile = None
@@ -307,7 +309,7 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 
 	# Translators: title of a dialog.
 	title = "Braille Extender - %s" % _("Custom braille tables")
-	providedTablesPath = "%s/res/brailleTables.json" % addoncfg.baseDir
+	providedTablesPath = "%s/res/brailleTables.json" % baseDir
 	userTablesPath = "%s/brailleTables.json" % addoncfg.configDir
 
 	def makeSettings(self, settingsSizer):
@@ -325,7 +327,7 @@ class CustomBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 	@staticmethod
 	def getBrailleTablesFromJSON(path):
 		if not os.path.exists(path):
-			path = "%s/%s" % (addoncfg.baseDir, path)
+			path = "%s/%s" % (baseDir, path)
 			if not os.path.exists(path): return {}
 		f = open(path)
 		return json.load(f)

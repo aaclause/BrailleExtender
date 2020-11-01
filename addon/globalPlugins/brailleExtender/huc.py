@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 import re
-import sys
-import struct
 
 HUC6_patterns = {
 	"⠿":   (0x000000, 0x1FFFF),

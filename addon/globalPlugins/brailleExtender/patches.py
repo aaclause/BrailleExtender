@@ -3,29 +3,18 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
-from .common import *
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
-from .onehand import process as processOneHandMode
-from . import undefinedchars
-from . import huc
-from . import tabledictionaries
-from . import addoncfg
-from . import regionhelper
-from . import advancedinput
 import os
+import struct
 import sys
 import time
-import struct
-import winUser
 
+import addonHandler
 import api
 import braille
 import brailleInput
-import brailleTables
 import colors
 import config
 import controlTypes
-import config
 import core
 import globalCommands
 import inputCore
@@ -40,13 +29,21 @@ import speech
 import textInfos
 import treeInterceptorHandler
 import watchdog
+import winUser
 from logHandler import log
+
+from . import addoncfg
+from . import advancedinput
+from . import huc
+from . import regionhelper
+from . import undefinedchars
+from .common import baseDir, CHOICE_tags
 from .documentformatting import get_method, get_tags, N_, normalizeTextAlign
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
+from .onehand import process as processOneHandMode
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
 
-import addonHandler
 addonHandler.initTranslation()
-
 
 instanceGP = None
 
@@ -681,7 +678,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 	return braille.TEXT_SEPARATOR.join([x for x in textList if x])
 
 
-#: braille.TextInfoRegion._addTextWithFields
+# braille.TextInfoRegion._addTextWithFields
 def _addTextWithFields(self, info, formatConfig, isSelection=False):
 	shouldMoveCursorToFirstContent = not isSelection and self.cursorPos is not None
 	ctrlFields = []
@@ -797,9 +794,8 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 		self._skipFieldsNotAtStartOfNode = True
 	info.obj._brailleFormatFieldAttributesCache = formatFieldAttributesCache
 
-#: braille.TextInfoRegion.nextLine()
 
-
+# braille.TextInfoRegion.nextLine()
 def nextLine(self):
 	try:
 		dest = self._readingInfo.copy()
@@ -828,9 +824,8 @@ def nextLine(self):
 	except BaseException as err:
 		log.error(err)
 
-#: braille.TextInfoRegion.previousLine()
 
-
+# braille.TextInfoRegion.previousLine()
 def previousLine(self, start=False):
 	try:
 		dest = self._readingInfo.copy()
@@ -864,102 +859,92 @@ def previousLine(self, start=False):
 	except BaseException as err:
 		log.error(err)
 
-#: inputCore.InputManager.executeGesture
 
-
+# inputCore.InputManager.executeGesture
 def executeGesture(self, gesture):
-	"""Perform the action associated with a gesture.
-	@param gesture: The gesture to execute.
-	@type gesture: L{InputGesture}
-	@raise NoInputGestureAction: If there is no action to perform.
-	"""
-	if watchdog.isAttemptingRecovery:
-		# The core is dead, so don't try to perform an action.
-		# This lets gestures pass through unhindered where possible,
-		# as well as stopping a flood of actions when the core revives.
-		raise NoInputGestureAction
+		"""Perform the action associated with a gesture.
+		@param gesture: The gesture to execute.
+		@type gesture: L{InputGesture}
+		@raise NoInputGestureAction: If there is no action to perform.
+		"""
+		if watchdog.isAttemptingRecovery:
+			# The core is dead, so don't try to perform an action.
+			# This lets gestures pass through unhindered where possible,
+			# as well as stopping a flood of actions when the core revives.
+			raise NoInputGestureAction
 
-	script = gesture.script
-	if "brailleDisplayDrivers" in str(type(gesture)):
-		if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.__name__ != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")):
-			return
-		if not config.conf["brailleExtender"]['stopSpeechUnknown'] and gesture.script == None:
-			stopSpeech = False
-		elif hasattr(script, "__func__") and (script.__func__.__name__ in [
+		script = gesture.script
+		if "brailleDisplayDrivers" in str(type(gesture)):
+			if instanceGP.brailleKeyboardLocked and ((hasattr(script, "__func__") and script.__func__.__name__ != "script_toggleLockBrailleKeyboard") or not hasattr(script, "__func__")): return
+			if not config.conf["brailleExtender"]['stopSpeechUnknown'] and gesture.script == None: stopSpeech = False
+			elif hasattr(script, "__func__") and (script.__func__.__name__ in [
 			"script_braille_dots", "script_braille_enter",
 			"script_volumePlus", "script_volumeMinus", "script_toggleVolume",
 			"script_hourDate",
 			"script_ctrl", "script_alt", "script_nvda", "script_win",
-			"script_ctrlAlt", "script_ctrlAltWin", "script_ctrlAltWinShift", "script_ctrlAltShift", "script_ctrlWin", "script_ctrlWinShift", "script_ctrlShift", "script_altWin", "script_altWinShift", "script_altShift", "script_winShift"]
-				or (
+			"script_ctrlAlt", "script_ctrlAltWin", "script_ctrlAltWinShift", "script_ctrlAltShift","script_ctrlWin","script_ctrlWinShift","script_ctrlShift","script_altWin","script_altWinShift","script_altShift","script_winShift"]
+			or (
 				not config.conf["brailleExtender"]['stopSpeechScroll'] and
-				script.__func__.__name__ in ["script_braille_scrollBack", "script_braille_scrollForward"])):
-			stopSpeech = False
+			script.__func__.__name__ in ["script_braille_scrollBack","script_braille_scrollForward"])):
+				stopSpeech = False
+			else: stopSpeech = True
+		else: stopSpeech = True
+
+		focus = api.getFocusObject()
+		if focus.sleepMode is focus.SLEEP_FULL or (focus.sleepMode and not getattr(script, 'allowInSleepMode', False)):
+			raise NoInputGestureAction
+
+		wasInSayAll=False
+		if gesture.isModifier:
+			if not self.lastModifierWasInSayAll:
+				wasInSayAll=self.lastModifierWasInSayAll=sayAllHandler.isRunning()
+		elif self.lastModifierWasInSayAll:
+			wasInSayAll=True
+			self.lastModifierWasInSayAll=False
 		else:
-			stopSpeech = True
-	else:
-		stopSpeech = True
+			wasInSayAll=sayAllHandler.isRunning()
+		if wasInSayAll:
+			gesture.wasInSayAll=True
 
-	focus = api.getFocusObject()
-	if focus.sleepMode is focus.SLEEP_FULL or (focus.sleepMode and not getattr(script, 'allowInSleepMode', False)):
+		speechEffect = gesture.speechEffectWhenExecuted
+		if not stopSpeech: pass
+		elif speechEffect == gesture.SPEECHEFFECT_CANCEL:
+			queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
+		elif speechEffect in (gesture.SPEECHEFFECT_PAUSE, gesture.SPEECHEFFECT_RESUME):
+			queueHandler.queueFunction(queueHandler.eventQueue, speech.pauseSpeech, speechEffect == gesture.SPEECHEFFECT_PAUSE)
+
+		if log.isEnabledFor(log.IO) and not gesture.isModifier:
+			self._lastInputTime = time.time()
+			log.io("Input: %s" % gesture.identifiers[0])
+
+		if self._captureFunc:
+			try:
+				if self._captureFunc(gesture) is False:
+					return
+			except BaseException:
+				log.error("Error in capture function, disabling", exc_info=True)
+				self._captureFunc = None
+
+		if gesture.isModifier:
+			raise NoInputGestureAction
+
+		if config.conf["keyboard"]["speakCommandKeys"] and gesture.shouldReportAsCommand:
+			queueHandler.queueFunction(queueHandler.eventQueue, speech.speakMessage, gesture.displayName)
+
+		gesture.reportExtra()
+
+		# #2953: if an intercepted command Script (script that sends a gesture) is queued
+		# then queue all following gestures (that don't have a script) with a fake script so that they remain in order.
+		if not script and scriptHandler._numIncompleteInterceptedCommandScripts:
+			script=lambda gesture: gesture.send()
+
+
+		if script:
+			scriptHandler.queueScript(script, gesture)
+			return
+
 		raise NoInputGestureAction
-
-	wasInSayAll = False
-	if gesture.isModifier:
-		if not self.lastModifierWasInSayAll:
-			wasInSayAll = self.lastModifierWasInSayAll = sayAllHandler.isRunning()
-	elif self.lastModifierWasInSayAll:
-		wasInSayAll = True
-		self.lastModifierWasInSayAll = False
-	else:
-		wasInSayAll = sayAllHandler.isRunning()
-	if wasInSayAll:
-		gesture.wasInSayAll = True
-
-	speechEffect = gesture.speechEffectWhenExecuted
-	if not stopSpeech:
-		pass
-	elif speechEffect == gesture.SPEECHEFFECT_CANCEL:
-		queueHandler.queueFunction(
-			queueHandler.eventQueue, speech.cancelSpeech)
-	elif speechEffect in (gesture.SPEECHEFFECT_PAUSE, gesture.SPEECHEFFECT_RESUME):
-		queueHandler.queueFunction(
-			queueHandler.eventQueue, speech.pauseSpeech, speechEffect == gesture.SPEECHEFFECT_PAUSE)
-
-	if log.isEnabledFor(log.IO) and not gesture.isModifier:
-		self._lastInputTime = time.time()
-		log.io("Input: %s" % gesture.identifiers[0])
-
-	if self._captureFunc:
-		try:
-			if self._captureFunc(gesture) is False:
-				return
-		except BaseException:
-			log.error("Error in capture function, disabling", exc_info=True)
-			self._captureFunc = None
-
-	if gesture.isModifier:
-		raise NoInputGestureAction
-
-	if config.conf["keyboard"]["speakCommandKeys"] and gesture.shouldReportAsCommand:
-		queueHandler.queueFunction(
-			queueHandler.eventQueue, speech.speakMessage, gesture.displayName)
-
-	gesture.reportExtra()
-
-	# #2953: if an intercepted command Script (script that sends a gesture) is queued
-	# then queue all following gestures (that don't have a script) with a fake script so that they remain in order.
-	if not script and scriptHandler._numIncompleteInterceptedCommandScripts:
-		def script(gesture): return gesture.send()
-
-	if script:
-		scriptHandler.queueScript(script, gesture)
-		return
-
-	raise NoInputGestureAction
-#: brailleInput.BrailleInputHandler.sendChars()
-
-
+# brailleInput.BrailleInputHandler.sendChars()
 def sendChars(self, chars):
 	"""Sends the provided unicode characters to the system.
 	@param chars: The characters to send to the system.
@@ -984,9 +969,8 @@ def sendChars(self, chars):
 		for ch in chars:
 			focusObj.event_typedCharacter(ch=ch)
 
-#: brailleInput.BrailleInputHandler.emulateKey()
 
-
+# brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
 	"""Emulates a key using the keyboard emulation system.
 	If emulation fails (e.g. because of an unknown key), a debug warning is logged
@@ -1011,9 +995,8 @@ def emulateKey(self, key, withModifiers=True):
 			"Unable to emulate %r, falling back to sending unicode characters" % gesture, exc_info=True)
 		self.sendChars(key)
 
-#: brailleInput.BrailleInputHandler.input()
 
-
+# brailleInput.BrailleInputHandler.input()
 def input_(self, dots):
 	"""Handle one cell of braille input.
 	"""
@@ -1097,13 +1080,12 @@ def input_(self, dots):
 	else:
 		self._reportUntranslated(pos)
 
-#: brailleInput.BrailleInputHandler._translate()
+# brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
 
 
 def sendChar(char):
-	nvwave.playWaveFile(os.path.join(
-		addoncfg.baseDir, "res/sounds/keyPress.wav"))
+	nvwave.playWaveFile(os.path.join(baseDir, "res/sounds/keyPress.wav"))
 	core.callLater(0, brailleInput.handler.sendChars, char)
 	if len(char) == 1:
 		core.callLater(100, speech.speakSpelling, char)
@@ -1179,9 +1161,8 @@ def _translate(self, endWord):
 
 	return False
 
-#: louis._createTablesString()
 
-
+# louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])

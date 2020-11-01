@@ -3,17 +3,24 @@
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 import os
-import globalVars
-from collections import OrderedDict
 
 import addonHandler
-addonHandler.initTranslation()
 import braille
 import config
 import configobj
+import globalVars
 import inputCore
-from .common import *
+from logHandler import log
+
+from .common import (
+	addonUpdateChannel, configDir, profilesDir,
+	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
+	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
+	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR
+)
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
+
+addonHandler.initTranslation()
 
 Validator = configobj.validate.Validator
 

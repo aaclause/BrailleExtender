@@ -1,18 +1,19 @@
 # documentformatting.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
-import gui
-import wx
+from collections import namedtuple
 
 import addonHandler
 import braille
-import controlTypes
 import config
+import gui
 import louis
-import ui
 import textInfos
-from collections import namedtuple
+import ui
+import wx
 from logHandler import log
+
+from . import regionhelper
 from .common import (
 	N_,
 	CHOICE_none,
@@ -27,7 +28,7 @@ from .common import (
 	TAG_SEPARATOR,
 	CHOICE_spacing
 )
-from . import regionhelper
+
 addonHandler.initTranslation()
 
 CHOICES_LABELS = {
@@ -255,7 +256,7 @@ def decorator(fn, s):
 				IA2Attributes = curObj.IA2Attributes
 				tag = IA2Attributes.get("tag")
 				if tag == "li":
-					s = (int(IA2Attributes["level"])-1) * \
+					s = (int(IA2Attributes["level"]) - 1) * \
 						2 if IA2Attributes.get("level") else 0
 					noAlign = True
 					postReplacements.append(regionhelper.BrailleCellReplacement(
@@ -306,8 +307,9 @@ def decorator(fn, s):
 				if lastTypeform:
 					start, end = regionhelper.getBraillePosFromRawPos(
 						self, pos)
-					for pos_ in range(start, end+1):
+					for pos_ in range(start, end + 1):
 						self.brailleCells[pos_] |= lastTypeform
+
 	if s == "addTextWithFields":
 		return addTextWithFields_edit
 	if s == "update":
@@ -517,7 +519,6 @@ class ManageTags(wx.Dialog):
 
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
-
 	# Translators: title of a dialog.
 	title = N_("Document formatting")
 	panelDescription = _(

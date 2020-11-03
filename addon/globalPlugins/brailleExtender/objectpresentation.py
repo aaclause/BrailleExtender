@@ -1,16 +1,17 @@
 # objectpresentation.py
-from .documentformatting import CHOICES_LABELS, get_report
-from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES
-import ui
-import queueHandler
-from logHandler import log
-import gui
-import wx
 import addonHandler
 import braille
-import controlTypes
 import config
+import controlTypes
+import gui
+import queueHandler
+import ui
+import wx
+from logHandler import log
+
 from . import addoncfg
+from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES
+from .documentformatting import CHOICES_LABELS, get_report
 
 addonHandler.initTranslation()
 
@@ -51,7 +52,7 @@ def getOrderPropertiesFromConfig():
 	orderProperties = config.conf["brailleExtender"]["objectPresentation"][
 		"orderProperties"
 	].split(",")
-	if len(defaultOrderProperties) >len(orderProperties):
+	if len(defaultOrderProperties) > len(orderProperties):
 		log.error("Missing one or more elements")
 		setOrderProperties(defaultOrderProperties, True)
 		return defaultOrderProperties
@@ -81,8 +82,8 @@ def setOrderProperties(newOrder, save=False):
 
 def selectedElementEnabled():
 	return (
-		config.conf["brailleExtender"]["objectPresentation"]["selectedElement"]
-		!= CHOICE_none
+			config.conf["brailleExtender"]["objectPresentation"]["selectedElement"]
+			!= CHOICE_none
 	)
 
 
@@ -179,19 +180,21 @@ def getPropertiesBraille(**propertyValues) -> str:
 			roleText = N_("h%s") % level
 			level = None
 		elif (
-			role == controlTypes.ROLE_LINK
-			and states
-			and controlTypes.STATE_VISITED in states
+				role == controlTypes.ROLE_LINK
+				and states
+				and controlTypes.STATE_VISITED in states
 		):
 			states = states.copy()
 			states.discard(controlTypes.STATE_VISITED)
 			roleText = N_("vlnk")
-		elif not description and config.conf["brailleExtender"]["documentFormatting"]["cellFormula"] and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo, "formula") and cellInfo.formula:
+		elif not description and config.conf["brailleExtender"]["documentFormatting"][
+			"cellFormula"] and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo,
+																										   "formula") and cellInfo.formula:
 			states = states.copy()
 			states.discard(controlTypes.STATE_HASFORMULA)
 			description = cellInfo.formula
 		elif (
-			name or cellCoordsText or rowNumber or columnNumber
+				name or cellCoordsText or rowNumber or columnNumber
 		) and role in controlTypes.silentRolesOnFocus:
 			roleText = None
 		else:
@@ -295,7 +298,6 @@ def getPropertiesBraille(**propertyValues) -> str:
 
 
 class ManageOrderProperties(gui.settingsDialogs.SettingsDialog):
-
 	# Translators: title of a dialog.
 	title = _("Order Properties")
 
@@ -401,22 +403,25 @@ class ManageOrderProperties(gui.settingsDialogs.SettingsDialog):
 
 
 class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
-
 	# Translators: title of a dialog.
 	title = _("Role/state labels")
 
-	roleLabels  = {}
+	roleLabels = {}
 
 	def makeSettings(self, settingsSizer):
 		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		self.toggleRoleLabels = sHelper.addItem(wx.CheckBox(self, label=_("Use custom braille &role labels")))
 		self.toggleRoleLabels.SetValue(config.conf["brailleExtender"]["features"]["roleLabels"])
-		self.categories = sHelper.addLabeledControl(_("Role &category:"), wx.Choice, choices=[_("General"), _("Landmark"), _("Positive state"), _("Negative state")])
+		self.categories = sHelper.addLabeledControl(_("Role &category:"), wx.Choice,
+													choices=[_("General"), _("Landmark"), _("Positive state"),
+															 _("Negative state")])
 		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)
 		self.categories.SetSelection(0)
 		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
-		self.labels = sHelper2.addLabeledControl(_("&Role:"), wx.Choice, choices=[controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()])
+		self.labels = sHelper2.addLabeledControl(_("&Role:"), wx.Choice,
+												 choices=[controlTypes.roleLabels[int(k)] for k in
+														  braille.roleLabels.keys()])
 		self.labels.Bind(wx.EVT_CHOICE, self.onLabels)
 		self.label = sHelper2.addLabeledControl(_("Braille &label"), wx.TextCtrl)
 		self.label.Bind(wx.EVT_TEXT, self.onLabel)
@@ -439,7 +444,8 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 			labels = [controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()]
 		elif idCategory == 3:
 			labels = [controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()]
-		else: labels = []
+		else:
+			labels = []
 		for iLabel, label in enumerate(labels):
 			idLabel = self.getIDFromIndexes(idCategory, iLabel)
 			actualLabel = self.getLabelFromID(idCategory, idLabel)
@@ -454,8 +460,10 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 		idCategory = self.categories.GetSelection()
 		idLabel = self.getIDFromIndexes(idCategory, self.labels.GetSelection())
 		key = "%d:%s" % (idCategory, idLabel)
-		if key in self.roleLabels.keys(): self.label.SetValue(self.roleLabels[key])
-		else: self.label.SetValue(self.getOriginalLabel(idCategory, idLabel))
+		if key in self.roleLabels.keys():
+			self.label.SetValue(self.roleLabels[key])
+		else:
+			self.label.SetValue(self.getOriginalLabel(idCategory, idLabel))
 
 	def onLabel(self, evt):
 		idCategory = self.categories.GetSelection()
@@ -468,12 +476,16 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 				if key in self.roleLabels.keys():
 					self.roleLabels.pop(key)
 					log.debug("Key %s deleted" % key)
-				else: log.info("Key %s not present" % key)
-			else: self.roleLabels[key] = label
+				else:
+					log.info("Key %s not present" % key)
+			else:
+				self.roleLabels[key] = label
 			actualLabel = self.getLabelFromID(idCategory, idLabel)
 			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-			if label != originalLabel: self.resetLabelBtn.Enable()
-			else: self.resetLabelBtn.Disable()
+			if label != originalLabel:
+				self.resetLabelBtn.Enable()
+			else:
+				self.resetLabelBtn.Disable()
 
 	def onResetLabelBtn(self, event):
 		idCategory = self.categories.GetSelection()
@@ -494,13 +506,13 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 		res = gui.messageBox(
 			_("You have %d customized role labels defined. Do you want to reset all labels?") % nbCustomizedLabels,
 			_("Reset role labels"),
-			wx.YES|wx.NO|wx.ICON_INFORMATION)
+			wx.YES | wx.NO | wx.ICON_INFORMATION)
 		if res == wx.YES:
 			self.roleLabels = {}
 			config.conf["brailleExtender"]["roleLabels"] = {}
 			self.onCategories(None)
 
-	def getOriginalLabel(self, idCategory, idLabel, defaultValue = ''):
+	def getOriginalLabel(self, idCategory, idLabel, defaultValue=''):
 		if "%s:%s" % (idCategory, idLabel) in addoncfg.backupRoleLabels.keys():
 			return addoncfg.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
 		return self.getLabelFromID(idCategory, idLabel)
@@ -513,7 +525,8 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 			if idCategory == 2: return list(braille.positiveStateLabels.keys())[idLabel]
 			if idCategory == 3: return list(braille.negativeStateLabels.keys())[idLabel]
 			raise ValueError("Invalid value for ID category: %d" % idCategory)
-		except BaseException: return -1
+		except BaseException:
+			return -1
 
 	def getLabelFromID(self, idCategory, idLabel):
 		if idCategory == 0: return braille.roleLabels[idLabel]
@@ -522,7 +535,8 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 		if idCategory == 3: return braille.negativeStateLabels[idLabel]
 		raise ValueError("Invalid value: %d" % idCategory)
 
-	def postInit(self): self.toggleRoleLabels.SetFocus()
+	def postInit(self):
+		self.toggleRoleLabels.SetFocus()
 
 	def onOk(self, evt):
 		config.conf["brailleExtender"]["features"]["roleLabels"] = self.toggleRoleLabels.IsChecked()
@@ -531,6 +545,7 @@ class ManageRoleLabels(gui.settingsDialogs.SettingsDialog):
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
 			addoncfg.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 			super().onOk(evt)
+
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 	# Translators: title of a dialog.

@@ -110,6 +110,30 @@ def update_NVDAObjectRegion(self):
 		cellCoordsText=obj.cellCoordsText if get_report("tableCellCoords") else None,
 		cellInfo=cellInfo
 	)
+	try:
+		if getattr(obj, "columnHeaderText"):
+			text += '⣀' + obj.columnHeaderText
+	except NotImplementedError:
+		pass
+	try:
+		if getattr(obj, "rowHeaderText"):
+			text += '⡀' + obj.rowHeaderText
+	except NotImplementedError:
+		pass
+	if not getattr(obj, "cellCoordsText"):
+		coordinates = ""
+		try:
+			if getattr(obj, "rowNumber"):
+				coordinates += N_("r{rowNumber}").format(rowNumber=obj.rowNumber)
+		except NotImplementedError:
+			pass
+		try:
+			if getattr(obj, "columnNumber"):
+				coordinates += N_("c{columnNumber}").format(columnNumber=obj.columnNumber)
+		except NotImplementedError:
+			pass
+		if coordinates:
+			text += ' ' + coordinates
 	if role == controlTypes.ROLE_MATH:
 		import mathPres
 		mathPres.ensureInit()

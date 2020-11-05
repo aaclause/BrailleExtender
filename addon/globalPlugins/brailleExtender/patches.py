@@ -60,6 +60,7 @@ origFunc = {
 	"update": braille.Region.update,
 	"_createTablesString": louis._createTablesString,
 	"update_TextInfoRegion": braille.TextInfoRegion.update,
+	"display": braille.handler.display.display
 }
 
 
@@ -1198,6 +1199,12 @@ def _displayWithCursor(self):
 	self._writeCells(cells)
 
 
+# braille.handler.display.display
+def display(cells):
+	nb = addoncfg.backupDisplaySize - braille.handler.displaySize
+	if nb: cells += [0] * nb
+	origFunc["display"](cells)
+
 # applying patches
 braille.getControlFieldBraille = getControlFieldBraille
 braille.getFormatFieldBraille = getFormatFieldBraille
@@ -1232,3 +1239,5 @@ braille.BrailleHandler.increase_auto_scroll_delay = autoscroll.increase_auto_scr
 braille.BrailleHandler.report_auto_scroll_delay = autoscroll.report_auto_scroll_delay
 braille.BrailleHandler.toggle_auto_scroll = autoscroll.toggle_auto_scroll
 braille.BrailleHandler._displayWithCursor = _displayWithCursor
+if addoncfg.getRightMarginCells():
+	braille.handler.display.display = display

@@ -1222,6 +1222,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
+		braille.handler.display.display = patches.origFunc["display"]
 		self.removeMenu()
 		self.restorReviewCursorTethering()
 		addoncfg.discardRoleLabels()

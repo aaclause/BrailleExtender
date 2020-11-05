@@ -64,7 +64,7 @@ focusOrReviewChoices = dict([
 ])
 
 curBD = braille.handler.display.name
-backupDisplaySize = braille.handler.displaySize
+backupDisplaySize = 0
 backupRoleLabels = {}
 iniGestures = {}
 iniProfile = {}
@@ -264,8 +264,9 @@ def discardRoleLabels():
 	backupRoleLabels = {}
 
 def loadConf():
-	global curBD, gesturesFileExists, profileFileExists, iniProfile
+	global curBD, gesturesFileExists, profileFileExists, iniProfile, backupDisplaySize
 	curBD = braille.handler.display.name
+	backupDisplaySize = 0
 	try: brlextConf = config.conf["brailleExtender"].copy()
 	except configobj.validate.VdtValueError:
 		config.conf["brailleExtender"]["updateChannel"] = "dev"
@@ -274,10 +275,6 @@ def loadConf():
 		config.conf["brailleExtender"]["profile_%s" % curBD] = "default"
 	if "tabSize_%s" % curBD not in brlextConf.keys():
 		config.conf["brailleExtender"]["tabSize_%s" % curBD] = 2
-	if "leftMarginCells__%s" % curBD not in brlextConf.keys():
-		config.conf["brailleExtender"]["leftMarginCells_%s" % curBD] = 0
-	if "rightMarginCells_%s" % curBD not in brlextConf.keys():
-		config.conf["brailleExtender"]["rightMarginCells_%s" % curBD] = 0
 	if "autoScrollDelay_%s" % curBD not in brlextConf.keys():
 		config.conf["brailleExtender"]["autoScrollDelay_%s" % curBD] = 3000
 	if "keyboardLayout_%s" % curBD not in brlextConf.keys():
@@ -294,15 +291,25 @@ def loadConf():
 	else:
 		if curBD != "noBraille": log.warn("%s inaccessible" % confGen)
 		else: log.debug("No braille display present")
-
-	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
-	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
-		braille.handler.displaySize = backupDisplaySize-limitCellsRight
+	setRightMarginCells()
 	if not noUnicodeTable: loadPreferedTables()
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
 	if config.conf["brailleExtender"]["features"]["roleLabels"]:
 		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
+
+def setRightMarginCells():
+	rightMarginCells = getRightMarginCells()
+	if rightMarginCells:
+		global backupDisplaySize
+		if not backupDisplaySize:
+			backupDisplaySize = braille.handler.displaySize
+		displaySize = backupDisplaySize-rightMarginCells
+		if displaySize: braille.handler.displaySize = displaySize
+
+def getRightMarginCells():
+	key = f"rightMarginCells_{curBD}"
+	return int(config.conf["brailleExtender"][key]) if key in config.conf["brailleExtender"]else 0
 
 def loadGestures():
 	if gesturesFileExists:

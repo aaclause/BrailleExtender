@@ -4,6 +4,7 @@
 # This file modify some functions from core.
 
 import os
+import re
 import struct
 import sys
 import time
@@ -126,8 +127,7 @@ def script_braille_routeTo(self, gesture):
 			pass
 
 # braille.Region.update()
-
-
+variationSelectorsPattern = lambda: r"([^\ufe00-\ufe0f])[\ufe00-\ufe0f]\u20E3?"
 def update_region(self):
 	"""Update this region.
 	Subclasses should extend this to update L{rawText}, L{cursorPos}, L{selectionStart} and L{selectionEnd} if necessary.
@@ -137,6 +137,22 @@ def update_region(self):
 	L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are similarly updated based on L{cursorPos}, L{selectionStart} and L{selectionEnd}, respectively.
 	@postcondition: L{brailleCells}, L{brailleCursorPos}, L{brailleSelectionStart} and L{brailleSelectionEnd} are updated and ready for rendering.
 	"""
+	if config.conf["brailleExtender"]["advanced"]["fixCursorPositions"]:
+		pattern = variationSelectorsPattern()
+		matches = re.finditer(pattern, self.rawText)
+		posToRemove = []
+		for match in matches:
+			posToRemove += list(range(match.start() + 1, match.end()))
+		self.rawText = re.sub(pattern, r"\1", self.rawText)
+		if isinstance(self.cursorPos, int):
+			adjustCursor = len(list(filter(lambda e: e<=self.cursorPos, posToRemove)))
+			self.cursorPos -= adjustCursor
+		if isinstance(self.selectionStart, int):
+			adjustCursor = len(list(filter(lambda e: e<=self.selectionStart, posToRemove)))
+			self.selectionStart -= adjustCursor
+		if isinstance(self.selectionEnd, int):
+			adjustCursor = len(list(filter(lambda e: e<=self.selectionEnd, posToRemove)))
+			self.selectionEnd -= adjustCursor
 	mode = louis.dotsIO
 	if config.conf["braille"]["expandAtCursor"] and self.cursorPos is not None:
 		mode |= louis.compbrlAtCursor
@@ -160,6 +176,8 @@ def update_region(self):
 						["objectPresentation"]["selectedElement"]]
 			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
 				name = self.obj.name
+				if config.conf["brailleExtender"]["advanced"]["fixCursorPositions"]:
+					name = re.sub(variationSelectorsPattern(), r"\1", name)
 				if name in self.rawText:
 					start = self.rawText.index(name)
 					end = start + len(name)-1

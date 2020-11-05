@@ -557,10 +557,13 @@ class AdvancedDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+		self.fixCursorPositions = sHelper.addItem(wx.CheckBox(self, label=_("Try to avoid &cursor positions issues with some characters such as variation selectors")))
+		self.fixCursorPositions.SetValue(config.conf["brailleExtender"]["advanced"]["fixCursorPositions"])
 		self.refreshForegroundObjNameChange = sHelper.addItem(wx.CheckBox(self, label="event_nameChange: " + _("force the refresh of braille region related to &foreground object")))
 		self.refreshForegroundObjNameChange.SetValue(config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"])
 
 	def onSave(self):
+		config.conf["brailleExtender"]["advanced"]["fixCursorPositions"] = self.fixCursorPositions.IsChecked()
 		config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"] = self.refreshForegroundObjNameChange.IsChecked()
 
 

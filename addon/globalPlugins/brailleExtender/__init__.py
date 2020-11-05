@@ -26,6 +26,7 @@ import speech
 import tones
 import ui
 import virtualBuffers
+import vision
 import wx
 from logHandler import log
 
@@ -187,6 +188,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def event_foreground(self, obj, nextHandler):
 		if braille.handler._auto_scroll:
 			braille.handler.toggle_auto_scroll()
+		nextHandler()
+
+	def event_nameChange(self, obj, nextHandler):
+		if config.conf["brailleExtender"]["advanced"]["refreshForegroundObjNameChange"]:
+			fg = api.getForegroundObject()
+			visibleRegions = list(braille.handler.mainBuffer.visibleRegions)
+			if len(visibleRegions) > 1 and visibleRegions[0].obj is not api.getFocusObject() and visibleRegions[0].obj is not fg:
+				visibleRegions[0].obj = fg
+			braille.handler.handleUpdate(fg)
+			vision.handler.handleUpdate(fg, property="name")
 		nextHandler()
 
 	def createMenu(self):

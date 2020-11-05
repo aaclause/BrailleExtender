@@ -16,7 +16,8 @@ from .common import (
 	addonUpdateChannel, configDir, profilesDir,
 	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
 	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
-	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR
+	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR,
+	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
 )
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
@@ -114,9 +115,12 @@ def getConfspec():
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"reverseScrollBtns": "boolean(default=False)",
-		"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-		"smartDelayScroll": "boolean(default=False)",
-		"ignoreBlankLineScroll": "boolean(default=True)",
+		"autoScroll": {
+			"delay_%s" % curBD: f"integer(min={MIN_AUTO_SCROLL_DELAY}, default={DEFAULT_AUTO_SCROLL_DELAY}, max={MAX_AUTO_SCROLL_DELAY})",
+			"stepDelayChange": f"integer(min={MIN_STEP_DELAY_CHANGE}, default={DEFAULT_STEP_DELAY_CHANGE}, max={MAX_STEP_DELAY_CHANGE})",
+			"adjustToContent": "boolean(default=False)",
+			"ignoreBlankLine": "boolean(default=True)",
+		},
 		"skipBlankLinesScroll": "boolean(default=False)",
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,

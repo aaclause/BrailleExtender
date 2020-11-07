@@ -7,52 +7,47 @@
 #  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
 #  -> https://github.com/albzan/attribra/
 
-from collections import OrderedDict
-from logHandler import log
-
 import os
-import re
 import subprocess
 import time
-import gui
-import wx
+from collections import OrderedDict
 
 import addonHandler
-addonHandler.initTranslation()
 import api
-import appModuleHandler
 import braille
 import brailleInput
-import brailleTables
 import config
 import controlTypes
-import cursorManager
 import globalCommands
 import globalPluginHandler
 import globalVars
+import gui
 import inputCore
-import keyboardHandler
 import keyLabels
-import languageHandler
+import keyboardHandler
 import scriptHandler
 import speech
-import treeInterceptorHandler
 import tones
 import ui
-import versionInfo
 import virtualBuffers
+import wx
+from logHandler import log
+
 from . import addoncfg
+
 config.conf.spec["brailleExtender"] = addoncfg.getConfspec()
-from . import utils
-from .updatecheck import *
 from . import advancedinput
-from . import tabledictionaries
 from . import tablegroups
 from . import huc
 from . import patches
 from . import settings
-from .common import *
+from . import tabledictionaries
 from . import undefinedchars
+from . import updatecheck
+from . import utils
+from .common import addonName, addonURL, addonVersion, punctuationSeparator
+
+addonHandler.initTranslation()
 
 instanceGP = None
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
@@ -192,7 +187,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			checkingForced = True
 		delayChecking = 86400 if config.conf["brailleExtender"]["updateChannel"] != addoncfg.CHANNEL_stable else 604800
 		if not globalVars.appArgs.secure and config.conf["brailleExtender"]["autoCheckUpdate"] and (checkingForced or (time.time() - config.conf["brailleExtender"]["lastCheckUpdate"]) > delayChecking):
-			checkUpdates(True)
+			updatecheck.checkUpdates(True)
 			config.conf["brailleExtender"]["lastCheckUpdate"] = time.time()
 		self.backup__addTextWithFields = braille.TextInfoRegion._addTextWithFields
 		self.backup__update = braille.TextInfoRegion.update
@@ -796,7 +791,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_checkUpdate(self, gesture):
 		if not globalVars.appArgs.secure:
-			checkUpdates()
+			updatecheck.checkUpdates()
 		return
 	script_checkUpdate.__doc__ = _("Checks for Braille Extender updates")
 
@@ -928,7 +923,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	@staticmethod
 	def onUpdate(evt):
-		return checkUpdates()
+		return updatecheck.checkUpdates()
 
 	@staticmethod
 	def onWebsite(evt):

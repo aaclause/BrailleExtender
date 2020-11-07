@@ -1,9 +1,10 @@
 # volumehelper.py
 # Borrowed from Tim Roberts => See https://mail.python.org/pipermail/python-win32/2014-March/013080.html
-from comtypes import *
-import comtypes.client
 from ctypes import POINTER
 from ctypes.wintypes import DWORD, BOOL
+
+import comtypes.client
+from comtypes import c_float, COMMETHOD, GUID, HRESULT, IUnknown, STDMETHOD
 
 MMDeviceApiLib = \
 	GUID('{2FDAAFA3-7523-4F66-9957-9D5E7FE698F6}')

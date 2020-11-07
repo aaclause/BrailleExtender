@@ -2,31 +2,33 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-import glob
 import hashlib
-import os
 import json
-import gui
-import wx
+import os
+
 import addonHandler
 import braille
 import config
 import controlTypes
 import core
+import glob
+import gui
 import inputCore
-import keyLabels
 import queueHandler
 import scriptHandler
 import ui
-addonHandler.initTranslation()
+import wx
+from logHandler import log
 
 from . import addoncfg
 from . import utils
 from .advancedinput import SettingsDlg as AdvancedInputModeDlg
+from .common import addonName, baseDir, punctuationSeparator
 from .onehand import SettingsDlg as OneHandModeDlg
 from .tablegroups import SettingsDlg as BrailleTablesDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
-from .common import *
+
+addonHandler.initTranslation()
 
 instanceGP = None
 addonSettingsDialogActiveConfigProfile = None
@@ -329,6 +331,7 @@ class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
 		addoncfg.discardRoleLabels()
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
 			addoncfg.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+
 
 class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
 

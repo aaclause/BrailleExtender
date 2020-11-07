@@ -2,19 +2,21 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-from collections import namedtuple
-from logHandler import log
-from . import tablegroups
-import louis
-import config
-import braille
-import gui
-import wx
 import os.path
 import re
 import unicodedata
+from collections import namedtuple
 
 import addonHandler
+import braille
+import config
+import gui
+import louis
+import wx
+from logHandler import log
+
+from . import tablegroups
+
 addonHandler.initTranslation()
 
 from .common import configDir

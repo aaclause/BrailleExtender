@@ -483,7 +483,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
 		AttribraDlg,
-		#BrailleTablesDlg,
+		BrailleTablesDlg,
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,
 		OneHandModeDlg,

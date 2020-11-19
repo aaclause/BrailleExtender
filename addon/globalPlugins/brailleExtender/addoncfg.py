@@ -130,6 +130,7 @@ def getConfspec():
 			CHOICE_review=CHOICE_review,
 			CHOICE_focusAndReview=CHOICE_focusAndReview
 		),
+		"smartCapsLock": "boolean(default=True)",
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",

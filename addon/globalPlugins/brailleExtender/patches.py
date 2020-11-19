@@ -476,6 +476,14 @@ def _translate(self, endWord):
 			else:
 				self.emulateKey(newText)
 		else:
+			if config.conf["brailleExtender"]["smartCapsLock"] and winUser.getKeyState(winUser.VK_CAPITAL)&1:
+				tmp = []
+				for ch in newText:
+					if ch.islower():
+						tmp.append(ch.upper())
+					else:
+						tmp.append(ch.lower())
+				newText = ''.join(tmp)
 			self.sendChars(newText)
 
 	if endWord or (newText and (not self.currentFocusIsTextObj or self.currentModifiers)):

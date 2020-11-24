@@ -2,6 +2,7 @@
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
+import addonHandler
 import braille
 import config
 import configobj
@@ -14,6 +15,8 @@ import wx
 
 from logHandler import log
 from .common import MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
+
+addonHandler.initTranslation()
 
 conf = config.conf["brailleExtender"]["autoScroll"]
 

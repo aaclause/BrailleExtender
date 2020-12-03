@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender 20.11.20:abed61a\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-11-20 16:07+0100\n"
-"PO-Revision-Date: 2020-11-24 21:22+0100\n"
+"POT-Creation-Date: 2020-11-26 10:09+0100\n"
+"PO-Revision-Date: 2020-12-01 15:15+0100\n"
+"Last-Translator: Fabrizio Marini <marini.carlo@fastwebnet.it>\n"
 "Language-Team: \n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.2\n"
-"Last-Translator: Fabrizio Marini <marini.carlo@fastwebnet.it>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: it\n"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:53
 msgid "Default"
@@ -1355,67 +1355,71 @@ msgid "Hebrew"
 msgstr "Ebraico"
 
 #: addon\globalPlugins\brailleExtender\addondoc.py:293
+msgid "Italian"
+msgstr "Italiano"
+
+#: addon\globalPlugins\brailleExtender\addondoc.py:294
 msgid "Persian"
 msgstr "Persiano"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:294
+#: addon\globalPlugins\brailleExtender\addondoc.py:295
 msgid "Polish"
 msgstr "Polacco"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:295
+#: addon\globalPlugins\brailleExtender\addondoc.py:296
 msgid "Russian"
 msgstr "Russo"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:298
+#: addon\globalPlugins\brailleExtender\addondoc.py:299
 msgid "Copyrights and acknowledgements"
 msgstr "Copyrights e riconoscimenti"
 
 #. Author(s)
-#: addon\globalPlugins\brailleExtender\addondoc.py:304 buildVars.py:70
+#: addon\globalPlugins\brailleExtender\addondoc.py:305 buildVars.py:70
 msgid "and other contributors"
 msgstr "e altri collaboratori"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:308
+#: addon\globalPlugins\brailleExtender\addondoc.py:309
 msgid "Translators"
 msgstr "Traduttori"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:318
+#: addon\globalPlugins\brailleExtender\addondoc.py:319
 msgid "Code contributions and other"
 msgstr "Contributi al codice ed altro"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:320
+#: addon\globalPlugins\brailleExtender\addondoc.py:321
 msgid "Code maintenance (cleanup, rewrites, optimizations) thanks to:"
 msgstr ""
 "Per la manutenzione del codice (pulizia, riscritture, ottimizzazioni) grazie "
 "a:"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:326
+#: addon\globalPlugins\brailleExtender\addondoc.py:327
 msgid "Additional third party copyrighted code is included:"
 msgstr "Il prodotto comprende codice la cui proprietà è di terzi:"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:332
+#: addon\globalPlugins\brailleExtender\addondoc.py:333
 msgid "Thanks also to"
 msgstr "Grazie anche a"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:334
+#: addon\globalPlugins\brailleExtender\addondoc.py:335
 msgid "Finally thank you very much for all your feedback and comments."
 msgstr "Grazie infine a tutti voi per i vostri pareri e commenti."
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:338
+#: addon\globalPlugins\brailleExtender\addondoc.py:339
 #, python-format
 msgid "%s's documentation"
 msgstr "Documentazione di %s"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:357
+#: addon\globalPlugins\brailleExtender\addondoc.py:358
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "Simula la pressione di %s sulla tastiera del pc"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:368
+#: addon\globalPlugins\brailleExtender\addondoc.py:369
 msgid "description currently unavailable for this shortcut"
 msgstr "al momento non esiste una descrizione per questo tasto"
 
-#: addon\globalPlugins\brailleExtender\addondoc.py:388
+#: addon\globalPlugins\brailleExtender\addondoc.py:389
 msgid "caps lock"
 msgstr "blocco maiuscole"
 
@@ -1519,34 +1523,34 @@ msgstr "&Esci dalla modalità di input avanzata dopo aver inserito un pattern"
 msgid "&Escape character for Unicode values input"
 msgstr "&Carattere di escape per l'inserimento di valori Unicode"
 
-#: addon\globalPlugins\brailleExtender\autoscroll.py:94
+#: addon\globalPlugins\brailleExtender\autoscroll.py:97
 #, python-brace-format
 msgid "{delay} ms"
 msgstr "{delay} ms"
 
 #. Translators: title of a dialog.
-#: addon\globalPlugins\brailleExtender\autoscroll.py:110
+#: addon\globalPlugins\brailleExtender\autoscroll.py:113
 msgid "Auto scroll"
 msgstr "Scorrimento automatico"
 
 #. Translators: label of a dialog.
-#: addon\globalPlugins\brailleExtender\autoscroll.py:116
+#: addon\globalPlugins\brailleExtender\autoscroll.py:119
 msgid "Autoscroll &delay for the active braille display (ms):"
 msgstr ""
 "&Ritardo dello scorrimento automatico per il display Braille attivo (ms):"
 
 #. Translators: label of a dialog.
-#: addon\globalPlugins\brailleExtender\autoscroll.py:125
+#: addon\globalPlugins\brailleExtender\autoscroll.py:128
 msgid "&Step for delay change (ms):"
 msgstr "Ampiezza dello &scatto per la modifica del ritardo (ms):"
 
 #. Translators: label of a dialog.
-#: addon\globalPlugins\brailleExtender\autoscroll.py:134
+#: addon\globalPlugins\brailleExtender\autoscroll.py:137
 msgid "&Adjust the delay to content"
 msgstr "&Adatta il ritardo al contenuto"
 
 #. Translators: label of a dialog.
-#: addon\globalPlugins\brailleExtender\autoscroll.py:138
+#: addon\globalPlugins\brailleExtender\autoscroll.py:141
 msgid "Always ignore &blank line"
 msgstr "&Ignora sempre le righe vuote"
 
@@ -2771,7 +2775,7 @@ msgstr "e molte altre!"
 msgid ""
 "For some braille displays, it extends the braille display commands to provide"
 msgstr ""
-"Con qualche display braille, l'add-on estende l'insieme dei copmandi "
+"Con qualche display braille, l'add-on estende l'insieme dei comandi "
 "disponibili"
 
 #: buildVars.py:62

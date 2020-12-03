@@ -145,15 +145,9 @@ def getTextInBraille(t=None, table=[]):
 		for i, e in enumerate(table):
 			if '\\' not in e and '/' not in e:
 				table[i] = "%s\\%s" % (brailleTables.TABLES_DIR, e)
-	nt = []
-	res = ''
 	t = t.split("\n")
-	for l in t:
-		l = l.rstrip()
-		if not l: res = ''
-		else: res = ''.join([chr(ord(ch)-0x8000+0x2800) for ch in louis.translateString(table, l, mode=louis.dotsIO)])
-		nt.append(res)
-	return '\n'.join(nt)
+	res = [louis.translateString(table, l, mode=louis.ucBrl|louis.dotsIO) for l in t if l]
+	return '\n'.join(res)
 
 def combinationDesign(dots, noDot = '⠤'):
 	out = ""

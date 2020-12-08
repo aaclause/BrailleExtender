@@ -3,6 +3,7 @@
 # See the file LICENSE for more details.
 # Copyright (C) 2016-2020 André-Abush Clause <dev@andreabc.net>
 
+import os
 import subprocess
 import time
 from collections import OrderedDict

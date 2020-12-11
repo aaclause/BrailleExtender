@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: BrailleExtender 20.02.27:19953a8\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2020-09-13 11:43+0200\n"
-"PO-Revision-Date: 2020-09-15 17:38+0200\n"
+"PO-Revision-Date: 2020-12-14 21:27+0100\n"
 "Last-Translator: Daniel Gartmann <lists@danielgartmann.dk>\n"
 "Language-Team: \n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,398,-1,-1,-1,-1,-1\n"
 
@@ -367,8 +367,6 @@ msgid "Braille keyboard unlocked"
 msgstr "Punkttastatur låst op"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:545
-#, fuzzy
-#| msgid "Toggles braille keyboard lock"
 msgid "Toggle braille keyboard lock"
 msgstr "Slår låsning af punkttastaturet til og fra"
 
@@ -381,8 +379,6 @@ msgid "One handed mode disabled"
 msgstr "Enhåndstilstand slået fra"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:553
-#, fuzzy
-#| msgid "Toggles one-handed mode"
 msgid "Toggle one-handed mode"
 msgstr "Slår Enhåndstilstand til og fra"
 
@@ -395,8 +391,6 @@ msgid "Dots 7 and 8 enabled"
 msgstr "Punkterne 7 og 8 slået til"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:562
-#, fuzzy
-#| msgid "Toggles showing or hiding dots 7 and 8"
 msgid "Toggle showing or hiding dots 7 and 8"
 msgstr "Skifter imellem at vise og skjule punkterne 7 og 8"
 
@@ -409,8 +403,6 @@ msgid "BRF mode disabled"
 msgstr "BRF-tilstand slået fra"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:571
-#, fuzzy
-#| msgid "Toggles BRF mode"
 msgid "Toggle BRF mode"
 msgstr "Slå BRF-tilstand til og fra"
 
@@ -423,24 +415,17 @@ msgid "Modifier keys unlocked"
 msgstr "Modifikationstaster låst op"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:579
-#, fuzzy
-#| msgid "Toggles locking modifier keys when using braille input"
 msgid "Toggle locking modifier keys when using braille input"
 msgstr ""
 "Slår låsning af modifikationstaster til og fra, når der bruges "
 "punktindtastning"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:588
-#, fuzzy
 #| msgid "Text attributes"
 msgid "Toggle font attributes report"
-msgstr "Tekstattributter"
+msgstr "Slår oplysning om skrifttypeattributter til og fra"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:598
-#, fuzzy
-#| msgid ""
-#| "Toggles between say current line while scrolling options between none, "
-#| "focus mode, review mode, or both"
 msgid ""
 "Toggle between say current line while scrolling options between none, focus "
 "mode, review mode, or both"
@@ -544,8 +529,6 @@ msgid "Advanced braille input mode disabled"
 msgstr "Avanceret indtastningstilstand til punktskrift slået fra"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:658
-#, fuzzy
-#| msgid "Toggles advanced input mode"
 msgid "Toggle advanced input mode"
 msgstr "Slår avanceret indtastningstilstand til og fra"
 
@@ -558,8 +541,6 @@ msgid "Describe undefined characters disabled"
 msgstr "Beskriv ikke-definerede tegn slået fra"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:667
-#, fuzzy
-#| msgid "Toggles description of undefined characters"
 msgid "Toggle description of undefined characters"
 msgstr "Slår Beskrivelse af ikke-definerede tegn til og fra"
 
@@ -584,8 +565,6 @@ msgid "Unable to start autoscroll. More info in NVDA log"
 msgstr "Autorul kunne ikke starte. Yderligere oplysninger i NVDA loggen"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:726
-#, fuzzy
-#| msgid "Toggles automatic braille scroll"
 msgid "Toggle automatic braille scroll"
 msgstr "Slår automatisk displayrul til og fra"
 
@@ -598,8 +577,6 @@ msgid "Decreases the master volume"
 msgstr "Sænker systemlydstyrken"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:746
-#, fuzzy
-#| msgid "Toggles sound mute"
 msgid "Toggle sound mute"
 msgstr "Slår lyd til og fra"
 
@@ -2123,16 +2100,13 @@ msgid "Unable to associate this gesture. Please enter another gesture"
 msgstr "Kan ikke tildele denne bevægelse. Angiv venligst en anden"
 
 #: addon/globalPlugins/brailleExtender/settings.py:635
-#, fuzzy, python-brace-format
-#| msgid ""
-#| "Please enter a gesture from your {NAME_BRAILLE_DISPLAY} braille display. "
-#| "Press space to cancel."
+#, python-brace-format
 msgid ""
 "Please enter a gesture from your {configBE.curBD} braille display. Press "
 "space to cancel."
 msgstr ""
-"Angiv venligst en kommando fra dit {NAME_BRAILLE_DISPLAY} punktdisplay. "
-"Press space to cancel."
+"Angiv venligst en kommando fra dit  {configBE.curBD} punktdisplay. Tryk "
+"Mellemrum for at annullere."
 
 #: addon/globalPlugins/brailleExtender/settings.py:639
 msgid "Out of capture"

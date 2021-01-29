@@ -1,6 +1,6 @@
 # patches.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
 import os

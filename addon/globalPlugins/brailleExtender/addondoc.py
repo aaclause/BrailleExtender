@@ -1,6 +1,6 @@
 # addondoc.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 
 import re
 
@@ -302,7 +302,7 @@ class AddonDoc:
 				"".join(
 					[
 						"<p>",
-						"Copyright (C) 2016-2020 André-Abush Clause ",
+						"Copyright (C) 2016-2021 André-Abush Clause ",
 						_("and other contributors"),
 						":<br />",
 						f"<pre>{addonGitHubURL}\n{addonURL}</pre>",

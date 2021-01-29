@@ -5,448 +5,447 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: BrailleExtender 20.02.27:19953a8\n"
+"Project-Id-Version: BrailleExtender 20.11.20:abed61a\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2020-12-18 19:26+0100\n"
-"PO-Revision-Date: 2020-12-23 15:40+0100\n"
-"Last-Translator: Daniel Gartmann <lists@danielgartmann.dk>\n"
+"POT-Creation-Date: 2020-12-07 09:19+0100\n"
+"PO-Revision-Date: 2020-12-08 22:43+0100\n"
+"Last-Translator: Fabrizio Marini <marini.carlo@fastwebnet.it>\n"
 "Language-Team: \n"
-"Language: da\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Poedit-Bookmarks: -1,-1,-1,-1,398,-1,-1,-1,-1,-1\n"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:55
 msgid "Default"
-msgstr "Standard"
+msgstr "Default"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:56
 msgid "Moving in the text"
-msgstr "Flytter i teksten"
+msgstr "Spostarsi nel testo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:57
 msgid "Text selection"
-msgstr "Tekstvalg"
+msgstr "Selezione del testo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:58
 msgid "Objects"
-msgstr "Objekter"
+msgstr "Oggetti"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:59
 msgid "Review"
-msgstr "Gennemsyn"
+msgstr "Esplorazione"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:60
 msgid "Links"
-msgstr "Links"
+msgstr "Link"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:61
 msgid "Unvisited links"
-msgstr "Ikke-besøgte links"
+msgstr "Link non visitati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:62
 msgid "Visited links"
-msgstr "Besøgte links"
+msgstr "Link visitati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:63
 msgid "Landmarks"
-msgstr "Landmærker"
+msgstr "Punti di riferimento"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:64
 msgid "Headings"
-msgstr "Overskrifter"
+msgstr "Intestazioni"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:65
 msgid "Level 1 headings"
-msgstr "Overskrifter på niveau 1"
+msgstr "Intestazioni di livello 1"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:66
 msgid "Level 2 headings"
-msgstr "Overskrifter på niveau 2"
+msgstr "Intestazioni di livello 2"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:67
 msgid "Level 3 headings"
-msgstr "Overskrifter på niveau 3"
+msgstr "Intestazioni di livello 3"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:68
 msgid "Level 4 headings"
-msgstr "Overskrifter på niveau 4"
+msgstr "Intestazioni di livello 4"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:69
 msgid "Level 5 headings"
-msgstr "Overskrifter på niveau 5"
+msgstr "Intestazioni di livello 5"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:70
 msgid "Level 6 headings"
-msgstr "Overskrifter på niveau 6"
+msgstr "Intestazioni di livello 6"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:71
 msgid "Lists"
-msgstr "Lister"
+msgstr "Elenchi"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:72
 msgid "List items"
-msgstr "Listeelementer"
+msgstr "Elementi di elenco"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:73
 msgid "Graphics"
-msgstr "Grafik"
+msgstr "Grafici"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:74
 msgid "Block quotes"
-msgstr "Blokcitater"
+msgstr "Blocchi virgolettati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:75
 msgid "Buttons"
-msgstr "Knapper"
+msgstr "Pulsanti"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:76
 msgid "Form fields"
-msgstr "Formularfelter"
+msgstr "Campi di form"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:77
 msgid "Edit fields"
-msgstr "Editfelter"
+msgstr "Campi editazione"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:78
 msgid "Radio buttons"
-msgstr "Radioknapper"
+msgstr "Pulsanti radio"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:79
 msgid "Combo boxes"
-msgstr "Combo boxe"
+msgstr "Caselle combinate"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:80
 msgid "Check boxes"
-msgstr "Check boxe"
+msgstr "Caselle di controllo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:81
 msgid "Non-link blocks"
-msgstr "Blokke, der ikke er links"
+msgstr "Blocchi senza link"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:82
 msgid "Frames"
-msgstr "Rammer"
+msgstr "Frame"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:83
 msgid "Separators"
-msgstr "Separatorer"
+msgstr "Separatori"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:84
 msgid "Embedded objects"
-msgstr "Indlejrede objekter"
+msgstr "Oggetti incorporati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:85
 msgid "Annotations"
-msgstr "Annotationer"
+msgstr "Annotazioni"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:86
 msgid "Spelling errors"
-msgstr "Stavefejl"
+msgstr "Errori di battitura"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:87
 msgid "Tables"
-msgstr "Tabeller"
+msgstr "Tabelle"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:88
 msgid "Move in table"
-msgstr "Flytte i tabel"
+msgstr "Spostarsi nella tabella"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:94
 msgid "If pressed twice, presents the information in browse mode"
-msgstr "Ved to tryk vises informationen i gennemsynstilstand"
+msgstr "Se premuto due volte, mostra le informazioni in modalità navigazione"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:248
 msgid "Docu&mentation"
-msgstr "Doku&mentation"
+msgstr "&Documentazione"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:248
 msgid "Opens the addon's documentation."
-msgstr "Åbner tilfføjelsesprogrammets dokumentation."
+msgstr "Apre la documentazione dell'add-on."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:254
 msgid "&Settings..."
-msgstr "&Indstillinger..."
+msgstr "&Impostazioni..."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:254
 msgid "Opens the addons' settings."
-msgstr "Åbner tilføjelsesprogrammets indstillinger."
+msgstr "Apre le impostazioni dell'add-on."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:261
 msgid "Table &dictionaries"
-msgstr "Tabel&ordbøger"
+msgstr "Dizionari per le &tabelle"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:261
 msgid "'Braille dictionaries' menu"
-msgstr "Menuen 'Punktskriftordbøger'"
+msgstr "menu 'dizionari Braille'"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:262
 msgid "&Global dictionary"
-msgstr "&Global ordbog"
+msgstr "Dizionario &globale"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:262
 msgid ""
 "A dialog where you can set global dictionary by adding dictionary entries to "
 "the list."
 msgstr ""
-"En dialog til at lave en global ordbog ved at tilføje ordbogselementer til "
-"listen."
+"Una finestra in cui potete impostare un dizionario globale aggiungendo nuove "
+"voci alla lista."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:264
 msgid "&Table dictionary"
-msgstr "&Tabel-ordbog"
+msgstr "Dizionario &tabella"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:264
 msgid ""
 "A dialog where you can set table-specific dictionary by adding dictionary "
 "entries to the list."
 msgstr ""
-"En dialog, hvor der kan angives en tabel-specifick ordbog ved at tilføje "
-"ordbogsemner til listen."
+"Una finestra in cui potete impostare un dizionario specifico per una "
+"tabella, aggiungendo nuove voci alla lista."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:266
 msgid "Te&mporary dictionary"
-msgstr "Mi&dlertidig ordbog"
+msgstr "Dizionario te&mporaneo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:266
 msgid ""
 "A dialog where you can set temporary dictionary by adding dictionary entries "
 "to the list."
 msgstr ""
-"En dialog, hvor der kan angives en midlertidig ordbog ved at tilføje "
-"ordbogsemner til listen."
+"Una finestra in cui potete impostare un dizionario temporaneo, aggiungendo "
+"nuove voci alla lista."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:269
 msgid "Advanced &input mode dictionary..."
-msgstr "Avanceret ordbog til &indtastningstilstand..."
+msgstr "Dizionario per la modalità di scrittura &avanzata..."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:269
 msgid "Advanced input mode configuration"
-msgstr "Konfiguration af avanceret indtastningstilstand"
+msgstr "Configurazione della modalità di scrittura avanzata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:275
 msgid "&Quick launches"
-msgstr "&Hurtigstartere"
+msgstr "&Collegamenti rapidi"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:275
 msgid "Quick launches configuration"
-msgstr "Opsætning af Hurtigstartere"
+msgstr "Configurazione dei collegamenti rapidi"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:281
 msgid "Braille input table &overview"
-msgstr "&Visning af punkttabel til indtastning"
+msgstr "&Riepilogo tabella Braille di scrittura"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:281
 msgid "Overview of the current input braille table"
-msgstr "Oversigt over den aktuelle indtastningstabel"
+msgstr "Riepilogo della tabella Braille di scrittura in uso"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:283
 msgid "&Reload add-on"
-msgstr "&Genindlæs tilføjelsesprogram"
+msgstr "Ricarica add-&on"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:283
 msgid "Reload this add-on."
-msgstr "Genindlæs dette tilføjelsesprogram."
+msgstr "Ricarica questo componente aggiuntivo."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:285
 msgid "Check for &update..."
-msgstr "&Søg efter opdateringer..."
+msgstr "Controlla a&ggiornamenti..."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:285
 msgid "Checks if Braille Extender update is available"
-msgstr "Undersøger, om der er opdateringer til Udvidelse til Punktskrift"
+msgstr "Controlla se sono disponibili aggiornamenti di Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:287
 msgid "&Website"
-msgstr "&Website"
+msgstr "&Sito web"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:287
 msgid "Open addon's website."
-msgstr "Åbn tilføjelsesprogrammets website."
+msgstr "Apre il sito web dell'add-on."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:289
 msgid "Get the latest template &translation file (.pot)"
-msgstr "Hent den nyeste skabelon &oversættelsesfil (.pot)"
+msgstr "Scarica l'&ultimo template del file di traduzione (.pot)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:289
 msgid ""
 "Opens the URL to download the latest Portable Object Template file of the "
 "add-on"
 msgstr ""
-"Åbner websiden til hentning af den nyeste fil af typen Portable Object "
-"Template til udvidelsen"
+"Si collega ad Internet per scaricare l'ultimo Portable Object Template file "
+"dell'add-on"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:291
 msgid "&Braille Extender"
-msgstr "&Udvidelse til Punktskrift"
+msgstr "&Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:304
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
 msgid "Global dictionary"
-msgstr "Global ordbog"
+msgstr "Dizionario globale"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:309
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
 msgid "Table dictionary ({})"
-msgstr "Tabelordbog ({})"
+msgstr "Dizionario per la tabella ({})"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:313
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
 msgid "Temporary dictionary"
-msgstr "Midlertidig ordbog"
+msgstr "Dizionario temporaneo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:412
 msgid "Switches to the previous rotor setting"
-msgstr "Skifter til forrige rotorindstilling"
+msgstr "Passa all'impostazione precedente del rotore"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:419
 msgid "Switches to the next rotor setting"
-msgstr "Skifter til næste rotorindstilling"
+msgstr "Passa all'impostazione successiva del rotore"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:425
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 msgid "Character"
-msgstr "Tegn"
+msgstr "Carattere"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:426
 msgid "Word"
-msgstr "Ord"
+msgstr "Parola"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:427
 msgid "Line"
-msgstr "Linje"
+msgstr "Riga"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:428
 msgid "Paragraph"
-msgstr "Afsnit"
+msgstr "Paragrafo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:429
 msgid "Page"
-msgstr "Side"
+msgstr "Pagina"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:430
 msgid "Document"
-msgstr "Dokument"
+msgstr "Documento"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:456
 msgid "Not available here"
-msgstr "Ikke tilgængelig her"
+msgstr "Non disponibile qui"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:474
 #: addon/globalPlugins/brailleExtender/__init__.py:495
 msgid "Not supported here or not in browse mode"
-msgstr "Understøttes ikke her eller gennemsynstilstand ikke slået til"
+msgstr "Non supportato qui o non in modalità navigazione"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:476
 #: addon/globalPlugins/brailleExtender/__init__.py:511
 msgid "Moves to the next item based on rotor setting"
-msgstr "Flytter til det næste element alt efter rotor-indstilling"
+msgstr "Si sposta all'elemento successivo secondo le impostazioni del rotore"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:497
 #: addon/globalPlugins/brailleExtender/__init__.py:525
 msgid "Moves to the previous item based on rotor setting"
-msgstr "Flytter til det forrige element alt efter rotor-indstilling"
+msgstr "Si sposta all'elemento precedente secondo le impostazioni del rotore"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:531
 msgid ""
 "Selects the item under the braille cursor e.g. doing default action if "
 "moving by objects"
 msgstr ""
-"Vælger elementet under punktmarkøren fx udfører standardhandlingenn, når der "
-"flyttes imellem objekter"
+"Seleziona l'elemento sotto il cursore Braille; ad es. esegue l'azione di "
+"default se ci si sposta per oggetti"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:536
 msgid "Braille keyboard locked"
-msgstr "Punkttastatur låst"
+msgstr "Tastiera Braille bloccata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:538
 msgid "Braille keyboard unlocked"
-msgstr "Punkttastatur låst op"
+msgstr "Tastiera Braille sbloccata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:539
 msgid "Toggle braille keyboard lock"
-msgstr "Slår låsning af punkttastaturet til og fra"
+msgstr "Blocca o sblocca la tastiera Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:544
 msgid "One-handed mode enabled"
-msgstr "Enhåndstilstand slået til"
+msgstr "Modalità a una mano abilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:546
 msgid "One handed mode disabled"
-msgstr "Enhåndstilstand slået fra"
+msgstr "Modalità a una mano disabilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:547
 msgid "Toggle one-handed mode"
-msgstr "Slår Enhåndstilstand til og fra"
+msgstr "Abilita o disabilita la modalità a una mano"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:552
 msgid "Dots 7 and 8 disabled"
-msgstr "Punkterne 7 og 8 slået fra"
+msgstr "Punti 7 e 8 nascosti"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:554
 msgid "Dots 7 and 8 enabled"
-msgstr "Punkterne 7 og 8 slået til"
+msgstr "Punti 7 e 8 mostrati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:556
 msgid "Toggle showing or hiding dots 7 and 8"
-msgstr "Skifter imellem at vise og skjule punkterne 7 og 8"
+msgstr "Mostra o scopre i punti 7 e 8"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:562
 msgid "BRF mode enabled"
-msgstr "BRF-tilstand slået til"
+msgstr "Modalità BRF abilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:564
 msgid "BRF mode disabled"
-msgstr "BRF-tilstand slået fra"
+msgstr "Modalità BRF disabilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:565
 msgid "Toggle BRF mode"
-msgstr "Slå BRF-tilstand til og fra"
+msgstr "Abilita o disabilita la modalità BRF"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:570
 msgid "Modifier keys locked"
-msgstr "Modifikationstaster låst"
+msgstr "Tasti modificatori bloccati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:572
 msgid "Modifier keys unlocked"
-msgstr "Modifikationstaster låst op"
+msgstr "Tasti modificatori sbloccati"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:573
 msgid "Toggle locking modifier keys when using braille input"
 msgstr ""
-"Slår låsning af modifikationstaster til og fra, når der bruges "
-"punktindtastning"
+"Blocca o sblocca i tasti modificatori quando si digita con la tastiera "
+"Perkins del display Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:582
 msgid "Toggle font attributes report"
-msgstr "Slår oplysning om skrifttypeattributter til og fra"
+msgstr "Mostra o nasconde le informazioni sugli attributi del testo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:592
 msgid ""
 "Toggle between say current line while scrolling options between none, focus "
 "mode, review mode, or both"
 msgstr ""
-"Skifter imellem de forskellige indstillingsmuligheder for oplæs aktuel linje "
-"ved rulning imellem ingen, læsetilstand, gennemsynstilstand eller begge dele"
+"Imposta l'opzione \"pronuncia riga corrente durante lo scorrimento\" su \"mai"
+"\", \"modalità focus\", \"modalità esplorazione\" e \"sempre\""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:597
 msgid "Speech on"
-msgstr "Tale til"
+msgstr "Sintesi attiva"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:600
 msgid "Speech off"
-msgstr "Tale fra"
+msgstr "Sintesi disattiva"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:601
 msgid "Toggle speech on or off"
-msgstr "Slår tale til eller fra"
+msgstr "Attiva o disattiva la sintesi"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:609
 msgid "No extra info for this element"
-msgstr "Ingen yderligere oplysninger om dette emne"
+msgstr "Nessuna informazione aggiuntiva per questo elemento"
 
 #. Translators: Input help mode message for report extra infos command.
 #: addon/globalPlugins/brailleExtender/__init__.py:613
@@ -454,162 +453,168 @@ msgid ""
 "Reports some extra infos for the current element. For example, the URL on a "
 "link"
 msgstr ""
-"Giver yderligere oplysninger om det aktuelle element. Det kan fx være "
-"adressen på et link"
+"Fornisce qualche informazione aggiuntiva per l'elemento corrente. Per "
+"esempio, la URL di destinazione per un link"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:618
 msgid " Input table"
-msgstr "Indtastningstabel"
+msgstr " Tabella di scrittura"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:618
 msgid "Output table"
-msgstr "Visningstabel"
+msgstr "Tabella di lettura"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:620
 #, python-format
 msgid "Table overview (%s)"
-msgstr "Tabelvisning (%s)"
+msgstr "Riepilogo della tabella (%s)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:621
 msgid ""
 "Shows an overview of current input braille table in a browseable message"
 msgstr ""
-"Viser en oversigt over den aktuelt valgte punktskrifttabel til indtastning i "
-"en navigérbar tekst"
+"Mostra un riepilogo della tabella Braille di scrittura corrente in un "
+"messaggio navigabile"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:626
 #: addon/globalPlugins/brailleExtender/__init__.py:634
 #: addon/globalPlugins/brailleExtender/__init__.py:641
 msgid "No text selection"
-msgstr "Ingen tekst valgt"
+msgstr "Nessun testo selezionato"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:627
 msgid "Unicode Braille conversion"
-msgstr "Unicode punktskriftkonvertering"
+msgstr "Conversione Unicode Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:628
 msgid ""
 "Convert the text selection in unicode braille and display it in a browseable "
 "message"
 msgstr ""
-"Konvertér den valgte tekst til unicode punktskrift og vis teksten i en "
-"navigérbar meddelelse"
+"Converte il testo selezionato in unicode braille e lo mostra in un messaggio "
+"navigabile"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:635
 msgid "Braille Unicode to cell descriptions"
-msgstr "Punktskrift Unicode til beskrivelser af punktcelle"
+msgstr "Da Braille unicode a descrizioni celle"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:636
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
 "browseable message"
 msgstr ""
-"Konvertér valgte tekst til beskrivelse af punktceller og viser den i en "
-"navigérbar meddelelse"
+"Converte il testo selezionato in descrizioni di celle braille e lo mostra in "
+"un messaggio navigabile"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:643
 msgid "Cell descriptions to braille Unicode"
-msgstr "Beskrivelse af punktceller til punktskrift Unicode"
+msgstr "Da descrizioni celle a Braille unicode"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:644
 msgid ""
 "Braille cell description to Unicode Braille. E.g.: in a edit field type "
 "'125-24-0-1-123-123'. Then select this text and execute this command"
 msgstr ""
-"Beskrivelse af punktcelle til Unicode punktskrift. I et editfelt kan du fx "
-"skrive '125-24-0-1-123-123'. Vælg derefter teksten og udfør denne kommando"
+"Da descrizioni celle Braille a Braille unicode. Ad esempio, in un campo "
+"editazione scrivete '125-24-0-1-123-123'. Quindi selezionate questo testo ed "
+"eseguite questo comando"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:649
 msgid "Advanced braille input mode enabled"
-msgstr "Avanceret indtastningstilstand til punktskrift slået til"
+msgstr "Modalità scrittura Braille avanzata abilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:651
 msgid "Advanced braille input mode disabled"
-msgstr "Avanceret indtastningstilstand til punktskrift slået fra"
+msgstr "Modalità scrittura Braille avanzata disabilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:652
 msgid "Toggle advanced input mode"
-msgstr "Slår avanceret indtastningstilstand til og fra"
+msgstr "Abilita o disabilita la modalità di scrittura avanzata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:657
 msgid "Describe undefined characters enabled"
-msgstr "Beskriv ikke-definerede tegn slået til"
+msgstr "Descrizione dei caratteri non definiti abilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:659
 msgid "Describe undefined characters disabled"
-msgstr "Beskriv ikke-definerede tegn slået fra"
+msgstr "Descrizione dei caratteri non definiti disabilitata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:661
 msgid "Toggle description of undefined characters"
-msgstr "Slår Beskrivelse af ikke-definerede tegn til og fra"
+msgstr "Abilita o disabilita la descrizione dei caratteri non definiti"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:669
 msgid "No text"
-msgstr "Ingen tekst"
+msgstr "Nessun testo"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:670
 msgid "Reports the cursor position of text under the braille cursor"
-msgstr "Oplyser markørpositionen af tekst under punktmarkøren"
+msgstr "Mostra le coordinate cursore del testo sotto il cursore Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:695
 msgid "Shows hour and date changes automatically on a braille display"
-msgstr "Viser ændringer i tid og dato automatisk på punktdisplayet"
+msgstr ""
+"Mostra automaticamente le modifiche alla data e all'ora in un display Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:708
 msgid "Autoscroll stopped"
-msgstr "Autorul stoppet"
+msgstr "Scorrimento automatico interrotto"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:715
 msgid "Unable to start autoscroll. More info in NVDA log"
-msgstr "Autorul kunne ikke starte. Yderligere oplysninger i NVDA loggen"
+msgstr ""
+"Impossibile avviare lo scorrimento automatico. Maggiori informazioni nel log "
+"di NVDA"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:720
 msgid "Toggle automatic braille scroll"
-msgstr "Slår automatisk displayrul til og fra"
+msgstr "Abilita o disabilita lo scorrimento automatico del Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:730
 msgid "Increases the master volume"
-msgstr "Øger systemlydstyrken"
+msgstr "Alza il volume generale"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:735
 msgid "Decreases the master volume"
-msgstr "Sænker systemlydstyrken"
+msgstr "Abbassa il volume generale"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:740
 msgid "Toggle sound mute"
-msgstr "Slår lyd til og fra"
+msgstr "Azzera o ripristina il volume"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:751
 msgid "Shows the Braille Extender documentation"
-msgstr "Viser dokumentationen til Udvidelse til Punktskrift"
+msgstr "Moastra la documentazione di Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:789
 msgid "No such file or directory"
-msgstr "Denne fil eller mappe findes ikke"
+msgstr "Nessun file o directory"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:791
 msgid ""
 "Opens a custom program/file. Go to Braille Extender settings to define them"
 msgstr ""
-"Åbner valgfrigt program/fil. Angiv dem i indstillingerne til Udvidelse til "
-"Punktskrift"
+"Apre un file o un programma scelto dall'utente. Vai nelle impostazioni di "
+"Braille Extender per definirli"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:797
 msgid "Checks for Braille Extender updates"
-msgstr "Søger efter opdateringer til Udvidelse til Punktskrift"
+msgstr "Verifica la presenza di aggiornamenti di Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:826
 msgid "Increases braille autoscroll delay"
-msgstr "Sæt forsinkelse ved autorul op"
+msgstr "Aumenta il ritardo dello scorrimento automatico"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:827
 msgid "Decreases braille autoscroll delay"
-msgstr "Sæt forsinkelse ved autorul ned"
+msgstr "Diminuisce il ritardo dello scorrimento automatico"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:831
 #: addon/globalPlugins/brailleExtender/__init__.py:846
 msgid "NVDA 2017.3 or later is required to use this feature"
-msgstr "NVDA 2017.3 eller nyere er påkrævet for at benytte denne funktion"
+msgstr ""
+"Per utilizzare questa funzionalità è richiesto NVDA 2017.3 o versioni "
+"successive"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:833
 #: addon/globalPlugins/brailleExtender/__init__.py:848
@@ -617,167 +622,167 @@ msgid ""
 "You must choose at least two tables for this feature. Please fill in the "
 "settings"
 msgstr ""
-"Du skal vælge mindst to tabeller til denne funktion. Udfyld venligst "
-"indstillingerne"
+"Per questa funzionalità dovete scegliere almeno due tabelle. Compilate "
+"opportunamente le impostazioni"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:840
 #, python-format
 msgid "Input: %s"
-msgstr "Indtastning: %s"
+msgstr "Scrittura: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:842
 msgid "Switches between configured braille input tables"
-msgstr "Skifter imellem forudindstillede indtastningstabeller"
+msgstr "Cicla tra le tabelle Braille di scrittura configurate"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:857
 #, python-format
 msgid "Output: %s"
-msgstr "Visning: %s"
+msgstr "Lettura: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:859
 msgid "Switches between configured braille output tables"
-msgstr "Skifter imellem forudindstillede visningstabeller"
+msgstr "Cicla tra le tabelle Braille di lettura configurate"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:865
 #, python-brace-format
 msgid "I⣿O:{I}"
-msgstr "I⣿O:{I}"
+msgstr "I/O:{I}"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:866
 #, python-brace-format
 msgid "Input and output: {I}."
-msgstr "Indtastning og visning: {I}."
+msgstr "Input e output: {I}."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:868
 #, python-brace-format
 msgid "I:{I} ⣿ O: {O}"
-msgstr "I:{I} ⣿ O: {O}"
+msgstr "I:{I} / O:{O}"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:869
 #, python-brace-format
 msgid "Input: {I}; Output: {O}"
-msgstr "Indtastning: {I}; Oversættelse: {O}"
+msgstr "Input: {I}; Output: {O}"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:871
 msgid "Reports the current braille input and output tables"
-msgstr "Oplyser aktuelt valgte punkttabeller til indskrivning og visning"
+msgstr "Mostra le tabelle Braille di scrittura e di lettura in uso"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:875
 msgid ""
 "Reports the Unicode value of the character where the cursor is located and "
 "the decimal, binary and octal values"
 msgstr ""
-"Oplyser Unicode-værdien for tegnet  hvor cursoren er placeret samt den samme "
-"værdi i decimal, binær og oktal"
+"Mostra i valori unicode, decimale, binario e ottale del carattere su cui si "
+"trova il cursore"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:881
 msgid ""
 "Shows the output speech for selected text in braille, useful for emojis for "
 "example"
 msgstr ""
-"Vis taleoutput for den valgte tekst på punkt, Nyttigt for eksempel ved "
-"emojier"
+"Mostra in Braille l'output vocale del testo selezionato; utile, ad esempio, "
+"per le emoji"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:885
 msgid "No shortcut performed from a braille display"
-msgstr "Ingen genvej udført fra punktdisplay"
+msgstr "Nessun comando eseguito dal display Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:889
 msgid "Repeats the last shortcut performed from a braille display"
-msgstr "Gentager den senest udførte genvej fra et punktdisplay"
+msgstr "Ripete l'ultimo comando eseguito dal display Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:903
 msgid "Braille Extender reloaded"
-msgstr "Udvidelse til Punktskrift genindlæst"
+msgstr "Braille Extender ricaricato"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:920
 msgid "Reloads Braille Extender"
-msgstr "Genindlæser Udvidelse til Punktskrift"
+msgstr "Ricarica Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:923
 msgid "Reloads the primary braille display defined in settings"
-msgstr "Genindlæser det primære punktdisplay angivet i indstillinger"
+msgstr "Ricarica il display Braille principale definito nelle impostazioni"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:926
 msgid "Reloads the secondary braille display defined in settings"
-msgstr "Genindlæser det sekundære punktdisplay angivet i indstillinger"
+msgstr "Ricarica il display Braille secondario definito nelle impostazioni"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:932
 msgid "No braille display specified. No reload to do"
-msgstr "Ingen punktdisplay angivet. Ingen renindlæsning gennemført"
+msgstr "Nessun display Braille specificato. Nessun caricamento da effettuare"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:957
 msgid "WIN"
-msgstr "WIN"
+msgstr "Windows"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:958
 msgid "CTRL"
-msgstr "CTRL"
+msgstr "Control"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:959
 msgid "SHIFT"
-msgstr "SHIFT"
+msgstr "Shift"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:960
 msgid "ALT"
-msgstr "ALT"
+msgstr "Alt"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1062
 msgid "Keyboard shortcut cancelled"
-msgstr "Tastaturgenvej annulleret"
+msgstr "Tasto rapido annullato"
 
 #. /* docstrings for modifier keys */
 #: addon/globalPlugins/brailleExtender/__init__.py:1070
 msgid "Emulate pressing down "
-msgstr "Svarer til at trykke "
+msgstr "Simula la pressione "
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1071
 msgid " on the system keyboard"
-msgstr " på systemets tastatur"
+msgstr " nella tastiera del pc"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1127
 msgid "Current braille view saved"
-msgstr "Det viste på punktdisplayet er blevet gemt"
+msgstr "Visualizzazione Braille corrente salvata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1130
 msgid "Buffer cleaned"
-msgstr "Buffer renset"
+msgstr "Buffer svuotato"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1131
 msgid "Saves the current braille view. Press twice quickly to clean the buffer"
 msgstr ""
-"Gem det, der vises på punktdisplayet. Tryk 2 gange hurtigt for at tømme "
-"bufferen"
+"Salva la visualizzazione Braille corrente. Premere due volte velocemente per "
+"svuotare il buffer"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1136
 msgid "View saved"
-msgstr "Vis gemte"
+msgstr "Visualizzazione salvata"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1137
 msgid "Buffer empty"
-msgstr "Buffer er tom"
+msgstr "Buffer vuoto"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1138
 msgid "Shows the saved braille view through a flash message"
-msgstr "Vis det gemte punktdisplay-billede ved hjælp af en flashmeddelelse"
+msgstr "Mostra la visualizzazione Braille salvata con un messaggio flash"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1172
 msgid "Pause"
-msgstr "Pause"
+msgstr "Pausa"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1172
 msgid "Resume"
-msgstr "Genoptag"
+msgstr "Riprendi"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1214
 #: addon/globalPlugins/brailleExtender/__init__.py:1221
 #, python-format
 msgid "Auto test type %d"
-msgstr "Autotest type %d"
+msgstr "Tipo di auto test %d"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1231
 msgid "Auto test stopped"
-msgstr "Autotest stoppet"
+msgstr "Auto test terminato"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1241
 msgid ""
@@ -785,34 +790,33 @@ msgid ""
 "left and right arrow keys to change test type. Use space key to pause or "
 "resume the test. Use escape key to quit"
 msgstr ""
-"Autotest startet. Brug Pil Op og Pil Ned til at ændre hastighed. Brug "
-"Venstre og Højre piletast til at skifte tyypen af test. Brug "
-"Mellemrumstasten til at sætte testen på pause eller genoptage den. Brug "
-"Escape til at afbryde"
+"Auto test avviato. Usate le frecce verticali per cambiare la velocità, le "
+"frecce orizzontali per cambiare il tipo di test, lo spazio per mettere in "
+"pausa o riprendere il test e il tasto esc per terminare"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1243
 msgid "Auto test"
-msgstr "Autotest"
+msgstr "Auto test"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1248
 msgid "Add dictionary entry or see a dictionary"
-msgstr "Tilføj et ordbogselement eller se en ordbog"
+msgstr "Aggiungi una voce o visualizza un dizionario"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1249
 msgid "Adds an entry in braille dictionary"
-msgstr "Føjer element til punktskriftordbog"
+msgstr "Aggiunge una voce al dizionario Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1254
 msgid "Skip blank lines enabled"
-msgstr "Spring blanke linjer over slået til"
+msgstr "Ignora righe vuote attivato"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1256
 msgid "Skip blank lines disabled"
-msgstr "Spring blanke linjer over slået fra"
+msgstr "Ignora righe vuote disattivato"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1257
 msgid "Toggle blank lines during text scrolling"
-msgstr "Slå blanke linjer til og fra ved tekstrulning"
+msgstr "Mostra o nasconde le righe vuote durante lo scorrimento del testo"
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
@@ -825,87 +829,89 @@ msgstr "Slå blanke linjer til og fra ved tekstrulning"
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:378
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:382 buildVars.py:36
 msgid "Braille Extender"
-msgstr "Udvidelse til Punktskrift"
+msgstr "Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:39
 #: addon/globalPlugins/brailleExtender/addoncfg.py:46
 #: addon/globalPlugins/brailleExtender/addoncfg.py:60
 #: addon/globalPlugins/brailleExtender/settings.py:434
 msgid "none"
-msgstr "ingen"
+msgstr "mai"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:40
 msgid "braille only"
-msgstr "kun punkt"
+msgstr "solo Braille"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:41
 msgid "speech only"
-msgstr "kun tale"
+msgstr "solo sintesi"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:42
 #: addon/globalPlugins/brailleExtender/addoncfg.py:63
 msgid "both"
-msgstr "begge"
+msgstr "sempre"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:47
 msgid "dots 7 and 8"
-msgstr "Punkterne 7 og 8"
+msgstr "punti 7 e 8"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:48
 msgid "dot 7"
-msgstr "punkt 7"
+msgstr "punto 7"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:49
 msgid "dot 8"
-msgstr "punkt 8"
+msgstr "punto 8"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:55
 msgid "stable"
-msgstr "stabil"
+msgstr "stabile"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:56
 msgid "development"
-msgstr "udvikling"
+msgstr "in sviluppo"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:61
 msgid "focus mode"
-msgstr "fokustilstand"
+msgstr "modalità focus"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:62
 msgid "review mode"
-msgstr "gennemsynstilstand"
+msgstr "modalità esplorazione"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:91
 msgid "last known"
-msgstr "sidst kendte"
+msgstr "ultimo conosciuto"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:58
 msgid "Hexadecimal"
-msgstr "Hexadecimal"
+msgstr "Esadecimale"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:59
 msgid "Decimal"
-msgstr "Decimal"
+msgstr "Decimale"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:60
 msgid "Octal"
-msgstr "Octal"
+msgstr "Ottale"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:61
 msgid "Binary"
-msgstr "Binær"
+msgstr "Binario"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:48
 msgid "Show punctuation/symbol &name for undefined characters if available"
-msgstr "Vis sætningstegn/symbol&navn for ikke-definerede tegn hvis det findes"
+msgstr ""
+"Per i caratteri non definiti, mostra il &nome presente nella finestra "
+"\"pronuncia simbolo\" se disponibile"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:50
 msgid "Representation of undefined characters"
-msgstr "Repræsentation af ikke-definerede tegn"
+msgstr "Rappresentazione dei caratteri non definiti"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:52
 msgid ""
@@ -914,21 +920,22 @@ msgid ""
 "undefined characters — settings. You can choose between the following "
 "representations:"
 msgstr ""
-"Udvidelsen giver mulighed for at indstille, hvordan et ikke-defineret tegn "
-"skal gengives i en punktskrifttabel. Det gøres ved at åbne indstillingerne "
-"for punkttabel. Der  kan vælges imellem følgende gengivelser:"
+"L'estensione vi permette di personalizzare il modo in cui un carattere non "
+"definito deve essere rappresentato in una tabella Braille. Per fare ciò, "
+"andate in Impostazioni, Rappresentazione dei caratteri non definiti. Potete "
+"scegliere tra le seguenti rappresentazioni:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:56
 msgid ""
 "You can also combine this option with the “describe the character if "
 "possible” setting."
 msgstr ""
-"Denne indstilling kan også kombineres med indstillinge “beskriv tegnet hvis "
-"muligt”."
+"Potete anche combinare questa opzione con l'impostazione \"descrivi il "
+"carattere se possibile\"."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:58
 msgid "Notes:"
-msgstr "Bemærkninger:"
+msgstr "Note:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:60
 #, python-brace-format
@@ -937,14 +944,14 @@ msgid ""
 "best combination is the usage of the HUC8 representation without checking "
 "the “{contextualOption}” option."
 msgstr ""
-"For at fremhæve gruppen med ikke-definerede tegn og samtidig udnytte "
-"pladsen, er den bedste kombination at bruge HUC8-gengivelsen uden at "
-"afkrydse indstillingen “{contextualOption}”."
+"Per distinguere tra loro i caratteri non definiti, massimizzando nello "
+"stesso tempo lo spazio, la miglior combinazione è l'utilizzo della "
+"rappresentazione HUC8 senza controllare l'opzione “{contextualOption}”."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:61
 #, python-brace-format
 msgid "To learn more about the HUC representation, see {url}"
-msgstr "Lær mere om HUC-repræsentationen på {url}"
+msgstr "Per maggiori informazioni sulla rappresentazione HUC, si veda {url}"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:62
 msgid ""
@@ -952,21 +959,22 @@ msgid ""
 "take precedence over character descriptions, which also take precedence over "
 "the chosen representation for undefined characters."
 msgstr ""
-"Husk på, at definitioner i tabeller og dem i dine tabelordbøger har forrang "
-"i forhold til tegnbeskrivelser, som selv har forrang i forhold til den "
-"valgte gengivelse af ikke-definerede tegn."
+"Ricordate che le definizioni presenti nelle tabelle e nei vostri dizionari "
+"per le tabelle hanno la precedenza sulle descrizioni dei caratteri, le "
+"quali, a loro volta, hanno la precedenza sulle rappresentazioni scelte per i "
+"caratteri non definiti."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:65
 msgid "Getting Current Character Info"
-msgstr "Finder info for aktuelle tegn"
+msgstr "Informazioni sul carattere corrente"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:67
 msgid ""
 "This feature allows you to obtain various information regarding the "
 "character under the cursor using the current input braille table, such as:"
 msgstr ""
-"Denne funktion gør det muligt at få forskellige oplysninger om tegnet under "
-"markøren ved hjælp af den aktuelt valgte indtastningstabel såsom:"
+"Utilizzando la tabella Braille di scrittura in uso, questa funzionalità vi "
+"permette di ottenere informazioni sul carattere sotto il cursore, come:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:69
 msgid ""
@@ -974,9 +982,9 @@ msgid ""
 "values; A description of the character if possible; the Unicode braille "
 "representation and the braille pattern dots."
 msgstr ""
-"Gengivelserne i HUC8 og HUC6, værdierne i hexadecimal, decimal, octal eller "
-"binær, en beskrivelse af tegnet hvis muligt, punktskriftgengivelsen i "
-"Unicode og punkterne i punktmønstret."
+"la rappresentazione HUC8 e HUC6, IL VALORE esadecimale, decimale, ottale o "
+"binario,  una descrizione del carattere se possibile, la rappresentazione "
+"Braille unicode e il pattern dei punti braille."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:71
 msgid ""
@@ -984,28 +992,30 @@ msgid ""
 "information in a flash message and a double-press displays the same "
 "information in a virtual NVDA buffer."
 msgstr ""
-"Hvis du udfører den indstillede inputbevægelse til denne funktion én gang, "
-"vises informationen i en flash-meddelelse, og udføres inputbevægelsen to "
-"gange, vises de samme informationer i en NVDA buffer."
+"Premendo il tasto associato a questa funzione una volta leggerete queste "
+"informazioni in un messaggio flash, mentre premendolo due volte le vedrete "
+"in un messaggio navigabile."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:73
 msgid ""
 "On supported displays the defined gesture is ⡉+space. No system gestures are "
 "defined by default."
 msgstr ""
-"På understøttede displays er den definerede inputbevægelse ⡉+mellemrum. Der "
-"er som standard ikke angivet nogen system-inputbevægelse."
+"Nei display Braille supportati il tasto da premere è ⡉+spazio; non è "
+"definito nessun tasto di default sulla tastiera del pc."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:75
 #, python-brace-format
 msgid ""
 "For example, for the '{chosenChar}' character, we will get the following "
 "information:"
-msgstr "For tegnet '{chosenChar}' får vi fx følgende oplysninger:"
+msgstr ""
+"Per esempio, per il carattere '{chosenChar}', avremo le seguenti "
+"informazioni:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:78
 msgid "Advanced braille input"
-msgstr "Avanceret indtastning i punktskrift"
+msgstr "Scrittura Braille avanzata"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:80
 msgid ""
@@ -1017,14 +1027,14 @@ msgid ""
 "Alternatively, an option allows you to automatically exit this mode after "
 "entering a single pattern. "
 msgstr ""
-"Denne funktion gør det muligt at indtaste et hvilket som helst tegn ud fra "
-"HUC8-repræsentationen eller via hexadecimal/decimal/octal/binær værdien. Den "
-"giver desuden mulighed for at opbygge egne forkortelser. Gå til den "
-"avancerede indtastningstilstand for at få adgang til denne funktion og "
-"indtast det ønskede mønster. Standard inputbevægelser: NVDA+Windows+i eller ⡊"
-"+mellemrum (på understøttede displays). Brug samme inputbevægelse til at "
-"forlade denne tilstand. Alternativt giver en indstilling mulighed for at "
-"forlade denne tilstand efter indtastning af et enkelt mønster. "
+"Questa funzionalità vi permette di inserire qualunque carattere utilizzando "
+"la sua rappresentazione HUC8 o il suo valore esadecimale, decimale, otttale "
+"o binario, nonché di sviluppare abbreviazioni. Per sviluppare abbreviazioni, "
+"entrate nella modalità di scrittura avanzata ed inserite il pattern "
+"desiderato. Tasti di default: NVDA+Windows+i o ⡊+spazio (nei display Braille "
+"supportati). Premete lo stesso tasti per uscire dalla modalità. In "
+"alternativa, un'opzione vi permette di uscire automaticamente da questa "
+"modalità dopo aver inserito un pattern. "
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:82
 msgid ""
@@ -1034,49 +1044,51 @@ msgid ""
 "entered. If you wish to enter a character from its hexadecimal, decimal, "
 "octal or binary value, do the following:"
 msgstr ""
-"Hvis du ønsker at indtaste et tegn ud fra dets HUC8-gengivelse, skal du blot "
-"indtaste HUC8-mønstret. Eftersom en HUC8-sekvens skal fylde 3 eller 4 "
-"celler, bliver fortolkningen udført efter indtastning af 3 eller 4 "
-"punktkombinationer. Hvis du ønsker at indtaste et tegn ved hjælp af dets "
-"hexadecimal, decimal, octal eller binære værdi, skal du gøre følgende:"
+"Se volete inserire la rappresentazione HUC8 di un carattere, inserite "
+"semplicemente tale pattern. Poiché una sequenza HUC8 deve entrare in 3 o 4 "
+"celle, l'interpretazione sarà effettuata ogni volta che vengono inserite tre "
+"o quattro combinazioni di punti. Se volete inserire il valore esadecimale, "
+"decimale, ottale o binario di un carattere, fate quanto segue:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:84
 #, python-brace-format
 msgid "Enter {braillePattern}"
-msgstr "Angiv {braillePattern}"
+msgstr "Inserite {braillePattern}"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:85
 msgid "Specify the basis as follows"
-msgstr "Angiv basen som følger"
+msgstr "Specificate la base come segue"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:87
 msgid "⠭ or ⠓"
-msgstr "⠭ eller ⠓"
+msgstr "⠭ o ⠓"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:87
 msgid "for a hexadecimal value"
-msgstr "for en hexadecimal værdi"
+msgstr "per un valore esadecimale"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:88
 msgid "for a decimal value"
-msgstr "for en decimal værdi"
+msgstr "per un valore decimale"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:89
 msgid "for an octal value"
-msgstr "for en octal værdi"
+msgstr "per un valore ottale"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:90
 msgid "for a binary value"
-msgstr "for en binær værdi"
+msgstr "per un valore binario"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:92
 msgid ""
 "Enter the value of the character according to the previously selected basis."
-msgstr "Angiv tegnets værdi svarende til den base, der tidligere er valgt."
+msgstr ""
+"Inserite il valore del carattere a seconda della base selezionata in "
+"precedenza."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:93
 msgid "Press Space to validate."
-msgstr "Tryk Mellemrum for at godkende."
+msgstr "Premete Spazio per validare."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:96
 msgid ""
@@ -1085,23 +1097,25 @@ msgid ""
 "press space to expand it. For example, you can define the following "
 "abbreviations: \"⠎⠺\" with \"sandwich\", \"⠋⠛⠋⠗\" to \"🇫🇷\"."
 msgstr ""
-"Forkortelser skal først tilføjes i dialogboksen — Avanceret "
-"indtastningstilstand ordbog —. Indskriv derefter forkortelsen og tryk "
-"Mellemrum for at udvide den. Man kan fx definere følgende forkortelser: \"⠎⠺"
-"\" for \"sandwich\", \"⠋⠛⠋⠗\" for \"🇫🇷\"."
+"Le abbreviazioni vanno prima aggiunte nella finestra di dialogo \"Dizionario "
+"per la modalità di scrittura avanzata\". Successivamente dovrete soltanto "
+"inserire l'abbreviazione e premere spazio per espanderla. Per esempio, "
+"potete definire le seguenti abbreviazioni: \"⠎⠺\" con \"sandwich\", \"⠋⠛⠋⠗\" "
+"per \"🇫🇷\"."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:98
 msgid "Here are some examples of sequences to be entered for given characters:"
 msgstr ""
-"Her følger nogle eksempler på sekvenser, der kan indtastes for bestemte tegn:"
+"Ecco qualche esempio di sequenza da inserire per ottenere il carattere "
+"corrispondente:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:102
 msgid "Note: the HUC6 input is currently not supported."
-msgstr "Bemærk: Indtastning med HUC6 understøttes ikke i øjeblikket."
+msgstr "Nota: la rappresentazione HUC6 al momento non è supportata."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:105
 msgid "One-hand mode"
-msgstr "Enhåndstilstand"
+msgstr "Modalità a una mano"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:107
 msgid ""
@@ -1110,14 +1124,14 @@ msgid ""
 "fly using NVDA+Windows+h gesture by default (⡂+space on supported displays). "
 "Three input methods are available."
 msgstr ""
-"Denne funktion gør det muligt at sammensætte en celle i flere trin. Den kan "
-"aktiveres fra tilføjelsens generelle indstillinger eller direkte med "
-"inputbevægelsen NVDA+Windows+h som standard (⡂+mellemrum på understøttede "
-"displays). Der findes tre metoder til indtastning."
+"Questa funzionalità vi permette di inserire un carattere Braille in più "
+"tempi; può essere attivata nelle impostazioni generali delle preferenze "
+"dell'estensione o al volo con il tasto di default NVDA+Windows+h (⡂+spazio "
+"nei display Braille supportati). Sono disponibili tre metodi di scrittura."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:108
 msgid "Method #1: fill a cell in 2 stages on both sides"
-msgstr "Metode #1: fyld en celle i 2 trin på begge sider"
+msgstr "Metodo #1: inserisci il carattere in due fasi su entrambi i lati"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:110
 msgid ""
@@ -1125,35 +1139,38 @@ msgid ""
 "side is empty, type the dots correspondig to the opposite side twice, or "
 "type the dots corresponding to the non-empty side in 2 steps."
 msgstr ""
-"Bruges denne metode, indtastes først punkterne i venstre side efterfulgt af "
-"punkterne i højre side. Hvis den ene side er tom, skriv de punkter 2 gange, "
-"der hører til på den modsatte side, eller med andre ord: Skriv punkterne "
-"tilhørende den ikke-tomme side i 2 trin."
+"Con questo metodo, digitate prima i punti del lato sinistro e poi i punti "
+"del lato destro del casellino. Se un lato è vuoto (ossia se i punti che "
+"compongono il carattere da inserire si trovano tutti sullo stesso lato), "
+"digitate i punti che si trovano sul lato non vuoto per due volte o in due "
+"tempi."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:111
 #: addon/globalPlugins/brailleExtender/addondoc.py:120
 msgid "For example:"
-msgstr "For eksempel:"
+msgstr "Per esempio:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:113
 msgid "For ⠛: press dots 1-2 then dots 4-5."
-msgstr "For ⠛: tryk punkterne 1-2 efterfulgt af punkterne 4-5."
+msgstr "Per la ⠛: digitate i punti 1-2 seguiti dai punti 4-5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:114
 msgid "For ⠃: press dots 1-2 then dots 1-2, or dot 1 then dot 2."
 msgstr ""
-"For ⠃: tryk punkterne 1-2 efterfulgt af punkterne 1-2 eller punkt 1 "
-"efterfulgt af punkt 2."
+"Per la ⠃: digitate i punti 1-2 seguiti dai punti 1-2, oppure il punto 1 "
+"seguito dal punto 2."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:115
 msgid "For ⠘: press 4-5 then 4-5, or dot 4 then dot 5."
 msgstr ""
-"For ⠘: Tryk punkterne 4-5 efterfulgt af punkterne 4-5 eller punkt 4 "
-"efterfulgt af punkt 5."
+"Per il simbolo ⠘: digitate i punti 4-5 seguiti dai punti 4-5, oppure il "
+"punto 4 seguito dal punto 5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:117
 msgid "Method #2: fill a cell in two stages on one side (Space = empty side)"
-msgstr "Metode #2: fyld en celle i to trin på én side (Mellemrum = tom side)"
+msgstr ""
+"Metodo #2: inserisci il carattere in due fasi su un lato (spazio = lato "
+"vuoto)"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:119
 msgid ""
@@ -1162,37 +1179,38 @@ msgid ""
 "dots 1-2-3-7 and the second one 4-5-6-8. If one side is empty, press space. "
 "An empty cell will be obtained by pressing the space key twice."
 msgstr ""
-"Ved at bruge denne metode kan man sammensætte en celle ved at bruge  én hånd "
-"uanset, hvilken side af punkttastaturet der vælges. Det første trin gør det "
-"muligt at indtaste punkterne 1-2-3-7 og det andet punkterne 4-5-6-8. Tryk "
-"Mellemrum, hvis den ene side er tom. Man laver en tom celle ved at trykke to "
-"gange på Mellemrum."
+"Utilizzando questo metodo, potete comporre un carattere con una mano, "
+"indipendentemente dal lato della tastiera Braille che scegliete. Il primo "
+"passo vi permette di inserire i punti 1-2-3-7 e il secondo i punti 4-5-6-8. "
+"Se un lato è vyuoto (cioè se il carattere che state digitando non prevede "
+"punti su quel lato), premete spazio. Premendo due volte spazio otterrete una "
+"cella vuota."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:122
 msgid "For ⠛: press dots 1-2 then dots 1-2, or dots 4-5 then dots 4-5."
 msgstr ""
-"For ⠛: tryk punkterne 1-2 efterfulgt af punkterne 1-2 eller punkterne 4-5 "
-"efterfulgt af punkterne 4-5."
+"Per la ⠛: digitate i punti 1-2 seguiti dai punti 1-2, oppure i punti 4-5 "
+"seguiti dai punti 4-5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:123
 msgid "For ⠃: press dots 1-2 then space, or 4-5 then space."
 msgstr ""
-"For ⠃: Tryk punkterne 1-2 efterfulgt af mellemrum eller 4-5 efterfulgt af "
-"mellemrum."
+"Per la ⠃: digitate i punti 1-2 seguiti da spazio, oppure i punti 4-5 seguiti "
+"da spazio."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:124
 msgid "For ⠘: press space then 1-2, or space then dots 4-5."
 msgstr ""
-"For ⠘: Tryk mellemrum efterfulgt af 1-2 eller mellemrum efterfulgt af "
-"punkterne 4-5."
+"Per il simbolo ⠘: digitate spazio seguito dai punti 1-2 oppure spazio "
+"seguito dai punti 4-5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:126
 msgid ""
 "Method #3: fill a cell dots by dots (each dot is a toggle, press Space to "
 "validate the character)"
 msgstr ""
-"Metode #3: fyld en celle ppunkt for punkt (hvert punkt kan slås til og fra, "
-"tryk Mellemrum for at bekræfte tegnet)"
+"Metodo #3: inserisci il carattere punto per punto (ogni punto si può "
+"aggiungere o rimuovere, premete Spazio per validare il carattere)"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:128
 msgid ""
@@ -1201,646 +1219,643 @@ msgid ""
 "the more dots are contained in the cell, the more ways you have to enter the "
 "character."
 msgstr ""
-"Ved brug af denne metode fungerer hvert punkt som en kontakt. Så snart de "
-"ønskede punkter er indtastet, skal man trykke Mellemrum for at skrive det "
-"ønskede tegn. Jo flere punkter, der findes i cellen, desto flere muligheder "
-"findes for at indtaste et tegn."
+"Con questo metodo, ogni punto può essere aggiunto o rimosso dal carattere "
+"che state digitando. Premete spazio non appena la cella che state componendo "
+"contiene i punti desiderati. Quindi, più punti ci sono nella cella più modi "
+"avete per digitare il carattere."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:129
 msgid "For example, for ⠛, you can compose the cell in the following ways"
-msgstr "For eksempel, for ⠛ kan du bygge cellen op på følgende måder"
+msgstr ""
+"Per esempio, se dovete digitare la lettera  ⠛, potete comporre la cella nei "
+"modi seguenti"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:131
 msgid "Dots 1-2, then dots 4-5, then space."
-msgstr "Punkterne 1-2, derefter punkterne 4-5, derefter mellemrum."
+msgstr "Punti 1-2, poi punti 4-5, poi spazio."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:132
 msgid "Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space."
 msgstr ""
-"Punkterne 1-2-3, derefter punkt 3 (for at rette), dernæst punkterne 4-5 "
-"derefter mellemrum."
+"Punti 1-2-3, poi punto 3 per correggere l'errore, poi punti 4-5, poi spazio."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:133
 msgid "Dot 1, then dots 2-4-5, then space."
-msgstr "Punkt 1, derefter punkterne 2-4-5, derefter mellemrum."
+msgstr "Punto 1, poi punti 2-4-5, poi spazio."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:134
 msgid "Dots 1-2-4, then dot 5, then space."
-msgstr "Punkterne 1-2-4, derefter punkt 5, derefter mellemrum."
+msgstr "Punti 1-2-4, poi punto 5, poi spazio."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:135
 msgid "Dot 2, then dot 1, then dot 5, then dot 4, and then space."
-msgstr ""
-"Punkt 2, derefter punkt 1, derefter punkt 5, derefter punkt 4 og derefter "
-"mellemrum."
+msgstr "Punto 2, poi punto 1, poi punto 5, poi punto 4, poi spazio."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:136
 msgid "Etc."
-msgstr "Etc."
+msgstr "Ecc."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:155
 msgid "Documentation"
-msgstr "Dokumentation"
+msgstr "Documentazione"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:157
 msgid "Let's explore some features"
-msgstr "Lad os udforske nogle funktioner"
+msgstr "Esploriamo qualche cunzionalità"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:159
 msgid "Profile gestures"
-msgstr "Profilbevægelser"
+msgstr "Tasti per il profilo"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:165
 msgid "Driver loaded"
-msgstr "Driver indlæst"
+msgstr "Driver caricato"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:166
 msgid "Profile"
-msgstr "Profil"
+msgstr "Profilo"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:180
 msgid "Simple keys"
-msgstr "Enkle taster"
+msgstr "Tasti semplici"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:182
 msgid "Usual shortcuts"
-msgstr "Almindelige genveje"
+msgstr "Tasti rapidi abituali"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:184
 msgid "Standard NVDA commands"
-msgstr "Standard NVDA-kommandoer"
+msgstr "Comandi standard di NVDA"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:187
 msgid "Modifier keys"
-msgstr "Modifikationstaster"
+msgstr "Tasti modificatori"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:190
 msgid "Quick navigation keys"
-msgstr "Lyntaster til navigering"
+msgstr "Tasti per la navigazione veloce"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:194
 msgid "Rotor feature"
-msgstr "Rotorfunktion"
+msgstr "Funzionalità rotore"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:202
 msgid "Gadget commands"
-msgstr "Værktøjskommandoer"
+msgstr "Comandi aggiuntivi"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:215
 msgid "Shortcuts defined outside add-on"
-msgstr "Genveje defineret uden for tilføjelsesprogrammet"
+msgstr "Tasti definiti fuori dell'add-on"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:243
 msgid "Keyboard configurations provided"
-msgstr "Tastaturkonfigurationer angivet"
+msgstr "Configurazioni tastiera fornite"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:246
 msgid "Keyboard configurations are"
-msgstr "Tastaturkonfigurationer er"
+msgstr "Le configurazioni tastiera sono"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:255
 msgid "Warning:"
-msgstr "Advarsel:"
+msgstr "Attenzione:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:257
 msgid "BrailleExtender has no gesture map yet for your braille display."
 msgstr ""
-"Udvidelse til Punktskrift har endnu intet sæt af bevægelser til dit "
-"punktdisplay."
+"Braille Extender non ha ancora tasti mappati per il vostro display Braille."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:260
 msgid ""
 "However, you can still assign your own gestures in the \"Input Gestures\" "
 "dialog (under Preferences menu)."
 msgstr ""
-"Du kan imidlertid tildele dine egne bevægelser i dialogen \"Inputbevægelser"
-"\" (under menuen Opsætning)."
+"Ad ogni modo, potete ancora assegnarne utilizzando la finestra \"Gesti e "
+"tasti di immissione\" (dal menù Preferenze)."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:264
 msgid "Add-on gestures on the system keyboard"
-msgstr "Tilføjelsens bevægelser på systemtastaturet"
+msgstr "Tasti dell'add-on sulla tastiera del pc"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:287
 msgid "Arabic"
-msgstr "Arabisk"
+msgstr "Arabo"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:288
 msgid "Chinese (Taiwan)"
-msgstr "Kinesisk (Taiwan)"
+msgstr "Cinese (Taiwan)"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:289
 msgid "Croatian"
-msgstr "Kroatisk"
+msgstr "Croato"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:290
 msgid "Danish"
-msgstr "Dansk"
+msgstr "Danese"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:291
 msgid "English and French"
-msgstr "Engelsk og fransk"
+msgstr "Inglese e francese"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:292
 msgid "German"
-msgstr "Tysk"
+msgstr "Tedesco"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:293
 msgid "Hebrew"
-msgstr "Hebraisk"
+msgstr "Ebraico"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:294
-#, fuzzy
-#| msgid "&Italic:"
 msgid "Italian"
-msgstr "&Kursiv:"
+msgstr "Italiano"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:295
 msgid "Persian"
-msgstr "Persisk"
+msgstr "Persiano"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:296
 msgid "Polish"
-msgstr "Polsk"
+msgstr "Polacco"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:297
 msgid "Russian"
-msgstr "Russisk"
+msgstr "Russo"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:300
 msgid "Copyrights and acknowledgements"
-msgstr "Copyright og anerkendelser"
+msgstr "Copyrights e riconoscimenti"
 
 #. Author(s)
 #: addon/globalPlugins/brailleExtender/addondoc.py:306 buildVars.py:70
 msgid "and other contributors"
-msgstr "og andre bidragydere"
+msgstr "e altri collaboratori"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:310
 msgid "Translators"
-msgstr "Oversættere"
+msgstr "Traduttori"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:320
 msgid "Code contributions and other"
-msgstr "Bidrag til koden og andre"
+msgstr "Contributi al codice ed altro"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:322
 msgid "Code maintenance (cleanup, rewrites, optimizations) thanks to:"
 msgstr ""
-"Vedligeholdelse af kildekoden (oprydning, gennemskrivninger, optimeringer) "
-"tak til:"
+"Per la manutenzione del codice (pulizia, riscritture, ottimizzazioni) grazie "
+"a:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:328
 msgid "Additional third party copyrighted code is included:"
-msgstr "Yderliere ophavsretligt beskyttet kode fra tredjeparter er inkluderet:"
+msgstr "Il prodotto comprende codice la cui proprietà è di terzi:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:334
 msgid "Thanks also to"
-msgstr "Også tak til"
+msgstr "Grazie anche a"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:336
 msgid "Finally thank you very much for all your feedback and comments."
-msgstr "Og til sidst mange tak for alle tilbagemeldinger og kommentarer."
+msgstr "Grazie infine a tutti voi per i vostri pareri e commenti."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:340
 #, python-format
 msgid "%s's documentation"
-msgstr "%s's dokumentation"
+msgstr "Documentazione di %s"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:359
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
-msgstr "Svarer til at trykke %s på systemets tastatur"
+msgstr "Simula la pressione di %s sulla tastiera del pc"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:370
 msgid "description currently unavailable for this shortcut"
-msgstr "Beskrivelse i øjeblikket ikke tilgængelig for denne genvej"
+msgstr "al momento non esiste una descrizione per questo tasto"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:390
 msgid "caps lock"
-msgstr "caps lock"
+msgstr "blocco maiuscole"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:107
 msgid "all tables"
-msgstr "alle tabeller"
+msgstr "tutte le tabelle"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:117
 msgid "Advanced input mode dictionary"
-msgstr "Ordbog til avanceret indtastningstilstand"
+msgstr "Dizionario per la modalità di scrittura avanzata"
 
 #. Translators: The label for the combo box of dictionary entries in advanced input mode dictionary dialog.
 #. Translators: The label for the combo box of dictionary entries in table dictionary dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:124
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:130
 msgid "Dictionary &entries"
-msgstr "Ordbogs&elementer"
+msgstr "&Voci del dizionario"
 
 #. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:132
 msgid "Abbreviation"
-msgstr "Forkortelse"
+msgstr "Abbreviazione"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:133
 msgid "Replace by"
-msgstr "Erstat med"
+msgstr "Sostituisci con"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:134
 msgid "Input table"
-msgstr "Indtastningstabel"
+msgstr "Tabella di scrittura"
 
 #. Translators: The label for a button in advanced input mode dictionariy dialog to add new entries.
 #. Translators: The label for a button in table dictionaries dialog to add new entries.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:140
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:147
 msgid "&Add"
-msgstr "&Tilføj"
+msgstr "&Aggiungi"
 
 #. Translators: The label for a button in advanced input mode dictionariy dialog to edit existing entries.
 #. Translators: The label for a button in table dictionaries dialog to edit existing entries.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:146
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:153
 msgid "&Edit"
-msgstr "&Redigér"
+msgstr "&Modifica"
 
 #. Translators: The label for a button in advanced input mode dictionariy dialog to remove existing entries.
 #. Translators: The label for a button in table dictionaries dialog to remove existing entries.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:152
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:159
 msgid "Re&move"
-msgstr "Fj&ern"
+msgstr "&Cancella"
 
 #. Translators: The label for a button in advanced input mode dictionariy dialog to open dictionary file in an editor.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:160
 msgid "&Open the dictionary file in an editor"
-msgstr "&Åben ordbogsfilen i en editor"
+msgstr "Apri il &file del dizionario in un editor"
 
 #. Translators: The label for a button in advanced input mode dictionariy dialog to reload dictionary.
 #. Translators: The label for a button in table dictionaries dialog to reload dictionary.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:165
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:172
 msgid "&Reload the dictionary"
-msgstr "&Genindlæs ordbogen"
+msgstr "&Ricarica il dizionario"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:178
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:216
 msgid "Add Dictionary Entry"
-msgstr "Tilføj ordbogselement"
+msgstr "Aggiungi Voce al Dizionario"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:224
 msgid "File doesn't exist yet"
-msgstr "Filen findes endnu ikke"
+msgstr "Il file non esiste ancora"
 
 #. Translators: This is the label for the edit dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:245
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:288
 msgid "Edit Dictionary Entry"
-msgstr "Redigér ordbogselement"
+msgstr "Modifica una Voce del Dizionario"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:250
 msgid "&Abreviation"
-msgstr "&Forkortelse"
+msgstr "&Abbreviazione"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:255
 msgid "&Replace by"
-msgstr "&Erstat med"
+msgstr "&Sostituisci con"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:280
 msgid "Advanced input mode"
-msgstr "Avanceret indtastningstilstand"
+msgstr "Modalità di scrittura avanzata"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:289
 msgid "E&xit the advanced input mode after typing one pattern"
 msgstr ""
-"A&fslut den avancerede indtastningstilstand efter indtastning af ét mønster"
+"&Esci dalla modalità di scrittura avanzata dopo aver inserito un pattern"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:296
 msgid "&Escape character for Unicode values input"
-msgstr "&Escape-tegn til indtastning af Unicode-værdier"
+msgstr "&Carattere di escape per l'inserimento di valori Unicode"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:17
 msgid "Fill a cell in two stages using one side only"
-msgstr "Udfyld en celle i to trin ved kun at bruge en side"
+msgstr "Digita un carattere in due tempi utilizzando un solo lato"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:18
 msgid "Fill a cell in two stages using both sides"
-msgstr "Udfyld en celle i to trin ved at bruge begge sider"
+msgstr "Digita un carattere in due tempi utilizzando entrambi i lati"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:19
 msgid "Fill a cell dots by dots"
-msgstr "Udfyld en celle med flere punkter ad gangen"
+msgstr "Digita un carattere punto per punto"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:71
 msgid "Unsupported input method"
-msgstr "Inputmetode ikke understøttet"
+msgstr "Metodo di scrittura non supportato"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/onehand.py:96
 msgid "One-handed mode"
-msgstr "Enhåndstilstand"
+msgstr "Modalità a una mano"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:100
 msgid "Enable &one-handed mode"
-msgstr "&Slå Enhåndstilstand til"
+msgstr "Attiva &modalità a una mano"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:105
 msgid "Input &method"
-msgstr "&Metode til indtastning"
+msgstr "Metodo di &scrittura"
 
 #. Translators: Reported when translation didn't succeed due to unsupported input.
 #: addon/globalPlugins/brailleExtender/patches.py:415
 msgid "Unsupported input"
-msgstr "Input ikke understøttet"
+msgstr "Scrittura non supportata"
 
 #: addon/globalPlugins/brailleExtender/settings.py:37
 msgid "Feature implementation is in progress. Thanks for your patience."
 msgstr ""
-"Implementering af denne funktion er under udarbejdelse. Tak for din "
-"tålmodighed."
+"Questa funzionalità è ancora in sviluppo. Grazie per la vostra pazienza."
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:43
 #: addon/globalPlugins/brailleExtender/settings.py:220
 msgid "General"
-msgstr "Generel"
+msgstr "Generale"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:50
 msgid "&Automatically check for Braille Extender updates"
-msgstr "Søg &automatisk efter opdateringer til Udvidelse til Punktskrift"
+msgstr ""
+"Controlla &automaticamente la presenza di aggiornamenti di Braille Extender"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:54
 msgid "Add-on &update channel:"
-msgstr "&Opdateringskanal for tilføjelsesprogram:"
+msgstr "&Canale di aggiornamento per l'add-on:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:61
 msgid "Say current line while &scrolling in:"
-msgstr "Sig aktuel linje under rulning i:"
+msgstr "&Leggi la riga corrente durante lo scorrimento:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:65
 msgid "Speech &interrupt when scrolling on same line"
-msgstr "&Afbryd tale ved rulning på samme linje"
+msgstr "&INterrompi la sintesi se non cambia la riga"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:69
 msgid "S&kip blank lines during text scrolling"
-msgstr "S&pring blanke linjer over ved tekstrulning"
+msgstr "&Salta le righe vuote durante lo scorrimento del testo"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:73
 msgid "Smart Caps Loc&k"
-msgstr "Smart Caps Loc&k"
+msgstr "&Blocco maiuscole intelligente"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:77
 msgid "Speech i&nterrupt for unknown gestures"
-msgstr "Afbryd tale ved ukendte be&vægelser"
+msgstr "Interrompi la sintesi con &tasti non assegnati"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:81
 msgid "Announce character when &routing braille cursor"
-msgstr "Oplæs tegnet under &flytning med markørsammenføringstaster"
+msgstr "Le&ggi il carattere corrente quando usi i tasti di cursor routing"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:85
 msgid "&Use cursor keys to route cursor in review mode"
-msgstr "&Brug markørtaster til at flytte markøren i gennemsynstilstand"
+msgstr "&Usa i tasti cursore per il cursor routing in modalità esplorazione"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:89
 msgid "&Display time and date infinitely"
-msgstr "Bliv ved med at &vise tid og dato"
+msgstr "&Mostra sempre la data e l'ora"
 
 #: addon/globalPlugins/brailleExtender/settings.py:91
 msgid ""
 "Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, "
 "PowerShell Maxima…)"
 msgstr ""
-"Skift automatisk til læsetilstand i &terminal-vinduer (cmd, bash, PuTTY, "
-"PowerShell Maxima…)"
+"Passa aut&omaticamente alla modalità esplorazione nelle finestre terminale "
+"(cmd, bash, PuTTY, PowerShell Maxima…)"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:95
 msgid "Announce &volume changes:"
-msgstr "Annoncér &ændringer i lydstyrken:"
+msgstr "Leggi le modifiche al &volume:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:103
 msgid "Announce m&odifier key presses:"
-msgstr "Oplys tryk på m&odifikationstaster:"
+msgstr "Vocali&zza i tasti modificatori:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:109
 msgid "Play &beeps for modifier keys"
-msgstr "Afspil &bip ved modifikatortaster"
+msgstr "Associa un &beep ai tasti modificatori"
 
 #: addon/globalPlugins/brailleExtender/settings.py:114
 msgid "&Right margin on cells for the active braille display"
-msgstr "&Højre margin på celler for det aktive punktdisplay"
+msgstr "Margine &destro sulle celle del display Braille attivo"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:118
 msgid "Braille &keyboard configuration:"
-msgstr "&Konfiguration af punkttastatur:"
+msgstr "&Configurazione tastiera Braille:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:122
 msgid "&Reverse forward and back scroll buttons"
-msgstr "&Vend knapperne til at rulle fremad og bagud"
+msgstr "&Inverti le funzioni dei tasti di scorrimento"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:126
 msgid "Autoscroll &delay for the active braille display (ms):"
-msgstr "&Forsinkelse på autorul for det aktive punktdisplay (ms):"
+msgstr ""
+"&Ritardo dello scorrimento automatico per il display Braille attivo (ms):"
 
 #: addon/globalPlugins/brailleExtender/settings.py:127
 msgid "Preferred &primary braille display:"
-msgstr "Foretrukket &primære punktdisplay:"
+msgstr "Display Braille &principale:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:129
 msgid "Preferred &secondary braille display:"
-msgstr "Foretrukket &sekundært punktdisplay:"
+msgstr "Display Braille secon&dario:"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:164
 msgid "Text attributes"
-msgstr "Tekstattributter"
+msgstr "Attributi del testo"
 
 #: addon/globalPlugins/brailleExtender/settings.py:168
 msgid "Indicate text attributes in braille with &Attribra"
-msgstr "Vis tekstattributter på punkt med &Attribra"
+msgstr "Indica in braille gli attributi del testo con &Attribra"
 
 #: addon/globalPlugins/brailleExtender/settings.py:170
 msgid "&Selected elements:"
-msgstr "&Valgte elementer:"
+msgstr "Elementi &selezionati:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:172
 msgid "Spelling &errors:"
-msgstr "Stave&fejl:"
+msgstr "&errori di ortografia:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:174
 msgid "&Bold:"
-msgstr "&Fed:"
+msgstr "&Grassetto:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:176
 msgid "&Italic:"
-msgstr "&Kursiv:"
+msgstr "&Corsivo:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:178
 msgid "&Underline:"
-msgstr "&Understreget:"
+msgstr "S&ottolineato:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:180
 msgid "Strike&through:"
-msgstr "Gennems&treget:"
+msgstr "&Barrato:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:182
 msgid "Su&bscripts:"
-msgstr "S&ænket skrift:"
+msgstr "&Pedice:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:184
 msgid "Su&perscripts:"
-msgstr "Hæ&vet skrift:"
+msgstr "Ap&ice:"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:211
 msgid "Role labels"
-msgstr "Rolleetiketter"
+msgstr "Etichette ruoli"
 
 #: addon/globalPlugins/brailleExtender/settings.py:218
 msgid "Use custom braille &role labels"
-msgstr "Brug tilpassede &rolleetiketter i punktskrift"
+msgstr "Usa etichette Braille personalizzate per i &ruoli"
 
 #: addon/globalPlugins/brailleExtender/settings.py:220
 msgid "Role &category:"
-msgstr "Rolle&kategori:"
+msgstr "&Categoria ruolo:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:220
 msgid "Landmark"
-msgstr "Landmærke"
+msgstr "Punto di riferimento"
 
 #: addon/globalPlugins/brailleExtender/settings.py:220
 msgid "Positive state"
-msgstr "Positiv tilstand"
+msgstr "Stato positivo"
 
 #: addon/globalPlugins/brailleExtender/settings.py:220
 msgid "Negative state"
-msgstr "Negativ tilstand"
+msgstr "Stato negativo"
 
 #: addon/globalPlugins/brailleExtender/settings.py:224
 msgid "&Role:"
-msgstr "&Rolle:"
+msgstr "&Ruolo:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:226
 msgid "Braille &label"
-msgstr "Punkt&etiket"
+msgstr "&Etichetta Braille"
 
 #: addon/globalPlugins/brailleExtender/settings.py:230
 msgid "&Reset this role label"
-msgstr "&Gendan denne rolleetiket"
+msgstr "&Reimposta etichetta"
 
 #: addon/globalPlugins/brailleExtender/settings.py:232
 msgid "Reset all role labels"
-msgstr "Gendan alle rolleetiketter"
+msgstr "Reimposta tutte le etichette di ruolo"
 
 #: addon/globalPlugins/brailleExtender/settings.py:297
 msgid "You have no customized role labels."
-msgstr "Du har ingen tilpassede rolle-etiketter."
+msgstr "Non ci sono etichette personalizzate."
 
 #: addon/globalPlugins/brailleExtender/settings.py:300
 #, python-format
 msgid ""
 "You have %d customized role labels defined. Do you want to reset all labels?"
 msgstr ""
-"Du har defineret %d tilpassede rolle-etiketter. Vil du nulstille alle "
-"etiketter?"
+"Sono state definite %d etichette personalizzate. Volete reimpostare tutte le "
+"etichette?"
 
 #: addon/globalPlugins/brailleExtender/settings.py:301
 msgid "Reset role labels"
-msgstr "Nulstil alle rolleetiketter"
+msgstr "Reimposta etichette"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:342
 msgid "Braille tables"
-msgstr "Punkttabeller"
+msgstr "Tabelle Braille"
 
 #: addon/globalPlugins/brailleExtender/settings.py:347
 msgid "Use the current input table"
-msgstr "Brug den aktuelle indskrivningstabel"
+msgstr "Usa la tabella di scrittura attuale"
 
 #: addon/globalPlugins/brailleExtender/settings.py:356
 msgid "Prefered braille &tables (press F1 for help):"
-msgstr "Foretrukne punkt&tabeller (tryk F1 for hjælp):"
+msgstr "Tabelle Braille &preferite (premete F1 per la guida):"
 
 #: addon/globalPlugins/brailleExtender/settings.py:360
 msgid "Input braille table for &keyboard shortcut keys:"
-msgstr "Punkttabel til indtastning til &tastaturgenvejje:"
+msgstr "&Tabella Braille di scrittura per i comandi da tastiera:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:362
 msgid "None"
-msgstr "Ingen"
+msgstr "Nessuna"
 
 #: addon/globalPlugins/brailleExtender/settings.py:365
 msgid "&Secondary output table:"
-msgstr "&sekundær tabel til visning:"
+msgstr "Tabella di lettura &secondaria:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:369
 msgid "Display &tabs as spaces"
-msgstr "Vis &tabulatortegn som mellemrum"
+msgstr "&Mostra i caratteri tabulazione come spazi"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:373
 msgid "&Spaces per tab for the active braille display:"
-msgstr "&Mellemrum pr tab for det aktive punktdisplay:"
+msgstr "&Spazi per ogni tab con il display Braille attuale:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:374
 msgid "Alternative and &custom braille tables..."
-msgstr "Alternative og &tilpassede punkttabeller..."
+msgstr "Tabelle Braille &alternative e personalizzate..."
 
 #: addon/globalPlugins/brailleExtender/settings.py:395
 msgid ""
 "NVDA must be restarted for changes to take effect. Would you like to restart "
 "now?"
 msgstr ""
-"NVDA skal genstartes for at indstillingerne kan slå igennem. Ønsker du at "
-"genstarte nu?"
+"Affinché le modifiche abbiano effetto, è necessario riavviare NVDA. Volete "
+"riavviarlo ora?"
 
 #: addon/globalPlugins/brailleExtender/settings.py:433
 msgid "input and output"
-msgstr "indtastning og visning"
+msgstr "scrittura e lettura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:435
 msgid "input only"
-msgstr "kun indtastning"
+msgstr "solo scrittura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:436
 msgid "output only"
-msgstr "kun visning"
+msgstr "solo lettura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:467
 #, python-format
 msgid "Table name: %s"
-msgstr "Tabelnavn: %s"
+msgstr "Nome tabella: %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:468
 #, python-format
 msgid "File name: %s"
-msgstr "Filnavn: %s"
+msgstr "Nome file: %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:469
 #, python-format
 msgid "In switches: %s"
-msgstr "Ind ændrer: %s"
+msgstr "Negli interruttori: %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:470
 msgid "About this table"
-msgstr "Om denne tabel"
+msgstr "INformazioni sulla tabella"
 
 #: addon/globalPlugins/brailleExtender/settings.py:473
 msgid ""
@@ -1851,220 +1866,218 @@ msgid ""
 "table, and 'semicolon' key to view miscellaneous information on the selected "
 "table."
 msgstr ""
-"Tilgængelige punkttabeller fra NVDA vises. Tryk tasterne mellemrum, pil "
-"venstre eller pil højre for at medtage (eller fravælge) den valgte tabel i "
-"kontakter.\n"
+"Vengono qui mostrate le tabelle utilizzabili con NVDA. Premete spazio, "
+"freccia destra o freccia sinistra per includere (o escludere) le tabelle "
+"selezionate negli interruttori.\n"
 "\n"
-"\t\t\tDu kan også trykke tasten 'komma' for at finde filnavnet til den "
-"valgte tabel og tasten 'semikolon' for at se forskellige oplysninger om den "
-"valgte tabel."
+"\t\t\tPotete anche premere il tasto 'virgola' per ottenere il nome del file "
+"della tabella selezionata e il tasto 'punto e virgola' per vedere altre "
+"informazioni su di essa."
 
 #: addon/globalPlugins/brailleExtender/settings.py:475
 msgid "Contextual help"
-msgstr "Konteksthjælp"
+msgstr "Guida contestuale"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:491
 msgid "Custom braille tables"
-msgstr "Tilpassede punkttabeller"
+msgstr "Tabelle Braille personalizzate"
 
 #: addon/globalPlugins/brailleExtender/settings.py:501
 msgid "Use a custom table as &input table"
-msgstr "Brug en tilpasset tabel som &indtastningstabel"
+msgstr "Usa una tabella personalizzata come tabella di &scrittura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:502
 msgid "Use a custom table as &output table"
-msgstr "Brug en tilpasset tabel som &visningstabel"
+msgstr "Usa una tabella personalizzata come tabella di &lettura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:503
 msgid "&Add a braille table..."
-msgstr "&Tilføj en punkttabel..."
+msgstr "&Aggiungi tabella Braille..."
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:527
 msgid "Add a braille table"
-msgstr "Tilføj en punkttabel"
+msgstr "Aggiungi una tabella Braille"
 
 #: addon/globalPlugins/brailleExtender/settings.py:533
 msgid "Display &name"
-msgstr "Display&navn"
+msgstr "&Nome visualizzato"
 
 #: addon/globalPlugins/brailleExtender/settings.py:534
 msgid "&Description"
-msgstr "&Beskrivelse"
+msgstr "&Descrizione"
 
 #: addon/globalPlugins/brailleExtender/settings.py:535
 msgid "&Path"
-msgstr "&Sti"
+msgstr "&Percorso"
 
 #: addon/globalPlugins/brailleExtender/settings.py:536
 #: addon/globalPlugins/brailleExtender/settings.py:607
 msgid "&Browse..."
-msgstr "&Gennemse..."
+msgstr "S&foglia..."
 
 #: addon/globalPlugins/brailleExtender/settings.py:539
 msgid "This is a &contracted (grade 2) braille table"
-msgstr "Dette er en &forkortet (niveau 2) punkttabel"
+msgstr "Questa tabella è s&tenografica (grado 2)"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:541
 msgid "&Available for:"
-msgstr "&Tilgængelig for:"
+msgstr "D&isponibile per:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:541
 msgid "Input and output"
-msgstr "Indskrivning og visning"
+msgstr "Lettura e scrittura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:541
 msgid "Input only"
-msgstr "Kun indskrivning"
+msgstr "Solo scrittura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:541
 msgid "Output only"
-msgstr "Kun visning"
+msgstr "Solo lettura"
 
 #: addon/globalPlugins/brailleExtender/settings.py:547
 msgid "Choose a braille table file"
-msgstr "Vælg en fil med en punkttabel"
+msgstr "Scegli una tabella Braille"
 
 #: addon/globalPlugins/brailleExtender/settings.py:547
 msgid "Liblouis table files"
-msgstr "Liblouis tabelfiler"
+msgstr "Tabelle Liblouis"
 
 #: addon/globalPlugins/brailleExtender/settings.py:559
 msgid "Please specify a display name."
-msgstr "Angiv venligst et vist navn."
+msgstr "Si prega di specificare un nome."
 
 #: addon/globalPlugins/brailleExtender/settings.py:559
 msgid "Invalid display name"
-msgstr "Ugyldigt displaynavn"
+msgstr "Nome non valido"
 
 #: addon/globalPlugins/brailleExtender/settings.py:563
 #, python-format
 msgid "The specified path is not valid (%s)."
-msgstr "Den angivne sti er ikke gyldig (%s)."
+msgstr "Il percorso inserito non è valido (%s)."
 
 #: addon/globalPlugins/brailleExtender/settings.py:563
 msgid "Invalid path"
-msgstr "Ugyldig sti"
+msgstr "Percorso non valido"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:591
 msgid "Braille Extender - Quick launches"
-msgstr "Udvidelse til Punktskrift - Hurtigstartere"
+msgstr "Braille Extender - Collegamenti rapidi"
 
 #: addon/globalPlugins/brailleExtender/settings.py:602
 msgid "&Gestures:"
-msgstr "&Bevægelser:"
+msgstr "&Tasti:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:605
 msgid "&Location (file path, URL or command)"
-msgstr "&Placering (fil, sti, URL eller kommando)"
+msgstr "&Posizione (percorso file, URL o comando)"
 
 #: addon/globalPlugins/brailleExtender/settings.py:608
 msgid "&Remove this gesture"
-msgstr "&Fjern denne bevægelse"
+msgstr "&Rimuovi questo tasto"
 
 #: addon/globalPlugins/brailleExtender/settings.py:609
 msgid "&Add a quick launch"
-msgstr "&Tilføj en hurtigstarter"
+msgstr "&Aggiungi un collegamento rapido"
 
 #: addon/globalPlugins/brailleExtender/settings.py:638
 msgid "Unable to associate this gesture. Please enter another gesture"
-msgstr "Kan ikke tildele denne bevægelse. Angiv venligst en anden"
+msgstr "Impossibile associare questo tasto. Inserite un altro tasto"
 
 #: addon/globalPlugins/brailleExtender/settings.py:642
 #, python-brace-format
 msgid ""
 "Please enter a gesture from your {addoncfg.curBD} braille display. Press "
 "space to cancel."
-msgstr ""
-"Angiv venligst en kommando fra dit {addoncfg.curBD} punktdisplay. Tryk "
-"Mellemrum for at annullere."
+msgstr "Inserite un tasto dal vostro display braille {addoncfg.curBD}."
 
 #: addon/globalPlugins/brailleExtender/settings.py:646
 msgid "Out of capture"
-msgstr "Uden for optagelse"
+msgstr "Fuori acquisizione"
 
 #: addon/globalPlugins/brailleExtender/settings.py:653
 #, python-format
 msgid "The gesture captured is %s"
-msgstr "Den registrerede bevægelse er %s"
+msgstr "Il tasto acquisito è %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:670
 msgid "Are you sure you wish to delete this shortcut?"
-msgstr "Ønsker du virkelig at slette denne genvej?"
+msgstr "Siete sicuri di voler eliminare questo comando?"
 
 #: addon/globalPlugins/brailleExtender/settings.py:670
 msgid "Remove shortcut"
-msgstr "Fjern genvej"
+msgstr "Rimuovi comando"
 
 #: addon/globalPlugins/brailleExtender/settings.py:679
 #, python-brace-format
 msgid "{g} removed"
-msgstr "{g} fjernet"
+msgstr "{g} rimosso"
 
 #: addon/globalPlugins/brailleExtender/settings.py:690
 msgid ""
 "Please enter the desired gesture for the new quick launch. Press \"space bar"
 "\" to cancel"
 msgstr ""
-"Angiv venligst den ønskede bevægelse til den nye hurtigstarter. Tryk "
-"\"Mellemrum\" for at annullere"
+"Inserite il tasto desiderato per il nuovo collegamento rapido. Premete "
+"spazio per annullare"
 
 #: addon/globalPlugins/brailleExtender/settings.py:693
 msgid "Don't add a quick launch"
-msgstr "Tilføj ikke en hurtigstarter"
+msgstr "Non aggiungere un collegamento rapido"
 
 #: addon/globalPlugins/brailleExtender/settings.py:719
 #, python-brace-format
 msgid "Choose a file for {0}"
-msgstr "Vælg en fil for {0}"
+msgstr "Scegli un file per {0}"
 
 #: addon/globalPlugins/brailleExtender/settings.py:732
 msgid "Please create or select a quick launch first"
-msgstr "Venligst opret eller vælg en hurtigstarter først"
+msgstr "Prima create o selezionate un collegamento rapido"
 
 #: addon/globalPlugins/brailleExtender/settings.py:732
 msgid "Error"
-msgstr "Fejl"
+msgstr "Errore"
 
 #. Translators: title of add-on settings dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:747
 msgid "Braille Extender settings"
-msgstr "Indstillinger for Udvidelse til Punktskrift"
+msgstr "Impostazioni di Braille Extender"
 
 #. Translators: The profile name for normal configuration
 #: addon/globalPlugins/brailleExtender/settings.py:762
 msgid "normal configuration"
-msgstr "normal konfiguration"
+msgstr "configurazione normale"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:29
 msgid "Sign"
-msgstr "Fortegn"
+msgstr "Segno"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:31
 msgid "Math"
-msgstr "Matematik"
+msgstr "Matematica"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:33
 msgid "Replace"
-msgstr "Erstat"
+msgstr "Sostituisci"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:41
 msgid "Both (input and output)"
-msgstr "Både (indtastning og visning)"
+msgstr "Lettura e scrittura"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:42
 msgid "Backward (input only)"
-msgstr "Bagud (kun indtastning)"
+msgstr "Indietro (solo scrittura)"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:43
 msgid "Forward (output only)"
-msgstr "Fremad (kun visning)"
+msgstr "Avanti (solo lettura)"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:109
 #, python-format
@@ -2072,88 +2085,88 @@ msgid ""
 "One or more errors are present in dictionary tables: %s. As a result, these "
 "dictionaries were not loaded."
 msgstr ""
-"Der er én eller flere fejl i ordbogstabeller: %s. Derfor blev disse ordbøger "
-"ikke indlæst."
+"Nelle tabelle dizionario sono presenti uno o più errori: %s. Di conseguenza, "
+"questi dizionari non sono stati caricati."
 
 #. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:133
 msgid "Comment"
-msgstr "Kommentar"
+msgstr "Commento"
 
 #. Translators: The label for a column in dictionary entries list used to identify original character.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:135
 msgid "Pattern"
-msgstr "Mønster"
+msgstr "Pattern"
 
 #. Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:137
 msgid "Representation"
-msgstr "Repræsentation"
+msgstr "Rappresentazione"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:139
 msgid "Opcode"
-msgstr "Opcode"
+msgstr "Codice operatore"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:141
 msgid "Direction"
-msgstr "Retning"
+msgstr "Direzione"
 
 #. Translators: The label for a button in table dictionaries dialog to open dictionary file in an editor.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:167
 msgid "&Open the current dictionary file in an editor"
-msgstr "&Åbn aktuelle ordbogsfil i en editor"
+msgstr "&Apri il file dizionario corrente in un editor"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:294
 msgid "Dictionary"
-msgstr "Ordbog"
+msgstr "Dizionario"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
 msgid "Global"
-msgstr "Global"
+msgstr "Globale"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
 msgid "Table ({})"
-msgstr "Tabel ({})"
+msgstr "Tabella ({})"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
 msgid "Temporary"
-msgstr "Midlertidig"
+msgstr "Temporaneo"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:302
 msgid "See &entries"
-msgstr "Se &elementer"
+msgstr "Vedi &voci"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:307
 msgid "&Text pattern/sign"
-msgstr "&Tekstmønster/tegn"
+msgstr "&Pattern testuale/segno"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog and in punctuation/symbol pronunciation dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:312
 msgid "&Braille representation"
-msgstr "&Punktskriftrepræsentation"
+msgstr "Rappresentazione &Braille"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:316
 msgid "&Comment"
-msgstr "&Kommentar"
+msgstr "&Commento"
 
 #. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:320
 msgid "&Opcode"
-msgstr "&Opcode"
+msgstr "C&odice operatore"
 
 #. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:325
 msgid "&Direction"
-msgstr "&Retning"
+msgstr "&Direzione"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:366
 msgid "Text pattern/sign field is empty."
-msgstr "Feltet til Tekstmønster/tegn er tomt."
+msgstr "Il campo \"Pattern testuale/segno\" è vuoto."
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:373
 #, python-format
@@ -2161,8 +2174,8 @@ msgid ""
 "Invalid value for 'text pattern/sign' field. You must specify a character "
 "with this opcode. E.g.: %s"
 msgstr ""
-"Ugyldig værdi i feltet 'tekstmønster/tegn'. Der skal angives et tegn med "
-"denne opcode. Fx: %s"
+"Valore non valido per il campo \"Pattern testuale/segno\". Con questo codice "
+"operatore dovete specificare un carattere. Esempio: %s"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:377
 #, python-format
@@ -2170,8 +2183,8 @@ msgid ""
 "'Braille representation' field is empty. You must specify something with "
 "this opcode. E.g.: %s"
 msgstr ""
-"Feltet 'Punktskriftrepræsentation' er tomt, angiv venligst noget med denne "
-"opcode fx: %s"
+"Il campo \"Rappresentazione Braille\" è vuoto. Con questo codice operatore "
+"dovete specificare qualcosa. Esempio: %s"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:381
 #, python-format
@@ -2179,117 +2192,117 @@ msgid ""
 "Invalid value for 'braille representation' field. You must enter dot "
 "patterns with this opcode. E.g.: %s"
 msgstr ""
-"Ugyldig værdi i feltet 'punktskriftrepræsentation'. Der skal angives "
-"punktmønstre med denne opcode fx: %s"
+"Valore non valido per il campo \"Rappresentazione Braille\". Con questo "
+"codice operatore dovete inserire sequenze di punti. Esempio: %s"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:44
 msgid "Use braille table behavior (no description possible)"
-msgstr "Brug virkemåde for punkttabel(ingen beskrivelse mulig)"
+msgstr ""
+"Usa il comportamento della tabella Braille (nessuna descrizione possibile)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:45
 msgid "Dots 1-8 (⣿)"
-msgstr "Punkterne 1-8 (⣿)"
+msgstr "Punti 1-8 (⣿)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:46
 msgid "Dots 1-6 (⠿)"
-msgstr "Punkterne 1-6 (⠿)"
+msgstr "Punti 1-6 (⣿)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:47
 msgid "Empty cell (⠀)"
-msgstr "Tom celle (⠀)"
+msgstr "Cella vuota (⠀)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:48
 #, python-brace-format
 msgid "Other dot pattern (e.g.: {dotPatternSample})"
-msgstr "Andet punktmønster (fx: {dotPatternSample})"
+msgstr "Altra sequenza di punti (es.: {dotPatternSample})"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:51
 msgid "Question mark (depending on output table)"
-msgstr "Spørgsmålstegn (afhænger af visningstabel)"
+msgstr "Punto interrogativo (a seconda della tabella di lettura)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:52
 #, python-brace-format
 msgid "Other sign/pattern (e.g.: {signPatternSample})"
-msgstr "Andet tegn/mønster (fx: {signPatternSample})"
+msgstr "Altro segno/pattern (es.: {signPatternSample})"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:55
 msgid "Hexadecimal, Liblouis style"
-msgstr "Hexadecimal, som i Liblouis"
+msgstr "Esadecimale, formato Liblouis"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:56
 msgid "Hexadecimal, HUC8"
-msgstr "Hexadecimal, HUC8"
+msgstr "Esadecimale, HUC8"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:57
 msgid "Hexadecimal, HUC6"
-msgstr "Hexadecimal, HUC6"
+msgstr "Esadecimale, HUC6"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:237
 msgid "Undefined character representation"
-msgstr "Gengivelse af ikke-definerede tegn"
+msgstr "Rappresentazione carattere non definita"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:242
 msgid "Representation &method"
-msgstr "&Metode til gengivelse"
+msgstr "&Metodo di rappresentazione"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:253
 msgid "Specify another &pattern"
-msgstr "Angiv et andet &mønster"
+msgstr "Specificate un altro &pattern"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:257
 msgid ""
 "Show punctuation/symbol &name for undefined characters if available (can "
 "cause a lag)"
 msgstr ""
-"Vis sætningstegn/symbol&navn for ikke-definerede tegn hvis det findes (kan "
-"give forsinkelse)"
+"Per i caratteri non definiti, mostra il &nome presente nella finestra "
+"\"pronuncia simbolo\" se disponibile (può causare un ritardo)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:267
 msgid "Also describe e&xtended characters (e.g.: country flags)"
-msgstr "Beskriv også u&dvidede tegn (fx: landes flag)"
+msgstr "&Descrivi anche i caratteri estesi (ad es. le bandiere delle nazioni)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:277
 msgid "&Full extended description"
-msgstr "&Fuld udvidet beskrivelse"
+msgstr "Descrizione &estesa completa"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:286
 msgid "Show the si&ze taken"
-msgstr "Vis den anvendte pla&ds"
+msgstr "&Mostra dimensione"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:293
 msgid "&Start tag"
-msgstr "&Start tag"
+msgstr "Tag &iniziale"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:298
 msgid "&End tag"
-msgstr "&Afslut tag"
+msgstr "Tag &finale"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:309
 msgid "&Language"
-msgstr "&Sprog"
+msgstr "&Lingua"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:312
 msgid "Use the current output table"
-msgstr "Brug den aktuelle visningstabel"
+msgstr "Usa la tabella di lettura attuale"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:325
 msgid "Braille &table"
-msgstr "Punkt&tabel"
+msgstr "&Tabella Braille"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:53
 #, python-format
 msgid ""
 "Braille Extender version %s is available. Do you want to download it now?"
 msgstr ""
-"Udvidelse til Punktskrift version %s er tilgængelig. Ønsker du at hente den "
-"nu?"
+"E' disponibile la versionee %s di Braille Extender. Volete scaricarla ora?"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:64
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
-msgstr "Du er up-to-date. %s er den seneste version."
+msgstr "Siete aggiornati. %s è la versioen più recente."
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:73
 #, python-format
@@ -2298,608 +2311,465 @@ msgid ""
 "later or download and install manually from %s. Do you want to open this URL "
 "in your browser?"
 msgstr ""
-"Ups! Der opstod et problem under hentning af opdateringen. Prøv venligst "
-"igen senere eller hent og installér nanuelt via %s. Ønsker du at åbne denne "
-"URL i din browser nu?"
+"Ops! C'è stato un problema nel download dell'aggiornamento di Braille "
+"Extender. Riprovate più tardi o scaricatelo e installatelo manualmente da "
+"%s. Volete aprire questo indirizzo nel vostro Browser?"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:107
 msgid "An update check dialog is already running!"
-msgstr "Der kører allerede en opdateringsdialog!"
+msgstr "La finestra di controllo dell'aggiornamento è già aperta!"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:108
 msgid "Braille Extender update"
-msgstr "Opdatering til Udvidelse til Punktskrift"
+msgstr "Aggiornamento di Braille Extender"
 
 #: addon/globalPlugins/brailleExtender/utils.py:39
 msgid "Muted sound"
-msgstr "Lyd slået fra"
+msgstr "Suoni disattivati"
 
 #: addon/globalPlugins/brailleExtender/utils.py:85
 msgid "Reload successful"
-msgstr "Genindlæsning fuldført"
+msgstr "Add-on ricaricato"
 
 #: addon/globalPlugins/brailleExtender/utils.py:88
 msgid "Reload failed"
-msgstr "Genindlæsning fejlede"
+msgstr "Impossibile ricaricare l'add-on"
 
-#: addon/globalPlugins/brailleExtender/utils.py:96
-#: addon/globalPlugins/brailleExtender/utils.py:115
+#: addon/globalPlugins/brailleExtender/utils.py:93
+#: addon/globalPlugins/brailleExtender/utils.py:105
 msgid "Not a character"
-msgstr "Ikke et tegn"
+msgstr "Non è un carattere"
 
-#: addon/globalPlugins/brailleExtender/utils.py:100
+#: addon/globalPlugins/brailleExtender/utils.py:97
 msgid "unknown"
-msgstr "ukendt"
+msgstr "sconosciuto"
 
-#: addon/globalPlugins/brailleExtender/utils.py:114
+#: addon/globalPlugins/brailleExtender/utils.py:104
 msgid "Char info"
-msgstr "Tegninfo"
+msgstr "Informazioni sul  carattere"
 
-#: addon/globalPlugins/brailleExtender/utils.py:197
+#: addon/globalPlugins/brailleExtender/utils.py:187
 msgid "Available combinations"
-msgstr "Tilgængelige kombinationer"
+msgstr "Combinazioni disponibili"
+
+#: addon/globalPlugins/brailleExtender/utils.py:189
+msgid "One combination available"
+msgstr "Una combinazione disponibile"
+
+#: addon/globalPlugins/brailleExtender/utils.py:198
+msgid "space"
+msgstr "spazio"
 
 #: addon/globalPlugins/brailleExtender/utils.py:199
-msgid "One combination available"
-msgstr "Der findes én kombination"
-
-#: addon/globalPlugins/brailleExtender/utils.py:208
-msgid "space"
-msgstr "mellemrum"
-
-#: addon/globalPlugins/brailleExtender/utils.py:209
 msgid "left SHIFT"
-msgstr "venstre SHIFT"
+msgstr "shift sinistro"
 
-#: addon/globalPlugins/brailleExtender/utils.py:210
+#: addon/globalPlugins/brailleExtender/utils.py:200
 msgid "right SHIFT"
-msgstr "højre SHIFT"
+msgstr "shift destro"
 
-#: addon/globalPlugins/brailleExtender/utils.py:211
+#: addon/globalPlugins/brailleExtender/utils.py:201
 msgid "left selector"
-msgstr "venstre vælger"
+msgstr "selettore sinistro"
 
-#: addon/globalPlugins/brailleExtender/utils.py:212
+#: addon/globalPlugins/brailleExtender/utils.py:202
 msgid "right selector"
-msgstr "højre vælger"
+msgstr "selettore destro"
 
-#: addon/globalPlugins/brailleExtender/utils.py:213
+#: addon/globalPlugins/brailleExtender/utils.py:203
 msgid "dot"
-msgstr "punkt"
+msgstr "punto"
 
-#: addon/globalPlugins/brailleExtender/utils.py:228
+#: addon/globalPlugins/brailleExtender/utils.py:218
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
-msgstr "{gesture} på {brailleDisplay}"
+msgstr "{gesture} su {brailleDisplay}"
 
-#: addon/globalPlugins/brailleExtender/utils.py:312
+#: addon/globalPlugins/brailleExtender/utils.py:302
 msgid "No text selected"
-msgstr "Ingen tekst valgt"
+msgstr "Nessun testo selezionato"
 
 #: buildVars.py:40
 msgid ""
 "BrailleExtender is a NVDA add-on that provides various features at braille "
 "level. Currently, the following features are implemented"
 msgstr ""
-"Udvidelsen til Punktskrift er en NVDA-tilføjelse, som tilbyder en lang række "
-"funktioner på punktskriftniveau. Følgende funktioner er for øjeblikket "
-"implementeret"
+"Braille Extender è un componente aggiuntivo di NVDA che fornisce una serie "
+"di funzionalità riguardanti il Braille. Attualmente sono implementate le "
+"seguenti funzioni"
 
 #: buildVars.py:41
 msgid "reload two favorite braille display with shortcuts"
-msgstr "indstil to foretrukne punktdisplays med genveje"
+msgstr "caricamento di due display Braille con tasti rapidi"
 
 #: buildVars.py:42
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
 msgstr ""
-"automatisk binding af gennemsynsmarkør  i terminalmode som i PuTTY, "
-"Powershell, bash, cmd"
+"attivazione automatica del cursore di controllo nelle finestre terminale, "
+"come in PuTTY, Powershell, bash, prompt dei comandi"
 
 #: buildVars.py:43
 msgid "auto scroll"
-msgstr "autorul"
+msgstr "scorrimento automatico"
 
 #: buildVars.py:44
 msgid "switch between several input/output braille tables"
-msgstr "Skift imellem flere punkttabeller til indtastning/visning"
+msgstr "gestione di più tabelle Braille di scrittura e lettura"
 
 #: buildVars.py:45
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
 msgstr ""
-"markér tekst med særlige attributter ved hjælp af punkt 7, punkt 8 eller "
-"begge"
+"marcatura del testo con attributi speciali mediante il punto 7, il punto 8 o "
+"entrambi"
 
 #: buildVars.py:46
 msgid "use two output braille tables simultaneously"
-msgstr "brug to punkttabeller til visning"
+msgstr "utilizzo contemporaneo di due tabelle Braille di lettura"
 
 #: buildVars.py:47
 msgid "display tab signs as spaces"
-msgstr "vis tabulatortegn som mellemrum"
+msgstr "possibilità di mostrare i caratteri di tabulazione come spazi"
 
 #: buildVars.py:48
 msgid "reverse forward scroll and back scroll buttons"
-msgstr "Vend knapperne til at rulle fremad og bagud"
+msgstr ""
+"inversione dei pulsanti di scorrimento avanti e indietro presenti sui "
+"display Braille"
 
 #: buildVars.py:49
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
 msgstr ""
-"oplæs den aktuelle linje under tekstrulning enten i gennemsynstilstand eller "
-"i fokustilstand eller begge dele"
+"lettura della riga corrente durante lo scorrimento del testo, in modalità "
+"focus, revisione o entrambe"
 
 #: buildVars.py:50
 msgid "translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"
 msgstr ""
-"oversætte tekst nemt til Unicode punktskrift og vice versa fx: z <--> ⠵"
+"possibilità di tradurre facilmente il testo in Braille Unicode e viceversa. "
+"Esempio: z <--> ⠵"
 
 #: buildVars.py:51
 msgid ""
 "convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"
 msgstr ""
-"Konvertere beskrivelse af punktceller til Unicode punktskrift og omvendt. "
-"Fx: 123 <--> ⠇"
+"conversione della descrizione celle in Braille Unicode e viceversa. Esempio: "
+"123 <--> ⠇"
 
 #: buildVars.py:52
 msgid "lock braille keyboard"
-msgstr "lås punkttastaturet"
+msgstr "blocco della tastiera Braille"
 
 #: buildVars.py:53
 msgid "launch an application/URL with gesture"
-msgstr "Åbn en applikation/URL med en inputbevægelse"
+msgstr "tasti rapidi per aprire un'applicazione o un indirizzo web"
 
 #: buildVars.py:54
 msgid "braille dictionaries"
-msgstr "punktskriftordbøger"
+msgstr "dizionari Braille"
 
 #: buildVars.py:55
 msgid "type with one-hand from braille keyboard"
-msgstr "Skriv med én hånd fra punktskrifttastatur"
+msgstr "scrittura ad una mano con la tastiera Braille"
 
 #: buildVars.py:56
 msgid ""
 "display undefined characters from braille tables (including emojis) using "
 "altenative representations"
 msgstr ""
-"Vis udefinerede tegn fra punkttabeller (herunder emojis) ved hjælp af "
-"alternative gengivelser"
+"possibilità di mostrare i caratteri non definiti delle tabelle Braille "
+"(comprese le emoji) utilizzando rappresentazioni alternative"
 
 #: buildVars.py:57
 msgid "enter any character from braille keyboard (including emojis)"
-msgstr "indskriv alle tegn fra punktskrifttastaturet (også emojis)"
+msgstr ""
+"inserimento di qualunque carattere dalla tastiera Braille (comprese le emoji)"
 
 #: buildVars.py:58
 msgid "skip blank lines during text scrolling"
-msgstr "Spring blanke linjer over ved tekstrulning"
+msgstr "salta le righe vuote durante lo scorrimento del testo"
 
 #: buildVars.py:59
 msgid "and much more!"
-msgstr "og meget mere!"
+msgstr "e molte altre!"
 
 #: buildVars.py:61
 msgid ""
 "For some braille displays, it extends the braille display commands to provide"
-msgstr "udvider punktskriftkommandoerne på nogle punktdisplays, så de omfatter"
+msgstr ""
+"Con qualche display braille, l'add-on estende l'insieme dei comandi "
+"disponibili"
 
 #: buildVars.py:62
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
 msgstr ""
-"tilbyder komplette kommandosæt herunder funktionstaster, multimedietaster, "
-"hurtig navigation, osv."
+"offre mappature tasti complete, compresi tasti funzione, tasti multimediali, "
+"tasti di navigazione veloce, ecc."
 
 #: buildVars.py:63
 msgid "emulate modifier keys, and thus any keyboard shortcut"
-msgstr "emulere modifikatortaster og derved alle genvejstaster"
+msgstr ""
+"simula i tasti modificatori e quindi tutti i tasti della tastiera del pc"
 
 #: buildVars.py:64
 msgid ""
 "offer several keyboard configurations concerning the possibility to input "
 "dots 7 and 8, enter and backspace"
 msgstr ""
-"indeholder flere tastaturkonfigurationer vedrørende muligheden for at "
-"indskrive prik 7 og 8, enter og backspace"
+"offre diverse configurazioni tastiera riguardanti la possibilità di inserire "
+"i punti 7 e 8, invio e backspace"
 
 #: buildVars.py:65
 msgid "add actions and quick navigation through a rotor"
-msgstr "tilføj handlinger og hurtig navigering via en rotor"
+msgstr "aggiunge azioni e comandi per la navigazione veloce mediante un rotore"
 
-#~ msgid "Toggles Attribra"
-#~ msgstr "Slå Attribra til og fra"
+#~ msgid "Toggle alignments report"
+#~ msgstr "Mostra o nasconde le informazioni sull'allineamento"
 
-#, python-format
-#~ msgid "Unmuted sound (%3d%%)"
-#~ msgstr "Lyd slået til (%3d%%)"
+#~ msgid "Plain text mode enabled"
+#~ msgstr "Modalità testo semplice abilitata"
+
+#~ msgid "Plain text mode disabled"
+#~ msgstr "Modalità testo semplice disabilitata"
+
+#~ msgid "Toggle plain text mode"
+#~ msgstr "Abilita o disabilita la modalità testo semplice"
+
+#~ msgid "Toggle speech mode"
+#~ msgstr "Attiva o disattiva la sintesi"
+
+#~ msgid "Toggles automatic braille scroll"
+#~ msgstr "Attiva o disattiva lo scorrimento automatico del Braille"
+
+#~ msgid "Increase braille autoscroll delay"
+#~ msgstr "Aumenta il ritardo dello scorrimento automatico del Braille"
+
+#~ msgid "Decrease braille autoscroll delay"
+#~ msgstr "Diminuisce il ritardo dello scorrimento automatico del Braille"
 
 #, python-brace-format
-#~ msgid "{BRAILLEGESTURE} removed"
-#~ msgstr "{BRAILLEGESTURE} fjernet"
+#~ msgid "{delay} ms"
+#~ msgstr "{delay} ms"
 
-#~ msgid "Headings at level 1"
-#~ msgstr "Overskrifter på niveau 1"
+#~ msgid "Auto scroll"
+#~ msgstr "Scorrimento automatico"
 
-#~ msgid "Headings at level 2"
-#~ msgstr "Overskrifter på niveau 2"
+#~ msgid "&Step for delay change (ms):"
+#~ msgstr "Ampiezza dello &scatto per la modifica del ritardo (ms):"
 
-#~ msgid "Headings at level 3"
-#~ msgstr "Overskrifter på niveau 3"
+#~ msgid "&Adjust the delay to content"
+#~ msgstr "&Adatta il ritardo al contenuto"
 
-#~ msgid "Headings at level 4"
-#~ msgstr "Overskrifter på niveau 4"
+#~ msgid "Always ignore &blank line"
+#~ msgstr "&Ignora sempre le righe vuote"
 
-#~ msgid "Headings at level 5"
-#~ msgstr "Overskrifter på niveau 5"
+#~ msgid "nothing"
+#~ msgstr "niente"
 
-#~ msgid "Headings at level 6"
-#~ msgstr "Overskrifter på niveau 6"
-
-#~ msgid "&Profile editor"
-#~ msgstr "&Profileditor"
-
-#~ msgid "Profile editor"
-#~ msgstr "Profileditor"
-
-#~ msgid "Move to previous item depending rotor setting"
-#~ msgstr "Flytter til forrige element afhængig af rotor-indstilling"
-
-#~ msgid "Move to next item depending rotor setting"
-#~ msgstr "Flytter til næste element afhængig af rotor-indstilling"
-
-#~ msgid ""
-#~ "Varies depending on rotor setting. Eg: in object mode, it's similar to "
-#~ "NVDA+enter"
-#~ msgstr ""
-#~ "Varierer alt efter rotor-indstilling. Fx: I objekt-tilstand svarer det "
-#~ "til NVDA+enter"
-
-#~ msgid "locked"
-#~ msgstr "låst"
-
-#~ msgid "unlocked"
-#~ msgstr "låst op"
-
-#~ msgid "Lock/unlock braille keyboard"
-#~ msgstr "Lås/lås op for punktskrifttastatur"
-
-#~ msgid "enabled"
-#~ msgstr "slået til"
-
-#~ msgid "disabled"
-#~ msgstr "slået fra"
-
-#~ msgid "Enable/disable one hand mode feature"
-#~ msgstr "Slå Enhåndstilstand til/fra"
-
-#, python-format
-#~ msgid "Modifier keys %s"
-#~ msgstr "Modifikationstaster %s"
-
-#~ msgid "Quick access to the \"say current line while scrolling in\" option"
-#~ msgstr "Hurtig adgang til indstillingen \"sig aktuel linje under rul i\""
-
-#~ msgid "Enable/disable the advanced input mode"
-#~ msgstr "Slå avanceret indtastningstilstand til/fra"
-
-#~ msgid "Enable/disable description of undefined characters"
-#~ msgstr "Slå beskrivelse af ikke-definerede tegn til og fra"
-
-#~ msgid "Hour and date with autorefresh"
-#~ msgstr "Tid og dato med automatisk opdatering"
-
-#~ msgid "Enable/disable autoscroll"
-#~ msgstr "Slå autorul til/fra"
-
-#~ msgid "Mute or unmute sound"
-#~ msgstr "Slå lyd fra eller til"
-
-#, python-format
-#~ msgid "Check for %s updates, and starts the download if there is one"
-#~ msgstr ""
-#~ "Søger efter %s opdateringer og påbegynder hentningen, hvis der findes én"
-
-#~ msgid "Please use NVDA 2017.3 minimum for this feature"
-#~ msgstr "Brug venligst som minimum NVDA 2017.3 til denne funktion "
-
-#~ msgid "Switch between his favorite output braille tables"
-#~ msgstr "Skift imellem de foretrukne punkttabeller til visning"
-
-#, python-format
-#~ msgid "%s reloaded"
-#~ msgstr "%s genindlæst"
-
-#, python-format
-#~ msgid "Reload %s"
-#~ msgstr "Genindlæs %s"
-
-#~ msgid "&Enable this feature"
-#~ msgstr "&Slå denne funktion til"
-
-#~ msgid "Check for &updates automatically"
-#~ msgstr "Søg automatisk efter &Opdateringer"
-
-#~ msgid "Automatic review mode for apps with terminal"
-#~ msgstr "Automatisk gennemsynstilstand for programmer med terminal"
-
-#~ msgid "Feedback for volume change in"
-#~ msgstr "Tilbagemelding om ændring i lydstyrke i"
-
-#~ msgid "Feedback for modifier keys in"
-#~ msgstr "Tilbagemelding om modifikatortaster i"
-
-#~ msgid "Right margin on cells"
-#~ msgstr "Højre margen på celler"
-
-#~ msgid "Autoscroll delay (ms)"
-#~ msgstr "Autorul forsinkelse (ms)"
-
-#~ msgid "First braille display preferred"
-#~ msgstr "Første foretrukne punktdisplay"
-
-#~ msgid "Second braille display preferred"
-#~ msgstr "Andet foretrukne punktdisplay"
-
-#, fuzzy
-#~| msgid "Show spelling errors with"
-#~ msgid "Show spelling errors with"
-#~ msgstr "Vis stavefejl med"
-
-#, fuzzy
-#~| msgid "Show bold with"
-#~ msgid "Show bold with"
-#~ msgstr "Vis fed med"
-
-#, fuzzy
-#~| msgid "Show italic with"
-#~ msgid "Show italic with"
-#~ msgstr "Vis kursiv med"
-
-#, fuzzy
-#~| msgid "Show underline with"
-#~ msgid "Show underline with"
-#~ msgstr "Vis understregning med"
-
-#, fuzzy
-#~| msgid "Show subscript with"
-#~ msgid "Show subscript with"
-#~ msgstr "Vis sænket skrift med"
-
-#~ msgid "Actual or new label"
-#~ msgstr "Aktuel eller ny etiket"
-
-#, python-format
-#~ msgid ""
-#~ "Do you want really reset all labels? Currently, you have %d customized "
-#~ "labels."
-#~ msgstr ""
-#~ "Ønsker du at gendanne alle etiketter? Du har i øjeblikket %d tilpassede "
-#~ "etiketter."
-
-#~ msgid "Confirmation"
-#~ msgstr "Bekræftelse"
-
-#~ msgid "press F1 for help"
-#~ msgstr "tryk F1 for hjælp"
-
-#~ msgid "Number of &space for a tab sign"
-#~ msgstr "Antal &mellemrum for et tabulatortegn "
-
-#~ msgid ""
-#~ "In this combo box, all tables are present. Press space bar, left or right "
-#~ "arrow keys to include (or not) the selected table in switches"
-#~ msgstr ""
-#~ "I denne combobox findes alle tabeller. Tryk Mellemrum, venstre eller "
-#~ "højre piletaster for at inkludere (eller ej) den valgte tabel i kontakter"
-
-#~ msgid "Quick launches"
-#~ msgstr "Hurtigstartere"
-
-#~ msgid "Profiles editor"
-#~ msgstr "Profileditor"
-
-#~ msgid "You must have a braille display to editing a profile"
-#~ msgstr "Der kræves et punktdisplay for at kunne redigere en profil"
-
-#~ msgid ""
-#~ "Profiles directory is not present or accessible. Unable to edit profiles"
-#~ msgstr ""
-#~ "Mappen med profiler findes ikke eller er utilgængelig. Kan ikke redigere "
-#~ "profiler"
-
-#~ msgid "Profile to edit"
-#~ msgstr "Profil der skal redigeres"
-
-#~ msgid "Gestures category"
-#~ msgstr "Kategorien Bevægelser "
-
-#~ msgid "Single keys"
-#~ msgstr "Enkelttaster"
-
-#~ msgid "Practical shortcuts"
-#~ msgstr "Praktiske genveje"
-
-#~ msgid "NVDA commands"
-#~ msgstr "NVDA-kommandoer"
-
-#~ msgid "Addon features"
-#~ msgstr "Tilføjelsesfunktioner"
-
-#~ msgid "Gestures list"
-#~ msgstr "Liste med bevægelser"
-
-#~ msgid "Add gesture"
-#~ msgstr "Tilføj bevægelse"
-
-#~ msgid "Remove this gesture"
-#~ msgstr "Fjern denne bevægelse"
-
-#~ msgid "Assign a braille gesture"
-#~ msgstr "Tildel en punktskriftbevægelse"
-
-#~ msgid "Remove this profile"
-#~ msgstr "Fjern denne profil"
-
-#~ msgid "Add a profile"
-#~ msgstr "Tilføj en profil"
-
-#~ msgid "Name for the new profile"
-#~ msgstr "Navn på den nye profil"
-
-#~ msgid "Create"
-#~ msgstr "Opret"
-
-#~ msgid "Unable to load this profile. Malformed or inaccessible file"
-#~ msgstr ""
-#~ "Denne profil kan ikke indlæses. Filen har enten den forkerte form eller "
-#~ "er utilgængelig"
-
-#, python-brace-format
-#~ msgid "{addonSummary} settings"
-#~ msgstr "{addonSummary} indstillinger"
-
-#~ msgid "no description possible"
-#~ msgstr "ingen beskrivelse mulig"
-
-#~ msgid "can cause a lag"
-#~ msgstr "kan give efterslæb"
-
-#, python-brace-format
-#~ msgid "{addonName}'s update"
-#~ msgstr "{addonName}'s opdatering"
-
-#~ msgid "Not text"
-#~ msgstr "Ikke tekst"
-
-#, python-brace-format
-#~| msgid "Text attributes"
-#~ msgid "Text attributes {state}"
-#~ msgstr "Tekstattributer {state}"
-
-#~ msgid ""
-#~ "Please fill at least two tables and/or groups of tables for this feature "
-#~ "first"
-#~ msgstr ""
-#~ "Udfyld venligst først to tabeller og/eller grupper af tabeller til denne "
-#~ "funktion"
-
-#~ msgid "group"
-#~ msgstr "gruppe"
-
-#, fuzzy
-#~| msgid "Switch between his favorite output braille tables"
-#~ msgid "Switch between your favorite input braille tables including groups"
-#~ msgstr "Skift imellem foretrukne oversættelsestabeller"
-
-#, fuzzy
-#~| msgid "Switch between his favorite output braille tables"
-#~ msgid "Switch between your favorite output braille tables including groups"
-#~ msgstr "Skift imellem foretrukne oversættelsestabeller"
-
-#~ msgid "input"
-#~ msgstr "indskrivning"
-
-#~| msgid "output only"
-#~ msgid "output"
-#~ msgstr "visning"
-
-#~| msgid "Use the current input table"
-#~ msgid "Preferred &input tables"
-#~ msgstr "Foretrukne &indtastningstabeller"
-
-#~| msgid "Use the current input table"
-#~ msgid "Preferred &output tables"
-#~ msgstr "Foretrukne &visningstabeller"
-
-#~ msgid "&Groups of tables"
-#~ msgstr "&Grupper af tabeller"
-
-#~ msgid "Tab size is invalid"
-#~ msgstr "Tabstørrelse er ugyldig"
-
-#~ msgid "Groups of tables"
-#~ msgstr "Grupper af tabeller"
-
-#~ msgid "List of table groups"
-#~ msgstr "Liste over tabelgrupper"
-
-#~ msgid "Name"
-#~ msgstr "Navn"
-
-#~ msgid "Members"
-#~ msgstr "Medlemmer"
-
-#, fuzzy
-#~| msgid "stable"
-#~ msgid "Usable in"
-#~ msgstr "stabil"
-
-#, fuzzy
-#~| msgid "&Open the current dictionary file in an editor"
-#~ msgid "&Open the groups of tables file in an editor"
-#~ msgstr "&Åbn aktuelle ordbogsfil i en editor"
-
-#, fuzzy
-#~| msgid "&Open the current dictionary file in an editor"
-#~ msgid "&Reload the groups of tables"
-#~ msgstr "&Åbn aktuelle ordbogsfil i en editor"
-
-#, fuzzy
-#~| msgid "Add gesture"
-#~ msgid "Add group entry"
-#~ msgstr "Tilføj bevægelse"
-
-#~ msgid "Group name"
-#~ msgstr "Gruppenavn"
-
-#~ msgid "Group members"
-#~ msgstr "Gruppemedlemmer"
-
-#~| msgid "Use the current input table"
-#~ msgid "Order of the tables"
-#~ msgstr "Tabellernes rækkefølge"
-
-#~ msgid "Please specify a group name"
-#~ msgstr "Angiv venligst et gruppenavn."
+#~ msgid "hand over to Liblouis (defined in tables)"
+#~ msgstr "passalo a Liblouis (definita nelle tabelle)"
 
 #~ msgid "tags"
-#~ msgstr "tags"
+#~ msgstr "tag"
 
-#~ msgid "N/A"
-#~ msgstr "N/A"
+#~ msgid "bold"
+#~ msgstr "grassetto"
 
-#~ msgid "HUC8"
-#~ msgstr "HUC8"
+#~ msgid "italic"
+#~ msgstr "coersivo"
 
-#~ msgid "Enable this feature"
-#~ msgstr "Slå denne funktion til"
+#~ msgid "underline"
+#~ msgstr "sottolineato"
 
-#~ msgid "Settings"
-#~ msgstr "Indstillinger"
+#~ msgid "strikethrough"
+#~ msgstr "barrato"
 
-#~ msgid "One hand mode method"
-#~ msgstr "Metode til enhåndstilstand"
+#~ msgid "subscript"
+#~ msgstr "pedice"
 
-#~ msgid "Braille &dictionaries"
-#~ msgstr "Punktskrift&ordbøger"
+#~ msgid "superscript"
+#~ msgstr "apice"
 
-#~ msgid "French"
-#~ msgstr "Fransk"
+#~ msgid "spelling errors"
+#~ msgstr "errori di battitura"
 
-#, python-format
-#~ msgid "%s braille display"
-#~ msgstr "%s punktdisplay"
+#~ msgid "grammar errors"
+#~ msgstr "errori grammaticali"
 
-#, python-format
-#~ msgid "profile loaded: %s"
-#~ msgstr "profil indlæst: %s"
+#~ msgid "centered alignment"
+#~ msgstr "allineamento centrato"
 
-#~ msgid "Prevent undefined characters with Hexadecimal Unicode value"
-#~ msgstr "Forhindre udefinerede tegnd med Hexadecimal Unicode værdi"
+#~ msgid "distributed alignment"
+#~ msgstr "allineamento distribuito"
+
+#~ msgid "justified alignment"
+#~ msgstr "allineamento giustificato"
+
+#~ msgid "left alignment"
+#~ msgstr "allineamento a sinistra"
+
+#~ msgid "right alignment"
+#~ msgstr "allineamento a destra"
+
+#~ msgid "default alignment"
+#~ msgstr "allineamento di default"
+
+#~ msgid "inserted revision"
+#~ msgstr "revisione aggiunta"
+
+#~ msgid "deleted revision"
+#~ msgstr "revisione eliminata"
+
+#~ msgid "notes and comments"
+#~ msgstr "note e commenti"
+
+#~ msgid "like speech"
+#~ msgstr "come la sintesi"
+
+#~ msgid "enabled"
+#~ msgstr "attivato"
+
+#~ msgid "disabled"
+#~ msgstr "disattivato"
+
+#~ msgid "Spelling and grammar &errors"
+#~ msgstr "&Errori grammaticali e di battitura"
+
+#~ msgid "{}: {}"
+#~ msgstr "{}: {}"
+
+#~ msgid "Formatting Method"
+#~ msgstr "Metodo di formattazione"
+
+#~ msgid "&Spelling errors:"
+#~ msgstr "Errori di &battitura:"
+
+#~ msgid "&Grammar errors:"
+#~ msgstr "Errori di &grammatica:"
+
+#~ msgid "B&old:"
+#~ msgstr "&Grassetto:"
+
+#~ msgid "Customize formatting tags"
+#~ msgstr "Personalizza i tag di formattazione"
+
+#~ msgid "&Formatting"
+#~ msgstr "&Formattazione"
 
 #~ msgid ""
-#~ "Show undefined characters as (e.g.: 0 for blank cell, 12345678, 6-123456)"
+#~ "The following options control the types of document formatting reported "
+#~ "by NVDA in braille only."
 #~ msgstr ""
-#~ "Vis udefinerede tegn som (fx: 0 for blank celle, 12345678, 6-123456)"
+#~ "Le seguenti opzioni controllano i tipi di formattazione documento "
+#~ "riportati da NVDA solo in Braille."
+
+#~ msgid "Plain text mode (disable all text formatting)"
+#~ msgstr "Modalità testo semplice (disabilita ogni formattazione testo)"
+
+#~ msgid "Process formatting line per line"
+#~ msgstr "Esegue la formattazione riga per riga"
+
+#, python-brace-format
+#~ msgid "{label}:"
+#~ msgstr "{label}:"
+
+#~ msgid "Cell &formula (Excel only for now)"
+#~ msgstr "&Formula associata alla cella (per ora solo Excel)"
+
+#~ msgid "Le&vel of items in a nested list"
+#~ msgstr "&Livello degli elementi in un elenco con livelli interni"
+
+#~ msgid "Met&hods..."
+#~ msgstr "&Metodi..."
+
+#~ msgid "name"
+#~ msgstr "nome"
+
+#~ msgid "value"
+#~ msgstr "valore"
+
+#~ msgid "state"
+#~ msgstr "stato"
+
+#~ msgid "role text"
+#~ msgstr "testo di esempio"
+
+#~ msgid "description"
+#~ msgstr "descrizione"
+
+#~ msgid "keyboard shortcut"
+#~ msgstr "comandi da tastiera"
+
+#~ msgid "position info"
+#~ msgstr "informazioni sulla posizione"
+
+#~ msgid "position info level"
+#~ msgstr "livello di informazioni sulla posizione"
+
+#~ msgid "current labels"
+#~ msgstr "etichette attuali"
+
+#~ msgid "place-holder"
+#~ msgstr "segnaposto"
+
+#~ msgid "cell coordinates text"
+#~ msgstr "coordinate testuali della cella"
+
+#~ msgid "Order Properties"
+#~ msgstr "Proprietà ordinamento"
+
+#~ msgid "Properties"
+#~ msgstr "Proprietà"
+
+#~ msgid "Move &up"
+#~ msgstr "Sposta &su"
+
+#~ msgid "Move &down"
+#~ msgstr "Sposta &giù"
+
+#~ msgid "Reset to the default &NVDA order"
+#~ msgstr "Ripristina l'ordine predefinito di &NVDA"
+
+#~ msgid "Reset to the &default add-on order"
+#~ msgstr "Ripristina l'ordine predefinito dell'&add-on"
+
+#~ msgid "after"
+#~ msgstr "dopo"
+
+#~ msgid "before"
+#~ msgstr "prima"
+
+#~ msgid "Role/state labels"
+#~ msgstr "Etichette ruolo/stato"
+
+#~ msgid "Selected &elements:"
+#~ msgstr "&Elementi selezionati:"
+
+#~ msgid "&Role/state labels..."
+#~ msgstr "&Etichette ruolo/stato..."
+
+#~ msgid "Braille display margins (beta, requires NVDA restart)"
+#~ msgstr "Margini del display Braille (beta, richiede il riavvio di NVDA)"
+
+#~ msgid "&Right"
+#~ msgstr "&Destro"
+
+#~ msgid "Advanced"
+#~ msgstr "Avanzato"
+
+#~ msgid ""
+#~ "Try to avoid &cursor positions issues with some characters such as "
+#~ "variation selectors"
+#~ msgstr ""
+#~ "Prova ad evitare &problemi di posizione del cursore con caratteri come i "
+#~ "selettori di variazione"
+
+#~ msgid "force the refresh of braille region related to &foreground object"
+#~ msgstr ""
+#~ "forza l'aggiornamento delle regioni Braille relative a &oggetti in primo "
+#~ "piano"

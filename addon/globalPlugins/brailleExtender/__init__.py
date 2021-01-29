@@ -816,7 +816,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		tabledictionaries.setDictTables()
 		ui.message(_("Output: %s") % addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])])
 		return
-	script_switchOutputBrailleTable.__doc__ = _("Switches between configured braille input tables")
+	script_switchOutputBrailleTable.__doc__ = _("Switches between configured braille output tables")
 
 	def script_currentBrailleTable(self, gesture):
 		inTable = brailleInput.handler.table.displayName

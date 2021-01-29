@@ -41,7 +41,7 @@ from .common import baseDir, CHOICE_tags
 from .documentformatting import get_method, get_tags, N_, normalizeTextAlign
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
 
 addonHandler.initTranslation()
 
@@ -79,8 +79,7 @@ def sayCurrentLine():
 			except (NotImplementedError, RuntimeError):
 				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
 			info.expand(textInfos.UNIT_LINE)
-			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE,
-								 reason=controlTypes.REASON_CARET)
+			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
 
@@ -1141,6 +1140,14 @@ def _translate(self, endWord):
 			else:
 				self.emulateKey(newText)
 		else:
+			if config.conf["brailleExtender"]["smartCapsLock"] and winUser.getKeyState(winUser.VK_CAPITAL)&1:
+				tmp = []
+				for ch in newText:
+					if ch.islower():
+						tmp.append(ch.upper())
+					else:
+						tmp.append(ch.lower())
+				newText = ''.join(tmp)
 			self.sendChars(newText)
 
 	if endWord or (newText and (not self.currentFocusIsTextObj or self.currentModifiers)):
@@ -1190,6 +1197,7 @@ braille.getPropertiesBraille = getPropertiesBraille
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
+REASON_CARET = get_output_reason("CARET")
 
 braille.Region.brlex_typeforms = {}
 braille.Region._len_brlex_typeforms = 0

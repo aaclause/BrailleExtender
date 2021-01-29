@@ -1,6 +1,6 @@
 # patches.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
 import os
@@ -38,7 +38,7 @@ from . import regionhelper
 from . import undefinedchars
 from .common import baseDir
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
 
 addonHandler.initTranslation()
 
@@ -66,7 +66,7 @@ def sayCurrentLine():
 			except (NotImplementedError, RuntimeError):
 				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
 			info.expand(textInfos.UNIT_LINE)
-			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
+			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
 def script_braille_routeTo(self, gesture):
@@ -525,3 +525,4 @@ script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
+REASON_CARET = get_output_reason("CARET")

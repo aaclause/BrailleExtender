@@ -13,6 +13,7 @@ import brailleInput
 import brailleTables
 import characterProcessing
 import config
+import controlTypes
 import languageHandler
 import louis
 import scriptHandler
@@ -346,3 +347,13 @@ def getCurrentBrailleTables(input_=False, brf=False):
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 		]
 	return tables
+
+
+def get_output_reason(reason_name):
+	old_attr = "REASON_%s" % reason_name
+	if hasattr(controlTypes, "OutputReason") and hasattr(controlTypes.OutputReason, reason_name):
+		return getattr(controlTypes.OutputReason, reason_name)
+	elif hasattr(controlTypes, old_attr):
+		return getattr(controlTypes, old_attr)
+	else:
+		raise AttributeError("Reason \"%s\" unknown" % reason_name)

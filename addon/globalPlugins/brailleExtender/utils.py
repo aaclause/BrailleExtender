@@ -1,6 +1,6 @@
 # utils.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 
 import os
 import re
@@ -13,6 +13,7 @@ import brailleInput
 import brailleTables
 import characterProcessing
 import config
+import controlTypes
 import languageHandler
 import louis
 import scriptHandler
@@ -88,20 +89,30 @@ def reload_brailledisplay(bd_name):
 	ui.message(_("Reload failed"))
 	return False
 
-def currentCharDesc(ch='', display=True):
+def currentCharDesc(
+		ch: str='',
+		display: bool=True
+	) -> str:
 	if not ch: ch = getCurrentChar()
 	if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
 	if c:
-		try: descChar = unicodedata.name(ch)
-		except ValueError: descChar = _("unknown")
-		HUCrepr = " (%s, %s)" % (huc.translate(ch, False), huc.translate(ch, True))
-		brch = getTextInBraille(ch)
-		s = "%c%s: %s; %s; %s; %s; %s [%s]\n%s (%s)" % (ch, HUCrepr, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch), brch, huc.unicodeBrailleToDescription(brch))
+		try: char_name = unicodedata.name(ch)
+		except ValueError: char_name = _("unknown")
+		char_category = unicodedata.category(ch)
+		HUC_repr = "%s, %s" % (huc.translate(ch, False), huc.translate(ch, True))
+		speech_output = getSpeechSymbols(ch)
+		brl_repr = getTextInBraille(ch)
+		brl_repr_desc = huc.unicodeBrailleToDescription(brl_repr)
+		s = (
+			f"{ch}: {hex(c)}, {c}, {oct(c)}, {bin(c)}\n"
+			f"{speech_output} ({char_name} [{char_category}])\n"
+			f"{brl_repr} ({brl_repr_desc})\n"
+			f"{HUC_repr}")
 		if not display: return s
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
-			ui.browseableMessage(s, (r"\x%d (%s) - " % (c, ch)) + _("Char info"))
+			ui.browseableMessage(s, (r"U+%.4x (%s) - " % (c, ch)) + _("Char info"))
 	else: ui.message(_("Not a character"))
 
 def getCurrentChar():
@@ -138,7 +149,7 @@ def getKeysTranslation(n):
 def getTextInBraille(t=None, table=[]):
 	if not isinstance(table, list): raise TypeError("Wrong type for table parameter: %s" % repr(table))
 	if not t: t = getTextSelection()
-	if not t.strip(): return ''
+	if not t: return ''
 	if not table or "current" in table:
 		table = getCurrentBrailleTables()
 	else:
@@ -312,3 +323,13 @@ def getCurrentBrailleTables(input_=False, brf=False):
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 		]
 	return tables
+
+
+def get_output_reason(reason_name):
+	old_attr = "REASON_%s" % reason_name
+	if hasattr(controlTypes, "OutputReason") and hasattr(controlTypes.OutputReason, reason_name):
+		return getattr(controlTypes.OutputReason, reason_name)
+	elif hasattr(controlTypes, old_attr):
+		return getattr(controlTypes, old_attr)
+	else:
+		raise AttributeError("Reason \"%s\" unknown" % reason_name)

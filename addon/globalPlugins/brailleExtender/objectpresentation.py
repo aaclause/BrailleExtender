@@ -12,6 +12,7 @@ from logHandler import log
 from . import addoncfg
 from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES
 from .documentformatting import CHOICES_LABELS, get_report
+from .utils import get_output_reason
 
 addonHandler.initTranslation()
 
@@ -221,7 +222,7 @@ def getPropertiesBraille(**propertyValues) -> str:
 			controlTypes.processAndLabelStates(
 				role,
 				states,
-				controlTypes.REASON_FOCUS,
+				REASON_FOCUS,
 				states,
 				None,
 				positiveStateLabels,
@@ -595,3 +596,5 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] = list(
 			self.choices.keys()
 		)[self.selectedElement.GetSelection()]
+
+REASON_FOCUS = get_output_reason("FOCUS")

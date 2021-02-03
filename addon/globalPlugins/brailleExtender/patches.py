@@ -324,7 +324,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 	states = field.get("states", set())
 	value = field.get('value', None)
 	childControlCount = int(field.get('_childcontrolcount',"0"))
-	current = field.get('current', None)
+	current = field.get("current", IS_CURRENT_NO)
 	placeholder = field.get('placeholder', None)
 	roleText = field.get('roleTextBraille', field.get('roleText'))
 	roleTextPost = None

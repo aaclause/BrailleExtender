@@ -10,7 +10,7 @@ import wx
 from logHandler import log
 
 from . import addoncfg
-from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES
+from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES, IS_CURRENT_NO
 from .documentformatting import CHOICES_LABELS, get_report
 from .utils import get_output_reason
 
@@ -149,6 +149,18 @@ def update_NVDAObjectRegion(self):
 	super(braille.NVDAObjectRegion, self).update()
 
 
+def is_current_display_string(current):
+	if hasattr(current, "displayString"):
+		return current.displayString
+	if hasattr(controlTypes, "isCurrentLabels"):
+		try:
+			return controlTypes.isCurrentLabels[current]
+		except KeyError:
+			pass
+	log.debugWarning("Aria-current value not handled: %s" % current)
+	return ''
+
+
 def getPropertiesBraille(**propertyValues) -> str:
 	properties = {}
 	positiveStateLabels = braille.positiveStateLabels
@@ -278,14 +290,9 @@ def getPropertiesBraille(**propertyValues) -> str:
 			cellCoordsText = rowCoordinate
 		elif columnCoordinate:
 			cellCoordsText = columnHeaderText
-	current = propertyValues.get("current", False)
-	if current:
-		try:
-			currentStr = controlTypes.isCurrentLabels[current]
-		except KeyError:
-			log.debugWarning("Aria-current value not handled: %s" % current)
-			currentStr = controlTypes.isCurrentLabels[True]
-		properties["current"] = currentStr
+	isCurrent = propertyValues.get("current", IS_CURRENT_NO)
+	if isCurrent != IS_CURRENT_NO:
+		properties["current"] = is_current_display_string(isCurrent)
 	placeholder = propertyValues.get("placeholder", None)
 	if placeholder:
 		properties["placeholder"] = placeholder

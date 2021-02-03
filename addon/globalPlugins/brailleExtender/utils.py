@@ -25,7 +25,7 @@ from keyboardHandler import KeyboardInputGesture
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
-from .addoncfg import CHOICE_braille,CHOICE_speech , CHOICE_speechAndBraille
+from .addoncfg import CHOICE_braille, CHOICE_speech, CHOICE_speechAndBraille
 from .common import INSERT_AFTER, INSERT_BEFORE, REPLACE_TEXT, baseDir
 from . import huc
 from . import tabledictionaries

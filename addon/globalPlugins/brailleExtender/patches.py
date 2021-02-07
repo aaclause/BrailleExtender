@@ -37,8 +37,8 @@ from . import advancedinput
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir, CHOICE_tags
-from .documentformatting import get_method, get_tags, N_, normalizeTextAlign
+from .common import baseDir, CHOICE_tags, IS_CURRENT_NO
+from .documentformatting import get_method, get_tags, N_, normalizeTextAlign, normalize_report_key
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
@@ -645,7 +645,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			"underline",
 			"strikethrough"] if get_method(tag) == CHOICE_tags
 		]
-	if formatConfig["reportSuperscriptsAndSubscripts"]:
+	if (normalize_report_key("superscriptsAndSubscripts") and formatConfig["reportSuperscriptsAndSubscripts"]) or formatConfig["reportFontAttributes"]:
 		tags += [tag for tag in [
 			"text-position:sub",
 			"text-position:super"] if get_method(tag) == CHOICE_tags

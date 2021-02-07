@@ -39,8 +39,8 @@ from . import autoscroll
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir, CHOICE_tags
-from .documentformatting import get_method, get_tags, N_, normalizeTextAlign
+from .common import baseDir, CHOICE_tags, IS_CURRENT_NO
+from .documentformatting import get_method, get_tags, N_, normalizeTextAlign, normalize_report_key
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
@@ -344,7 +344,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 	states = field.get("states", set())
 	value = field.get('value', None)
 	childControlCount = int(field.get('_childcontrolcount',"0"))
-	current = field.get('current', None)
+	current = field.get("current", IS_CURRENT_NO)
 	placeholder = field.get('placeholder', None)
 	roleText = field.get('roleTextBraille', field.get('roleText'))
 	roleTextPost = None
@@ -665,7 +665,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 			"underline",
 			"strikethrough"] if get_method(tag) == CHOICE_tags
 		]
-	if formatConfig["reportSuperscriptsAndSubscripts"]:
+	if (normalize_report_key("superscriptsAndSubscripts") and formatConfig["reportSuperscriptsAndSubscripts"]) or formatConfig["reportFontAttributes"]:
 		tags += [tag for tag in [
 			"text-position:sub",
 			"text-position:super"] if get_method(tag) == CHOICE_tags

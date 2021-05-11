@@ -24,7 +24,10 @@ import louis
 import louisHelper
 import nvwave
 import queueHandler
-import sayAllHandler
+try:
+	import sayAllHandler
+except ModuleNotFoundError:
+	from speech.sayAll import SayAllHandler as sayAllHandler
 import scriptHandler
 import speech
 import textInfos

@@ -333,3 +333,27 @@ def get_output_reason(reason_name):
 		return getattr(controlTypes, old_attr)
 	else:
 		raise AttributeError("Reason \"%s\" unknown" % reason_name)
+
+def get_speech_mode():
+	if hasattr(speech, "getState"):
+		return speech.getState().speechMode
+	return speech.speechMode
+
+
+def is_speechMode_talk() -> bool:
+	speechMode = get_speech_mode()
+	if hasattr(speech, "SpeechMode"):
+		return speechMode == speech.SpeechMode.talk
+	return speechMode == speech.speechMode_talk 
+
+
+def set_speech_off():
+	if hasattr(speech, "SpeechMode"):
+		return speech.setSpeechMode(speech.SpeechMode.off)
+	speech.speechMode = speech.speechMode_off
+
+
+def set_speech_talk():
+	if hasattr(speech, "SpeechMode"):
+		return speech.setSpeechMode(speech.SpeechMode.talk)
+	speech.speechMode = speech.speechMode_talk

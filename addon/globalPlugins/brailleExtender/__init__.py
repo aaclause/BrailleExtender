@@ -646,9 +646,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_advancedInput(self, gesture):
 		self.advancedInput = not self.advancedInput
 		if self.advancedInput:
-			speech.speakMessage(_("Advanced braille input mode enabled"))
+			tones.beep(700, 30)
 		else:
-			speech.speakMessage(_("Advanced braille input mode disabled"))
+			tones.beep(300, 30)
 	script_advancedInput.__doc__ = _("Toggle advanced input mode")
 
 	def script_undefinedCharsDesc(self, gesture):

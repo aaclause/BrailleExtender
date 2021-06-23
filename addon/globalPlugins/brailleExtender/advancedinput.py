@@ -202,6 +202,12 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 		bHelper.addButton(
 			parent=self,
 			# Translators: The label for a button in advanced input mode
+			# dictionariy dialog to save entries.
+			label=_("&Save"),
+		).Bind(wx.EVT_BUTTON, self.onSaveClick)
+		bHelper.addButton(
+			parent=self,
+			# Translators: The label for a button in advanced input mode
 			# dictionariy dialog to open dictionary file in an editor.
 			label=_("&Open the dictionary file in an editor"),
 		).Bind(wx.EVT_BUTTON, self.onOpenFileClick)
@@ -256,17 +262,22 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 			deleteIndex = self.dictList.GetNextSelected(deleteIndex)
 		self.dictList.SetFocus()
 
+	def onSaveClick(self, evt):
+		saveDict(self.curDict)
+		self.dictList.SetFocus()
+
 	def onOpenFileClick(self, event):
-		dictPath = getPathDict()
-		if not os.path.exists(dictPath):
+		if not os.path.exists(PATH_DICT):
 			return ui.message(_("File doesn't exist yet"))
 		try:
-			os.startfile(dictPath)
+			os.startfile(PATH_DICT)
 		except OSError:
 			os.popen('notepad "%s"' % dictPath)
 
 	def onReloadDictClick(self, event):
-		self.tmpDict = advancedInputDictHandler.getEntries()
+		self.curDict.terminate()
+		initialize()
+		self.curDict = advancedInputDictHandler
 		self.onSetEntries()
 
 	def postInit(self):

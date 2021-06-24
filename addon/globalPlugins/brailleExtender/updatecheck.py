@@ -176,7 +176,7 @@ class UpdateCheck(threading.Thread):
 	shouldStop = False
 
 	def run(self):
-		if globalVars.appArgs.secure:
+		if globalVars.appArgs.secure or config.isAppX or globalVars.appArgs.launcher:
 			return self.stop()
 		checkingForced = False
 		delayChecking = 86400 if config.conf[sectionName]["updateChannel"] != "stable" else 604800

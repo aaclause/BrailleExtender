@@ -1237,7 +1237,6 @@ braille.getPropertiesBraille = getPropertiesBraille
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
-REASON_CARET = get_output_reason("CARET")
 
 braille.Region.brlex_typeforms = {}
 braille.Region._len_brlex_typeforms = 0
@@ -1250,5 +1249,8 @@ braille.BrailleHandler.increase_auto_scroll_delay = autoscroll.increase_auto_scr
 braille.BrailleHandler.report_auto_scroll_delay = autoscroll.report_auto_scroll_delay
 braille.BrailleHandler.toggle_auto_scroll = autoscroll.toggle_auto_scroll
 braille.BrailleHandler._displayWithCursor = _displayWithCursor
+
 if addoncfg.getRightMarginCells():
 	braille.handler.display.display = display
+
+REASON_CARET = get_output_reason("CARET")

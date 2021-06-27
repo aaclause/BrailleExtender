@@ -43,7 +43,8 @@ class AutoScroll(threading.Thread):
 					braille.handler.scrollForward()
 				except wx._core.wxAssertionError as err:
 					log.error(err)
-				# HACK: windowStartPos and windowEndPos take a some time to refresh
+				# HACK: windowStartPos and windowEndPos take a some time to
+				# refresh
 				time.sleep(0.1)
 
 	def stop(self):

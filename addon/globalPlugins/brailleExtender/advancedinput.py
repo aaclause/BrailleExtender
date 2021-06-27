@@ -54,6 +54,13 @@ class AdvancedInputDictEntry:
 	def table(self, table):
 		self._table = table
 
+	def update(self, newEntry):
+		if not isinstance(newEntry, AdvancedInputDictEntry):
+			raise TypeError("entry: wrong type")
+		self.abreviation = newEntry.abreviation
+		self.replacement = newEntry.replacement
+		self.table = newEntry.table
+
 	def __repr__(self):
 		return '(abreviation="{abreviation}", replacement="{replacement}", table="{table}")'.format(
 			abreviation=self.abreviation, replacement=self.replacement, table=self.table)
@@ -78,7 +85,7 @@ class AdvancedInputDict:
 		elif isinstance(entry, AdvancedInputDictEntry):
 			entryDict = entry
 		else:
-			log.error("wrong type")
+			log.error("entry: wrong type")
 		self.addEntry(entryDict)
 
 	def addEntry(self, newEntry):
@@ -86,16 +93,14 @@ class AdvancedInputDict:
 			raise TypeError("newEntry: wrong type")
 		for i, entry in enumerate(self.entries):
 			if newEntry.abreviation == entry.abreviation and newEntry.table == entry.table:
-				entry.abreviation = newEntry.abreviation
-				entry.replacement = newEntry.replacement
-				entry.table = newEntry.table
+				entry.update(newEntry)
 				return i
 		self.entries.append(newEntry)
 		self.sort()
 		return self.entries.index(newEntry)
 
 	def editEntry(self, editIndex, entry):
-		self.entries[editIndex] = entry
+		self.entries[editIndex].update(entry)
 
 	def removeEntry(self, entry):
 		del self.entries[entry]

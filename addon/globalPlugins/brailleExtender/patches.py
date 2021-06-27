@@ -396,7 +396,7 @@ def input_(self, dots):
 				else: self._reportUntranslated(pos)
 			elif abreviations:
 				if len(abreviations) == 1:
-					res = abreviations[0].replaceBy
+					res = abreviations[0].replacement
 					sendChar(res)
 				else: return self._reportUntranslated(pos)
 			else:

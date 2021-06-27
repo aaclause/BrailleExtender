@@ -290,8 +290,12 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 				return False
 		return True
 
-	def _postValidation(self):
-		newIndex = self.curDict.addEntry(self.entry)
+	def _postValidation(self, editIndex=NO_DUPLICATE):
+		newIndex = editIndex
+		if editIndex != NO_DUPLICATE:
+			self.curDict.editEntry(editIndex, self.entry)
+		else:
+			newIndex = self.curDict.addEntry(self.entry)
 		self.onSetEntries()
 		self.dictList.Focus(newIndex)
 		self.dictList.Select(newIndex)
@@ -309,7 +313,7 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onEditClick(self, event):
 		if self.dictList.GetSelectedItemCount() != 1:
-			return
+			return ui.message(_("Please select an entry first"))
 		editIndex = self.dictList.GetFirstSelected()
 		entry = self.curDict.getEntries()[editIndex]
 		entryDialog = DictionaryEntryDlg(self)
@@ -319,7 +323,7 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 			self.entry = entryDialog.dictEntry
 			if not self._isValid(editIndex):
 				continue
-			self._postValidation()
+			self._postValidation(editIndex)
 			entryDialog.Destroy()
 			break
 
@@ -333,6 +337,7 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 
 	def onSaveClick(self, evt):
 		saveDict(self.curDict)
+		self.backupDict = deepcopy(self.curDict)
 		self.dictList.SetFocus()
 
 	def onOpenFileClick(self, event):

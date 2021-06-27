@@ -1215,6 +1215,7 @@ def display(cells):
 	if nb: cells += [0] * nb
 	origFunc["display"](cells)
 
+
 # applying patches
 braille.getControlFieldBraille = getControlFieldBraille
 braille.getFormatFieldBraille = getFormatFieldBraille
@@ -1240,6 +1241,7 @@ braille.Region.parseUndefinedChars = True
 
 braille.Region.brlex_typeforms = {}
 braille.Region._len_brlex_typeforms = 0
+
 braille.BrailleHandler.AutoScroll = autoscroll.AutoScroll
 braille.BrailleHandler._auto_scroll = None
 braille.BrailleHandler.get_auto_scroll_delay = autoscroll.get_auto_scroll_delay

@@ -681,7 +681,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_autoScroll(self, gesture):
 		braille.handler.toggle_auto_scroll()
-	script_autoScroll.__doc__ = _("Toggles automatic braille scroll")
+	script_autoScroll.__doc__ = _("Toggle automatic braille scroll")
 
 	def script_volumePlus(self, gesture):
 		keyboardHandler.KeyboardInputGesture.fromName('volumeup').send()

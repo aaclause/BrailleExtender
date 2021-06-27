@@ -4,7 +4,6 @@
 import codecs
 import json
 import os
-from collections import namedtuple
 from copy import deepcopy
 from logHandler import log
 
@@ -23,9 +22,41 @@ addonHandler.initTranslation()
 
 PATH_DICT = os.path.join(configDir, "advancedInputMode.json")
 
-AdvancedInputDictEntry = namedtuple(
-	"AdvancedInputDictEntry", ("abreviation", "replaceBy", "table")
-)
+
+class AdvancedInputDictEntry:
+
+	def __init__(self, abreviation: str, replacement: str, table: str):
+		self.abreviation = abreviation
+		self.replacement = replacement
+		self.table = table
+
+	@property
+	def abreviation(self):
+		return self._abreviation
+
+	@abreviation.setter
+	def abreviation(self, abreviation):
+		self._abreviation = abreviation
+
+	@property
+	def replacement(self):
+		return self._replacement
+
+	@replacement.setter
+	def replacement(self, replacement):
+		self._replacement = replacement
+
+	@property
+	def table(self):
+		return self._table
+
+	@table.setter
+	def table(self, table):
+		self._table = table
+
+	def __repr__(self):
+		return '(abreviation="{abreviation}", replacement="{replacement}", table="{table}")'.format(
+			abreviation=self.abreviation, replacement=self.replacement, table=self.table)
 
 
 class AdvancedInputDict:
@@ -56,7 +87,7 @@ class AdvancedInputDict:
 		for i, entry in enumerate(self.entries):
 			if newEntry.abreviation == entry.abreviation and newEntry.table == entry.table:
 				entry.abreviation = newEntry.abreviation
-				entry.replaceBy = newEntry.replaceBy
+				entry.replacement = newEntry.replacement
 				entry.table = newEntry.table
 				return i
 		self.entries.append(newEntry)
@@ -70,7 +101,7 @@ class AdvancedInputDict:
 		del self.entries[entry]
 
 	def sort(self):
-		self.entries = sorted(self.entries, key=lambda e: e.replaceBy)
+		self.entries = sorted(self.entries, key=lambda e: e.replacement)
 
 	def getEntries(self):
 		return self.entries
@@ -104,7 +135,7 @@ def saveDict(dictToSave, fp=None):
 	entries = [
 		{
 			"abreviation": entry.abreviation,
-			"replaceBy": entry.replaceBy,
+			"replacement": entry.replacement,
 			"table": entry.table,
 		}
 		for entry in dictToSave.getEntries()
@@ -223,7 +254,7 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 		self.dictList.DeleteAllItems()
 		for entry in self.curDict.getEntries():
 			self.dictList.Append(
-				(entry.replaceBy,
+				(entry.replacement,
 				 entry.abreviation,
 				 translateTable(
 					 entry.table)))
@@ -246,7 +277,7 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 		entry = self.curDict.getEntries()[editIndex]
 		entryDialog = DictionaryEntryDlg(self)
 		entryDialog.abreviationTextCtrl.SetValue(entry.abreviation)
-		entryDialog.replaceByTextCtrl.SetValue(entry.replaceBy)
+		entryDialog.replacementTextCtrl.SetValue(entry.replacement)
 		if entryDialog.ShowModal() == wx.ID_OK:
 			entry = entryDialog.dictEntry
 			self.curDict.editEntry(editIndex, entry)
@@ -308,9 +339,9 @@ class DictionaryEntryDlg(wx.Dialog):
 		)
 		# Translators: This is a label for an edit field in add dictionary
 		# entry dialog.
-		replaceByLabelText = _("&Replace by")
-		self.replaceByTextCtrl = sHelper.addLabeledControl(
-			replaceByLabelText, wx.TextCtrl
+		replacementLabelText = _("&Replace by")
+		self.replacementTextCtrl = sHelper.addLabeledControl(
+			replacementLabelText, wx.TextCtrl
 		)
 
 		sHelper.addDialogDismissButtons(
@@ -324,8 +355,8 @@ class DictionaryEntryDlg(wx.Dialog):
 
 	def onOk(self, evt):
 		abreviation = getTextInBraille(self.abreviationTextCtrl.GetValue())
-		replaceBy = self.replaceByTextCtrl.GetValue()
-		newEntry = AdvancedInputDictEntry(abreviation, replaceBy, "*")
+		replacement = self.replacementTextCtrl.GetValue()
+		newEntry = AdvancedInputDictEntry(abreviation, replacement, "*")
 		self.dictEntry = newEntry
 		evt.Skip()
 

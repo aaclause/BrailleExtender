@@ -15,12 +15,13 @@ import gui
 import ui
 import wx
 
-from .common import configDir
+from .common import configDir, addonName
 from .utils import getTextInBraille
 
 addonHandler.initTranslation()
 
 PATH_DICT = os.path.join(configDir, "advancedInputMode.json")
+NO_DUPLICATE = -1
 
 
 class AdvancedInputDictEntry:
@@ -80,8 +81,10 @@ class AdvancedInputDict:
 	def _addEntry(self, entry):
 		if isinstance(entry, dict):
 			entryDict = AdvancedInputDictEntry(
-				entry["abreviation"], entry["replaceBy"], entry["table"]
-			)
+				entry["abreviation"],
+				entry["replacement"]
+				if "replacement" in entry else entry["replaceBy"],
+				entry["table"])
 		elif isinstance(entry, AdvancedInputDictEntry):
 			entryDict = entry
 		else:
@@ -91,10 +94,10 @@ class AdvancedInputDict:
 	def addEntry(self, newEntry):
 		if not isinstance(newEntry, AdvancedInputDictEntry):
 			raise TypeError("newEntry: wrong type")
-		for i, entry in enumerate(self.entries):
-			if newEntry.abreviation == entry.abreviation and newEntry.table == entry.table:
-				entry.update(newEntry)
-				return i
+		duplicateIndex = self.checkDuplicate(newEntry)
+		if duplicateIndex != NO_DUPLICATE:
+			self.entries[duplicateIndex].update(newEntry)
+			return duplicateIndex
 		self.entries.append(newEntry)
 		self.sort()
 		return self.entries.index(newEntry)
@@ -104,6 +107,14 @@ class AdvancedInputDict:
 
 	def removeEntry(self, entry):
 		del self.entries[entry]
+
+	def checkDuplicate(self, newEntry, excludedIndex=NO_DUPLICATE):
+		for i, entry in enumerate(self.entries):
+			if i == excludedIndex:
+				continue
+			if newEntry.abreviation == entry.abreviation and newEntry.table == entry.table:
+				return i
+		return NO_DUPLICATE
 
 	def sort(self):
 		self.entries = sorted(self.entries, key=lambda e: e.replacement)
@@ -265,15 +276,36 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 					 entry.table)))
 		self.dictList.SetFocus()
 
+	def _isValid(self, entryIndex=NO_DUPLICATE):
+		duplicateIndex = self.curDict.checkDuplicate(self.entry, entryIndex)
+		if duplicateIndex != NO_DUPLICATE:
+			if self.entry.replacement == self.curDict.entries[duplicateIndex].replacement:
+				msg = _("Don't get tired, this entry already exists!")
+				gui.messageBox(msg, addonName, wx.OK | wx.ICON_INFORMATION)
+				return True
+			msg = _('The abreviation "{abreviation}" is already used for "{replacement}". Do you want to update the existing entry?').format(
+				abreviation=self.entry.abreviation, replacement=self.curDict.entries[duplicateIndex].replacement)
+			if gui.messageBox(msg, addonName, wx.YES_NO |
+							  wx.ICON_INFORMATION) == wx.NO:
+				return False
+		return True
+
+	def _postValidation(self):
+		newIndex = self.curDict.addEntry(self.entry)
+		self.onSetEntries()
+		self.dictList.Focus(newIndex)
+		self.dictList.Select(newIndex)
+		self.dictList.SetFocus()
+
 	def onAddClick(self, event):
 		entryDialog = DictionaryEntryDlg(self, title=_("Add Dictionary Entry"))
-		if entryDialog.ShowModal() == wx.ID_OK:
-			entry = entryDialog.dictEntry
-			addIndex = self.curDict.addEntry(entry)
-			self.onSetEntries()
-			self.dictList.Focus(addIndex)
-			self.dictList.SetFocus()
-		entryDialog.Destroy()
+		while entryDialog.ShowModal() == wx.ID_OK:
+			self.entry = entryDialog.dictEntry
+			if not self._isValid():
+				continue
+			self._postValidation()
+			entryDialog.Destroy()
+			break
 
 	def onEditClick(self, event):
 		if self.dictList.GetSelectedItemCount() != 1:
@@ -283,12 +315,13 @@ class AdvancedInputModeDlg(gui.settingsDialogs.SettingsDialog):
 		entryDialog = DictionaryEntryDlg(self)
 		entryDialog.abreviationTextCtrl.SetValue(entry.abreviation)
 		entryDialog.replacementTextCtrl.SetValue(entry.replacement)
-		if entryDialog.ShowModal() == wx.ID_OK:
-			entry = entryDialog.dictEntry
-			self.curDict.editEntry(editIndex, entry)
-			self.onSetEntries()
-			self.dictList.Focus(editIndex)
+		while entryDialog.ShowModal() == wx.ID_OK:
+			self.entry = entryDialog.dictEntry
+			if not self._isValid(editIndex):
+				continue
+			self._postValidation()
 			entryDialog.Destroy()
+			break
 
 	def onRemoveClick(self, event):
 		deleteIndex = self.dictList.GetFirstSelected()
@@ -359,8 +392,18 @@ class DictionaryEntryDlg(wx.Dialog):
 		self.Bind(wx.EVT_BUTTON, self.onOk, id=wx.ID_OK)
 
 	def onOk(self, evt):
-		abreviation = getTextInBraille(self.abreviationTextCtrl.GetValue())
+		abreviation = self.abreviationTextCtrl.GetValue()
 		replacement = self.replacementTextCtrl.GetValue()
+		msg = None
+		if not abreviation:
+			msg = _('The abreviation field is empty, please enter something.')
+			self.abreviationTextCtrl.SetFocus()
+		if not replacement:
+			msg = _('The remplacement field is empty, please enter something.')
+			self.replacementTextCtrl.SetFocus()
+		if msg:
+			return gui.messageBox(msg, addonName, wx.OK | wx.ICON_ERROR)
+		abreviation = getTextInBraille(abreviation)
 		newEntry = AdvancedInputDictEntry(abreviation, replacement, "*")
 		self.dictEntry = newEntry
 		evt.Skip()

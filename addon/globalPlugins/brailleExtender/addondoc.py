@@ -318,6 +318,9 @@ class AddonDoc:
 			[
 				"</ul>",
 				"<h3>" + _("Code contributions and other") + "</h3>",
+				"<ul>",
+				"<li>" + _("Speech mode feature:") + " Emil Hesmyr &lt;emilhe@viken.no&gt;" + "</li>",
+				"</ul>",
 				"<p>"
 				+ _("Code maintenance (cleanup, rewrites, optimizations) thanks to:")
 				+ "</p>",

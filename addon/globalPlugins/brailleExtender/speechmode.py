@@ -51,8 +51,15 @@ def speak(
 	index = len(speechList) - 1
 	showSpeech(index)
 
+if hasattr(speech, "speech"):
+	#to insure the speech function works correctly if another add-on creates a speech attribute on the speech module
+	if hasattr(speech.speech, "speak") and isinstance(speech.speech, type(speech)):
+		speech.speech.speak = speak
+	else:
+		speech.speak = speak
+else:
+	speech.speak = speak
 
-speech.speak = speak
 oldScrollBack = braille.BrailleBuffer.scrollBack
 
 

@@ -94,7 +94,7 @@ oldBrailleMessage = braille.handler.message
 
 
 def newBrailleMessage(*args, **kwargs):
-	if braille.handler.getTether != "speech":
+	if braille.handler.getTether() != "speech":
 		oldBrailleMessage(*args, **kwargs)
 
 

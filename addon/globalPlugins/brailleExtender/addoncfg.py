@@ -132,6 +132,7 @@ def getConfspec():
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
+		"speechMode": "boolean(default=False)",
 		"routingReviewModeWithCursorKeys": "boolean(default=False)",
 		"speechMode": "boolean(default=False)",
 		"inputTableShortcuts": 'string(default="?")',

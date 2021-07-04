@@ -6,10 +6,12 @@ import config
 import speech
 import api
 import ui
-
 orig_speak = speech.speak
-
-if not ("speech", "to speech") in braille.handler.tetherValues:
+speechInList = False
+for i in braille.handler.tetherValues:
+	if "speech" in i:
+		speechInList = True
+if not speechInList:
 	# the speech option can not be positioned such that the user goes directly
 	# from it to "automaticly" when using the NVDA + ctrl + t command. If it
 	# is, the braille display does not show the focus propperly until the user
@@ -18,6 +20,10 @@ if not ("speech", "to speech") in braille.handler.tetherValues:
 		if braille.handler.tetherValues[i][0] == "auto":
 			braille.handler.tetherValues.insert(i + 1, ("speech", "to speech"))
 
+if config.conf["brailleExtender"]["speechMode"] and config.conf["braille"]["autoTether"]:
+	config.conf["braille"]["autoTether"] = False
+	config.conf["brailleExtender"]["speechMode"] = False
+	braille.handler.setTether("speech")
 
 def showSpeech(index):
 	try:

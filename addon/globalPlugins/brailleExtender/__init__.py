@@ -40,6 +40,7 @@ from . import advancedinput
 from . import huc
 from . import patches
 from . import settings
+from . import speechmode
 from . import tabledictionaries
 from . import undefinedchars
 from . import updatecheck

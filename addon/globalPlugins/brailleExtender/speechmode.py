@@ -20,10 +20,12 @@ if not speechInList:
 		if braille.handler.tetherValues[i][0] == "auto":
 			braille.handler.tetherValues.insert(i + 1, ("speech", "to speech"))
 
-if config.conf["brailleExtender"]["speechMode"] and config.conf["braille"]["autoTether"]:
+if config.conf["brailleExtender"]["speechMode"] and config.conf["braille"][
+		"autoTether"]:
 	config.conf["braille"]["autoTether"] = False
 	config.conf["brailleExtender"]["speechMode"] = False
 	braille.handler.setTether("speech")
+
 
 def showSpeech(index):
 	try:
@@ -41,9 +43,9 @@ index = 0
 
 
 def speak(
-		speechSequence,
-		symbolLevel=None,
-		priority=speech.Spri.NORMAL,
+	speechSequence,
+	symbolLevel=None,
+	priority=speech.Spri.NORMAL,
 ):
 	orig_speak(speechSequence, symbolLevel, priority)
 	string = ""
@@ -57,9 +59,15 @@ def speak(
 	index = len(speechList) - 1
 	showSpeech(index)
 
+
 if hasattr(speech, "speech"):
-	#to insure the speech function works correctly if another add-on creates a speech attribute on the speech module
-	if hasattr(speech.speech, "speak") and isinstance(speech.speech, type(speech)):
+	# to insure the speech function works correctly if another add-on creates
+	# a speech attribute on the speech module
+	if hasattr(
+			speech.speech,
+			"speak") and isinstance(
+			speech.speech,
+			type(speech)):
 		speech.speech.speak = speak
 	else:
 		speech.speak = speak

@@ -159,15 +159,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	modifiersLocked = False
 	hourDatePlayed = False
 	hourDateTimer = None
-	autoScrollRunning = False
-	autoScrollTimer = None
 	modifiers = set()
 	_pGestures = OrderedDict()
 	rotorGES = {}
 	noKC = None
 	backupInputTable = brailleInput.handler.table
 	backupMessageTimeout = None
-	backupShowCursor = False
 	backupTether = utils.getTether()
 	switchedMode = False
 
@@ -233,7 +230,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)
-		if self.autoScrollRunning: self.script_autoScroll(None)
 		if self.autoTestPlayed: self.script_autoTest(None)
 		if braille.handler is not None and addoncfg.curBD != braille.handler.display.name:
 			addoncfg.curBD = braille.handler.display.name
@@ -242,6 +238,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		nextHandler()
 		return
+
+	def event_foreground(self, obj, nextHandler):
+		if braille.handler._auto_scroll:
+			braille.handler.toggle_auto_scroll()
+		nextHandler()
 
 	def createMenu(self):
 		self.submenu = wx.Menu()
@@ -591,12 +592,12 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_toggleSpeechScrollFocusMode.__doc__ = _("Toggle between say current line while scrolling options between none, focus mode, review mode, or both")
 
 	def script_toggleSpeech(self, gesture):
-		if speech.speechMode == speech.speechMode_off:
-			speech.speechMode = speech.speechMode_talk
-			ui.message(_("Speech on"))
-		else:
-			speech.speechMode = speech.speechMode_off
+		if utils.is_speechMode_talk():
+			utils.set_speech_off()
 			ui.message(_("Speech off"))
+		else:
+			utils.set_speech_talk()
+			ui.message(_("Speech on"))
 	script_toggleSpeech.__doc__ = _("Toggle speech on or off")
 
 	def script_reportExtraInfos(self, gesture):
@@ -669,7 +670,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_position.__doc__ = _("Reports the cursor position of text under the braille cursor")
 
 	def script_hourDate(self, gesture=None):
-		if self.autoScrollRunning:
+		if braille.handler._auto_scroll:
 			return
 		if self.hourDatePlayed:
 			self.hourDateTimer.Stop()
@@ -698,30 +699,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		currentHourDate = time.strftime('%X %x (%a, %W/53, %b)', time.localtime())
 		return braille.handler.message(currentHourDate)
 
-	def script_autoScroll(self, gesture, sil=False):
-		if self.hourDatePlayed:
-			return
-		if self.autoScrollRunning:
-			self.autoScrollTimer.Stop()
-			if not sil:
-				speech.speakMessage(_("Autoscroll stopped"))
-			config.conf["braille"]["showCursor"] = self.backupShowCursor
-		else:
-			self.autoScrollTimer = wx.PyTimer(self.autoScroll)
-			try: self.autoScrollTimer.Start(int(config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD]))
-			except BaseException as e:
-				log.error("%s | %s" % (config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD], e))
-				ui.message(_("Unable to start autoscroll. More info in NVDA log"))
-				return
-			self.backupShowCursor = config.conf["braille"]["showCursor"]
-			config.conf["braille"]["showCursor"] = False
-		self.autoScrollRunning = not self.autoScrollRunning
+	def script_autoScroll(self, gesture):
+		braille.handler.toggle_auto_scroll()
 	script_autoScroll.__doc__ = _("Toggle automatic braille scroll")
-
-	def autoScroll(self):
-		braille.handler.scrollForward()
-		if utils.isLastLine():
-			self.script_autoScroll(None)
 
 	def script_volumePlus(self, gesture):
 		keyboardHandler.KeyboardInputGesture.fromName('volumeup').send()
@@ -795,35 +775,17 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 	script_checkUpdate.__doc__ = _("Checks for Braille Extender updates")
 
-	@staticmethod
-	def increaseDelayAutoScroll():
-		config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD] += 25
-
-	@staticmethod
-	def decreaseDelayAutoScroll():
-		if config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD] - 25 >= 25:
-			config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD] -= 25
-
 	def script_increaseDelayAutoScroll(self, gesture):
-		self.increaseDelayAutoScroll()
-		if self.autoScrollRunning:
-			self.script_autoScroll(None, True)
-			self.script_autoScroll(None)
-		else:
-			ui.message('%s ms' %
-					   config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD])
-		return
+		braille.handler.increase_auto_scroll_delay()
+		if not braille.handler._auto_scroll:
+			braille.handler.report_auto_scroll_delay()
+	script_increaseDelayAutoScroll.__doc__ = _("Increase braille autoscroll delay")
 
 	def script_decreaseDelayAutoScroll(self, gesture):
-		self.decreaseDelayAutoScroll()
-		if self.autoScrollRunning:
-			self.script_autoScroll(None, True)
-			self.script_autoScroll(None)
-		else:
-			ui.message('%s ms' % config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD])
-		return
-	script_increaseDelayAutoScroll.__doc__ = _("Increases braille autoscroll delay")
-	script_decreaseDelayAutoScroll.__doc__ = _("Decreases braille autoscroll delay")
+		braille.handler.decrease_auto_scroll_delay()
+		if not braille.handler._auto_scroll:
+			braille.handler.report_auto_scroll_delay()
+	script_decreaseDelayAutoScroll.__doc__ = _("Decrease braille autoscroll delay")
 
 	def script_switchInputBrailleTable(self, gesture):
 		usageIn = tablegroups.USAGE_INPUT
@@ -1309,9 +1271,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.hourDateTimer.Stop()
 			if addoncfg.noMessageTimeout:
 				config.conf["braille"]["noMessageTimeout"] = self.backupMessageTimeout
-		if self.autoScrollRunning:
-			self.autoScrollTimer.Stop()
-			config.conf["braille"]["showCursor"] = self.backupShowCursor
+		if braille.handler._auto_scroll:
+			braille.handler.toggle_auto_scroll()
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
 		tabledictionaries.removeTmpDict()
 		advancedinput.terminate()

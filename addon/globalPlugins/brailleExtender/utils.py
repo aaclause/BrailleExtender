@@ -29,7 +29,9 @@ from .addoncfg import CHOICE_braille,CHOICE_speech , CHOICE_speechAndBraille
 from .common import INSERT_AFTER, INSERT_BEFORE, REPLACE_TEXT, baseDir
 from . import huc
 from . import tabledictionaries
+from . import tablegroups
 from . import volumehelper
+from logHandler import log
 
 get_mute = volumehelper.get_mute
 get_volume_level = volumehelper.get_volume_level

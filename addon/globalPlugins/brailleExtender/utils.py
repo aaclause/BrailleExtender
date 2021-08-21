@@ -263,30 +263,6 @@ def getLine():
 	info.expand(textInfos.UNIT_LINE)
 	return info.text
 
-def isLastLine():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
-		p1.expand(textInfos.UNIT_LINE)
-		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
-		if p1.compareEndPoints(p2, "endToEnd") == 1: return True
-	except BaseException: return True
-	return False
-
-def isEnd():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
-		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
-		if p1.compareEndPoints(p2, "startToEnd") == 0: return True
-	except BaseException: pass
-	return False
 
 def getTextPosition():
 	try:
@@ -357,3 +333,28 @@ def get_output_reason(reason_name):
 		return getattr(controlTypes, old_attr)
 	else:
 		raise AttributeError("Reason \"%s\" unknown" % reason_name)
+
+
+def get_speech_mode():
+	if hasattr(speech, "getState"):
+		return speech.getState().speechMode
+	return speech.speechMode
+
+
+def is_speechMode_talk() -> bool:
+	speechMode = get_speech_mode()
+	if hasattr(speech, "SpeechMode"):
+		return speechMode == speech.SpeechMode.talk
+	return speechMode == speech.speechMode_talk 
+
+
+def set_speech_off():
+	if hasattr(speech, "SpeechMode"):
+		return speech.setSpeechMode(speech.SpeechMode.off)
+	speech.speechMode = speech.speechMode_off
+
+
+def set_speech_talk():
+	if hasattr(speech, "SpeechMode"):
+		return speech.setSpeechMode(speech.SpeechMode.talk)
+	speech.speechMode = speech.speechMode_talk

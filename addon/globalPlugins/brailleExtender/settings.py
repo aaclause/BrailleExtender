@@ -24,6 +24,7 @@ from . import addoncfg
 from . import utils
 from .advancedinput import SettingsDlg as AdvancedInputModeDlg
 from .common import addonName, baseDir, punctuationSeparator
+from .autoscroll import SettingsDlg as AutoScrollDlg
 from .documentformatting import SettingsDlg as DocumentFormattingDlg
 from .objectpresentation import SettingsDlg as ObjectPresentationDlg
 from .onehand import SettingsDlg as OneHandModeDlg
@@ -124,8 +125,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.reverseScrollBtns = sHelper.addItem(wx.CheckBox(self, label=_("&Reverse forward and back scroll buttons")))
 		self.reverseScrollBtns.SetValue(config.conf["brailleExtender"]["reverseScrollBtns"])
 
-		# Translators: label of a dialog.
-		self.autoScrollDelay = sHelper.addLabeledControl(_("Autoscroll &delay for the active braille display (ms):"), gui.nvdaControls.SelectOnFocusSpinCtrl, min=125, max=42000, initial=int(config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD]))
 		self.brailleDisplay1 = sHelper.addLabeledControl(_("Preferred &primary braille display:"), wx.Choice, choices=self.bds_v)
 		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Preferred &secondary braille display:"), wx.Choice, choices=self.bds_v)
@@ -150,7 +149,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(addoncfg.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]
 
-		config.conf["brailleExtender"]["autoScrollDelay_%s" % addoncfg.curBD] = self.autoScrollDelay.Value
 		config.conf["brailleExtender"]["rightMarginCells_%s" % addoncfg.curBD] = self.rightMarginCells.Value
 		config.conf["brailleExtender"]["brailleDisplay1"] = self.bds_k[self.brailleDisplay1.GetSelection()]
 		config.conf["brailleExtender"]["brailleDisplay2"] = self.bds_k[self.brailleDisplay2.GetSelection()]
@@ -561,6 +559,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		GeneralDlg,
 		DocumentFormattingDlg,
 		ObjectPresentationDlg,
+		AutoScrollDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,

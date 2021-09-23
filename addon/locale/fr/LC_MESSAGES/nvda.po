@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2021-06-27 10:29+0200\n"
-"PO-Revision-Date: 2021-06-27 10:55+0200\n"
+"POT-Creation-Date: 2021-09-23 13:58+0200\n"
+"PO-Revision-Date: 2021-09-23 14:03+0200\n"
 "Last-Translator: André-Abush Clause <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-SearchPath-0: .\n"
@@ -515,14 +515,6 @@ msgstr ""
 "Description de cellule braille vers Braille Unicode. Par exemple : dans un "
 "champ d’édition, tapez ’125-24-0-1-123-123’. Puis sélectionnez ce texte et "
 "exécutez cette commande"
-
-#: addon\globalPlugins\brailleExtender\__init__.py:650
-msgid "Advanced braille input mode enabled"
-msgstr "Mode de saisie braille avancée activé"
-
-#: addon\globalPlugins\brailleExtender\__init__.py:652
-msgid "Advanced braille input mode disabled"
-msgstr "Mode de saisie braille avancée désactivé"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:653
 msgid "Toggle advanced input mode"
@@ -1412,103 +1404,143 @@ msgstr "description actuellement indisponible pour ce raccourci"
 msgid "caps lock"
 msgstr "verrouillage majuscules"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:107
+#: addon\globalPlugins\brailleExtender\advancedinput.py:193
 msgid "all tables"
 msgstr "toutes les tables braille"
 
 #. Translators: title of a dialog.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:117
+#: addon\globalPlugins\brailleExtender\advancedinput.py:203
 msgid "Advanced input mode dictionary"
 msgstr "Dictionnaire du mode d’entrée avancé"
 
-#. Translators: The label for the combo box of dictionary entries in advanced input mode dictionary dialog.
+#. Translators: The label for the combo box of dictionary entries in
+#. advanced input mode dictionary dialog.
 #. Translators: The label for the combo box of dictionary entries in table dictionary dialog.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:124
+#: addon\globalPlugins\brailleExtender\advancedinput.py:212
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:130
 msgid "Dictionary &entries"
 msgstr "&Entrées du dictionnaire"
 
-#. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:132
-msgid "Abbreviation"
-msgstr "Abréviation"
+#. Translators: The label for a column in dictionary entries list used
+#. to identify comments for the entry.
+#: addon\globalPlugins\brailleExtender\advancedinput.py:221
+msgid "Replacement"
+msgstr "Remplacement"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:133
-msgid "Replace by"
-msgstr "Remplacer par"
+#: addon\globalPlugins\brailleExtender\advancedinput.py:222
+msgid "Input"
+msgstr "Saisie"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:134
+#: addon\globalPlugins\brailleExtender\advancedinput.py:223
 msgid "Input table"
 msgstr "Table de saisie"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to add new entries.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to add new entries.
 #. Translators: The label for a button in table dictionaries dialog to add new entries.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:140
+#: addon\globalPlugins\brailleExtender\advancedinput.py:230
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:147
 msgid "&Add"
 msgstr "&Ajouter"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to edit existing entries.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to edit existing entries.
 #. Translators: The label for a button in table dictionaries dialog to edit existing entries.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:146
+#: addon\globalPlugins\brailleExtender\advancedinput.py:237
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:153
 msgid "&Edit"
 msgstr "&Éditer"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to remove existing entries.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to remove existing entries.
 #. Translators: The label for a button in table dictionaries dialog to remove existing entries.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:152
+#: addon\globalPlugins\brailleExtender\advancedinput.py:244
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:159
 msgid "Re&move"
 msgstr "&Supprimer"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to open dictionary file in an editor.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:160
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to save entries.
+#: addon\globalPlugins\brailleExtender\advancedinput.py:253
+msgid "&Save"
+msgstr "Enregi&strer"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to open dictionary file in an editor.
+#: addon\globalPlugins\brailleExtender\advancedinput.py:259
 msgid "&Open the dictionary file in an editor"
 msgstr "&Ouvrir le fichier de dictionnaire actuel dans un éditeur"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to reload dictionary.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to reload dictionary.
 #. Translators: The label for a button in table dictionaries dialog to reload dictionary.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:165
+#: addon\globalPlugins\brailleExtender\advancedinput.py:265
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:172
 msgid "&Reload the dictionary"
 msgstr "&Recharger le dictionnaire"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:178
+#: addon\globalPlugins\brailleExtender\advancedinput.py:283
+msgid "Don't get tired, this entry already exists!"
+msgstr "Ne vous fatiguez pas, cette entrée existe déjà !"
+
+#: addon\globalPlugins\brailleExtender\advancedinput.py:286
+#, python-brace-format
+msgid ""
+"The abreviation \"{abreviation}\" is already used for \"{replacement}\". Do "
+"you want to update the existing entry?"
+msgstr ""
+"L’abréviation \"{abreviation}\" est déjà utilisée pour \"{replacement}\". "
+"Voulez-vous mettre à jour l’entrée existante ?"
+
+#: addon\globalPlugins\brailleExtender\advancedinput.py:305
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:216
 msgid "Add Dictionary Entry"
 msgstr "Ajouter une entrée au dictionnaire"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:224
+#: addon\globalPlugins\brailleExtender\advancedinput.py:316
+msgid "Please select an entry first"
+msgstr "Veuillez d’abord sélectionner une entrée"
+
+#: addon\globalPlugins\brailleExtender\advancedinput.py:345
 msgid "File doesn't exist yet"
 msgstr "Le fichier n’existe pas encore"
 
 #. Translators: This is the label for the edit dictionary entry dialog.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:245
+#: addon\globalPlugins\brailleExtender\advancedinput.py:373
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:288
 msgid "Edit Dictionary Entry"
 msgstr "Modifier une entrée de dictionnaire"
 
-#. Translators: This is a label for an edit field in add dictionary entry dialog.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:250
+#. Translators: This is a label for an edit field in add dictionary
+#. entry dialog.
+#: addon\globalPlugins\brailleExtender\advancedinput.py:379
 msgid "&Abreviation"
 msgstr "&Abréviation"
 
-#. Translators: This is a label for an edit field in add dictionary entry dialog.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:255
+#. Translators: This is a label for an edit field in add dictionary
+#. entry dialog.
+#: addon\globalPlugins\brailleExtender\advancedinput.py:385
 msgid "&Replace by"
 msgstr "&Remplacer par"
 
+#: addon\globalPlugins\brailleExtender\advancedinput.py:404
+msgid "The abreviation field is empty, please enter something."
+msgstr "Le champ abréviation est vide, veuillez entrer quelque chose."
+
+#: addon\globalPlugins\brailleExtender\advancedinput.py:407
+msgid "The remplacement field is empty, please enter something."
+msgstr "Le champ remplacement est vide, veuillez entrer quelque chose."
+
 #. Translators: title of a dialog.
-#: addon\globalPlugins\brailleExtender\advancedinput.py:280
+#: addon\globalPlugins\brailleExtender\advancedinput.py:420
 msgid "Advanced input mode"
 msgstr "Mode de saisie avancée"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:289
+#: addon\globalPlugins\brailleExtender\advancedinput.py:427
 msgid "E&xit the advanced input mode after typing one pattern"
 msgstr "&Quitter le mode de saisie avancée après avoir tapé un motif"
 
-#: addon\globalPlugins\brailleExtender\advancedinput.py:296
+#: addon\globalPlugins\brailleExtender\advancedinput.py:431
 msgid "&Escape character for Unicode values input"
 msgstr "Caractère d’&échappement pour la saisie des valeurs Unicode"
 
@@ -2547,6 +2579,18 @@ msgstr ""
 #: buildVars.py:65
 msgid "add actions and quick navigation through a rotor"
 msgstr "ajouter des actions et une navigation rapide dans un rotor"
+
+#~ msgid "Advanced braille input mode enabled"
+#~ msgstr "Mode de saisie braille avancée activé"
+
+#~ msgid "Advanced braille input mode disabled"
+#~ msgstr "Mode de saisie braille avancée désactivé"
+
+#~ msgid "Abbreviation"
+#~ msgstr "Abréviation"
+
+#~ msgid "Replace by"
+#~ msgstr "Remplacer par"
 
 #~ msgid "Autoscroll stopped"
 #~ msgstr "Défilement automatique arrêté"

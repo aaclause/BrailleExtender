@@ -1072,7 +1072,7 @@ def input_(self, dots):
 		if self._translate(endWord):
 			if not endWord:
 				self.cellsWithText.add(pos)
-		elif self.bufferText and not self.useContractedForCurrentFocus:
+		elif self.bufferText and not self.useContractedForCurrentFocus and self._table.contracted:
 			# Translators: Reported when translation didn't succeed due to unsupported input.
 			speech.speakMessage(_("Unsupported input"))
 			self.flushBuffer()

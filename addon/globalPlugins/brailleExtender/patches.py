@@ -105,7 +105,7 @@ def script_braille_routeTo(self, gesture):
 		nb = 0
 		key = "rightarrow"
 		region = braille.handler.mainBuffer
-		cur_pos = region.cursorPos
+		cur_pos = region.brailleToRawPos[region.cursorPos]
 		new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
 		if cur_pos > new_pos:
 			key = "leftarrow"

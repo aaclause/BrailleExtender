@@ -1218,6 +1218,14 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("Skip blank lines disabled"))
 	script_toggle_blank_line_scroll.__doc__ = _("Toggle blank lines during text scrolling")
 
+	def script_toggleEmulateArrowKeysRoutingCursor(self, gesture):
+		config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"] = not config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"]
+		if config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"]:
+			ui.message(_("Moving the cursor with arrow keys enabled"))
+		else:
+			ui.message(_("Moving the cursor with arrow keys disabled"))
+	script_toggleEmulateArrowKeysRoutingCursor.__doc__ = _("Toggle emulate horizontal arrow keys to move cursor in edit areas")
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"

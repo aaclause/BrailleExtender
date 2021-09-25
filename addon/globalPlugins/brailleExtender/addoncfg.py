@@ -137,7 +137,7 @@ def getConfspec():
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
-		"routingReviewModeWithCursorKeys": "boolean(default=False)",
+		"emulateArrowKeysRoutingCursor": "boolean(default=False)",
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

@@ -33,7 +33,6 @@ import treeInterceptorHandler
 import watchdog
 import winUser
 from logHandler import log
-import ui
 
 from . import addoncfg
 from . import advancedinput

@@ -35,6 +35,7 @@ import treeInterceptorHandler
 import watchdog
 import winUser
 from logHandler import log
+import ui
 
 from . import addoncfg
 from . import advancedinput
@@ -46,7 +47,10 @@ from .common import baseDir, CHOICE_tags, IS_CURRENT_NO
 from .documentformatting import get_method, get_tags, N_, normalizeTextAlign, normalize_report_key
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
+from .utils import (
+	getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason,
+	get_speech_mode, set_speech_off, set_speech
+)
 
 addonHandler.initTranslation()
 
@@ -88,46 +92,53 @@ def sayCurrentLine():
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
+def say_character_under_braille_routing_cursor(gesture):
+	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
+		region = braille.handler.buffer
+		if region.cursorPos is None: return
+		try:
+			start = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+			_, endBraillePos = regionhelper.getBraillePosFromRawPos(region, start)
+			end = region.brailleToRawPos[endBraillePos+1]
+			ch = region.rawText[start:end]
+			if ch:
+				speech.speakMessage(getSpeechSymbols(ch))
+		except IndexError: pass
 
 
 def script_braille_routeTo(self, gesture):
 	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
 		braille.handler.toggle_auto_scroll()
-	obj = obj = api.getNavigatorObject()
+	obj = api.getNavigatorObject()
 	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
+			braille.handler.buffer is braille.handler.mainBuffer and
 			obj.hasFocus and
-			braille.handler._cursorPos and
 			(obj.role == controlTypes.ROLE_TERMINAL or
 			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
 			  getTether() == braille.handler.TETHER_REVIEW))):
-		speechMode = speech.speechMode
-		speech.speechMode = 0
-		nb = braille.handler._cursorPos-gesture.routingIndex
+		cur_speech_mode = get_speech_mode()
+		set_speech_off()
+		nb = 0
+		key = "rightarrow"
+		region = braille.handler.mainBuffer
+		cur_pos = region.cursorPos
+		new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+		if cur_pos > new_pos:
+			key = "leftarrow"
+			nb = cur_pos - new_pos
+		else:
+			nb =  new_pos - cur_pos
 		i = 0
-		key = "leftarrow" if nb > 0 else "rightarrow"
-		while i < abs(nb):
+		while i < nb:
 			keyboardHandler.KeyboardInputGesture.fromName(key).send()
 			i += 1
-		speech.speechMode = speechMode
-		speech.speakSpelling(getCurrentChar())
+		set_speech(cur_speech_mode)
+		say_character_under_braille_routing_cursor(gesture)
 		return
 	try: braille.handler.routeTo(gesture.routingIndex)
 	except LookupError: pass
-	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
-		region = braille.handler.buffer
-		if region.cursorPos is None:
-			return
-		try:
-			start = region.brailleToRawPos[braille.handler.buffer.windowStartPos +
-										   gesture.routingIndex]
-			_, endBraillePos = regionhelper.getBraillePosFromRawPos(
-				region, start)
-			end = region.brailleToRawPos[endBraillePos+1]
-			ch = region.rawText[start:end]
-			if ch:
-				speech.speakMessage(getSpeechSymbols(ch))
-		except IndexError:
-			pass
+	say_character_under_braille_routing_cursor(gesture)
+
 
 # braille.Region.update()
 variationSelectorsPattern = lambda: r"([^\ufe00-\ufe0f])[\ufe00-\ufe0f]\u20E3?"

@@ -85,8 +85,8 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.speakRoutingTo.SetValue(config.conf["brailleExtender"]["speakRoutingTo"])
 
 		# Translators: label of a dialog.
-		self.routingReviewModeWithCursorKeys = sHelper.addItem(wx.CheckBox(self, label=_("&Use cursor keys to route cursor in review mode")))
-		self.routingReviewModeWithCursorKeys.SetValue(config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"])
+		self.emulateArrowKeysRoutingCursor = sHelper.addItem(wx.CheckBox(self, label=_("Emulate &horizontal arrow keys to move cursor in edit areas (can help in Windows consoles, IntelliJ, PyCharm... It is better to activate this option on demand or an application profile)")))
+		self.emulateArrowKeysRoutingCursor.SetValue(config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"])
 
 		# Translators: label of a dialog.
 		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("&Display time and date infinitely")))
@@ -150,7 +150,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["smartCapsLock"] = self.smartCapsLock.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
-		config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"] = self.routingReviewModeWithCursorKeys.IsChecked()
+		config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"] = self.emulateArrowKeysRoutingCursor.IsChecked()
 
 		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(addoncfg.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]

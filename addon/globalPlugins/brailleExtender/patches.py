@@ -31,6 +31,7 @@ except ModuleNotFoundError:
 import scriptHandler
 import speech
 import textInfos
+import tones
 import treeInterceptorHandler
 import watchdog
 import winUser
@@ -109,28 +110,39 @@ def script_braille_routeTo(self, gesture):
 	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
 		braille.handler.toggle_auto_scroll()
 	obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
+	if (config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"] and
 			braille.handler.buffer is braille.handler.mainBuffer and
+			braille.handler.mainBuffer.cursorPos is not None and
 			obj.hasFocus and
-			(obj.role == controlTypes.ROLE_TERMINAL or
-			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
-			  getTether() == braille.handler.TETHER_REVIEW))):
-		cur_speech_mode = get_speech_mode()
-		set_speech_off()
+			obj.role in {controlTypes.ROLE_TERMINAL, controlTypes.ROLE_EDITABLETEXT}
+		):
 		nb = 0
 		key = "rightarrow"
 		region = braille.handler.mainBuffer
 		cur_pos = region.brailleToRawPos[region.cursorPos]
-		new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
-		if cur_pos > new_pos:
-			key = "leftarrow"
-			nb = cur_pos - new_pos
+		size = region.brailleToRawPos[-1]
+		try:
+			new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+		except IndexError:
+			new_pos = size
+		cur_speech_mode = get_speech_mode()
+		set_speech_off()
+		tones.beep(100, 100)
+		if new_pos == 0:
+			keyboardHandler.KeyboardInputGesture.fromName("home").send()
+		elif new_pos >= size:
+			keyboardHandler.KeyboardInputGesture.fromName("end").send()
 		else:
-			nb =  new_pos - cur_pos
-		i = 0
-		while i < nb:
-			keyboardHandler.KeyboardInputGesture.fromName(key).send()
-			i += 1
+			if cur_pos > new_pos:
+				key = "leftarrow"
+				nb = cur_pos - new_pos
+			else:
+				nb =  new_pos - cur_pos
+			i = 0
+			while i < nb:
+				keyboardHandler.KeyboardInputGesture.fromName(key).send()
+				i += 1
+		tones.beep(150, 100)
 		set_speech(cur_speech_mode)
 		say_character_under_braille_routing_cursor(gesture)
 		return

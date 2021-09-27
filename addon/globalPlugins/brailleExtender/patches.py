@@ -43,10 +43,7 @@ from . import regionhelper
 from . import undefinedchars
 from .common import baseDir
 from .onehand import process as processOneHandMode
-from .utils import (
-	getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason,
-	get_speech_mode, set_speech_off, set_speech
-)
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
 
 addonHandler.initTranslation()
 
@@ -110,8 +107,7 @@ def script_braille_routeTo(self, gesture):
 			new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
 		except IndexError:
 			new_pos = size
-		cur_speech_mode = get_speech_mode()
-		set_speech_off()
+		log.debug(f"Moving from position {cur_pos} to position {new_pos}")
 		tones.beep(100, 100)
 		if new_pos == 0:
 			keyboardHandler.KeyboardInputGesture.fromName("home").send()
@@ -122,13 +118,13 @@ def script_braille_routeTo(self, gesture):
 				key = "leftarrow"
 				nb = cur_pos - new_pos
 			else:
-				nb =  new_pos - cur_pos
+				nb = new_pos - cur_pos
 			i = 0
+			gestureKB = keyboardHandler.KeyboardInputGesture.fromName(key)
 			while i < nb:
-				keyboardHandler.KeyboardInputGesture.fromName(key).send()
+				gestureKB.send()
 				i += 1
 		tones.beep(150, 100)
-		set_speech(cur_speech_mode)
 		say_character_under_braille_routing_cursor(gesture)
 		return
 	try: braille.handler.routeTo(gesture.routingIndex)

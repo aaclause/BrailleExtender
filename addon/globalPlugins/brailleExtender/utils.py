@@ -357,9 +357,3 @@ def set_speech_talk():
 	if hasattr(speech, "SpeechMode"):
 		return speech.setSpeechMode(speech.SpeechMode.talk)
 	speech.speechMode = speech.speechMode_talk
-
-
-def set_speech(speechMode):
-	if hasattr(speech, "SpeechMode"):
-		return speech.setSpeechMode(speechMode)
-	speech.speechMode = speechMode

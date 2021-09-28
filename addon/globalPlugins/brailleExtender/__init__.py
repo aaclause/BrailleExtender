@@ -573,12 +573,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			utils.set_speech_talk()
 			ui.message(_("Speech on"))
 	script_toggleSpeech.__doc__ = _("Toggle speech on or off")
-	@scriptHandler.script(
-		description=_("Toggle speech mode")
-	)
-	def script_toggle_speech_mode(self, gesture):
-		speechmode.toggle_speech_mode()
-		speechmode.report_speech_mode()
 
 	def script_reportExtraInfos(self, gesture):
 		obj = api.getNavigatorObject()
@@ -1228,6 +1222,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+j"] = "toggleTextAttributes"
 
 	def terminate(self):
+		if braille.handler.getTether() == "speech":
+			braille.handler.setTether(braille.handler.TETHER_AUTO)
+			config.conf["brailleExtender"]["speechMode"] = True
+			config.conf["braille"]["autoTether"] = True
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField

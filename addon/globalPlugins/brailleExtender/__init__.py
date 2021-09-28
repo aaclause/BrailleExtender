@@ -1258,6 +1258,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 
 	def terminate(self):
+		if braille.handler.getTether() == "speech":
+			braille.handler.setTether(braille.handler.TETHER_AUTO)
+			config.conf["brailleExtender"]["speechMode"] = True
+			config.conf["braille"]["autoTether"] = True
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField

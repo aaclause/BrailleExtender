@@ -6,7 +6,11 @@ import config
 import speech
 import api
 import ui
-orig_speak = speech.speak
+import versionInfo
+if versionInfo.version_year < 2021:
+	orig_speak= speech.speak
+else:
+	orig_speak = speech.speech.speak
 speechInList = False
 for i in braille.handler.tetherValues:
 	if "speech" in i:
@@ -17,7 +21,7 @@ if not speechInList:
 	# is, the braille display does not show the focus propperly until the user
 	# either switches to another tether option or moves the focus.
 	for i in range(len(braille.handler.tetherValues)):
-		if braille.handler.tetherValues[i][0] == "auto":
+		if braille.handler.tetherValues[i][0] == braille.handler.TETHER_AUTO:
 			braille.handler.tetherValues.insert(i + 1, ("speech", "to speech"))
 
 if config.conf["brailleExtender"]["speechMode"] and config.conf["braille"][
@@ -39,8 +43,6 @@ def showSpeech(index):
 
 speechList = []
 index = 0
-#: speech.speakMessage
-
 
 def speak(
 	speechSequence,
@@ -58,22 +60,10 @@ def speak(
 	global index
 	index = len(speechList) - 1
 	showSpeech(index)
-
-
-if hasattr(speech, "speech"):
-	# to insure the speech function works correctly if another add-on creates
-	# a speech attribute on the speech module
-	if hasattr(
-			speech.speech,
-			"speak") and isinstance(
-			speech.speech,
-			type(speech)):
-		speech.speech.speak = speak
-	else:
-		speech.speak = speak
-else:
+if versionInfo.version_year < 2021:
 	speech.speak = speak
-
+else:
+	speech.speech.speak = speak
 oldScrollBack = braille.BrailleBuffer.scrollBack
 
 

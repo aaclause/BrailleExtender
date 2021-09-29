@@ -44,7 +44,8 @@ from . import tabledictionaries
 from . import undefinedchars
 from . import updatecheck
 from . import utils
-from .common import addonName, addonURL, addonVersion, punctuationSeparator
+from .common import (addonName, addonURL, addonVersion, punctuationSeparator,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 
 addonHandler.initTranslation()
 
@@ -1218,13 +1219,19 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("Skip blank lines disabled"))
 	script_toggle_blank_line_scroll.__doc__ = _("Toggle blank lines during text scrolling")
 
-	def script_toggleEmulateArrowKeysRoutingCursor(self, gesture):
-		config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"] = not config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"]
-		if config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"]:
-			ui.message(_("Moving the cursor with arrow keys enabled"))
+	def script_toggleRoutingCursorsEditFields(self, gesture):
+		routingCursorsEditFields = config.conf["brailleExtender"]["routingCursorsEditFields"]
+		count = scriptHandler.getLastScriptRepeatCount()
+		if count == 0:
+			if routingCursorsEditFields == RC_NORMAL:
+				config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_EMULATE_ARROWS_BEEP
+			else:
+				config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_NORMAL
 		else:
-			ui.message(_("Moving the cursor with arrow keys disabled"))
-	script_toggleEmulateArrowKeysRoutingCursor.__doc__ = _("Toggle emulate horizontal arrow keys to move cursor in edit areas")
+			config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_EMULATE_ARROWS_SILENT
+		labels = addoncfg.routingCursorsEditFields_labels[config.conf["brailleExtender"]["routingCursorsEditFields"]]
+		ui.message(labels)
+	script_toggleRoutingCursorsEditFields.__doc__ = _("Toggle routing cursors behavior in edit fields")
 
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"

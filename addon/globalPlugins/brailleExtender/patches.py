@@ -41,7 +41,7 @@ from . import autoscroll
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir
+from .common import baseDir, RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .onehand import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
 
@@ -92,12 +92,13 @@ def script_braille_routeTo(self, gesture):
 	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
 		braille.handler.toggle_auto_scroll()
 	obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"] and
-			braille.handler.buffer is braille.handler.mainBuffer and
-			braille.handler.mainBuffer.cursorPos is not None and
-			obj.hasFocus and
-			obj.role in {controlTypes.ROLE_TERMINAL, controlTypes.ROLE_EDITABLETEXT}
-		):
+	if (config.conf["brailleExtender"]["routingCursorsEditFields"] in [RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT] and
+		braille.handler.buffer is braille.handler.mainBuffer and
+		braille.handler.mainBuffer.cursorPos is not None and
+		obj.hasFocus and
+		obj.role in [controlTypes.ROLE_TERMINAL, controlTypes.ROLE_EDITABLETEXT]	
+	):
+		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
 		nb = 0
 		key = "rightarrow"
 		region = braille.handler.mainBuffer
@@ -108,7 +109,7 @@ def script_braille_routeTo(self, gesture):
 		except IndexError:
 			new_pos = size
 		log.debug(f"Moving from position {cur_pos} to position {new_pos}")
-		tones.beep(100, 100)
+		if play_beeps: tones.beep(100, 100)
 		if new_pos == 0:
 			keyboardHandler.KeyboardInputGesture.fromName("home").send()
 		elif new_pos >= size:
@@ -124,7 +125,7 @@ def script_braille_routeTo(self, gesture):
 			while i < nb:
 				gestureKB.send()
 				i += 1
-		tones.beep(150, 100)
+		if play_beeps: tones.beep(150, 100)
 		say_character_under_braille_routing_cursor(gesture)
 		return
 	try: braille.handler.routeTo(gesture.routingIndex)

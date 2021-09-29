@@ -37,3 +37,8 @@ MAX_AUTO_SCROLL_DELAY = 42000
 DEFAULT_STEP_DELAY_CHANGE = 100
 MIN_STEP_DELAY_CHANGE = 25
 MAX_STEP_DELAY_CHANGE = 7000
+
+# Routing cursors behavior in edit fields
+RC_NORMAL = "normal"
+RC_EMULATE_ARROWS_BEEP = "arrows_beeps"
+RC_EMULATE_ARROWS_SILENT = "arrows_silent"

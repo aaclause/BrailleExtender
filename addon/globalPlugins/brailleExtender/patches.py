@@ -43,7 +43,7 @@ from . import autoscroll
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir, CHOICE_tags, IS_CURRENT_NO, RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
+from .common import baseDir, CHOICE_tags, IS_CURRENT_NO, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .documentformatting import get_method, get_tags, N_, normalizeTextAlign, normalize_report_key
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode

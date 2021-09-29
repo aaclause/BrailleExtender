@@ -1202,7 +1202,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_EMULATE_ARROWS_SILENT
 		label = addoncfg.routingCursorsEditFields_labels[config.conf["brailleExtender"]["routingCursorsEditFields"]]
-		ui.message(label)
+		ui.message(label[0].upper() + label[1:])
 	script_toggleRoutingCursorsEditFields.__doc__ = _("Toggle routing cursors behavior in edit fields")
 
 	__gestures = OrderedDict()

@@ -57,9 +57,9 @@ focusOrReviewChoices = dict([
 ])
 
 routingCursorsEditFields_labels = {
-	RC_NORMAL: _("Normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
-	RC_EMULATE_ARROWS_BEEP:   _("Alternative, emulation of horizontal arrows with beeps"),
-	RC_EMULATE_ARROWS_SILENT: _("Alternative, emulation of horizontal arrows without beeps")
+	RC_NORMAL: _("normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("alternative, emulation of horizontal arrow keys with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("alternative, emulation of horizontal arrow keys silently")
 }
 curBD = braille.handler.display.name
 backupDisplaySize = 0

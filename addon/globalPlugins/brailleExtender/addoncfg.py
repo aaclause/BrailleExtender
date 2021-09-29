@@ -66,9 +66,9 @@ focusOrReviewChoices = dict([
 ])
 
 routingCursorsEditFields_labels = {
-	RC_NORMAL: _("Normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
-	RC_EMULATE_ARROWS_BEEP:   _("Alternative, emulation of horizontal arrows with beeps"),
-	RC_EMULATE_ARROWS_SILENT: _("Alternative, emulation of horizontal arrows without beeps")
+	RC_NORMAL: _("normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("alternative, emulation of horizontal arrow keys with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("alternative, emulation of horizontal arrow keys silently")
 }
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
@@ -140,11 +140,11 @@ def getConfspec():
 			CHOICE_review=CHOICE_review,
 			CHOICE_focusAndReview=CHOICE_focusAndReview
 		),
-		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"smartCapsLock": "boolean(default=True)",
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

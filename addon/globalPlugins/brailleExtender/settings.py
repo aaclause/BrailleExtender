@@ -49,16 +49,21 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		# Translators: label of a dialog.
-		self.autoCheckUpdate = sHelper.addItem(wx.CheckBox(self, label=_("&Automatically check for Braille Extender updates")))
-		self.autoCheckUpdate.SetValue(config.conf["brailleExtender"]["autoCheckUpdate"])
 
 		# Translators: label of a dialog.
-		self.updateChannel = sHelper.addLabeledControl(_("Add-on &update channel:"), wx.Choice, choices=list(addoncfg.updateChannels.values()))
+		choices = [
+			_("stable channel, automatic check"),
+			_("dev channel, automatic check"),
+			_("stable channel, manual check"),
+			_("dev channel, manual check"),
+		]
+		self.updateCheck = sHelper.addLabeledControl(_("Check for upd&ates:"), wx.Choice, choices=choices)
 		if config.conf["brailleExtender"]["updateChannel"] in addoncfg.updateChannels.keys():
 			itemToSelect = list(addoncfg.updateChannels.keys()).index(config.conf["brailleExtender"]["updateChannel"])
-		else: itemToSelect = list(config.conf["brailleExtender"]["updateChannel"]).index(addoncfg.CHANNEL_stable)
-		self.updateChannel.SetSelection(itemToSelect)
+		else:
+			itemToSelect = list(config.conf["brailleExtender"]["updateChannel"]).index(addoncfg.CHANNEL_stable)
+		if not config.conf["brailleExtender"]["autoCheckUpdate"]: itemToSelect += len(addoncfg.updateChannels.keys())
+		self.updateCheck.SetSelection(itemToSelect)
 
 		# Translators: label of a dialog.
 		self.speakScroll = sHelper.addLabeledControl(_("Say current line while &scrolling in:"), wx.Choice, choices=list(addoncfg.focusOrReviewChoices.values()))
@@ -144,7 +149,11 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 	def postInit(self): self.autoCheckUpdate.SetFocus()
 
 	def onSave(self):
-		config.conf["brailleExtender"]["autoCheckUpdate"] = self.autoCheckUpdate.IsChecked()
+		updateCheckChoice = self.updateCheck.GetSelection()
+		size = len(addoncfg.updateChannels.keys())
+		config.conf["brailleExtender"]["autoCheckUpdate"] = updateCheckChoice < size
+		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[updateCheckChoice % size]
+
 		config.conf["brailleExtender"]["hourDynamic"] = self.hourDynamic.IsChecked()
 		config.conf["brailleExtender"]["reviewModeTerminal"] = self.reviewModeTerminal.IsChecked()
 		if self.reverseScrollBtns.IsChecked(): instanceGP.reverseScrollBtns()
@@ -156,7 +165,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
 
-		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(addoncfg.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]
 
 		config.conf["brailleExtender"]["rightMarginCells_%s" % addoncfg.curBD] = self.rightMarginCells.Value

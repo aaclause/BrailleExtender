@@ -17,8 +17,8 @@ from .common import (
 	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
 	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
 	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR,
-	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
-)
+	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 addonHandler.initTranslation()
@@ -56,6 +56,11 @@ focusOrReviewChoices = dict([
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+routingCursorsEditFields_labels = {
+	RC_NORMAL: _("Normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("Alternative, emulation of horizontal arrows with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("Alternative, emulation of horizontal arrows without beeps")
+}
 curBD = braille.handler.display.name
 backupDisplaySize = 0
 backupRoleLabels = {}
@@ -128,12 +133,12 @@ def getConfspec():
 			CHOICE_review=CHOICE_review,
 			CHOICE_focusAndReview=CHOICE_focusAndReview
 		),
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"smartCapsLock": "boolean(default=True)",
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
 		"speechMode": "boolean(default=False)",
-		"emulateArrowKeysRoutingCursor": "boolean(default=False)",
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

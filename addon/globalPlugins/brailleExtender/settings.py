@@ -24,7 +24,7 @@ from . import addoncfg
 from . import utils
 from .advancedinput import SettingsDlg as AdvancedInputModeDlg
 from .autoscroll import SettingsDlg as AutoScrollDlg
-from .common import addonName, baseDir, punctuationSeparator
+from .common import addonName, baseDir, punctuationSeparator, RC_NORMAL
 from .documentformatting import SettingsDlg as DocumentFormattingDlg
 from .objectpresentation import SettingsDlg as ObjectPresentationDlg
 from .onehand import SettingsDlg as OneHandModeDlg
@@ -85,14 +85,19 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.speakRoutingTo.SetValue(config.conf["brailleExtender"]["speakRoutingTo"])
 
 		# Translators: label of a dialog.
-		self.emulateArrowKeysRoutingCursor = sHelper.addItem(wx.CheckBox(self, label=_("Emulate &horizontal arrow keys to move cursor in edit areas (can help in Windows consoles, IntelliJ, PyCharm... It is better to activate this option on demand or an application profile)")))
-		self.emulateArrowKeysRoutingCursor.SetValue(config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"])
-
-		# Translators: label of a dialog.
 		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("&Display time and date infinitely")))
 		self.hourDynamic.SetValue(config.conf["brailleExtender"]["hourDynamic"])
 		self.reviewModeTerminal = sHelper.addItem(wx.CheckBox(self, label=_("Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, PowerShell Maxima…)")))
 		self.reviewModeTerminal.SetValue(config.conf["brailleExtender"]["reviewModeTerminal"])
+
+		# Translators: label of a dialog.
+		label = _("Rooting cursors behavior in edit &fields:")
+		self.routingCursorsEditFields = sHelper.addLabeledControl(label, wx.Choice, choices=list(addoncfg.routingCursorsEditFields_labels.values()))
+		if config.conf["brailleExtender"]["routingCursorsEditFields"] in addoncfg.routingCursorsEditFields_labels:
+			itemToSelect = list(addoncfg.routingCursorsEditFields_labels.keys()).index(config.conf["brailleExtender"]["routingCursorsEditFields"])
+		else:
+			itemToSelect = list(addoncfg.routingCursorsEditFields_labels.keys()).index(RC_NORMAL)
+		self.routingCursorsEditFields.SetSelection(itemToSelect)
 
 		# Translators: label of a dialog.
 		self.volumeChangeFeedback = sHelper.addLabeledControl(_("Announce &volume changes:"), wx.Choice, choices=list(addoncfg.outputMessage.values()))
@@ -150,7 +155,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["smartCapsLock"] = self.smartCapsLock.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
-		config.conf["brailleExtender"]["emulateArrowKeysRoutingCursor"] = self.emulateArrowKeysRoutingCursor.IsChecked()
 
 		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(addoncfg.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]
@@ -160,6 +164,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["brailleDisplay2"] = self.bds_k[self.brailleDisplay2.GetSelection()]
 		if addoncfg.gesturesFileExists:
 			config.conf["brailleExtender"]["keyboardLayout_%s" % addoncfg.curBD] = addoncfg.iniProfile["keyboardLayouts"].keys()[self.KBMode.GetSelection()]
+		config.conf["brailleExtender"]["routingCursorsEditFields"] = list(addoncfg.routingCursorsEditFields_labels.keys())[self.routingCursorsEditFields.GetSelection()]
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = list(addoncfg.outputMessage.keys())[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = list(addoncfg.outputMessage.keys())[self.modifierKeysFeedback.GetSelection()]
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()

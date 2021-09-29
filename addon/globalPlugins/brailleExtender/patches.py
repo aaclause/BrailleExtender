@@ -41,7 +41,7 @@ from . import autoscroll
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir, RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
+from .common import baseDir, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .onehand import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
 

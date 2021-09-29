@@ -140,11 +140,11 @@ def getConfspec():
 			CHOICE_review=CHOICE_review,
 			CHOICE_focusAndReview=CHOICE_focusAndReview
 		),
-		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"smartCapsLock": "boolean(default=True)",
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

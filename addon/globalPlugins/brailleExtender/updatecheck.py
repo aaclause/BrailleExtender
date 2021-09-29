@@ -42,7 +42,6 @@ def paramsDL(): return {
 
 
 urlencode = urllib.parse.urlencode
-URLopener = urllib.request.URLopener
 urlopen = urllib.request.urlopen
 
 
@@ -79,10 +78,9 @@ def checkUpdates(sil=False):
 	def errorUpdateDialog(details=None):
 		global checkInProgress
 		checkInProgress = True
-		msg = _(
-			"Oops! There was a problem downloading Braille Extender update. Please retry later or download and install manually from %s. Do you want to open this URL in your browser?") % addonInfos["url"]
+		msg = _("Oops! There was a problem downloading Braille Extender update. Please retry later or download and install manually from %s. Do you want to open this URL in your browser?") % addonInfos["url"]
 		if details:
-			msg += '\n' + _("Details:") + ' ' + details
+			msg += '\n' + _("Details:") + ' ' + repr(details)
 		res = gui.messageBox(
 			msg,
 			title,
@@ -101,8 +99,8 @@ def checkUpdates(sil=False):
 			"%s.nvda-addon" %
 			sectionName)
 		try:
-			dl = URLopener()
-			dl.retrieve(url, fp)
+			with urllib.request.urlopen(url) as res:
+				with open(fp, "wb") as out: out.write(res.read())
 			actualSHA256Sum = SHA256Sum(fp)
 			if expectedSHA256Sum != actualSHA256Sum:
 				log.info(

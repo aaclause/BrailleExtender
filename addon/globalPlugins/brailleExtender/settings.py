@@ -88,12 +88,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.speakRoutingTo.SetValue(config.conf["brailleExtender"]["speakRoutingTo"])
 
 		# Translators: label of a dialog.
-		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("&Display time and date infinitely")))
-		self.hourDynamic.SetValue(config.conf["brailleExtender"]["hourDynamic"])
-		self.reviewModeTerminal = sHelper.addItem(wx.CheckBox(self, label=_("Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, PowerShell Maxima…)")))
-		self.reviewModeTerminal.SetValue(config.conf["brailleExtender"]["reviewModeTerminal"])
-
-		# Translators: label of a dialog.
 		label = _("Rooting cursors behavior in edit &fields:")
 		self.routingCursorsEditFields = sHelper.addLabeledControl(label, wx.Choice, choices=list(addoncfg.routingCursorsEditFields_labels.values()))
 		if config.conf["brailleExtender"]["routingCursorsEditFields"] in addoncfg.routingCursorsEditFields_labels:
@@ -101,6 +95,12 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		else:
 			itemToSelect = list(addoncfg.routingCursorsEditFields_labels.keys()).index(RC_NORMAL)
 		self.routingCursorsEditFields.SetSelection(itemToSelect)
+
+		# Translators: label of a dialog.
+		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("&Display time and date infinitely")))
+		self.hourDynamic.SetValue(config.conf["brailleExtender"]["hourDynamic"])
+		self.reviewModeTerminal = sHelper.addItem(wx.CheckBox(self, label=_("Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, PowerShell Maxima…)")))
+		self.reviewModeTerminal.SetValue(config.conf["brailleExtender"]["reviewModeTerminal"])
 
 		# Translators: label of a dialog.
 		self.volumeChangeFeedback = sHelper.addLabeledControl(_("Announce &volume changes:"), wx.Choice, choices=list(addoncfg.outputMessage.values()))

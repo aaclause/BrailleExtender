@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender dev-18.08.04-105046\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2021-08-04 10:41+0200\n"
-"PO-Revision-Date: 2021-08-04 10:52+0200\n"
+"POT-Creation-Date: 2021-09-28 13:27+0200\n"
+"PO-Revision-Date: 2021-09-28 13:42+0200\n"
 "Last-Translator: zvonimir stanecic <zvonimirek222@yandex.com>\n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -25,7 +25,7 @@ msgstr "По умолчанию"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:56
 msgid "Moving in the text"
-msgstr "Перемещение по тексту"
+msgstr "гПеремещение по тексту"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:57
 msgid "Text selection"
@@ -514,14 +514,6 @@ msgid ""
 msgstr ""
 "Описание брайлевских клеток в брайлевский юникод. Напр: в редактор напишите "
 "'125-24-0-1-123-123'. Потом выделите этот текст и выполните эту команду"
-
-#: addon/globalPlugins/brailleExtender/__init__.py:650
-msgid "Advanced braille input mode enabled"
-msgstr "Режим расширенного брайлевского ввода включён"
-
-#: addon/globalPlugins/brailleExtender/__init__.py:652
-msgid "Advanced braille input mode disabled"
-msgstr "Режим расширенного брайлевского ввода выключен"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:653
 msgid "Toggle advanced input mode"
@@ -1389,103 +1381,146 @@ msgstr "описание функции данного сочитания кла
 msgid "caps lock"
 msgstr "caps lock"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:107
+#: addon/globalPlugins/brailleExtender/advancedinput.py:193
 msgid "all tables"
 msgstr "Все таблицы"
 
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:117
+#: addon/globalPlugins/brailleExtender/advancedinput.py:203
 msgid "Advanced input mode dictionary"
 msgstr "Словарь расширенного ввода"
 
-#. Translators: The label for the combo box of dictionary entries in advanced input mode dictionary dialog.
+#. Translators: The label for the combo box of dictionary entries in
+#. advanced input mode dictionary dialog.
 #. Translators: The label for the combo box of dictionary entries in table dictionary dialog.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:124
+#: addon/globalPlugins/brailleExtender/advancedinput.py:212
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:130
 msgid "Dictionary &entries"
 msgstr "Словарные &статьи"
 
-#. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:132
-msgid "Abbreviation"
-msgstr "Сокращение"
+#. Translators: The label for a column in dictionary entries list used
+#. to identify comments for the entry.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:221
+#| msgid "Replace"
+msgid "Replacement"
+msgstr "Замена"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:133
-msgid "Replace by"
-msgstr "Заменить с"
+#: addon/globalPlugins/brailleExtender/advancedinput.py:222
+#| msgid "input"
+msgid "Input"
+msgstr "Ввод"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:134
+#: addon/globalPlugins/brailleExtender/advancedinput.py:223
 msgid "Input table"
 msgstr "Таблица ввода"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to add new entries.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to add new entries.
 #. Translators: The label for a button in table dictionaries dialog to add new entries.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:140
+#: addon/globalPlugins/brailleExtender/advancedinput.py:230
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:147
 msgid "&Add"
 msgstr "&Добавить"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to edit existing entries.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to edit existing entries.
 #. Translators: The label for a button in table dictionaries dialog to edit existing entries.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:146
+#: addon/globalPlugins/brailleExtender/advancedinput.py:237
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:153
 msgid "&Edit"
 msgstr "&Редактировать"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to remove existing entries.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to remove existing entries.
 #. Translators: The label for a button in table dictionaries dialog to remove existing entries.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:152
+#: addon/globalPlugins/brailleExtender/advancedinput.py:244
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:159
 msgid "Re&move"
 msgstr "&Удалить"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to open dictionary file in an editor.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:160
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to save entries.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:253
+msgid "&Save"
+msgstr "&Сохранить"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to open dictionary file in an editor.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:259
 msgid "&Open the dictionary file in an editor"
 msgstr "&Открыть файл словаря в текстовом редакторе"
 
-#. Translators: The label for a button in advanced input mode dictionariy dialog to reload dictionary.
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to reload dictionary.
 #. Translators: The label for a button in table dictionaries dialog to reload dictionary.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:165
+#: addon/globalPlugins/brailleExtender/advancedinput.py:265
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:172
 msgid "&Reload the dictionary"
 msgstr "&Перезагрузить словарь"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:178
+#: addon/globalPlugins/brailleExtender/advancedinput.py:283
+msgid "Don't get tired, this entry already exists!"
+msgstr "Не беспокойтесь, эта запись уже существует!"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:286
+#, python-brace-format
+msgid ""
+"The abreviation \"{abreviation}\" is already used for \"{replacement}\". Do "
+"you want to update the existing entry?"
+msgstr ""
+"Сокращение \"{abreviation}\" уже используется для \"{replacement}\". Вы "
+"хотите обновить уже существующую запись?"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:305
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:216
 msgid "Add Dictionary Entry"
 msgstr "Добавить словарную статью"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:224
+#: addon/globalPlugins/brailleExtender/advancedinput.py:316
+#| msgid "Please select at least 2 tables"
+msgid "Please select an entry first"
+msgstr "Сначала выберите запись"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:345
 msgid "File doesn't exist yet"
 msgstr "Файл ещё не существует"
 
 #. Translators: This is the label for the edit dictionary entry dialog.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:245
+#: addon/globalPlugins/brailleExtender/advancedinput.py:373
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:288
 msgid "Edit Dictionary Entry"
 msgstr "Редактировать словарную статью"
 
-#. Translators: This is a label for an edit field in add dictionary entry dialog.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:250
+#. Translators: This is a label for an edit field in add dictionary
+#. entry dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:379
 msgid "&Abreviation"
 msgstr "&Сокращение"
 
-#. Translators: This is a label for an edit field in add dictionary entry dialog.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:255
+#. Translators: This is a label for an edit field in add dictionary
+#. entry dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:385
 msgid "&Replace by"
 msgstr "&Заменить с"
 
+#: addon/globalPlugins/brailleExtender/advancedinput.py:404
+msgid "The abreviation field is empty, please enter something."
+msgstr "Поле сокращения пусто, пожалуйста, введите что-нибудь."
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:407
+msgid "The remplacement field is empty, please enter something."
+msgstr "Поле замены - пусто, Введите что-нибудь."
+
 #. Translators: title of a dialog.
-#: addon/globalPlugins/brailleExtender/advancedinput.py:280
+#: addon/globalPlugins/brailleExtender/advancedinput.py:420
 msgid "Advanced input mode"
 msgstr "Режим расширенного ввода"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:289
+#: addon/globalPlugins/brailleExtender/advancedinput.py:427
 msgid "E&xit the advanced input mode after typing one pattern"
 msgstr "&Выйти из разсширенного режима ввода после набора одной комбинации"
 
-#: addon/globalPlugins/brailleExtender/advancedinput.py:296
+#: addon/globalPlugins/brailleExtender/advancedinput.py:431
 msgid "&Escape character for Unicode values input"
 msgstr "&Знак escape для набора знаков юникод"
 
@@ -2225,7 +2260,7 @@ msgstr "Отображение неопределенных знаков"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:242
-msgid "Representation &method"
+msgid "Representation &method:"
 msgstr "&Метод отображения"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:253
@@ -2253,15 +2288,15 @@ msgid "Show the si&ze taken"
 msgstr "&Показать взятый размер"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:293
-msgid "&Start tag"
+msgid "&Start tag:"
 msgstr "&Разметка начала"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:298
-msgid "&End tag"
+msgid "&End tag:"
 msgstr "&Разметка конца"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:309
-msgid "&Language"
+msgid "&Language:"
 msgstr "&Язык"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:312
@@ -2269,7 +2304,7 @@ msgid "Use the current output table"
 msgstr "Использовать актуальную таблицу вывода"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:325
-msgid "Braille &table"
+msgid "Braille &table:"
 msgstr "Брайлевская &таблица"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:57
@@ -2513,6 +2548,18 @@ msgstr ""
 #: buildVars.py:65
 msgid "add actions and quick navigation through a rotor"
 msgstr "Добавление быстрых действий и навигация с помощью ротора"
+
+#~ msgid "Advanced braille input mode enabled"
+#~ msgstr "Режим расширенного брайлевского ввода включён"
+
+#~ msgid "Advanced braille input mode disabled"
+#~ msgstr "Режим расширенного брайлевского ввода выключен"
+
+#~ msgid "Abbreviation"
+#~ msgstr "Сокращение"
+
+#~ msgid "Replace by"
+#~ msgstr "Заменить с"
 
 #~ msgid "Autoscroll stopped"
 #~ msgstr "Автопрокрутка остановлена"
@@ -2798,9 +2845,6 @@ msgstr "Добавление быстрых действий и навигаци
 #~ "Переключайтесь между вашими любымими брайлевскими таблицами вывода, "
 #~ "включая группы"
 
-#~ msgid "input"
-#~ msgstr "Ввод"
-
 #~ msgid "output"
 #~ msgstr "Выводoutput"
 
@@ -2848,9 +2892,6 @@ msgstr "Добавление быстрых действий и навигаци
 
 #~ msgid "Please specify a group name"
 #~ msgstr "Пожалуйста, определите название группы"
-
-#~ msgid "Please select at least 2 tables"
-#~ msgstr "Выберите, пожалуйста, хоть две таблицы"
 
 #~ msgid "Other dot pattern (e.g.: 6-123456)"
 #~ msgstr "Другая комбинация точек (например.: 6-123456)"

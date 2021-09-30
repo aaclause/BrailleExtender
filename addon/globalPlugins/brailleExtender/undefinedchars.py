@@ -1,6 +1,6 @@
 # undefinedchars.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 import re
 
 import addonHandler
@@ -239,7 +239,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		# Translators: label of a dialog.
-		label = _("Representation &method")
+		label = _("Representation &method:")
 		self.undefinedCharReprList = sHelper.addLabeledControl(
 			label, wx.Choice, choices=list(CHOICES_LABELS.values())
 		)
@@ -290,12 +290,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["showSize"]
 		)
 		self.startTag = sHelper.addLabeledControl(
-			_("&Start tag"),
+			_("&Start tag:"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["start"],
 		)
 		self.endTag = sHelper.addLabeledControl(
-			_("&End tag"),
+			_("&End tag:"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["end"],
 		)
@@ -306,7 +306,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			undefinedCharLang = keys[-1]
 		undefinedCharLangID = keys.index(undefinedCharLang)
 		self.undefinedCharLang = sHelper.addLabeledControl(
-			_("&Language"), wx.Choice, choices=values
+			_("&Language:"), wx.Choice, choices=values
 		)
 		self.undefinedCharLang.SetSelection(undefinedCharLangID)
 		values = [_("Use the current output table")] + [
@@ -322,7 +322,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			undefinedCharTable = "current"
 		undefinedCharTableID = keys.index(undefinedCharTable)
 		self.undefinedCharTable = sHelper.addLabeledControl(
-			_("Braille &table"), wx.Choice, choices=values
+			_("Braille &table:"), wx.Choice, choices=values
 		)
 		self.undefinedCharTable.SetSelection(undefinedCharTableID)
 		self.onExtendedDesc()
@@ -341,7 +341,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			]
 		return ""
 
-	def onUndefinedCharDesc(self, evt=None):
+	def onUndefinedCharDesc(self, evt=None, forceDisable=False):
 		l = [
 			self.extendedDesc,
 			self.fullExtendedDesc,
@@ -352,7 +352,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			self.undefinedCharTable,
 		]
 		for e in l:
-			if self.undefinedCharDesc.IsChecked():
+			if self.undefinedCharDesc.IsChecked() and not forceDisable:
 				e.Enable()
 			else:
 				e.Disable()
@@ -367,6 +367,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onUndefinedCharReprList(self, evt=None):
 		selected = self.undefinedCharReprList.GetSelection()
+		if selected == CHOICE_tableBehaviour:
+			self.undefinedCharDesc.Disable()
+			self.onUndefinedCharDesc(forceDisable=True)
+		else:
+			self.undefinedCharDesc.Enable()
+			self.onUndefinedCharDesc()
 		if selected in [CHOICE_otherDots, CHOICE_otherSign]:
 			self.undefinedCharReprEdit.Enable()
 		else:

@@ -29,6 +29,7 @@ except ModuleNotFoundError:
 import scriptHandler
 import speech
 import textInfos
+import tones
 import treeInterceptorHandler
 import watchdog
 import winUser
@@ -40,7 +41,7 @@ from . import autoscroll
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir
+from .common import baseDir, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .onehand import process as processOneHandMode
 from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
 
@@ -73,29 +74,7 @@ def sayCurrentLine():
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
-def script_braille_routeTo(self, gesture):
-	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
-		braille.handler.toggle_auto_scroll()
-	obj = obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
-			obj.hasFocus and
-			braille.handler._cursorPos and
-			(obj.role == controlTypes.ROLE_TERMINAL or
-			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
-			 getTether() == braille.handler.TETHER_REVIEW))):
-		speechMode = speech.speechMode
-		speech.speechMode = 0
-		nb = braille.handler._cursorPos-gesture.routingIndex
-		i = 0
-		key = "leftarrow" if nb > 0 else "rightarrow"
-		while i < abs(nb):
-			keyboardHandler.KeyboardInputGesture.fromName(key).send()
-			i += 1
-		speech.speechMode = speechMode
-		speech.speakSpelling(getCurrentChar())
-		return
-	try: braille.handler.routeTo(gesture.routingIndex)
-	except LookupError: pass
+def say_character_under_braille_routing_cursor(gesture):
 	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
 		region = braille.handler.buffer
 		if region.cursorPos is None: return
@@ -107,6 +86,52 @@ def script_braille_routeTo(self, gesture):
 			if ch:
 				speech.speakMessage(getSpeechSymbols(ch))
 		except IndexError: pass
+
+
+def script_braille_routeTo(self, gesture):
+	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
+		braille.handler.toggle_auto_scroll()
+	obj = api.getNavigatorObject()
+	if (config.conf["brailleExtender"]["routingCursorsEditFields"] in [RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT] and
+		braille.handler.buffer is braille.handler.mainBuffer and
+		braille.handler.mainBuffer.cursorPos is not None and
+		obj.hasFocus and
+		obj.role in [controlTypes.ROLE_TERMINAL, controlTypes.ROLE_EDITABLETEXT]	
+	):
+		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
+		nb = 0
+		key = "rightarrow"
+		region = braille.handler.mainBuffer
+		cur_pos = region.brailleToRawPos[region.cursorPos]
+		size = region.brailleToRawPos[-1]
+		try:
+			new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+		except IndexError:
+			new_pos = size
+		log.debug(f"Moving from position {cur_pos} to position {new_pos}")
+		if play_beeps: tones.beep(100, 100)
+		if new_pos == 0:
+			keyboardHandler.KeyboardInputGesture.fromName("home").send()
+		elif new_pos >= size:
+			keyboardHandler.KeyboardInputGesture.fromName("end").send()
+		else:
+			if cur_pos > new_pos:
+				key = "leftarrow"
+				nb = cur_pos - new_pos
+			else:
+				nb = new_pos - cur_pos
+			i = 0
+			gestureKB = keyboardHandler.KeyboardInputGesture.fromName(key)
+			while i < nb:
+				gestureKB.send()
+				i += 1
+		if play_beeps: tones.beep(150, 100)
+		say_character_under_braille_routing_cursor(gesture)
+		return
+	try: braille.handler.routeTo(gesture.routingIndex)
+	except LookupError: pass
+	say_character_under_braille_routing_cursor(gesture)
+
 
 # braille.Region.update()
 def update(self):

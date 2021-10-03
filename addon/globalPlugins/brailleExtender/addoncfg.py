@@ -12,8 +12,7 @@ import globalVars
 import inputCore
 from logHandler import log
 
-from .common import (
-	addonUpdateChannel, configDir, profilesDir,
+from .common import (addonUpdateChannel, configDir, profilesDir,
 	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
 	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
 	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR,

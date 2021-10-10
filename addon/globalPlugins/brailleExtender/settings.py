@@ -28,6 +28,7 @@ from .common import addonName, baseDir, punctuationSeparator, RC_NORMAL
 from .documentformatting import SettingsDlg as DocumentFormattingDlg
 from .objectpresentation import SettingsDlg as ObjectPresentationDlg
 from .onehand import SettingsDlg as OneHandModeDlg
+from .speechhistorymode import SettingsDlg as SpeechHistorymodeDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
 
 addonHandler.initTranslation()
@@ -595,6 +596,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
 		AutoScrollDlg,
+		SpeechHistorymodeDlg,
 		DocumentFormattingDlg,
 		ObjectPresentationDlg,
 		BrailleTablesDlg,

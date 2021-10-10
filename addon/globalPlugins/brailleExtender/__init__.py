@@ -39,7 +39,7 @@ from . import documentformatting
 from . import objectpresentation
 from . import patches
 from . import settings
-from . import speechmode
+from . import speechhistorymode
 from . import tabledictionaries
 from . import undefinedchars
 from . import updatecheck
@@ -1231,7 +1231,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def terminate(self):
 		if braille.handler.getTether() == "speech":
 			braille.handler.setTether(braille.handler.TETHER_AUTO)
-			config.conf["brailleExtender"]["speechMode"] = True
+			config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] = True
 			config.conf["braille"]["autoTether"] = True
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update

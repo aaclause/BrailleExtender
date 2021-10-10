@@ -138,6 +138,10 @@ def getConfspec():
 		"speakRoutingTo": "boolean(default=True)",
 		"speechMode": "boolean(default=False)",
 		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
+		"speechHistoryMode": {
+			"enabled": "boolean(default=False)",
+			f"limit": "integer(min=0, default=50)",
+		},
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

@@ -1,12 +1,36 @@
-# speechmode.py
+# speechhistorymode.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2021 Emil Hesmyr, released under GPL.
+# Copyright 2021 Emil Hesmyr, André-Abush Clause, released under GPL.
 import braille
 import config
 import speech
 import api
 import ui
 import versionInfo
+import gui
+from logHandler import log
+class SettingsDlg(gui.settingsDialogs.SettingsPanel):
+
+	# Translators: title of a dialog.
+	title = _("Speech history mode")
+
+	def makeSettings(self, settingsSizer):
+
+		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
+
+		# Translators: label of a dialog.
+		label = _("&Number of last announcements to retain:")
+		self.limit = sHelper.addLabeledControl(
+			label,
+			gui.nvdaControls.SelectOnFocusSpinCtrl,
+			min=0,
+			initial=config.conf["brailleExtender"]["speechHistoryMode"]["limit"]
+		)
+
+	def onSave(self):
+		config.conf["brailleExtender"]["speechHistoryMode"]["limit"] = self.limit.Value
+
+
 if versionInfo.version_year < 2021:
 	orig_speak= speech.speak
 else:
@@ -24,10 +48,10 @@ if not speechInList:
 		if braille.handler.tetherValues[i][0] == braille.handler.TETHER_AUTO:
 			braille.handler.tetherValues.insert(i + 1, ("speech", "to speech"))
 
-if config.conf["brailleExtender"]["speechMode"] and config.conf["braille"][
+if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] and config.conf["braille"][
 		"autoTether"]:
 	config.conf["braille"]["autoTether"] = False
-	config.conf["brailleExtender"]["speechMode"] = False
+	config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] = False
 	braille.handler.setTether("speech")
 
 
@@ -56,10 +80,13 @@ def speak(
 			string += i
 			if not speechSequence.index(i) == len(speechSequence) - 1:
 				string += " "
+	global speechList, index
 	speechList.append(string)
-	global index
+	log.info(f"adding {len(speechList)} {string}")
+	speechList = speechList[-config.conf["brailleExtender"]["speechHistoryMode"]["limit"]:]
 	index = len(speechList) - 1
 	showSpeech(index)
+
 if versionInfo.version_year < 2021:
 	speech.speak = speak
 else:

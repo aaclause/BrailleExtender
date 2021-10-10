@@ -26,6 +26,7 @@ from .advancedinput import SettingsDlg as AdvancedInputModeDlg
 from .common import addonName, baseDir, punctuationSeparator, RC_NORMAL
 from .autoscroll import SettingsDlg as AutoScrollDlg
 from .onehand import SettingsDlg as OneHandModeDlg
+from .speechhistorymode import SettingsDlg as SpeechHistorymodeDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
 
 addonHandler.initTranslation()
@@ -746,6 +747,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
 		AutoScrollDlg,
+		SpeechHistorymodeDlg,
 		AttribraDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,

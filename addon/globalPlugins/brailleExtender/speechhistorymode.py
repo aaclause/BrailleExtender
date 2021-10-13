@@ -82,7 +82,6 @@ def speak(
 				string += " "
 	global speechList, index
 	speechList.append(string)
-	log.info(f"adding {len(speechList)} {string}")
 	speechList = speechList[-config.conf["brailleExtender"]["speechHistoryMode"]["limit"]:]
 	index = len(speechList) - 1
 	showSpeech(index)

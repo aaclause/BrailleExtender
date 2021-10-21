@@ -13,7 +13,6 @@ import braille
 import brailleInput
 import brailleTables
 import config
-import controlTypes
 import globalCommands
 import globalPluginHandler
 import globalVars
@@ -41,7 +40,8 @@ from . import tabledictionaries
 from . import undefinedchars
 from . import updatecheck
 from . import utils
-from .common import addonName, addonURL, addonVersion, punctuationSeparator
+from .common import (addonName, addonURL, addonVersion, punctuationSeparator,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 
 addonHandler.initTranslation()
 
@@ -156,7 +156,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.bindRotorGES()
 
 		if config.conf["brailleExtender"]["reviewModeTerminal"]:
-			if not self.switchedMode and obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
+			if not self.switchedMode and obj.role == utils.get_control_type("ROLE_TERMINAL") and obj.hasFocus:
 				if not hasattr(braille.handler, "TETHER_AUTO"):
 					self.backupTether = utils.getTether()
 					braille.handler.tether = braille.handler.TETHER_REVIEW
@@ -169,7 +169,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
 					braille.handler.handleReviewMove(shouldAutoTether=False)
 				self.switchedMode = True
-			elif self.switchedMode and obj.role != controlTypes.ROLE_TERMINAL: self.restorReviewCursorTethering()
+			elif self.switchedMode and obj.role != utils.get_control_type("ROLE_TERMINAL"): self.restorReviewCursorTethering()
 
 		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)
@@ -607,9 +607,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def script_advancedInput(self, gesture):
 		self.advancedInput = not self.advancedInput
 		if self.advancedInput:
-			speech.speakMessage(_("Advanced braille input mode enabled"))
+			tones.beep(700, 30)
 		else:
-			speech.speakMessage(_("Advanced braille input mode disabled"))
+			tones.beep(300, 30)
 	script_advancedInput.__doc__ = _("Toggle advanced input mode")
 
 	def script_undefinedCharsDesc(self, gesture):
@@ -1176,6 +1176,20 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		else:
 			ui.message(_("Skip blank lines disabled"))
 	script_toggle_blank_line_scroll.__doc__ = _("Toggle blank lines during text scrolling")
+
+	def script_toggleRoutingCursorsEditFields(self, gesture):
+		routingCursorsEditFields = config.conf["brailleExtender"]["routingCursorsEditFields"]
+		count = scriptHandler.getLastScriptRepeatCount()
+		if count == 0:
+			if routingCursorsEditFields == RC_NORMAL:
+				config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_EMULATE_ARROWS_BEEP
+			else:
+				config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_NORMAL
+		else:
+			config.conf["brailleExtender"]["routingCursorsEditFields"] = RC_EMULATE_ARROWS_SILENT
+		label = addoncfg.routingCursorsEditFields_labels[config.conf["brailleExtender"]["routingCursorsEditFields"]]
+		ui.message(label[0].upper() + label[1:])
+	script_toggleRoutingCursorsEditFields.__doc__ = _("Toggle routing cursors behavior in edit fields")
 
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"

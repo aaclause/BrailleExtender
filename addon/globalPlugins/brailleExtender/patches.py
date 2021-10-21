@@ -30,6 +30,7 @@ except ModuleNotFoundError:
 import scriptHandler
 import speech
 import textInfos
+import tones
 import treeInterceptorHandler
 import watchdog
 import winUser
@@ -41,11 +42,11 @@ from . import autoscroll
 from . import huc
 from . import regionhelper
 from . import undefinedchars
-from .common import baseDir, CHOICE_tags, IS_CURRENT_NO
+from .common import baseDir, CHOICE_tags, IS_CURRENT_NO, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .documentformatting import get_method, get_tags, N_, normalizeTextAlign, normalize_report_key
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason, get_control_type
 
 addonHandler.initTranslation()
 
@@ -86,31 +87,7 @@ def sayCurrentLine():
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
-
-
-def script_braille_routeTo(self, gesture):
-	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
-		braille.handler.toggle_auto_scroll()
-	obj = obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
-			obj.hasFocus and
-			braille.handler._cursorPos and
-			(obj.role == controlTypes.ROLE_TERMINAL or
-			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
-			  getTether() == braille.handler.TETHER_REVIEW))):
-		speechMode = speech.speechMode
-		speech.speechMode = 0
-		nb = braille.handler._cursorPos-gesture.routingIndex
-		i = 0
-		key = "leftarrow" if nb > 0 else "rightarrow"
-		while i < abs(nb):
-			keyboardHandler.KeyboardInputGesture.fromName(key).send()
-			i += 1
-		speech.speechMode = speechMode
-		speech.speakSpelling(getCurrentChar())
-		return
-	try: braille.handler.routeTo(gesture.routingIndex)
-	except LookupError: pass
+def say_character_under_braille_routing_cursor(gesture):
 	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
 		region = braille.handler.buffer
 		if region.cursorPos is None:
@@ -126,6 +103,52 @@ def script_braille_routeTo(self, gesture):
 				speech.speakMessage(getSpeechSymbols(ch))
 		except IndexError:
 			pass
+
+
+def script_braille_routeTo(self, gesture):
+	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
+		braille.handler.toggle_auto_scroll()
+	obj = api.getNavigatorObject()
+	if (config.conf["brailleExtender"]["routingCursorsEditFields"] in [RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT] and
+		braille.handler.buffer is braille.handler.mainBuffer and
+		braille.handler.mainBuffer.cursorPos is not None and
+		obj.hasFocus and
+		obj.role in [get_control_type("TERMINAL"), get_control_type("EDITABLETEXT")]
+	):
+		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
+		nb = 0
+		key = "rightarrow"
+		region = braille.handler.mainBuffer
+		cur_pos = region.brailleToRawPos[region.cursorPos]
+		size = region.brailleToRawPos[-1]
+		try:
+			new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+		except IndexError:
+			new_pos = size
+		log.debug(f"Moving from position {cur_pos} to position {new_pos}")
+		if play_beeps: tones.beep(100, 100)
+		if new_pos == 0:
+			keyboardHandler.KeyboardInputGesture.fromName("home").send()
+		elif new_pos >= size:
+			keyboardHandler.KeyboardInputGesture.fromName("end").send()
+		else:
+			if cur_pos > new_pos:
+				key = "leftarrow"
+				nb = cur_pos - new_pos
+			else:
+				nb = new_pos - cur_pos
+			i = 0
+			gestureKB = keyboardHandler.KeyboardInputGesture.fromName(key)
+			while i < nb:
+				gestureKB.send()
+				i += 1
+		if play_beeps: tones.beep(150, 100)
+		say_character_under_braille_routing_cursor(gesture)
+		return
+	try: braille.handler.routeTo(gesture.routingIndex)
+	except LookupError: pass
+	say_character_under_braille_routing_cursor(gesture)
+
 
 # braille.Region.update()
 
@@ -158,9 +181,8 @@ def update_region(self):
 			addoncfg.CHOICE_dots78: 192
 		}
 		if config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] in d:
-			addDots = d[config.conf["brailleExtender"]
-						["objectPresentation"]["selectedElement"]]
-			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
+			addDots = d[config.conf["brailleExtender"]["objectPresentation"]["selectedElement"]]
+			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and get_control_type("STATE_SELECTED") in self.obj.states:
 				name = self.obj.name
 				if name in self.rawText:
 					start = self.rawText.index(name)
@@ -310,7 +332,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 	presCat = field.getPresentationCategory(ancestors, formatConfig)
 	# Cache this for later use.
 	field._presCat = presCat
-	role = field.get("role", controlTypes.ROLE_UNKNOWN)
+	role = field.get("role", get_control_type("ROLE_UNKNOWN"))
 	if reportStart:
 		# If this is a container, only report it if this is the start of the node.
 		if presCat == field.PRESCAT_CONTAINER and not field.get("_startOfNode"):
@@ -321,7 +343,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		if (
 				not field.get("_endOfNode")
 				or presCat != field.PRESCAT_CONTAINER
-				#or role == controlTypes.ROLE_LANDMARK
+				#or role == get_control_type("ROLE_LANDMARK")
 		):
 			return None
 
@@ -333,13 +355,13 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 	roleText = field.get('roleTextBraille', field.get('roleText'))
 	roleTextPost = None
 	landmark = field.get("landmark")
-	if not roleText and role == controlTypes.ROLE_LANDMARK and landmark:
-		roleText = f"{roleLabels[controlTypes.ROLE_LANDMARK]} {landmarkLabels[landmark]}"
+	if not roleText and role == get_control_type("ROLE_LANDMARK") and landmark:
+		roleText = f'{roleLabels[get_control_type("ROLE_LANDMARK")]} {landmarkLabels[landmark]}'
 	content = field.get("content")
 
-	if childControlCount and role == controlTypes.ROLE_LIST:
+	if childControlCount and role == get_control_type("ROLE_LIST"):
 		roleTextPost = "(%s)" % childControlCount
-	if childControlCount and role == controlTypes.ROLE_TABLE:
+	if childControlCount and role == get_control_type("ROLE_TABLE"):
 		row_count = field.get("table-rowcount", 0)
 		column_count = field.get("table-columncount", 0)
 		roleTextPost = f"({row_count},{column_count})"
@@ -347,11 +369,11 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		text = []
 		if current:
 			text.append(getPropertiesBraille(current=current))
-		if role == controlTypes.ROLE_GRAPHIC and content:
+		if role == get_control_type("ROLE_GRAPHIC") and content:
 			text.append(content)
 		return braille.TEXT_SEPARATOR.join(text) if len(text) != 0 else None
 
-	if role in (controlTypes.ROLE_TABLECELL, controlTypes.ROLE_TABLECOLUMNHEADER, controlTypes.ROLE_TABLEROWHEADER) and field.get("table-id"):
+	if role in (get_control_type("ROLE_TABLECELL"), get_control_type("ROLE_TABLECOLUMNHEADER"), get_control_type("ROLE_TABLEROWHEADER")) and field.get("table-id"):
 		# Table cell.
 		reportTableHeaders = formatConfig["reportTableHeaders"]
 		reportTableCellCoords = formatConfig["reportTableCellCoords"]
@@ -372,7 +394,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		props = {
 			# Don't report the role for math here.
 			# However, we still need to pass it (hence "_role").
-			"_role" if role == controlTypes.ROLE_MATH else "role": role,
+			"_role" if role == get_control_type("ROLE_MATH") else "role": role,
 			"states": states,
 			"value": value,
 			"current": current,
@@ -397,7 +419,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 			if text:
 				text += braille.TEXT_SEPARATOR
 			text += content
-		elif role == controlTypes.ROLE_MATH:
+		elif role == get_control_type("ROLE_MATH"):
 			import mathPres
 			mathPres.ensureInit()
 			if mathPres.brailleProvider:
@@ -523,7 +545,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		link = field.get("link")
 		oldLink = fieldCache.get("link") if fieldCache else None
 		if link and link != oldLink:
-			textList.append(braille.roleLabels[controlTypes.ROLE_LINK]+' ')
+			textList.append(braille.roleLabels[get_control_type("ROLE_LINK]")] +' ')
 
 	if formatConfig["reportStyle"]:
 		style = field.get("style")
@@ -745,14 +767,14 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 					textList = []
 					if not inClickable and formatConfig['reportClickable']:
 						states = field.get('states')
-						if states and controlTypes.STATE_CLICKABLE in states:
+						if states and get_control_type("STATE_CLICKABLE") in states:
 							# We have entered an outer most clickable or entered a new clickable after exiting a previous one
 							# Report it if there is nothing else interesting about the field
 							field._presCat = presCat = field.getPresentationCategory(
 								ctrlFields, formatConfig)
 							if not presCat or presCat is field.PRESCAT_LAYOUT:
 								textList.append(
-									braille.positiveStateLabels[controlTypes.STATE_CLICKABLE])
+									braille.positiveStateLabels[get_control_type("STATE_CLICKABLE")])
 							inClickable = True
 					text = info.getControlFieldBraille(
 						field, ctrlFields, True, formatConfig)
@@ -1049,7 +1071,7 @@ def input_(self, dots):
 					self._reportUntranslated(pos)
 			elif abreviations:
 				if len(abreviations) == 1:
-					res = abreviations[0].replaceBy
+					res = abreviations[0].replacement
 					sendChar(res)
 				else:
 					return self._reportUntranslated(pos)

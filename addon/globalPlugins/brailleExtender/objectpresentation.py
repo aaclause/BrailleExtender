@@ -12,7 +12,7 @@ from logHandler import log
 from . import addoncfg
 from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES, IS_CURRENT_NO
 from .documentformatting import CHOICES_LABELS, get_report
-from .utils import get_output_reason
+from .utils import get_output_reason, get_control_type
 
 addonHandler.initTranslation()
 
@@ -136,7 +136,7 @@ def update_NVDAObjectRegion(self):
 			pass
 		if coordinates:
 			text += ' ' + coordinates
-	if role == controlTypes.ROLE_MATH:
+	if role == get_control_type("ROLE_MATH"):
 		import mathPres
 		mathPres.ensureInit()
 		if mathPres.brailleProvider:
@@ -152,13 +152,19 @@ def update_NVDAObjectRegion(self):
 def is_current_display_string(current):
 	if hasattr(current, "displayString"):
 		return current.displayString
-	if hasattr(controlTypes, "isCurrentLabels"):
+	if hasattr(get_control_type("controlTypes"), "isCurrentLabels"):
 		try:
 			return controlTypes.isCurrentLabels[current]
 		except KeyError:
 			pass
 	log.debugWarning("Aria-current value not handled: %s" % current)
 	return ''
+
+
+def get_roleLabel(role):
+	if hasattr(controlTypes, "Role"):
+		return getattr(controlTypes.Role, role).displayString
+	return controlTypes.roleLabels[role]
 
 
 def getPropertiesBraille(**propertyValues) -> str:
@@ -189,29 +195,29 @@ def getPropertiesBraille(**propertyValues) -> str:
 	includeTableCellCoords = get_report("tableCellCoords") and propertyValues.get("includeTableCellCoords", True)
 	positionInfoLevelStr = None
 	if role is not None and not roleText:
-		if role == controlTypes.ROLE_HEADING and level:
+		if role == get_control_type("ROLE_HEADING") and level:
 			roleText = N_("h%s") % level
 			level = None
 		elif (
-				role == controlTypes.ROLE_LINK
+				role == get_control_type("ROLE_LINK")
 				and states
-				and controlTypes.STATE_VISITED in states
+				and get_control_type("STATE_VISITED") in states
 		):
 			states = states.copy()
-			states.discard(controlTypes.STATE_VISITED)
+			states.discard(get_control_type("STATE_VISITED"))
 			roleText = N_("vlnk")
 		elif not description and config.conf["brailleExtender"]["documentFormatting"][
-			"cellFormula"] and states and controlTypes.STATE_HASFORMULA in states and cellInfo and hasattr(cellInfo,
+			"cellFormula"] and states and get_control_type("STATE_HASFORMULA") in states and cellInfo and hasattr(cellInfo,
 																										   "formula") and cellInfo.formula:
 			states = states.copy()
-			states.discard(controlTypes.STATE_HASFORMULA)
+			states.discard(get_control_type("STATE_HASFORMULA"))
 			description = cellInfo.formula
 		elif (
 				name or cellCoordsText or rowNumber or columnNumber
 		) and role in controlTypes.silentRolesOnFocus:
 			roleText = None
 		else:
-			roleText = roleLabels.get(role, controlTypes.roleLabels[role])
+			roleText = roleLabels.get(role, role.displayString)
 	elif role is None:
 		role = propertyValues.get("_role")
 	if roleText and roleTextPost:
@@ -228,8 +234,8 @@ def getPropertiesBraille(**propertyValues) -> str:
 	if states:
 		if name and selectedElementEnabled():
 			states = states.copy()
-			states.discard(controlTypes.STATE_SELECTED)
-			states.discard(controlTypes.STATE_SELECTABLE)
+			states.discard(get_control_type("STATE_SELECTED"))
+			states.discard(get_control_type("STATE_SELECTABLE"))
 		properties["states"] = " ".join(
 			controlTypes.processAndLabelStates(
 				role,

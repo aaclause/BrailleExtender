@@ -15,6 +15,7 @@ from logHandler import log
 from .common import (
 	addonUpdateChannel, configDir, profilesDir,
 	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT,
 	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
 	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
 	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR
@@ -56,6 +57,11 @@ focusOrReviewChoices = dict([
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+routingCursorsEditFields_labels = {
+	RC_NORMAL: _("normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("alternative, emulation of horizontal arrow keys with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("alternative, emulation of horizontal arrow keys silently")
+}
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}
@@ -132,7 +138,7 @@ def getConfspec():
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
-		"routingReviewModeWithCursorKeys": "boolean(default=False)",
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

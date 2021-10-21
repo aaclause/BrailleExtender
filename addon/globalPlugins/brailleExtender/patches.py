@@ -15,6 +15,7 @@ import braille
 import brailleInput
 import colors
 import config
+import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -346,7 +347,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 	presCat = field.getPresentationCategory(ancestors, formatConfig)
 	# Cache this for later use.
 	field._presCat = presCat
-	role = field.get("role", controlTypes.ROLE_UNKNOWN)
+	role = field.get("role", get_control_type("ROLE_UNKNOWN"))
 	if reportStart:
 		# If this is a container, only report it if this is the start of the node.
 		if presCat == field.PRESCAT_CONTAINER and not field.get("_startOfNode"):
@@ -357,7 +358,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		if (
 				not field.get("_endOfNode")
 				or presCat != field.PRESCAT_CONTAINER
-				#or role == controlTypes.ROLE_LANDMARK
+				#or role == get_control_type("ROLE_LANDMARK")
 		):
 			return None
 
@@ -369,13 +370,13 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 	roleText = field.get('roleTextBraille', field.get('roleText'))
 	roleTextPost = None
 	landmark = field.get("landmark")
-	if not roleText and role == controlTypes.ROLE_LANDMARK and landmark:
-		roleText = f"{roleLabels[controlTypes.ROLE_LANDMARK]} {landmarkLabels[landmark]}"
+	if not roleText and role == get_control_type("ROLE_LANDMARK") and landmark:
+		roleText = f'{roleLabels[get_control_type("ROLE_LANDMARK")]} {landmarkLabels[landmark]}'
 	content = field.get("content")
 
-	if childControlCount and role == controlTypes.ROLE_LIST:
+	if childControlCount and role == get_control_type("ROLE_LIST"):
 		roleTextPost = "(%s)" % childControlCount
-	if childControlCount and role == controlTypes.ROLE_TABLE:
+	if childControlCount and role == get_control_type("ROLE_TABLE"):
 		row_count = field.get("table-rowcount", 0)
 		column_count = field.get("table-columncount", 0)
 		roleTextPost = f"({row_count},{column_count})"
@@ -383,11 +384,11 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		text = []
 		if current:
 			text.append(getPropertiesBraille(current=current))
-		if role == controlTypes.ROLE_GRAPHIC and content:
+		if role == get_control_type("ROLE_GRAPHIC") and content:
 			text.append(content)
 		return braille.TEXT_SEPARATOR.join(text) if len(text) != 0 else None
 
-	if role in (controlTypes.ROLE_TABLECELL, controlTypes.ROLE_TABLECOLUMNHEADER, controlTypes.ROLE_TABLEROWHEADER) and field.get("table-id"):
+	if role in (get_control_type("ROLE_TABLECELL"), get_control_type("ROLE_TABLECOLUMNHEADER"), get_control_type("ROLE_TABLEROWHEADER")) and field.get("table-id"):
 		# Table cell.
 		reportTableHeaders = formatConfig["reportTableHeaders"]
 		reportTableCellCoords = formatConfig["reportTableCellCoords"]
@@ -408,7 +409,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 		props = {
 			# Don't report the role for math here.
 			# However, we still need to pass it (hence "_role").
-			"_role" if role == controlTypes.ROLE_MATH else "role": role,
+			"_role" if role == get_control_type("ROLE_MATH") else "role": role,
 			"states": states,
 			"value": value,
 			"current": current,
@@ -433,7 +434,7 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 			if text:
 				text += braille.TEXT_SEPARATOR
 			text += content
-		elif role == controlTypes.ROLE_MATH:
+		elif role == get_control_type("ROLE_MATH"):
 			import mathPres
 			mathPres.ensureInit()
 			if mathPres.brailleProvider:
@@ -559,7 +560,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		link = field.get("link")
 		oldLink = fieldCache.get("link") if fieldCache else None
 		if link and link != oldLink:
-			textList.append(braille.roleLabels[controlTypes.ROLE_LINK]+' ')
+			textList.append(braille.roleLabels[get_control_type("ROLE_LINK]")] +' ')
 
 	if formatConfig["reportStyle"]:
 		style = field.get("style")
@@ -781,14 +782,14 @@ def _addTextWithFields(self, info, formatConfig, isSelection=False):
 					textList = []
 					if not inClickable and formatConfig['reportClickable']:
 						states = field.get('states')
-						if states and controlTypes.STATE_CLICKABLE in states:
+						if states and get_control_type("STATE_CLICKABLE") in states:
 							# We have entered an outer most clickable or entered a new clickable after exiting a previous one
 							# Report it if there is nothing else interesting about the field
 							field._presCat = presCat = field.getPresentationCategory(
 								ctrlFields, formatConfig)
 							if not presCat or presCat is field.PRESCAT_LAYOUT:
 								textList.append(
-									braille.positiveStateLabels[controlTypes.STATE_CLICKABLE])
+									braille.positiveStateLabels[get_control_type("STATE_CLICKABLE")])
 							inClickable = True
 					text = info.getControlFieldBraille(
 						field, ctrlFields, True, formatConfig)
@@ -1255,6 +1256,7 @@ braille.getPropertiesBraille = getPropertiesBraille
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
+REASON_CARET = get_output_reason("CARET")
 
 braille.Region.brlex_typeforms = {}
 braille.Region._len_brlex_typeforms = 0

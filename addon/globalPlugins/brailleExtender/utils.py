@@ -334,6 +334,7 @@ def get_output_reason(reason_name):
 	else:
 		raise AttributeError("Reason \"%s\" unknown" % reason_name)
 
+
 def get_speech_mode():
 	if hasattr(speech, "getState"):
 		return speech.getState().speechMode

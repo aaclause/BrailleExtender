@@ -18,7 +18,6 @@ import braille
 import brailleInput
 import brailleTables
 import config
-import controlTypes
 import globalCommands
 import globalPluginHandler
 import globalVars
@@ -213,7 +212,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.bindRotorGES()
 
 		if config.conf["brailleExtender"]["reviewModeTerminal"]:
-			if not self.switchedMode and obj.role == controlTypes.ROLE_TERMINAL and obj.hasFocus:
+			if not self.switchedMode and obj.role == utils.get_control_type("ROLE_TERMINAL") and obj.hasFocus:
 				if not hasattr(braille.handler, "TETHER_AUTO"):
 					self.backupTether = utils.getTether()
 					braille.handler.tether = braille.handler.TETHER_REVIEW
@@ -226,7 +225,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
 					braille.handler.handleReviewMove(shouldAutoTether=False)
 				self.switchedMode = True
-			elif self.switchedMode and obj.role != controlTypes.ROLE_TERMINAL: self.restorReviewCursorTethering()
+			elif self.switchedMode and obj.role != utils.get_control_type("ROLE_TERMINAL"): self.restorReviewCursorTethering()
 
 		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)

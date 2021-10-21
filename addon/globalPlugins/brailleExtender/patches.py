@@ -15,7 +15,6 @@ import braille
 import brailleInput
 import colors
 import config
-import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -47,7 +46,7 @@ from .common import baseDir, CHOICE_tags, IS_CURRENT_NO, RC_EMULATE_ARROWS_BEEP,
 from .documentformatting import get_method, get_tags, N_, normalizeTextAlign, normalize_report_key
 from .objectpresentation import getPropertiesBraille, selectedElementEnabled, update_NVDAObjectRegion
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason, get_control_type
 
 addonHandler.initTranslation()
 
@@ -111,7 +110,7 @@ def script_braille_routeTo(self, gesture):
 		braille.handler.buffer is braille.handler.mainBuffer and
 		braille.handler.mainBuffer.cursorPos is not None and
 		obj.hasFocus and
-		obj.role in [controlTypes.ROLE_TERMINAL, controlTypes.ROLE_EDITABLETEXT]	
+		obj.role in [get_control_type("TERMINAL"), get_control_type("EDITABLETEXT")]
 	):
 		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
 		nb = 0
@@ -194,9 +193,8 @@ def update_region(self):
 			addoncfg.CHOICE_dots78: 192
 		}
 		if config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] in d:
-			addDots = d[config.conf["brailleExtender"]
-						["objectPresentation"]["selectedElement"]]
-			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
+			addDots = d[config.conf["brailleExtender"]["objectPresentation"]["selectedElement"]]
+			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and get_control_type("STATE_SELECTED") in self.obj.states:
 				name = self.obj.name
 				if config.conf["brailleExtender"]["advanced"]["fixCursorPositions"]:
 					name = re.sub(variationSelectorsPattern(), r"\1", name)

@@ -14,7 +14,6 @@ import braille
 import brailleInput
 import colors
 import config
-import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -113,7 +112,7 @@ def script_braille_routeTo(self, gesture):
 		braille.handler.buffer is braille.handler.mainBuffer and
 		braille.handler.mainBuffer.cursorPos is not None and
 		obj.hasFocus and
-		obj.role in [get_control_type("TERMINAL"), get_control_type("EDITABLETEXT")]
+		obj.role in [get_control_type("ROLE_TERMINAL"), get_control_type("ROLE_EDITABLETEXT")]
 	):
 		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
 		nb = 0

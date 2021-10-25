@@ -12,9 +12,9 @@ import louis
 import wx
 from logHandler import log
 
-from . import addoncfg, huc
+from . import addoncfg
+from . import huc
 from . import regionhelper
-# from .common import
 from .utils import getCurrentBrailleTables, getTextInBraille
 
 addonHandler.initTranslation()

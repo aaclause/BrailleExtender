@@ -152,7 +152,7 @@ def update_NVDAObjectRegion(self):
 def is_current_display_string(current):
 	if hasattr(current, "displayString"):
 		return current.displayString
-	if hasattr(get_control_type("controlTypes"), "isCurrentLabels"):
+	if hasattr(controlTypes, "isCurrentLabels"):
 		try:
 			return controlTypes.isCurrentLabels[current]
 		except KeyError:

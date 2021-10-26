@@ -12,10 +12,10 @@ import louis
 import wx
 from logHandler import log
 
-from . import addoncfg, huc
+from . import addoncfg
+from . import huc
 from . import regionhelper
-# from .common import
-from .utils import getCurrentBrailleTables, getTextInBraille
+from .utils import getCurrentBrailleTables, getTextInBraille, get_symbol_level
 
 addonHandler.initTranslation()
 
@@ -113,7 +113,7 @@ def getDescChar(c, lang="Windows", start="", end=""):
 	if lang == "Windows":
 		lang = languageHandler.getLanguage()
 	desc = characterProcessing.processSpeechSymbols(
-		lang, c, characterProcessing.SYMLVL_CHAR).replace(' ', '').strip()
+		lang, c, get_symbol_level("SYMLVL_CHAR")).strip()
 	if not desc or desc == c:
 		return getAlternativeDescChar(c, method)
 	return f"{start}{desc}{end}"

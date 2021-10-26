@@ -18,6 +18,7 @@ from .common import (addonUpdateChannel, configDir, profilesDir,
 	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR,
 	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
 	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT,
+	SHM_ACTION_COPY_CLIPBOARD, SHM_ACTION_QUICK_NAV,
 	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
 	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
 	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR)
@@ -143,7 +144,9 @@ def getConfspec():
 		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
 		"speechHistoryMode": {
 			"enabled": "boolean(default=False)",
-			f"limit": "integer(min=0, default=50)",
+			"limit": "integer(min=0, default=50)",
+			"numberEntries": "boolean(default=True)",
+			"actionroutingCursors": f"option({SHM_ACTION_COPY_CLIPBOARD}, {SHM_ACTION_QUICK_NAV}, default={SHM_ACTION_COPY_CLIPBOARD})",
 		},
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",

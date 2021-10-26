@@ -13,7 +13,6 @@ import api
 import braille
 import brailleInput
 import config
-import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -43,7 +42,7 @@ from . import regionhelper
 from . import undefinedchars
 from .common import baseDir, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason, get_control_type
 
 addonHandler.initTranslation()
 
@@ -96,7 +95,7 @@ def script_braille_routeTo(self, gesture):
 		braille.handler.buffer is braille.handler.mainBuffer and
 		braille.handler.mainBuffer.cursorPos is not None and
 		obj.hasFocus and
-		obj.role in [controlTypes.ROLE_TERMINAL, controlTypes.ROLE_EDITABLETEXT]	
+		obj.role in [get_control_type("ROLE_TERMINAL"), get_control_type("ROLE_EDITABLETEXT")]
 	):
 		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
 		nb = 0
@@ -162,7 +161,7 @@ def update(self):
 		}
 		if config.conf["brailleExtender"]["attributes"]["selectedElement"] in d:
 			addDots = d[config.conf["brailleExtender"]["attributes"]["selectedElement"]]
-			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
+			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and get_control_type("STATE_SELECTED") in self.obj.states:
 				name = self.obj.name
 				if name in self.rawText:
 					start = self.rawText.index(name)

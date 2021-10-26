@@ -163,7 +163,11 @@ def is_current_display_string(current):
 
 def get_roleLabel(role):
 	if hasattr(controlTypes, "Role"):
-		return getattr(controlTypes.Role, role).displayString
+		if isinstance(role, controlTypes.Role):
+			return role.displayString
+		if isinstance(role, str):
+			return getattr(controlTypes.Role, role).displayString
+		raise TypeError()
 	return controlTypes.roleLabels[role]
 
 
@@ -217,7 +221,7 @@ def getPropertiesBraille(**propertyValues) -> str:
 		) and role in controlTypes.silentRolesOnFocus:
 			roleText = None
 		else:
-			roleText = roleLabels.get(role, role.displayString)
+			roleText = roleLabels.get(role, get_roleLabel(role))
 	elif role is None:
 		role = propertyValues.get("_role")
 	if roleText and roleTextPost:

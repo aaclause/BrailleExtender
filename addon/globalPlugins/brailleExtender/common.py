@@ -42,3 +42,7 @@ MAX_STEP_DELAY_CHANGE = 7000
 RC_NORMAL = "normal"
 RC_EMULATE_ARROWS_BEEP = "arrows_beeps"
 RC_EMULATE_ARROWS_SILENT = "arrows_silent"
+
+# speech history mode
+SHM_ACTION_COPY_CLIPBOARD = "copyToClip"
+SHM_ACTION_QUICK_NAV = "quickNav"

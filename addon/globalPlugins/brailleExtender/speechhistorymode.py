@@ -75,7 +75,10 @@ if not speechInList:
 	# either switches to another tether option or moves the focus.
 	for i in range(len(braille.handler.tetherValues)):
 		if braille.handler.tetherValues[i][0] == braille.handler.TETHER_AUTO:
-			braille.handler.tetherValues.insert(i + 1, ("speech", "to speech"))
+			braille.handler.tetherValues.insert(
+				i + 1, ("speech",
+				# Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
+				_("to speech history")))
 
 if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] and config.conf["braille"][
 		"autoTether"]:

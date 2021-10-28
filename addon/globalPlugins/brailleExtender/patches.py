@@ -559,7 +559,7 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 		link = field.get("link")
 		oldLink = fieldCache.get("link") if fieldCache else None
 		if link and link != oldLink:
-			textList.append(braille.roleLabels[get_control_type("ROLE_LINK]")] +' ')
+			textList.append(braille.roleLabels[get_control_type("ROLE_LINK")] +' ')
 
 	if formatConfig["reportStyle"]:
 		style = field.get("style")

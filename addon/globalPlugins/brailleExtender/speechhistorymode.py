@@ -11,6 +11,7 @@ import gui
 import wx
 import addonHandler
 from .common import SHM_ACTION_COPY_CLIPBOARD, SHM_ACTION_QUICK_NAV
+import globalCommands
 
 addonHandler.initTranslation()
 
@@ -176,3 +177,7 @@ def newRouteTo(*args, **kwargs):
 
 
 braille.TextRegion.routeTo = newRouteTo
+
+# Translators: Reports which position braille is tethered to
+# (braille can be tethered automatically or to either focus or review position or speech history).
+globalCommands.GlobalCommands.script_braille_toggleTether.__doc__ = _("Toggle tethering of braille between the focus, the review position and the speech history")

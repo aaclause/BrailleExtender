@@ -11,6 +11,7 @@ import gui
 import wx
 import addonHandler
 from .common import SHM_ACTION_COPY_CLIPBOARD, SHM_ACTION_QUICK_NAV
+import globalCommands
 
 addonHandler.initTranslation()
 
@@ -75,7 +76,10 @@ if not speechInList:
 	# either switches to another tether option or moves the focus.
 	for i in range(len(braille.handler.tetherValues)):
 		if braille.handler.tetherValues[i][0] == braille.handler.TETHER_AUTO:
-			braille.handler.tetherValues.insert(i + 1, ("speech", "to speech"))
+			braille.handler.tetherValues.insert(
+				i + 1, ("speech",
+				# Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
+				_("to speech history")))
 
 if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] and config.conf["braille"][
 		"autoTether"]:
@@ -173,3 +177,7 @@ def newRouteTo(*args, **kwargs):
 
 
 braille.TextRegion.routeTo = newRouteTo
+
+# Translators: Reports which position braille is tethered to
+# (braille can be tethered automatically or to either focus or review position or speech history).
+globalCommands.GlobalCommands.script_braille_toggleTether.__doc__ = _("Toggle tethering of braille between the focus, the review position and the speech history")

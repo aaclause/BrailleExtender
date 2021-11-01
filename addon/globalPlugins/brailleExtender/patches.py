@@ -39,6 +39,7 @@ from . import advancedinput
 from . import autoscroll
 from . import huc
 from . import regionhelper
+from . import speechhistorymode
 from . import undefinedchars
 from .common import baseDir, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .onehand import process as processOneHandMode
@@ -88,6 +89,8 @@ def say_character_under_braille_routing_cursor(gesture):
 
 
 def script_braille_routeTo(self, gesture):
+	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether() == "speech":
+		return speechhistorymode.showSpeechFromRoutingIndex(gesture.routingIndex)
 	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
 		braille.handler.toggle_auto_scroll()
 	obj = api.getNavigatorObject()

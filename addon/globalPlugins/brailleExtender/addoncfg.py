@@ -14,8 +14,7 @@ from logHandler import log
 
 from .common import (addonUpdateChannel, configDir, profilesDir,
 	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
-	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT,
-	SHM_ACTION_COPY_CLIPBOARD, SHM_ACTION_QUICK_NAV)
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 addonHandler.initTranslation()
@@ -150,7 +149,7 @@ def getConfspec():
 			"enabled": "boolean(default=False)",
 			"limit": "integer(min=0, default=50)",
 			"numberEntries": "boolean(default=True)",
-			"actionroutingCursors": f"option({SHM_ACTION_COPY_CLIPBOARD}, {SHM_ACTION_QUICK_NAV}, default={SHM_ACTION_COPY_CLIPBOARD})",
+			"speakEntries": "boolean(default=True)",
 		},
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",

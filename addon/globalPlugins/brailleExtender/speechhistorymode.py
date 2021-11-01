@@ -75,7 +75,7 @@ if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] and config.con
 	braille.handler.setTether("speech")
 
 
-def showSpeech(index):
+def showSpeech(index, allowReadEntry=False):
 	try:
 		if braille.handler.getTether() == "speech":
 			text = speechList[index]
@@ -85,7 +85,8 @@ def showSpeech(index):
 			region = braille.TextRegion(text)
 			region.update()
 			braille.handler._doNewObject([region])
-			if config.conf["brailleExtender"]["speechHistoryMode"]["speakEntries"]:
+			if allowReadEntry and config.conf["brailleExtender"]["speechHistoryMode"]["speakEntries"]:
+				speech.cancelSpeech()
 				speak([speechList[index]], saveString=False)
 	except BaseException:
 		pass
@@ -98,7 +99,8 @@ def speak(
 	speechSequence,
 	symbolLevel=None,
 	priority=speech.Spri.NORMAL,
-	saveString=True
+	saveString=True,
+	allowReadEntry=False
 ):
 	orig_speak(speechSequence, symbolLevel, priority)
 	if not saveString: return
@@ -112,7 +114,7 @@ def speak(
 	speechList.append(string)
 	speechList = speechList[-config.conf["brailleExtender"]["speechHistoryMode"]["limit"]:]
 	index = len(speechList) - 1
-	showSpeech(index)
+	showSpeech(index, allowReadEntry=allowReadEntry)
 
 if versionInfo.version_year < 2021:
 	speech.speak = speak
@@ -129,7 +131,7 @@ def scrollBack(self):
 		global index
 		if index > 0:
 			index -= 1
-		showSpeech(index)
+		showSpeech(index, allowReadEntry=True)
 
 
 braille.BrailleBuffer.scrollBack = scrollBack
@@ -144,7 +146,7 @@ def scrollForward(self):
 		global index
 		if not index >= len(speechList) - 1:
 			index += 1
-			showSpeech(index)
+			showSpeech(index, allowReadEntry=True)
 
 
 braille.BrailleBuffer.scrollForward = scrollForward
@@ -173,7 +175,7 @@ def showSpeechFromRoutingIndex(routingNumber):
 			index = 0
 		if index >= len(speechList):
 			index = len(speechList) - 1
-	showSpeech(index)
+	showSpeech(index, allowReadEntry=True)
 
 
 braille.handler.message = newBrailleMessage

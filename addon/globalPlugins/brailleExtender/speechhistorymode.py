@@ -10,15 +10,10 @@ import versionInfo
 import gui
 import wx
 import addonHandler
-from .common import SHM_ACTION_COPY_CLIPBOARD, SHM_ACTION_QUICK_NAV
 import globalCommands
+from logHandler import log
 
 addonHandler.initTranslation()
-
-ACTIONS_ROUTING_CURSORS = {
-	SHM_ACTION_COPY_CLIPBOARD: _("copy current entry to clipboard"),
-	SHM_ACTION_QUICK_NAV: _("navigate through history faster (soon available))")
-}
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
@@ -40,25 +35,18 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 		# Translators: label of a dialog.
 		label = _("&Prefix entries with their position in the history")
-		self.numberEntries = sHelper.addItem(
-			wx.CheckBox(self, label=(
-				label
-			))
-		)
+		self.numberEntries = sHelper.addItem(wx.CheckBox(self, label=label))
 		self.numberEntries.SetValue(config.conf["brailleExtender"]["speechHistoryMode"]["numberEntries"])
 
 		# Translators: label of a dialog.
-		label = _("&Action with routing cursors:")
-		self.actionRoutingCursors = sHelper.addLabeledControl(label, wx.Choice, choices=list(ACTIONS_ROUTING_CURSORS.values()))
-		if config.conf["brailleExtender"]["speechHistoryMode"]["actionroutingCursors"] in ACTIONS_ROUTING_CURSORS:
-			itemToSelect = list(ACTIONS_ROUTING_CURSORS.keys()).index(config.conf["brailleExtender"]["speechHistoryMode"]["actionroutingCursors"])
-		else:
-			itemToSelect = list(ACTIONS_ROUTING_CURSORS.keys()).index(SHM_ACTION_COPY_CLIPBOARD)
-		self.actionRoutingCursors.SetSelection(itemToSelect)
+		label = _("&Read entries while browsing history")
+		self.speakEntries = sHelper.addItem(wx.CheckBox(self, label=label))
+		self.speakEntries.SetValue(config.conf["brailleExtender"]["speechHistoryMode"]["speakEntries"])
 
 	def onSave(self):
 		config.conf["brailleExtender"]["speechHistoryMode"]["limit"] = self.limit.Value
 		config.conf["brailleExtender"]["speechHistoryMode"]["numberEntries"] = self.numberEntries.IsChecked()
+		config.conf["brailleExtender"]["speechHistoryMode"]["speakEntries"] = self.speakEntries.IsChecked()
 
 
 if versionInfo.version_year < 2021:
@@ -81,8 +69,7 @@ if not speechInList:
 				# Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
 				_("to speech history")))
 
-if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] and config.conf["braille"][
-		"autoTether"]:
+if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] and config.conf["braille"]["autoTether"]:
 	config.conf["braille"]["autoTether"] = False
 	config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] = False
 	braille.handler.setTether("speech")
@@ -98,6 +85,8 @@ def showSpeech(index):
 			region = braille.TextRegion(text)
 			region.update()
 			braille.handler._doNewObject([region])
+			if config.conf["brailleExtender"]["speechHistoryMode"]["speakEntries"]:
+				speak([speechList[index]], saveString=False)
 	except BaseException:
 		pass
 
@@ -109,8 +98,10 @@ def speak(
 	speechSequence,
 	symbolLevel=None,
 	priority=speech.Spri.NORMAL,
+	saveString=True
 ):
 	orig_speak(speechSequence, symbolLevel, priority)
+	if not saveString: return
 	string = ""
 	for i in speechSequence:
 		if isinstance(i, str):
@@ -137,7 +128,7 @@ def scrollBack(self):
 	) == "speech" and braille.handler.buffer.windowRawText == windowRawText:
 		global index
 		if index > 0:
-			index = index - 1
+			index -= 1
 		showSpeech(index)
 
 
@@ -152,7 +143,7 @@ def scrollForward(self):
 	) == "speech" and braille.handler.buffer.windowRawText == windowRawText:
 		global index
 		if not index >= len(speechList) - 1:
-			index = index + 1
+			index += 1
 			showSpeech(index)
 
 
@@ -165,18 +156,27 @@ def newBrailleMessage(*args, **kwargs):
 		oldBrailleMessage(*args, **kwargs)
 
 
-braille.handler.message = newBrailleMessage
-oldRouteTo = braille.TextRegion.routeTo
-
-
-def newRouteTo(*args, **kwargs):
-	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether() == "speech":
+def showSpeechFromRoutingIndex(routingNumber):
+	global index
+	if not routingNumber:
 		api.copyToClip(speechList[index])
-		return()
-	oldRouteTo(*args, **kwargs)
+		speak([_("Entry copied to clipboard")], saveString=False)
+	elif routingNumber == braille.handler.displaySize - 1:
+		ui.browseableMessage(speechList[index])
+	else:
+		direction = routingNumber > braille.handler.displaySize / 2
+		if direction:
+			index = index - (braille.handler.displaySize - routingNumber) + 1
+		else:
+			index += routingNumber
+		if index < 0:
+			index = 0
+		if index >= len(speechList):
+			index = len(speechList) - 1
+	showSpeech(index)
 
 
-braille.TextRegion.routeTo = newRouteTo
+braille.handler.message = newBrailleMessage
 
 # Translators: Reports which position braille is tethered to
 # (braille can be tethered automatically or to either focus or review position or speech history).

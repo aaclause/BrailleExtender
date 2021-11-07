@@ -18,7 +18,7 @@ addonHandler.initTranslation()
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	# Translators: title of a dialog.
-	title = _("Speech history mode")
+	title = _("Speech History Mode")
 
 	def makeSettings(self, settingsSizer):
 
@@ -162,7 +162,7 @@ def showSpeechFromRoutingIndex(routingNumber):
 	global index
 	if not routingNumber:
 		api.copyToClip(speechList[index])
-		speak([_("Entry copied to clipboard")], saveString=False)
+		speak([_("Announcement copied to clipboard")], saveString=False)
 	elif routingNumber == braille.handler.displaySize - 1:
 		ui.browseableMessage(speechList[index])
 	else:

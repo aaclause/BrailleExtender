@@ -146,6 +146,8 @@ def getConfspec():
 			"limit": "integer(min=0, default=50)",
 			"numberEntries": "boolean(default=True)",
 			"speakEntries": "boolean(default=True)",
+			"backup_tetherTo": 'string(default="focus")',
+			"backup_autoTether": "boolean(default=True)",
 		},
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",

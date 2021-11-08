@@ -1204,6 +1204,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.message(label[0].upper() + label[1:])
 	script_toggleRoutingCursorsEditFields.__doc__ = _("Toggle routing cursors behavior in edit fields")
 
+	def script_toggleSpeechHistoryMode(self, gesture):
+		msg = ""
+		if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
+			speechhistorymode.disable()
+			msg = _("automatic")
+			if not config.conf["braille"]["autoTether"]:
+				tether = braille.handler.getTether()
+				msg = [e[1] for e in braille.handler.tetherValues if e[0] == tether][0]
+			msg = _("Speech History Mode disabled (%s)" % msg)
+		else:
+			speechhistorymode.enable()
+			msg = _("Speech History Mode enabled")
+		speech.speakMessage(msg)
+	script_toggleSpeechHistoryMode.__doc__ = _("Toggle Speech History Mode")
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
@@ -1229,9 +1244,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def terminate(self):
 		if braille.handler.getTether() == "speech":
-			braille.handler.setTether(braille.handler.TETHER_AUTO)
+			speechhistorymode.disable()
 			config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] = True
-			config.conf["braille"]["autoTether"] = True
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField

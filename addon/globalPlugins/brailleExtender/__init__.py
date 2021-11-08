@@ -1237,11 +1237,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		msg = ""
 		if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
 			speechhistorymode.disable()
-			msg = _("automatic")
+			tether = "auto"
 			if not config.conf["braille"]["autoTether"]:
 				tether = braille.handler.getTether()
-				msg = [e[1] for e in braille.handler.tetherValues if e[0] == tether][0]
-			msg = _("Speech History Mode disabled (%s)" % msg)
+			msg = [e[1] for e in braille.handler.tetherValues if e[0] == tether][0]
+			msg = _("Speech History Mode disabled (%s)") % msg
 		else:
 			speechhistorymode.enable()
 			msg = _("Speech History Mode enabled")

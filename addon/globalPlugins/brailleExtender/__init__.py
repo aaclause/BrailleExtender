@@ -619,7 +619,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ouTable = addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])]
 		t = (_(" Input table")+": %s\n"+_("Output table")+": %s\n\n") % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
 		t += utils.getTableOverview()
-		ui.browseableMessage("<pre>%s</pre>" % t, _("Table overview (%s)" % brailleInput.handler.table.displayName), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Table overview (%s)") % brailleInput.handler.table.displayName, True)
 	script_getTableOverview.__doc__ = _("Shows an overview of current input braille table in a browseable message")
 
 	def script_translateInBRU(self, gesture):

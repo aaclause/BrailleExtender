@@ -36,6 +36,7 @@ from . import documentformatting
 from . import objectpresentation
 from . import patches
 from . import settings
+from . import speechhistorymode
 from . import tabledictionaries
 from . import undefinedchars
 from . import updatecheck
@@ -578,7 +579,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ouTable = addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])]
 		t = (_(" Input table")+": %s\n"+_("Output table")+": %s\n\n") % (inTable+' (%s)' % (brailleInput.handler.table.fileName), ouTable+' (%s)' % (config.conf["braille"]["translationTable"]))
 		t += utils.getTableOverview()
-		ui.browseableMessage("<pre>%s</pre>" % t, _("Table overview (%s)" % brailleInput.handler.table.displayName), True)
+		ui.browseableMessage("<pre>%s</pre>" % t, _("Table overview (%s)") % brailleInput.handler.table.displayName, True)
 	script_getTableOverview.__doc__ = _("Shows an overview of current input braille table in a browseable message")
 
 	def script_translateInBRU(self, gesture):
@@ -1191,6 +1192,21 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		ui.message(label[0].upper() + label[1:])
 	script_toggleRoutingCursorsEditFields.__doc__ = _("Toggle routing cursors behavior in edit fields")
 
+	def script_toggleSpeechHistoryMode(self, gesture):
+		msg = ""
+		if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
+			speechhistorymode.disable()
+			tether = "auto"
+			if not config.conf["braille"]["autoTether"]:
+				tether = braille.handler.getTether()
+			msg = [e[1] for e in braille.handler.tetherValues if e[0] == tether][0]
+			msg = _("Speech History Mode disabled (%s)") % msg
+		else:
+			speechhistorymode.enable()
+			msg = _("Speech History Mode enabled")
+		speech.speakMessage(msg)
+	script_toggleSpeechHistoryMode.__doc__ = _("Toggle Speech History Mode")
+
 	__gestures = OrderedDict()
 	__gestures["kb:NVDA+control+shift+a"] = "logFieldsAtCursor"
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
@@ -1215,6 +1231,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+shift+j"] = "toggleTextAttributes"
 
 	def terminate(self):
+		if braille.handler.getTether() == "speech":
+			speechhistorymode.disable()
+			config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] = True
 		braille.TextInfoRegion._addTextWithFields = self.backup__addTextWithFields
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField

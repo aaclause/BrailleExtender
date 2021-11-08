@@ -47,6 +47,21 @@ def getFeaturesDoc():
 
 	contextualOption = _("Show punctuation/symbol &name for undefined characters if available").replace('&', '')
 	features = {
+	_("Speech History Mode"): [
+		"<p>",
+		_("This mode allows to review the last announcements that have been spoken by NVDA."),
+		"<br />",
+		_("To enable this mode, use NVDA+Control+t command or equivalent gestures on your braille displays (like ⡞+space)."),
+		"<br />",
+		_("In this mode, you can use:"),
+		"</p><ul>",
+			"<li>" + _("the first routing cursor to copy the current announcement to the Clipboard.") + "</li>",
+			"<li>" + _("the last routing cursor to show the current announcement in a browseable message.") + "</li>",
+			"<li>" + _("other routing cursors to navigate through history entries.") + "</li>",
+		"</ul><p>",
+			_('Please note that specific settings are available for this feature under the category "Speech History Mode".'),
+		"</p>"
+	],
 		_("Representation of undefined characters"): [
 			"<p>",
 			_("The extension allows you to customize how an undefined character should be represented within a braille table. To do so, go to the — Representation of undefined characters — settings. You can choose between the following representations:"),
@@ -318,6 +333,9 @@ class AddonDoc:
 			[
 				"</ul>",
 				"<h3>" + _("Code contributions and other") + "</h3>",
+				"<ul>",
+				"<li>" + _("Speech mode feature:") + " Emil Hesmyr &lt;emilhe@viken.no&gt;" + "</li>",
+				"</ul>",
 				"<p>"
 				+ _("Code maintenance (cleanup, rewrites, optimizations) thanks to:")
 				+ "</p>",

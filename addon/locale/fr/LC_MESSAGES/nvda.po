@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2021-11-08 14:43+0100\n"
-"PO-Revision-Date: 2021-11-08 15:01+0100\n"
+"PO-Revision-Date: 2021-11-08 15:13+0100\n"
 "Last-Translator: André-Abush Clause <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -803,15 +803,15 @@ msgstr ""
 #: addon\globalPlugins\brailleExtender\__init__.py:1244
 #, python-format
 msgid "Speech History Mode disabled (%s)"
-msgstr "Mode historique de la parole désactivé (%s)"
+msgstr "Mode historique vocal désactivé (%s)"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:1247
 msgid "Speech History Mode enabled"
-msgstr "Mode historique de la parole activé"
+msgstr "Mode historique vocal activé"
 
 #: addon\globalPlugins\brailleExtender\__init__.py:1249
 msgid "Toggle Speech History Mode"
-msgstr "Basculer le mode historique de la parole"
+msgstr "Basculer le mode historique vocal"
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
@@ -921,7 +921,7 @@ msgstr ""
 #: addon\globalPlugins\brailleExtender\addondoc.py:50
 #: addon\globalPlugins\brailleExtender\speechhistorymode.py:22
 msgid "Speech History Mode"
-msgstr "Mode historique de la parole"
+msgstr "Mode historique vocal"
 
 #: addon\globalPlugins\brailleExtender\addondoc.py:52
 msgid ""
@@ -967,7 +967,7 @@ msgid ""
 "category \"Speech History Mode\"."
 msgstr ""
 "Veuillez noter que des paramètres spécifiques sont disponibles pour cette "
-"fonctionnalité dans la catégorie « Mode historique de la parole »."
+"fonctionnalité dans la catégorie « Mode historique vocal »."
 
 #: addon\globalPlugins\brailleExtender\addondoc.py:65
 msgid "Representation of undefined characters"
@@ -2199,7 +2199,7 @@ msgstr "&Préfixer les entrées par leur position dans l'historique"
 #. Translators: label of a dialog.
 #: addon\globalPlugins\brailleExtender\speechhistorymode.py:43
 msgid "&Read entries while browsing history"
-msgstr "Lire les entrées pendant le parcours de l'historique"
+msgstr "&Lire les entrées pendant le parcours de l'historique"
 
 #. Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
 #: addon\globalPlugins\brailleExtender\speechhistorymode.py:71
@@ -2217,8 +2217,7 @@ msgid ""
 "Toggle tethering of braille between the focus, the review position and the "
 "speech history"
 msgstr ""
-"Basculer le suivi braille entre focus, curseur de revue et historique de la "
-"parole"
+"Basculer le suivi braille entre focus, curseur de revue et historique vocal"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon\globalPlugins\brailleExtender\tabledictionaries.py:29

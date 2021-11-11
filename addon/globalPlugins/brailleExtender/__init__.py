@@ -37,6 +37,7 @@ from . import huc
 from . import documentformatting
 from . import objectpresentation
 from . import patches
+from . import rolelabels
 from . import settings
 from . import speechhistorymode
 from . import tabledictionaries
@@ -141,6 +142,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedinput.initialize()
+		if config.conf["brailleExtender"]["features"]["roleLabels"]:
+			rolelabels.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 		objectpresentation.loadOrderProperties()
 		documentformatting.load_tags()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")

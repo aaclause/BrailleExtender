@@ -72,7 +72,7 @@ routingCursorsEditFields_labels = {
 }
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
-backupRoleLabels = {}
+
 iniGestures = {}
 iniProfile = {}
 profileFileExists = gesturesFileExists = False
@@ -176,7 +176,7 @@ def getConfspec():
 		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
 			"attributes": "boolean(default=True)",
-			"roleLabels": "boolean(default=True)"
+			"roleLabels": "boolean(default=False)"
 		},
 		"attributes": {
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
@@ -249,38 +249,6 @@ def loadPreferedTables():
 	inputTables = [t for t in inputTables if t in listInputTables]
 	outputTables = [t for t in outputTables if t in listOutputTables]
 
-def getLabelFromID(idCategory, idLabel):
-	if idCategory == 0: return braille.roleLabels[int(idLabel)]
-	if idCategory == 1: return braille.landmarkLabels[idLabel]
-	if idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
-	if idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
-
-def setLabelFromID(idCategory, idLabel, newLabel):
-	if idCategory == 0: braille.roleLabels[int(idLabel)] = newLabel
-	elif idCategory == 1: braille.landmarkLabels[idLabel] = newLabel
-	elif idCategory == 2: braille.positiveStateLabels[int(idLabel)] = newLabel
-	elif idCategory == 3: braille.negativeStateLabels[int(idLabel)] = newLabel
-
-def loadRoleLabels(roleLabels):
-	global backupRoleLabels
-	for k, v in roleLabels.items():
-		try:
-			arg1 = int(k.split(':')[0])
-			arg2 = k.split(':')[1]
-			backupRoleLabels[k] = (v, getLabelFromID(arg1, arg2))
-			setLabelFromID(arg1, arg2, v)
-		except BaseException as err:
-			log.error("Error during loading role label `%s` (%s)" % (k, err))
-			roleLabels.pop(k)
-			config.conf["brailleExtender"]["roleLabels"] = roleLabels
-
-def discardRoleLabels():
-	global backupRoleLabels
-	for k, v in backupRoleLabels.items():
-		arg1 = int(k.split(':')[0])
-		arg2 = k.split(':')[1]
-		setLabelFromID(arg1, arg2, v[1])
-	backupRoleLabels = {}
 
 def loadConf():
 	global curBD, gesturesFileExists, profileFileExists, iniProfile
@@ -319,8 +287,6 @@ def loadConf():
 		braille.handler.displaySize = backupDisplaySize-limitCellsRight
 	if not noUnicodeTable: loadPreferedTables()
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
-	if config.conf["brailleExtender"]["features"]["roleLabels"]:
-		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
 
 def loadGestures():

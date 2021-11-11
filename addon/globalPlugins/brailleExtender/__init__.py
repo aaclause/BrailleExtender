@@ -38,6 +38,7 @@ config.conf.spec["brailleExtender"] = addoncfg.getConfspec()
 from . import advancedinput
 from . import huc
 from . import patches
+from . import rolelabels
 from . import settings
 from . import speechhistorymode
 from . import tabledictionaries
@@ -197,6 +198,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedinput.initialize()
+		if config.conf["brailleExtender"]["features"]["roleLabels"]:
+			rolelabels.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):

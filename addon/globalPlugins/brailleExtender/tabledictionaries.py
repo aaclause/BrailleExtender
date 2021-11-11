@@ -1,22 +1,23 @@
-# dictionaries.py
+# tabledictionaries.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
-import gui
-import wx
 import os.path
 import re
 import unicodedata
+from collections import namedtuple
 
 import addonHandler
+import gui
+import wx
+
 addonHandler.initTranslation()
 import braille
 import config
 import louis
 
-from collections import namedtuple
-from . import configBE
-from .common import *
+from . import addoncfg
+from .common import configDir
 from . import huc
 
 TableDictEntry = namedtuple("TableDictEntry", ("opcode", "textPattern", "braillePattern", "direction", "comment"))
@@ -269,7 +270,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		setDictTables()
 		braille.handler.setDisplayByName(braille.handler.display.name)
 		if res: super().onApply(evt)
-		else: notImplemented("Error during writing file, more info in log.")
+		else: RuntimeError("Error during writing file, more info in log.")
 		notifyInvalidTables()
 		self.dictList.SetFocus()
 
@@ -279,7 +280,7 @@ class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 		braille.handler.setDisplayByName(braille.handler.display.name)
 		notifyInvalidTables()
 		if res: super().onOk(evt)
-		else: notImplemented("Error during writing file, more info in log.")
+		else: RuntimeError("Error during writing file, more info in log.")
 		notifyInvalidTables()
 
 class DictionaryEntryDlg(wx.Dialog):
@@ -291,7 +292,7 @@ class DictionaryEntryDlg(wx.Dialog):
 		if specifyDict:
 			# Translators: This is a label for an edit field in add dictionary entry dialog.
 			dictText = _("Dictionary")
-			outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+			outTable = addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])]
 			dictChoices = [_("Global"), _("Table ({})").format(outTable), _("Temporary")]
 			self.dictRadioBox = sHelper.addItem(wx.RadioBox(self, label=dictText, choices=dictChoices))
 			self.dictRadioBox.SetSelection(1)
@@ -337,7 +338,7 @@ class DictionaryEntryDlg(wx.Dialog):
 
 
 	def onSeeEntriesClick(self, evt):
-		outTable = configBE.tablesTR[configBE.tablesFN.index(config.conf["braille"]["translationTable"])]
+		outTable = addoncfg.tablesTR[addoncfg.tablesFN.index(config.conf["braille"]["translationTable"])]
 		label = [_("Global dictionary"), _("Table dictionary ({})").format(outTable), _("Temporary dictionary")][self.dictRadioBox.GetSelection()]
 		type_ = self.getType_()
 		self.Destroy()

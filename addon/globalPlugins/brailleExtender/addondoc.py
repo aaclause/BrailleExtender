@@ -1,22 +1,23 @@
-# addonDoc.py
+# addondoc.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 
 import re
+
 import addonHandler
 
 addonHandler.initTranslation()
 import braille
-from . import configBE
+from . import addoncfg
 from collections import OrderedDict
 import config
 import cursorManager
 import globalCommands
 import ui
 import random
-from .undefinedChars import CHOICES_LABELS
+from .undefinedchars import CHOICES_LABELS
 from . import utils
-from .common import *
+from .common import addonDesc, addonGitHubURL, addonName, addonSummary, addonURL, addonVersion, punctuationSeparator
 
 def escape(text):
 	chars = {"&": "&amp;", '"': "&quot;", "'": "&apos;", "<": "&lt;", ">": "&gt;"}
@@ -46,6 +47,21 @@ def getFeaturesDoc():
 
 	contextualOption = _("Show punctuation/symbol &name for undefined characters if available").replace('&', '')
 	features = {
+	_("Speech History Mode"): [
+		"<p>",
+		_("This mode allows to review the last announcements that have been spoken by NVDA."),
+		"<br />",
+		_("To enable this mode, use NVDA+Control+t command or equivalent gestures on your braille displays (like ⡞+space)."),
+		"<br />",
+		_("In this mode, you can use:"),
+		"</p><ul>",
+			"<li>" + _("the first routing cursor to copy the current announcement to the Clipboard.") + "</li>",
+			"<li>" + _("the last routing cursor to show the current announcement in a browseable message.") + "</li>",
+			"<li>" + _("other routing cursors to navigate through history entries.") + "</li>",
+		"</ul><p>",
+			_('Please note that specific settings are available for this feature under the category "Speech History Mode".'),
+		"</p>"
+	],
 		_("Representation of undefined characters"): [
 			"<p>",
 			_("The extension allows you to customize how an undefined character should be represented within a braille table. To do so, go to the — Representation of undefined characters — settings. You can choose between the following representations:"),
@@ -156,8 +172,8 @@ class AddonDoc:
 		doc += "<h2>" + _("Let's explore some features") + "</h2>"
 		doc += getFeaturesDoc()
 		doc += "<h2>" + _("Profile gestures") + "</h2>"
-		if configBE.gesturesFileExists:
-			brailleDisplayDriverName = configBE.curBD.capitalize()
+		if addoncfg.gesturesFileExists:
+			brailleDisplayDriverName = addoncfg.curBD.capitalize()
 			profileName = "default"
 			doc += ''.join([
 				"<p>",
@@ -168,14 +184,14 @@ class AddonDoc:
 			mKB = OrderedDict()
 			mNV = OrderedDict()
 			mW = OrderedDict()
-			for g in configBE.iniGestures["globalCommands.GlobalCommands"].keys():
+			for g in addoncfg.iniGestures["globalCommands.GlobalCommands"].keys():
 				if "kb:" in g:
 					if "+" in g:
-						mW[g] = configBE.iniGestures["globalCommands.GlobalCommands"][g]
+						mW[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 					else:
-						mKB[g] = configBE.iniGestures["globalCommands.GlobalCommands"][g]
+						mKB[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 				else:
-					mNV[g] = configBE.iniGestures["globalCommands.GlobalCommands"][g]
+					mNV[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 			doc += ("<h3>" + _("Simple keys") + " (%d)</h3>") % len(mKB)
 			doc += self.translateLst(mKB)
 			doc += ("<h3>" + _("Usual shortcuts") + " (%d)</h3>") % len(mW)
@@ -183,29 +199,29 @@ class AddonDoc:
 			doc += ("<h3>" + _("Standard NVDA commands") + " (%d)</h3>") % len(mNV)
 			doc += self.translateLst(mNV)
 			doc += "<h3>{} ({})</h3>".format(
-				_("Modifier keys"), len(configBE.iniProfile["modifierKeys"])
+				_("Modifier keys"), len(addoncfg.iniProfile["modifierKeys"])
 			)
-			doc += self.translateLst(configBE.iniProfile["modifierKeys"])
+			doc += self.translateLst(addoncfg.iniProfile["modifierKeys"])
 			doc += "<h3>" + _("Quick navigation keys") + "</h3>"
 			doc += self.translateLst(
-				configBE.iniGestures["cursorManager.CursorManager"]
+				addoncfg.iniGestures["cursorManager.CursorManager"]
 			)
 			doc += "<h3>" + _("Rotor feature") + "</h3>"
 			doc += self.translateLst(
 				{
-					k: configBE.iniProfile["miscs"][k]
-					for k in configBE.iniProfile["miscs"]
+					k: addoncfg.iniProfile["miscs"][k]
+					for k in addoncfg.iniProfile["miscs"]
 					if "rotor" in k.lower()
 				}
-			) + self.translateLst(configBE.iniProfile["rotor"])
+			) + self.translateLst(addoncfg.iniProfile["rotor"])
 			doc += ("<h3>" + _("Gadget commands") + " (%d)</h3>") % (
-				len(configBE.iniProfile["miscs"]) - 2
+                    len(addoncfg.iniProfile["miscs"]) - 2
 			)
 			doc += self.translateLst(
 				OrderedDict(
 					[
-						(k, configBE.iniProfile["miscs"][k])
-						for k in configBE.iniProfile["miscs"]
+						(k, addoncfg.iniProfile["miscs"][k])
+						for k in addoncfg.iniProfile["miscs"]
 						if k not in ["nextRotor", "priorRotor"]
 					]
 				)
@@ -236,7 +252,7 @@ class AddonDoc:
 			# list keyboard layouts
 			if (
 				not instanceGP.noKeyboarLayout()
-				and "keyboardLayouts" in configBE.iniProfile
+				and "keyboardLayouts" in addoncfg.iniProfile
 			):
 				lb = instanceGP.getKeyboardLayouts()
 				doc += "<h3>{}</h3>".format(_("Keyboard configurations provided"))
@@ -284,11 +300,13 @@ class AddonDoc:
 		doc += "</ul>"
 		translators = {
 			_("Arabic"): "Ikrami Ahmad",
+			_("Chinese (Taiwan)"): "蔡宗豪 Victor Cai <surfer0627@gmail.com>",
 			_("Croatian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>",
 			_("Danish"): "Daniel Gartmann <dg@danielgartmann.dk>",
-			_("English and French"): "Sof <hellosof@gmail.com>, Joseph Lee, André-Abush Clause <dev@andreabc.net>",
-			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick <hozosch@web.de>, Jürgen Schwingshandl <jbs@b-a-c.at>",
+			_("English and French"): "Sof <hellosof@gmail.com>, Joseph Lee, André-Abush Clause <dev@andreabc.net>, Oreonan <corentin@progaccess.net>",
+			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick <hozosch@web.de>, Rene Linke <rene.linke@hamburg.de>, Jürgen Schwingshandl <jbs@b-a-c.at>",
 			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
+			_("Italian"): "Fabrizio Marini <marini.carlo@fastwebnet.it>",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
 			_("Polish"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Dorota Krać",
 			_("Russian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Pavel Kaplan <pavel46@gmail.com>, Artem Plaksin <admin@maniyax.ru>",
@@ -299,7 +317,7 @@ class AddonDoc:
 				"".join(
 					[
 						"<p>",
-						"Copyright (C) 2016-2020 André-Abush Clause ",
+						"Copyright (C) 2016-2021 André-Abush Clause ",
 						_("and other contributors"),
 						":<br />",
 						f"<pre>{addonGitHubURL}\n{addonURL}</pre>",
@@ -315,6 +333,9 @@ class AddonDoc:
 			[
 				"</ul>",
 				"<h3>" + _("Code contributions and other") + "</h3>",
+				"<ul>",
+				"<li>" + _("Speech mode feature:") + " Emil Hesmyr &lt;emilhe@viken.no&gt;" + "</li>",
+				"</ul>",
 				"<p>"
 				+ _("Code maintenance (cleanup, rewrites, optimizations) thanks to:")
 				+ "</p>",

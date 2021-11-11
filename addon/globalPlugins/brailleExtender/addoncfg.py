@@ -1,19 +1,23 @@
-# configBE.py
+# addoncfg.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
 
 import os
-import globalVars
-from collections import OrderedDict
 
 import addonHandler
-addonHandler.initTranslation()
 import braille
 import config
 import configobj
+import globalVars
 import inputCore
-from .common import *
-from .oneHandMode import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
+from logHandler import log
+
+from .common import (addonUpdateChannel, configDir, profilesDir,
+	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
+from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
+
+addonHandler.initTranslation()
 
 Validator = configobj.validate.Validator
 
@@ -61,6 +65,11 @@ focusOrReviewChoices = dict([
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+routingCursorsEditFields_labels = {
+	RC_NORMAL: _("normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("alternative, emulation of horizontal arrow keys with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("alternative, emulation of horizontal arrow keys silently")
+}
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
 backupRoleLabels = {}
@@ -118,19 +127,32 @@ def getConfspec():
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"reverseScrollBtns": "boolean(default=False)",
-		"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-		"smartDelayScroll": "boolean(default=False)",
-		"ignoreBlankLineScroll": "boolean(default=True)",
+		"autoScroll": {
+			"delay_%s" % curBD: f"integer(min={MIN_AUTO_SCROLL_DELAY}, default={DEFAULT_AUTO_SCROLL_DELAY}, max={MAX_AUTO_SCROLL_DELAY})",
+			"stepDelayChange": f"integer(min={MIN_STEP_DELAY_CHANGE}, default={DEFAULT_STEP_DELAY_CHANGE}, max={MAX_STEP_DELAY_CHANGE})",
+			"adjustToContent": "boolean(default=False)",
+			"ignoreBlankLine": "boolean(default=True)",
+		},
+		"skipBlankLinesScroll": "boolean(default=False)",
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,
 			CHOICE_focus=CHOICE_focus,
 			CHOICE_review=CHOICE_review,
 			CHOICE_focusAndReview=CHOICE_focusAndReview
 		),
+		"smartCapsLock": "boolean(default=True)",
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
-		"routingReviewModeWithCursorKeys": "boolean(default=False)",
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
+		"speechHistoryMode": {
+			"enabled": "boolean(default=False)",
+			"limit": "integer(min=0, default=50)",
+			"numberEntries": "boolean(default=True)",
+			"speakEntries": "boolean(default=True)",
+			"backup_tetherTo": 'string(default="focus")',
+			"backup_autoTether": "boolean(default=True)",
+		},
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],

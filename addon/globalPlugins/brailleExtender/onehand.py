@@ -1,9 +1,10 @@
-# oneHandMode.py
+# onehand.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+import addonHandler
 import gui
 import wx
-import addonHandler
+
 addonHandler.initTranslation()
 import config
 from .huc import unicodeBrailleToDescription, cellDescriptionsToUnicodeBraille

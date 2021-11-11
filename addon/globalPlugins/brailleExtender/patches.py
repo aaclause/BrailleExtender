@@ -1,19 +1,17 @@
 # patches.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
 import os
+import struct
 import sys
 import time
-import struct
-import winUser
 
+import addonHandler
 import api
 import braille
 import brailleInput
-import brailleTables
-import controlTypes
 import config
 import core
 import globalCommands
@@ -23,26 +21,31 @@ import louis
 import louisHelper
 import nvwave
 import queueHandler
-import sayAllHandler
+try:
+	import sayAllHandler
+except ModuleNotFoundError:
+	from speech.sayAll import SayAllHandler as sayAllHandler
 import scriptHandler
 import speech
 import textInfos
+import tones
 import treeInterceptorHandler
 import watchdog
+import winUser
 from logHandler import log
 
-import addonHandler
-addonHandler.initTranslation()
-
-from . import advancedInputMode
-from . import brailleRegionHelper
-from . import configBE
-from . import dictionaries
+from . import addoncfg
+from . import advancedinput
+from . import autoscroll
 from . import huc
-from . import undefinedChars
-from .oneHandMode import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables
-from .common import *
+from . import regionhelper
+from . import speechhistorymode
+from . import undefinedchars
+from .common import baseDir, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
+from .onehand import process as processOneHandMode
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason, get_control_type
+
+addonHandler.initTranslation()
 
 instanceGP = None
 
@@ -55,12 +58,12 @@ origFunc = {
 
 def sayCurrentLine():
 	global instanceGP
-	if not instanceGP.autoScrollRunning:
+	if not braille.handler._auto_scroll:
 		if getTether() == braille.handler.TETHER_REVIEW:
-			if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_review]:
+			if config.conf["brailleExtender"]["speakScroll"] in [addoncfg.CHOICE_focusAndReview, addoncfg.CHOICE_review]:
 				scriptHandler.executeScript(globalCommands.commands.script_review_currentLine, None)
 			return
-		if config.conf["brailleExtender"]["speakScroll"] in [configBE.CHOICE_focusAndReview, configBE.CHOICE_focus]:
+		if config.conf["brailleExtender"]["speakScroll"] in [addoncfg.CHOICE_focusAndReview, addoncfg.CHOICE_focus]:
 			obj = api.getFocusObject()
 			treeInterceptor = obj.treeInterceptor
 			if isinstance(treeInterceptor, treeInterceptorHandler.DocumentTreeInterceptor) and not treeInterceptor.passThrough: obj = treeInterceptor
@@ -68,41 +71,69 @@ def sayCurrentLine():
 			except (NotImplementedError, RuntimeError):
 				info = obj.makeTextInfo(textInfos.POSITION_FIRST)
 			info.expand(textInfos.UNIT_LINE)
-			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=controlTypes.REASON_CARET)
+			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
-def script_braille_routeTo(self, gesture):
-	obj = obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
-			obj.hasFocus and
-			braille.handler._cursorPos and
-			(obj.role == controlTypes.ROLE_TERMINAL or
-			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
-			 getTether() == braille.handler.TETHER_REVIEW))):
-		speechMode = speech.speechMode
-		speech.speechMode = 0
-		nb = braille.handler._cursorPos-gesture.routingIndex
-		i = 0
-		key = "leftarrow" if nb > 0 else "rightarrow"
-		while i < abs(nb):
-			keyboardHandler.KeyboardInputGesture.fromName(key).send()
-			i += 1
-		speech.speechMode = speechMode
-		speech.speakSpelling(getCurrentChar())
-		return
-	try: braille.handler.routeTo(gesture.routingIndex)
-	except LookupError: pass
-	if scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
+def say_character_under_braille_routing_cursor(gesture):
+	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
 		region = braille.handler.buffer
 		if region.cursorPos is None: return
 		try:
 			start = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
-			_, endBraillePos = brailleRegionHelper.getBraillePosFromRawPos(region, start)
+			_, endBraillePos = regionhelper.getBraillePosFromRawPos(region, start)
 			end = region.brailleToRawPos[endBraillePos+1]
 			ch = region.rawText[start:end]
 			if ch:
 				speech.speakMessage(getSpeechSymbols(ch))
 		except IndexError: pass
+
+
+def script_braille_routeTo(self, gesture):
+	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether() == "speech":
+		return speechhistorymode.showSpeechFromRoutingIndex(gesture.routingIndex)
+	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
+		braille.handler.toggle_auto_scroll()
+	obj = api.getNavigatorObject()
+	if (config.conf["brailleExtender"]["routingCursorsEditFields"] in [RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT] and
+		braille.handler.buffer is braille.handler.mainBuffer and
+		braille.handler.mainBuffer.cursorPos is not None and
+		obj.hasFocus and
+		obj.role in [get_control_type("ROLE_TERMINAL"), get_control_type("ROLE_EDITABLETEXT")]
+	):
+		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
+		nb = 0
+		key = "rightarrow"
+		region = braille.handler.mainBuffer
+		cur_pos = region.brailleToRawPos[region.cursorPos]
+		size = region.brailleToRawPos[-1]
+		try:
+			new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+		except IndexError:
+			new_pos = size
+		log.debug(f"Moving from position {cur_pos} to position {new_pos}")
+		if play_beeps: tones.beep(100, 100)
+		if new_pos == 0:
+			keyboardHandler.KeyboardInputGesture.fromName("home").send()
+		elif new_pos >= size:
+			keyboardHandler.KeyboardInputGesture.fromName("end").send()
+		else:
+			if cur_pos > new_pos:
+				key = "leftarrow"
+				nb = cur_pos - new_pos
+			else:
+				nb = new_pos - cur_pos
+			i = 0
+			gestureKB = keyboardHandler.KeyboardInputGesture.fromName(key)
+			while i < nb:
+				gestureKB.send()
+				i += 1
+		if play_beeps: tones.beep(150, 100)
+		say_character_under_braille_routing_cursor(gesture)
+		return
+	try: braille.handler.routeTo(gesture.routingIndex)
+	except LookupError: pass
+	say_character_under_braille_routing_cursor(gesture)
+
 
 # braille.Region.update()
 def update(self):
@@ -123,23 +154,23 @@ def update(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedChars.CHOICE_tableBehaviour:
-		undefinedChars.undefinedCharProcess(self)
-	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != configBE.CHOICE_none:
+	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour:
+		undefinedchars.undefinedCharProcess(self)
+	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != addoncfg.CHOICE_none:
 		d = {
-			configBE.CHOICE_dot7: 64,
-			configBE.CHOICE_dot8: 128,
-			configBE.CHOICE_dots78: 192
+			addoncfg.CHOICE_dot7: 64,
+			addoncfg.CHOICE_dot8: 128,
+			addoncfg.CHOICE_dots78: 192
 		}
 		if config.conf["brailleExtender"]["attributes"]["selectedElement"] in d:
 			addDots = d[config.conf["brailleExtender"]["attributes"]["selectedElement"]]
-			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
+			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and get_control_type("STATE_SELECTED") in self.obj.states:
 				name = self.obj.name
 				if name in self.rawText:
 					start = self.rawText.index(name)
 					end = start + len(name)-1
-					startBraillePos, _ = brailleRegionHelper.getBraillePosFromRawPos(self, start)
-					_, endBraillePos = brailleRegionHelper.getBraillePosFromRawPos(self, end)
+					startBraillePos, _ = regionhelper.getBraillePosFromRawPos(self, start)
+					_, endBraillePos = regionhelper.getBraillePosFromRawPos(self, end)
 					self.brailleCells = [cell | addDots if startBraillePos <= pos <= endBraillePos else cell for pos, cell in enumerate(self.brailleCells)]
 	if self.selectionStart is not None and self.selectionEnd is not None:
 		try:
@@ -157,46 +188,70 @@ def update(self):
 			self.brailleCells = [(cell & 63) for cell in self.brailleCells]
 
 
-#: braille.TextInfoRegion.nextLine()
+# braille.TextInfoRegion.nextLine()
 def nextLine(self):
-	try:
-		dest = self._readingInfo.copy()
+	dest = self._readingInfo.copy()
+	continue_ = True
+	while continue_:
 		moved = dest.move(self._getReadingUnit(), 1)
 		if not moved:
 			if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
 				try: dest.obj.turnPage()
-				except RuntimeError: pass
+				except RuntimeError as err:
+					log.error(err)
+					continue_ = False
 				else: dest = dest.obj.makeTextInfo(textInfos.POSITION_FIRST)
-			else: return
-		dest.collapse()
-		self._setCursor(dest)
-		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
-		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
-	except BaseException: pass
+			else:
+				if braille.handler._auto_scroll:
+					braille.handler.toggle_auto_scroll()
+				return
+		if continue_ and config.conf["brailleExtender"]["skipBlankLinesScroll"] or (
+			braille.handler._auto_scroll and (
+				config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]
+				or config.conf["brailleExtender"]["autoScroll"]["adjustToContent"])
+		):
+			dest_ = dest.copy()
+			dest_.expand(textInfos.UNIT_LINE)
+			continue_ = not dest_.text.strip()
+		else:
+			continue_ = False
+	dest.collapse()
+	self._setCursor(dest)
+	queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
+	queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 
-#: braille.TextInfoRegion.previousLine()
+# braille.TextInfoRegion.previousLine()
 def previousLine(self, start=False):
-	try:
-		dest = self._readingInfo.copy()
-		dest.collapse()
-		if start: unit = self._getReadingUnit()
-		else: unit = textInfos.UNIT_CHARACTER
+	dest = self._readingInfo.copy()
+	dest.collapse()
+	if start: unit = self._getReadingUnit()
+	else: unit = textInfos.UNIT_CHARACTER
+	continue_ = True
+	while continue_:
 		moved = dest.move(unit, -1)
 		if not moved:
 			if self.allowPageTurns and isinstance(dest.obj, textInfos.DocumentWithPageTurns):
 				try: dest.obj.turnPage(previous=True)
-				except RuntimeError: pass
+				except RuntimeError as err:
+					log.error(err)
+					continue_ = False
 				else:
 					dest = dest.obj.makeTextInfo(textInfos.POSITION_LAST)
 					dest.expand(unit)
 			else: return
-		dest.collapse()
-		self._setCursor(dest)
-		queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
-		queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
-	except BaseException: pass
+		if continue_ and config.conf["brailleExtender"]["skipBlankLinesScroll"] or (braille.handler._auto_scroll and config.conf["brailleExtender"]["autoScroll"]["ignoreBlankLine"]):
+			dest_ = dest.copy()
+			dest_.expand(textInfos.UNIT_LINE)
+			continue_ = not dest_.text.strip()
+		else:
+			continue_ = False
+	dest.collapse()
+	self._setCursor(dest)
+	queueHandler.queueFunction(queueHandler.eventQueue, speech.cancelSpeech)
+	queueHandler.queueFunction(queueHandler.eventQueue, sayCurrentLine)
 
-#: inputCore.InputManager.executeGesture
+
+# inputCore.InputManager.executeGesture
 def executeGesture(self, gesture):
 		"""Perform the action associated with a gesture.
 		@param gesture: The gesture to execute.
@@ -280,7 +335,7 @@ def executeGesture(self, gesture):
 			return
 
 		raise NoInputGestureAction
-#: brailleInput.BrailleInputHandler.sendChars()
+# brailleInput.BrailleInputHandler.sendChars()
 def sendChars(self, chars):
 	"""Sends the provided unicode characters to the system.
 	@param chars: The characters to send to the system.
@@ -304,7 +359,7 @@ def sendChars(self, chars):
 		for ch in chars:
 			focusObj.event_typedCharacter(ch=ch)
 
-#: brailleInput.BrailleInputHandler.emulateKey()
+# brailleInput.BrailleInputHandler.emulateKey()
 def emulateKey(self, key, withModifiers=True):
 	"""Emulates a key using the keyboard emulation system.
 	If emulation fails (e.g. because of an unknown key), a debug warning is logged
@@ -327,7 +382,7 @@ def emulateKey(self, key, withModifiers=True):
 		log.debugWarning("Unable to emulate %r, falling back to sending unicode characters"%gesture, exc_info=True)
 		self.sendChars(key)
 
-#: brailleInput.BrailleInputHandler.input()
+# brailleInput.BrailleInputHandler.input()
 def input_(self, dots):
 	"""Handle one cell of braille input.
 	"""
@@ -351,7 +406,7 @@ def input_(self, dots):
 		advancedInputStr = ''.join([chr(cell | 0x2800) for cell in self.bufferBraille[:pos]])
 		if advancedInputStr:
 			res = ''
-			abreviations = advancedInputMode.getReplacements([advancedInputStr])
+			abreviations = advancedinput.getReplacements([advancedInputStr])
 			startUnicodeValue = "⠃⠙⠓⠕⠭⡃⡙⡓⡕⡭"
 			if not abreviations and advancedInputStr[0] in startUnicodeValue: advancedInputStr = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"] + advancedInputStr
 			lenEscapeSign = len(config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"])
@@ -368,7 +423,7 @@ def input_(self, dots):
 				else: self._reportUntranslated(pos)
 			elif abreviations:
 				if len(abreviations) == 1:
-					res = abreviations[0].replaceBy
+					res = abreviations[0].replacement
 					sendChar(res)
 				else: return self._reportUntranslated(pos)
 			else:
@@ -390,7 +445,7 @@ def input_(self, dots):
 		if self._translate(endWord):
 			if not endWord:
 				self.cellsWithText.add(pos)
-		elif self.bufferText and not self.useContractedForCurrentFocus:
+		elif self.bufferText and not self.useContractedForCurrentFocus and self._table.contracted:
 			# Translators: Reported when translation didn't succeed due to unsupported input.
 			speech.speakMessage(_("Unsupported input"))
 			self.flushBuffer()
@@ -400,11 +455,11 @@ def input_(self, dots):
 	else:
 		self._reportUntranslated(pos)
 
-#: brailleInput.BrailleInputHandler._translate()
+# brailleInput.BrailleInputHandler._translate()
 # reason for patching: possibility to lock modifiers, display modifiers in braille during input, HUC Braille input
 
 def sendChar(char):
-	nvwave.playWaveFile(os.path.join(configBE.baseDir, "res/sounds/keyPress.wav"))
+	nvwave.playWaveFile(os.path.join(baseDir, "res/sounds/keyPress.wav"))
 	core.callLater(0, brailleInput.handler.sendChars, char)
 	if len(char) == 1:
 		core.callLater(100, speech.speakSpelling, char)
@@ -456,6 +511,14 @@ def _translate(self, endWord):
 			else:
 				self.emulateKey(newText)
 		else:
+			if config.conf["brailleExtender"]["smartCapsLock"] and winUser.getKeyState(winUser.VK_CAPITAL)&1:
+				tmp = []
+				for ch in newText:
+					if ch.islower():
+						tmp.append(ch.upper())
+					else:
+						tmp.append(ch.lower())
+				newText = ''.join(tmp)
 			self.sendChars(newText)
 
 	if endWord or (newText and (not self.currentFocusIsTextObj or self.currentModifiers)):
@@ -476,10 +539,23 @@ def _translate(self, endWord):
 
 	return False
 
-#: louis._createTablesString()
+# louis._createTablesString()
 def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
+
+
+def _displayWithCursor(self):
+	if not self._cells:
+		return
+	cells = list(self._cells)
+	if self._cursorPos is not None and self._cursorBlinkUp and not self._auto_scroll:
+		if self.getTether() == self.TETHER_FOCUS:
+			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeFocus"]
+		else:
+			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
+	self._writeCells(cells)
+
 
 # applying patches
 braille.Region.update = update
@@ -497,3 +573,15 @@ script_braille_routeTo.__doc__ = origFunc["script_braille_routeTo"].__doc__
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
+
+braille.BrailleHandler.AutoScroll = autoscroll.AutoScroll
+braille.BrailleHandler._auto_scroll = None
+braille.BrailleHandler.get_auto_scroll_delay = autoscroll.get_auto_scroll_delay
+braille.BrailleHandler.get_dynamic_auto_scroll_delay = autoscroll.get_dynamic_auto_scroll_delay
+braille.BrailleHandler.decrease_auto_scroll_delay = autoscroll.decrease_auto_scroll_delay
+braille.BrailleHandler.increase_auto_scroll_delay = autoscroll.increase_auto_scroll_delay
+braille.BrailleHandler.report_auto_scroll_delay = autoscroll.report_auto_scroll_delay
+braille.BrailleHandler.toggle_auto_scroll = autoscroll.toggle_auto_scroll
+braille.BrailleHandler._displayWithCursor = _displayWithCursor
+
+REASON_CARET = get_output_reason("CARET")

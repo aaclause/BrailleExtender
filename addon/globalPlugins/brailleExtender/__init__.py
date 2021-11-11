@@ -1283,7 +1283,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
 		self.removeMenu()
 		self.restorReviewCursorTethering()
-		addoncfg.discardRoleLabels()
+		rolelabels.discardRoleLabels()
 		if addoncfg.noUnicodeTable:
 			brailleInput.handler.table = self.backupInputTable
 		if self.hourDatePlayed:

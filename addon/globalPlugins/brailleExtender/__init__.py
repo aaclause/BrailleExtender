@@ -1255,7 +1255,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.handler.display.display = patches.origFunc["display"]
 		self.removeMenu()
 		self.restorReviewCursorTethering()
-		addoncfg.discardRoleLabels()
+		rolelabels.discardRoleLabels()
 		if addoncfg.noUnicodeTable:
 			brailleInput.handler.table = self.backupInputTable
 		if self.hourDatePlayed:

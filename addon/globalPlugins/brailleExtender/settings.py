@@ -28,6 +28,7 @@ from .autoscroll import SettingsDlg as AutoScrollDlg
 from .documentformatting import SettingsDlg as DocumentFormattingDlg
 from .objectpresentation import SettingsDlg as ObjectPresentationDlg
 from .onehand import SettingsDlg as OneHandModeDlg
+from .rolelabels import SettingsDlg as RoleLabelsDlg
 from .speechhistorymode import SettingsDlg as SpeechHistorymodeDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
 
@@ -579,6 +580,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,
 		OneHandModeDlg,
+		RoleLabelsDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

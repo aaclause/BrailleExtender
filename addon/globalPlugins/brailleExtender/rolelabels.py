@@ -170,6 +170,7 @@ backupRoleLabels = {}
 roleLabels = {}
 
 def getIDFromIndexes(idCategory, idLabel):
+	oldRoleLabels = hasattr(controlTypes, "roleLabels")
 	if not isinstance(idCategory, int):
 		raise TypeError(f"Wrong type for idCategory ({idCategory})")
 	if not isinstance(idLabel, int):
@@ -180,7 +181,7 @@ def getIDFromIndexes(idCategory, idLabel):
 	elif idCategory == 2: idRole = list(braille.positiveStateLabels.keys())[idLabel]
 	elif idCategory == 3: idRole = list(braille.negativeStateLabels.keys())[idLabel]
 	else: raise ValueError(f"Wrong value for category ({idCategory})")
-	if isinstance(idRole, (controlTypes.Role, controlTypes.State)):
+	if not oldRoleLabels and isinstance(idRole, (controlTypes.Role, controlTypes.State)):
 		idRole = idRole.value
 	return idRole
 

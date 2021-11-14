@@ -257,7 +257,6 @@ def getConfspec():
 			}
 		},
 		"quickLaunches": {},
-		"roleLabels": {},
 		"brailleTables": {},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",

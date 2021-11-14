@@ -143,7 +143,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.createMenu()
 		advancedinput.initialize()
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
-			rolelabels.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+			rolelabels.loadRoleLabels()
 		objectpresentation.loadOrderProperties()
 		documentformatting.load_tags()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")

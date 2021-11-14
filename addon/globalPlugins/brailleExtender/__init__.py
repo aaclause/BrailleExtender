@@ -199,7 +199,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.createMenu()
 		advancedinput.initialize()
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
-			rolelabels.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
+			rolelabels.loadRoleLabels()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):

@@ -426,7 +426,13 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 def getExtendedSymbols(locale):
 	if locale == "Windows":
 		locale = languageHandler.getLanguage()
-	b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+	if '_' in locale:
+		try:
+			b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+		except LookupError:
+			return getExtendedSymbols(locale.split('_')[0])
+	else:
+		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
 	if not b and not u: return None
 	a = {
 		k.strip(): v.replacement.replace(' ', '').strip()

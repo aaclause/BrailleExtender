@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2021-11-14 15:55+0100\n"
-"PO-Revision-Date: 2021-11-14 15:57+0100\n"
+"POT-Creation-Date: 2021-11-15 12:33+0100\n"
+"PO-Revision-Date: 2021-11-15 12:42+0100\n"
 "Last-Translator: André-Abush Clause <dev@andreabc.net>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -880,13 +880,13 @@ msgid "normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"
 msgstr "normal (recommandé hors consoles Windows, IntelliJ, PyCharm…)"
 
 #: addon\globalPlugins\brailleExtender\addoncfg.py:70
-msgid "alternative, emulation of horizontal arrow keys with beeps"
-msgstr "alternative, émulation des touches fléchées horizontales avec bips"
+msgid "alternative, emulate left and right arrow keys with beeps"
+msgstr "alternative, émuler les touches flèchées gauche et droite avec bips"
 
 #: addon\globalPlugins\brailleExtender\addoncfg.py:71
-msgid "alternative, emulation of horizontal arrow keys silently"
+msgid "alternative, emulate left and right arrow keys silently"
 msgstr ""
-"alternative, émulation des touches fléchées horizontales silencieusement"
+"alternative, émuler les touches flèchées gauche et droite silencieusement"
 
 #: addon\globalPlugins\brailleExtender\addoncfg.py:98
 msgid "last known"
@@ -920,7 +920,7 @@ msgstr ""
 
 #. Translators: title of a dialog.
 #: addon\globalPlugins\brailleExtender\addondoc.py:50
-#: addon\globalPlugins\brailleExtender\speechhistorymode.py:22
+#: addon\globalPlugins\brailleExtender\speechhistorymode.py:22 buildVars.py:59
 msgid "Speech History Mode"
 msgstr "Mode historique vocal"
 
@@ -932,11 +932,11 @@ msgstr "Ce mode permet de revoir les dernières annonces dites par NVDA."
 
 #: addon\globalPlugins\brailleExtender\addondoc.py:54
 msgid ""
-"To enable this mode, use NVDA+Control+t command or equivalent gestures on "
-"your braille displays (like ⡞+space)."
+"To enable this mode, you can use the appropriate toggle command or the basic "
+"gesture NVDA+Control+t."
 msgstr ""
-"Pour activer ce mode, utilisez la commande NVDA+Contrôle+t ou les gestes "
-"équivalents sur vos afficheurs braille (comme ⡞+espace)."
+"Pour activer ce mode, vous pouvez utiliser la commande de basculement "
+"appropriée ou le geste de base NVDA+Contrôle+t."
 
 #: addon\globalPlugins\brailleExtender\addondoc.py:56
 msgid "In this mode, you can use:"
@@ -958,7 +958,7 @@ msgstr ""
 "navigable."
 
 #: addon\globalPlugins\brailleExtender\addondoc.py:60
-msgid "other routing cursors to navigate through history entries."
+msgid "the other routing cursors to navigate through history entries."
 msgstr ""
 "les autres curseurs éclairs pour naviguer dans les entrées de l'historique."
 
@@ -1442,7 +1442,7 @@ msgid "Copyrights and acknowledgements"
 msgstr "Droits d’auteur et remerciements"
 
 #. Author(s)
-#: addon\globalPlugins\brailleExtender\addondoc.py:321 buildVars.py:70
+#: addon\globalPlugins\brailleExtender\addondoc.py:321 buildVars.py:71
 msgid "and other contributors"
 msgstr "et d’autres contributeurs"
 
@@ -2679,16 +2679,16 @@ msgstr ""
 msgid "skip blank lines during text scrolling"
 msgstr "ignorer les lignes vides pendant le défilement"
 
-#: buildVars.py:59
+#: buildVars.py:60
 msgid "and much more!"
 msgstr "et beaucoup plus !"
 
-#: buildVars.py:61
+#: buildVars.py:62
 msgid ""
 "For some braille displays, it extends the braille display commands to provide"
 msgstr "Pour certains afficheurs braille, il étend le mappage, en permettant"
 
-#: buildVars.py:62
+#: buildVars.py:63
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
@@ -2696,12 +2696,12 @@ msgstr ""
 "de fournir des ensembles de geste complets comprenant les touches de "
 "fonction, les touches multimédia, la navigation rapide, etc.."
 
-#: buildVars.py:63
+#: buildVars.py:64
 msgid "emulate modifier keys, and thus any keyboard shortcut"
 msgstr ""
 "d’émuler les touches de combinaison, et donc n’importe quel raccourci clavier"
 
-#: buildVars.py:64
+#: buildVars.py:65
 msgid ""
 "offer several keyboard configurations concerning the possibility to input "
 "dots 7 and 8, enter and backspace"
@@ -2709,9 +2709,16 @@ msgstr ""
 "propose plusieurs configurations de clavier concernant la possibilité de "
 "saisir les points 7 et 8, d’entrer et de revenir en arrière"
 
-#: buildVars.py:65
+#: buildVars.py:66
 msgid "add actions and quick navigation through a rotor"
 msgstr "ajouter des actions et une navigation rapide dans un rotor"
+
+#~ msgid ""
+#~ "To enable this mode, use NVDA+Control+t command or equivalent gestures on "
+#~ "your braille displays (like ⡞+space)."
+#~ msgstr ""
+#~ "Pour activer ce mode, utilisez la commande NVDA+Contrôle+t ou les gestes "
+#~ "équivalents sur vos afficheurs braille (comme ⡞+espace)."
 
 #~ msgid "Landmark"
 #~ msgstr "Repère"

@@ -12,6 +12,7 @@ import braille
 import config
 import controlTypes
 import languageHandler
+from logHandler import log
 
 from .common import configDir
 
@@ -210,12 +211,19 @@ def loadRoleLabels(roleLabels_=None):
 		saveRoleLabels(roleLabels)
 		config.conf["brailleExtender"]["roleLabels"] = {}
 	elif os.path.exists(PATH_JSON):
-		f = open(PATH_JSON, "r", encoding="UTF-8")
 		try:
-			roleLabels.update(json.load(f))
+			with open(PATH_JSON, "r", encoding="UTF-8") as f:
+				roleLabels.update(json.load(f))
+		except UnicodeDecodeError:
+			with open(PATH_JSON, "r") as f:
+				try:
+					roleLabels.update(json.load(f))
+				except BaseException as err:
+					log.error(err)
 		except json.decoder.JSONDecodeError:
 			pass
-		f.close()
+		except BaseException as err:
+			log.error(err)
 	for k, v in roleLabels.items():
 		idCategory, idRole = k.split(':')
 		idCategory = int(idCategory)
@@ -224,7 +232,7 @@ def loadRoleLabels(roleLabels_=None):
 
 
 def saveRoleLabels(roleLabels_):
-	f = open(PATH_JSON, 'w')
+	f = open(PATH_JSON, 'w', encoding="UTF-8")
 	json.dump(roleLabels_, f, ensure_ascii=False, indent=2)
 	f.close()
 

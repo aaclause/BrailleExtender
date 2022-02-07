@@ -139,9 +139,10 @@ oldScrollBack = braille.BrailleBuffer.scrollBack
 
 def scrollBack(self):
 	windowRawText = braille.handler.mainBuffer.windowRawText
+	windowEndPos = braille.handler.buffer.windowEndPos
 	oldScrollBack(self)
 	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether(
-	) == TETHER_SPEECH and braille.handler.buffer.windowRawText == windowRawText:
+	) == TETHER_SPEECH and braille.handler.buffer.windowRawText == windowRawText and braille.handler.buffer.windowEndPos == windowEndPos:
 		global index
 		if index > 0:
 			index -= 1
@@ -154,9 +155,10 @@ oldScrollForward = braille.BrailleBuffer.scrollForward
 
 def scrollForward(self):
 	windowRawText = braille.handler.mainBuffer.windowRawText
+	windowEndPos = braille.handler.buffer.windowEndPos
 	oldScrollForward(self)
 	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether(
-	) == TETHER_SPEECH and braille.handler.buffer.windowRawText == windowRawText:
+	) == TETHER_SPEECH and braille.handler.buffer.windowRawText == windowRawText and braille.handler.buffer.windowEndPos == windowEndPos:
 		global index
 		if not index >= len(speechList) - 1:
 			index += 1
@@ -207,4 +209,3 @@ globalCommands.GlobalCommands.script_braille_toggleTether.__doc__ = _("Toggle te
 
 if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
 	enable()
-

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BrailleExtender 20.02.27:19953a8\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2021-11-14 18:41+0100\n"
-"PO-Revision-Date: 2021-12-20 00:20+0100\n"
+"POT-Creation-Date: 2022-02-02 22:05+0100\n"
+"PO-Revision-Date: 2022-02-10 10:41+0100\n"
 "Last-Translator: Daniel Gartmann <dg@danielgartmann.dk>\n"
 "Language-Team: \n"
 "Language: da\n"
@@ -814,7 +814,6 @@ msgid "Speech History Mode enabled"
 msgstr "Tilstanden Taleistorik slået til"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1252
-#| msgid "Toggle speech on or off"
 msgid "Toggle Speech History Mode"
 msgstr "Slår tilstanden Talehistorik til eller fra"
 
@@ -884,12 +883,13 @@ msgid "normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"
 msgstr "normal (anbefales undtagen Windows konsoller, IntelliJ, PyCharm...)"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:70
-msgid "alternative, emulation of horizontal arrow keys with beeps"
-msgstr "alternativ, emulerer horisontale piletaster med biplyde"
+#| msgid "alternative, emulation of horizontal arrow keys with beeps"
+msgid "alternative, emulate left and right arrow keys with beeps"
+msgstr "alternativt gengiv tasterne Pil Venstre og Pil Højre med biplyde"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:71
-msgid "alternative, emulation of horizontal arrow keys silently"
-msgstr "alternativ, emulerer horisontale piletaster uden lyd"
+msgid "alternative, emulate left and right arrow keys silently"
+msgstr "alternativt gengiv tasterne Pil Venstre og Pil Højre uden lyd"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:98
 msgid "last known"
@@ -935,11 +935,11 @@ msgstr ""
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:54
 msgid ""
-"To enable this mode, use NVDA+Control+t command or equivalent gestures on "
-"your braille displays (like ⡞+space)."
+"To enable this mode, you can use the appropriate toggle command or the basic "
+"gesture NVDA+Control+t."
 msgstr ""
-"Brug NVDA+Control+t eller en tilsvarende kommando på dit punktdisplay (såsom "
-"⡞+mellemrum) til at aktivere denne tilstand."
+"Denne tilstand slås til ved at bruge den tilhørende aktiveringskommando "
+"eller den grundlæggende kommando NVDA+Control+t."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:56
 msgid "In this mode, you can use:"
@@ -953,8 +953,6 @@ msgstr ""
 "udklipsholderen."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:59
-#| msgid ""
-#| "Shows an overview of current input braille table in a browseable message"
 msgid ""
 "the last routing cursor to show the current announcement in a browseable "
 "message."
@@ -963,9 +961,9 @@ msgstr ""
 "virtuel meddelelse."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:60
-msgid "other routing cursors to navigate through history entries."
+msgid "the other routing cursors to navigate through history entries."
 msgstr ""
-"øvrige markørsammenføringstaster til at lfytte igennem elementerne i "
+"de øvrige markørsammenføringstaster til at flytte igennem elementerne i "
 "historikken."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:62
@@ -1455,7 +1453,6 @@ msgid "Code contributions and other"
 msgstr "Bidrag til koden og andre"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:337
-#| msgid "Speech off"
 msgid "Speech mode feature:"
 msgstr "Taletilstands-funktionen:"
 
@@ -1589,7 +1586,6 @@ msgid "Add Dictionary Entry"
 msgstr "Tilføj ordbogselement"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:316
-#| msgid "Please create or select a quick launch first"
 msgid "Please select an entry first"
 msgstr "Vælg venligst et element først"
 
@@ -1746,7 +1742,6 @@ msgstr "Gendan &alle rolleetiketter"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:99
 #, python-format
-#| msgid "Input: %s"
 msgid ": %s"
 msgstr ": %s"
 
@@ -2211,7 +2206,6 @@ msgstr "&Oplæs elementer ved gennemsyn af historik"
 
 #. Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
 #: addon/globalPlugins/brailleExtender/speechhistorymode.py:71
-#| msgid "speech only"
 msgid "to speech history"
 msgstr "til talehistorik"
 
@@ -2708,6 +2702,13 @@ msgstr ""
 #: buildVars.py:66
 msgid "add actions and quick navigation through a rotor"
 msgstr "tilføj handlinger og hurtig navigering via en rotor"
+
+#~ msgid ""
+#~ "To enable this mode, use NVDA+Control+t command or equivalent gestures on "
+#~ "your braille displays (like ⡞+space)."
+#~ msgstr ""
+#~ "Brug NVDA+Control+t eller en tilsvarende kommando på dit punktdisplay "
+#~ "(såsom ⡞+mellemrum) til at aktivere denne tilstand."
 
 #~ msgid "Advanced braille input mode enabled"
 #~ msgstr "Avanceret indtastningstilstand til punktskrift slået til"

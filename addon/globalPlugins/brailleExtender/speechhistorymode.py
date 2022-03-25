@@ -31,6 +31,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			label,
 			gui.nvdaControls.SelectOnFocusSpinCtrl,
 			min=0,
+			max=1000000,
 			initial=config.conf["brailleExtender"]["speechHistoryMode"]["limit"]
 		)
 

@@ -1,11 +1,7 @@
-# BrailleExtender Addon for NVDA
+# Braille Extender Addon for NVDA
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
-# Copyright (C) 2016-2020 André-Abush Clause <dev@andreabc.net>
-#
-# Additional third party copyrighted code is included:
-#  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
-#  -> https://github.com/albzan/attribra/
+# Copyright (C) 2016-2022 André-Abush Clause <dev@andreabc.net>
 
 import os
 import subprocess
@@ -731,7 +727,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 	def script_getHelp(self, g):
 		from . import addondoc
-		addondoc.AddonDoc(self)
+		doc = addondoc.AddonDoc(self)
+		ui.browseableMessage(doc.get_doc(), _("%s documentation") % addonName, True)
 	script_getHelp.__doc__ = _("Shows the Braille Extender documentation")
 
 	def noKeyboarLayout(self):

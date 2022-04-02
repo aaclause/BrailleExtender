@@ -1,35 +1,38 @@
 # addondoc.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush Clause, released under GPL.
 
+from collections import OrderedDict
+import random
 import re
 
 import addonHandler
-
-addonHandler.initTranslation()
 import braille
-from . import addoncfg
-from collections import OrderedDict
 import config
 import cursorManager
+import globalPluginHandler
 import globalCommands
 import ui
-import random
-from .undefinedchars import CHOICES_LABELS
+from logHandler import log
+
+from . import addoncfg
 from . import utils
-from .common import addonDesc, addonGitHubURL, addonName, addonSummary, addonURL, addonVersion, punctuationSeparator
+from .common import addonDesc, addonGitHubURL, addonName, addonSummary, addonURL, addonVersion
+from .undefinedchars import CHOICES_LABELS
+
+addonHandler.initTranslation()
+
+URL_HUC_DOC = "https://danielmayr.at/huc/"
+URL_GITHUB_CONTRIBUTORS = "https://github.com/aaclause/BrailleExtender/graphs/contributors"
 
 def escape(text):
 	chars = {"&": "&amp;", '"': "&quot;", "'": "&apos;", "<": "&lt;", ">": "&gt;"}
 	return "".join(chars.get(c, c) for c in text)
 
 
-def initializeRandomChar():
-	global chosenChar
-	chosenChar = random.choice("#$£€=+()*,;:.?!/\"&")
+def get_random_char():
+	return random.choice("#$£€=+()*,;:.?!/\"&")
 
-URLHUC = "https://danielmayr.at/huc/"
-chosenChar = None
 
 def getFeaturesDoc():
 	undefinedCharsSamples = [
@@ -43,25 +46,25 @@ def getFeaturesDoc():
 		ch = undefinedCharsSamples[i][0][0]
 		undefinedCharsSamples[i][0] = "%s (%s)" % (ch, utils.getSpeechSymbols(ch))
 
-	braillePattern = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"]
-
-	contextualOption = _("Show punctuation/symbol &name for undefined characters if available").replace('&', '')
+	braille_pattern = config.conf["brailleExtender"]["advancedInputMode"]["escapeSignUnicodeValue"]
+	contextual_option = _("Show punctuation/symbol &name for undefined characters if available").replace('&', '')
+	random_char = get_random_char()
 	features = {
-	_("Speech History Mode"): [
-		"<p>",
-		_("This mode allows to review the last announcements that have been spoken by NVDA."),
-		"<br />",
-		_("To enable this mode, you can use the appropriate toggle command or the basic gesture NVDA+Control+t."),
-		"<br />",
-		_("In this mode, you can use:"),
-		"</p><ul>",
-			"<li>" + _("the first routing cursor to copy the current announcement to the Clipboard.") + "</li>",
-			"<li>" + _("the last routing cursor to show the current announcement in a browseable message.") + "</li>",
-			"<li>" + _("the other routing cursors to navigate through history entries.") + "</li>",
-		"</ul><p>",
-			_('Please note that specific settings are available for this feature under the category "Speech History Mode".'),
-		"</p>"
-	],
+		_("Speech History Mode"): [
+			"<p>",
+			_("This mode allows to review the last announcements that have been spoken by NVDA."),
+			"<br />",
+			_("To enable this mode, you can use the appropriate toggle command or the basic gesture NVDA+Control+t."),
+			"<br />",
+			_("In this mode, you can use:"),
+			"</p><ul>",
+				"<li>" + _("the first routing cursor to copy the current announcement to the Clipboard.") + "</li>",
+				"<li>" + _("the last routing cursor to show the current announcement in a browseable message.") + "</li>",
+				"<li>" + _("the other routing cursors to navigate through history entries.") + "</li>",
+			"</ul><p>",
+				_('Please note that specific settings are available for this feature under the category "Speech History Mode".'),
+			"</p>"
+		],
 		_("Representation of undefined characters"): [
 			"<p>",
 			_("The extension allows you to customize how an undefined character should be represented within a braille table. To do so, go to the — Representation of undefined characters — settings. You can choose between the following representations:"),
@@ -72,8 +75,8 @@ def getFeaturesDoc():
 			"</p><p>",
 			_("Notes:"),
 			"</p><ul>",
-			"<li>" + _("To distinguish the undefined set of characters while maximizing space, the best combination is the usage of the HUC8 representation without checking the “{contextualOption}” option.").format(contextualOption=contextualOption) + "</li>",
-			"<li>" + _("To learn more about the HUC representation, see {url}").format(url=f"<br />{URLHUC}") + "</li>",
+			"<li>" + _("To distinguish the undefined set of characters while maximizing space, the best combination is the usage of the HUC8 representation without checking the “{contextual_option}” option.").format(contextual_option=contextual_option) + "</li>",
+			"<li>" + _("To learn more about the HUC representation, see {url}").format(url=f"<br />{URL_HUC_DOC}") + "</li>",
 			"<li>" + _("Keep in mind that definitions in tables and those in your table dictionaries take precedence over character descriptions, which also take precedence over the chosen representation for undefined characters.") + "</li>",
 			"</ul>"
 		],
@@ -87,8 +90,8 @@ def getFeaturesDoc():
 			"<br />",
 			_("On supported displays the defined gesture is ⡉+space. No system gestures are defined by default."),
 			"</p><p>",
-			_("For example, for the '{chosenChar}' character, we will get the following information:").format(chosenChar=chosenChar),
-			"<br /><blockquote><pre>" + utils.currentCharDesc(chosenChar, 0) + "</pre></blockquote></p>",
+			_("For example, for the '{random_char}' character, we will get the following information:").format(random_char=random_char),
+			"<br /><blockquote><pre>" + utils.currentCharDesc(random_char, 0) + "</pre></blockquote></p>",
 		],
 		_("Advanced braille input"): [
 			"<p>",
@@ -96,13 +99,13 @@ def getFeaturesDoc():
 			"</p><p>",
 			_("If you want to enter a character from its HUC8 representation, simply enter the HUC8 pattern. Since a HUC8 sequence must fit on 3 or 4 cells, the interpretation will be performed each time 3 or 4 dot combinations are entered. If you wish to enter a character from its hexadecimal, decimal, octal or binary value, do the following:"),
 			"</p><ol>",
-			"<li>" + _("Enter {braillePattern}").format(braillePattern=braillePattern) + "</li>",
-			"<li>" + _("Specify the basis as follows") + f"{punctuationSeparator}:",
-			"<ul><li>",
-			_("⠭ or ⠓") + f"{punctuationSeparator}: " + _("for a hexadecimal value") + "</li>",
-			f"<li>⠙{punctuationSeparator}: " + _("for a decimal value") + "</li>",
-			f"<li>⠕{punctuationSeparator}: " + _("for an octal value") + "</li>",
-			f"<li>⠃{punctuationSeparator}: " + _("for a binary value") + "</li>",
+			"<li>" + _("Enter {braille_pattern}").format(braille_pattern=braille_pattern) + "</li>",
+			"<li>" + _("Specify the basis as follows:"),
+			"<ul>",
+				"<li>" + _("⠭ or ⠓: for a hexadecimal value") + "</li>",
+				"<li>" + _("⠙: for a decimal value") + "</li>",
+				"<li>" + _("⠕: for an octal value") + "</li>",
+				"<li>" + _("⠃: for a binary value") + "</li>",
 			"</ul></li>",
 			"<li>" + _("Enter the value of the character according to the previously selected basis.") + "</li>",
 			"<li>" + _("Press Space to validate.") + "</li>",
@@ -135,8 +138,8 @@ def getFeaturesDoc():
 			"<br />" + _("For example:"),
 			"</p><ul>",
 			"<li>" + _("For ⠛: press dots 1-2 then dots 1-2, or dots 4-5 then dots 4-5.") + "</li>",
-"<li>" + _("For ⠃: press dots 1-2 then space, or 4-5 then space.") + "</li>",
-"<li>" + _("For ⠘: press space then 1-2, or space then dots 4-5.") + "</li>",
+			"<li>" + _("For ⠃: press dots 1-2 then space, or 4-5 then space.") + "</li>",
+			"<li>" + _("For ⠘: press space then 1-2, or space then dots 4-5.") + "</li>",
 			"</ul>",
 			"<h4>" + _("Method #3: fill a cell dots by dots (each dot is a toggle, press Space to validate the character)") + "</h4>",
 			"<p>",
@@ -158,14 +161,11 @@ def getFeaturesDoc():
 	return out
 
 class AddonDoc:
-	instanceGP = None
 
 	def __init__(self, instanceGP):
-		initializeRandomChar()
-		if not instanceGP:
-			return
 		self.instanceGP = instanceGP
-		gestures = instanceGP.getGestures()
+
+	def get_doc(self):
 		manifestDescription = self.getDescFormated(addonDesc)
 		doc = f"<h1>{addonSummary} {addonVersion} — " + _("Documentation") + "</h1>"
 		doc += f"<p>{manifestDescription}</p>"
@@ -177,8 +177,8 @@ class AddonDoc:
 			profileName = "default"
 			doc += ''.join([
 				"<p>",
-				_("Driver loaded") + f"{punctuationSeparator}: {brailleDisplayDriverName}" + "<br />",
-				_("Profile") + f"{punctuationSeparator}: {profileName}",
+				_("Driver loaded:") + " %s<br />" % brailleDisplayDriverName,
+				_("Profile:") + " %s" % profileName,
 				"</p>"
 			])
 			mKB = OrderedDict()
@@ -192,74 +192,49 @@ class AddonDoc:
 						mKB[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
 				else:
 					mNV[g] = addoncfg.iniGestures["globalCommands.GlobalCommands"][g]
-			doc += ("<h3>" + _("Simple keys") + " (%d)</h3>") % len(mKB)
-			doc += self.translateLst(mKB)
-			doc += ("<h3>" + _("Usual shortcuts") + " (%d)</h3>") % len(mW)
-			doc += self.translateLst(mW)
-			doc += ("<h3>" + _("Standard NVDA commands") + " (%d)</h3>") % len(mNV)
-			doc += self.translateLst(mNV)
+			doc += "<h3>" + _("Simple keys") + "</h3>"
+			doc += self.make_table(
+				mKB,
+				c_name=_("Key (braille)"),
+					c_key=_("Key (system)")
+				)
+			doc += "<h3>" + _("Usual shortcuts") + "</h3>"
+			doc += self.make_table(
+				mW,
+				c_name=_("Key (braille)"),
+				c_key=_("Key (system)"),
+			)
+			doc += "<h3>" + _("Standard NVDA commands") + "</h3>"
+			doc += self.make_table(mNV)
 			doc += "<h3>{} ({})</h3>".format(
 				_("Modifier keys"), len(addoncfg.iniProfile["modifierKeys"])
 			)
-			doc += self.translateLst(addoncfg.iniProfile["modifierKeys"])
+			doc += self.make_table(addoncfg.iniProfile["modifierKeys"])
 			doc += "<h3>" + _("Quick navigation keys") + "</h3>"
-			doc += self.translateLst(
-				addoncfg.iniGestures["cursorManager.CursorManager"]
-			)
-			doc += "<h3>" + _("Rotor feature") + "</h3>"
-			doc += self.translateLst(
-				{
-					k: addoncfg.iniProfile["miscs"][k]
-					for k in addoncfg.iniProfile["miscs"]
-					if "rotor" in k.lower()
-				}
-			) + self.translateLst(addoncfg.iniProfile["rotor"])
-			doc += ("<h3>" + _("Gadget commands") + " (%d)</h3>") % (
-                    len(addoncfg.iniProfile["miscs"]) - 2
-			)
-			doc += self.translateLst(
-				OrderedDict(
-					[
-						(k, addoncfg.iniProfile["miscs"][k])
-						for k in addoncfg.iniProfile["miscs"]
-						if k not in ["nextRotor", "priorRotor"]
-					]
-				)
+			gestures = addoncfg.iniGestures["cursorManager.CursorManager"]
+			doc += self.make_table(gestures)
+			gestures = addoncfg.iniProfile["miscs"].dict()
+			gestures.update(addoncfg.iniProfile["rotor"].dict())
+			doc += "<h3>" + _("Braille Extender commands on the braille keyboard") + "</h3>"
+			doc += self.make_table(
+				OrderedDict([
+					(k, gestures[k]) for k in gestures
+				])
 			)
 			doc += "<h3>{} ({})</h3>".format(
 				_("Shortcuts defined outside add-on"),
 				len(braille.handler.display.gestureMap._map),
 			)
-			doc += "<ul>"
-			for g in braille.handler.display.gestureMap._map:
-				doc += ("<li>{}{}: {}{};</li>").format(
-					utils.beautifulSht(g),
-					punctuationSeparator,
-					utils.uncapitalize(
-						re.sub(
-							"^([A-Z])",
-							lambda m: m.group(1).lower(),
-							self.getDocScript(
-								braille.handler.display.gestureMap._map[g]
-							),
-						)
-					),
-					punctuationSeparator,
-				)
-			doc = re.sub(r"[  ]?;(</li>)$", r".\1", doc)
-			doc += "</ul>"
-
+			doc += self.make_table(braille.handler.display.gestureMap._map) #***
 			# list keyboard layouts
-			if (
-				not instanceGP.noKeyboarLayout()
+			if (not self.instanceGP.noKeyboarLayout()
 				and "keyboardLayouts" in addoncfg.iniProfile
 			):
-				lb = instanceGP.getKeyboardLayouts()
+				lb = self.instanceGP.getKeyboardLayouts()
 				doc += "<h3>{}</h3>".format(_("Keyboard configurations provided"))
 				doc += (
 					"<p>"
-					+ _("Keyboard configurations are")
-					+ punctuationSeparator
+					+ _("Keyboard configurations are:")
 					+ "</p><ol>"
 				)
 				doc += "".join(f"<li>{l}.</li>" for l in lb)
@@ -276,28 +251,9 @@ class AddonDoc:
 				)
 				+ "</p>"
 			)
-		doc += ("<h2>" + _("Add-on gestures on the system keyboard") + " (%s)</h2>") % (
-			len(gestures) - 4
-		)
-		doc += "<ul>"
-		for g in [k for k in gestures if k.lower().startswith("kb:")]:
-			if g.lower() not in [
-				"kb:volumeup",
-				"kb:volumedown",
-				"kb:volumemute",
-			] and gestures[g] not in ["logFieldsAtCursor"]:
-				doc += ("<li>{}{}: {}{};</li>").format(
-					utils.getKeysTranslation(g),
-					punctuationSeparator,
-					re.sub(
-						"^([A-Z])",
-						lambda m: m.group(1).lower(),
-						self.getDocScript(gestures[g]),
-					),
-					punctuationSeparator,
-				)
-		doc = re.sub(r"[  ]?;(</li>)$", r".\1", doc)
-		doc += "</ul>"
+		gestures = self.instanceGP.getGestures()
+		doc += "<h2>" + _("Braille Extender commands on the system keyboard") + "</h2>"
+		doc += self.make_table({k: v for k, v in gestures.items() if v not in ["logFieldsAtCursor", "volumeMinus", "volumePlus"]})
 		translators = {
 			_("Arabic"): "Ikrami Ahmad",
 			_("Chinese (Taiwan)"): "蔡宗豪 Victor Cai <surfer0627@gmail.com>",
@@ -317,9 +273,9 @@ class AddonDoc:
 				"".join(
 					[
 						"<p>",
-						"Copyright (C) 2016-2021 André-Abush Clause ",
-						_("and other contributors"),
-						":<br />",
+						"Copyright (C) 2016-2022 André-Abush Clause ",
+						_("and other contributors:"),
+						"<br />",
 						f"<pre>{addonGitHubURL}\n{addonURL}</pre>",
 						"</p>",
 						"<h3>" + _("Translators") + "</h3><ul>",
@@ -328,34 +284,19 @@ class AddonDoc:
 			)
 		)
 		for language, authors in sorted(translators.items()):
-			doc += f"<li>{language}{punctuationSeparator}: {escape(authors)}</li>"
+			doc += f"<li>{language}: {escape(authors)}</li>"
 		doc += "".join(
 			[
 				"</ul>",
-				"<h3>" + _("Code contributions and other") + "</h3>",
+				"<h3>" + _("Code contributions") + "</h3>",
 				"<ul>",
-				"<li>" + _("Speech mode feature:") + " Emil Hesmyr &lt;emilhe@viken.no&gt;" + "</li>",
-				"</ul>",
-				"<p>"
-				+ _("Code maintenance (cleanup, rewrites, optimizations) thanks to:")
-				+ "</p>",
-				"<ul>"
-					+ "<li>Joseph Lee &lt;joseph.lee22590@gmail.com&gt;</li>"
-				+ "</ul>",
-				"<p>"
-				+ _("Additional third party copyrighted code is included:")
-				+ "</p>",
-				"<ul>",
-				f"<li><em>Attribra</em>{punctuationSeparator}: Copyright (C) 2017 Alberto Zanella &lt;lapostadialberto@gmail.com&gt; → https://github.com/albzan/attribra/</li>",
-				"</ul>",
-				"<p>"
-				+ _("Thanks also to")
-				+ punctuationSeparator + ": Daniel Cotto, Daniel Mayr, Dawid Pieper, Corentin, Louis...<br />",
-				_("Finally thank you very much for all your feedback and comments.")
-				+ " ☺</p>",
+					"<li>" + escape(_("GitHub contributors: see <{URL_GITHUB_CONTRIBUTORS}>").format(URL_GITHUB_CONTRIBUTORS=URL_GITHUB_CONTRIBUTORS)) + "</li>",
+					"<li>" + _("Speech mode feature:") + " Emil Hesmyr &lt;emilhe@viken.no&gt;" + "</li>",
+				"</ul>"
 			]
 		)
-		ui.browseableMessage(doc, _("%s's documentation") % addonName, True)
+		return doc
+
 
 	@staticmethod
 	def getDescFormated(txt):
@@ -367,6 +308,7 @@ class AddonDoc:
 		return txt
 
 	def getDocScript(self, n):
+		o = n
 		if n == "defaultQuickLaunches":
 			n = "quickLaunch"
 		doc = None
@@ -376,64 +318,53 @@ class AddonDoc:
 			return _(
 				"Emulates pressing %s on the system keyboard"
 			) % utils.getKeysTranslation(n)
-		places = [globalCommands.commands, self.instanceGP, cursorManager.CursorManager]
+		places = [
+			globalCommands.commands,
+			cursorManager.CursorManager,
+			self.instanceGP
+		]
 		for place in places:
 			func = getattr(place, ("script_%s" % n), None)
 			if func:
 				doc = func.__doc__
 				break
-		return (
-			doc
-			if doc is not None
-			else _("description currently unavailable for this shortcut")
-		)
+		if not doc:
+			log.warning(f"No docstring for {n} (received {o})") 
+		return doc
 
-	def translateLst(self, lst):
-		doc = "<ul>"
+	def make_table(
+		self,
+		lst,
+		c_name=_("Name"),
+		c_key =_("Key")
+	):
+		doc = f"<table><tr><th>{c_name}</th><th>{c_key}</th></tr>"
 		for g in lst:
 			if "kb:" in g and "capsLock" not in g and "insert" not in g:
 				if isinstance(lst[g], list):
-					doc += "<li>{0}{2}: {1}{2};</li>".format(
-						utils.getKeysTranslation(g),
-						utils.beautifulSht(lst[g]),
-						punctuationSeparator,
-					)
+					c_key = utils.getKeysTranslation(g)
+					c_name = utils.beautifulSht(lst[g])
 				else:
-					doc += "<li>{0}{2}: {1}{2};</li>".format(
-						utils.getKeysTranslation(g),
-						utils.beautifulSht(lst[g]),
-						punctuationSeparator,
-					)
+					c_key = utils.getKeysTranslation(g)
+					c_name = self.getDocScript(lst[g])
 			elif "kb:" in g:
 				gt = _("caps lock") if "capsLock" in g else g
-				doc += "<li>{0}{2}: {1}{2};</li>".format(
-					gt.replace("kb:", ""),
-					utils.beautifulSht(lst[g]),
-					punctuationSeparator,
-				)
+				c_key = gt.replace("kb:", "")
+				c_name = utils.beautifulSht(lst[g])
 			else:
 				if isinstance(lst[g], list):
-					doc += "<li>{}{}: {}{};</li>".format(
-						utils.beautifulSht(lst[g]),
-						punctuationSeparator,
-						re.sub(
-							"^([A-Z])",
-							lambda m: m.group(1).lower(),
-							utils.uncapitalize(self.getDocScript(g)),
-						),
-						punctuationSeparator,
-					)
+					c_key = utils.beautifulSht(g)
+					c_name = self.getDocScript(lst[g])
+					if not c_name:
+						c_name = re.sub("^([A-Z])", lambda m: m.group(1).lower(), self.getDocScript(g))
 				else:
-					doc += "<li>{}{}: {}{};</li>".format(
-						utils.beautifulSht(lst[g]),
-						punctuationSeparator,
-						re.sub(
-							"^([A-Z])",
-							lambda m: m.group(1).lower(),
-							utils.uncapitalize(self.getDocScript(g)),
-						),
-						punctuationSeparator,
-					)
-		doc = re.sub(r"[  ]?;(</li>)$", r".\1", doc)
-		doc += "</ul>"
+					c_key = utils.getKeysTranslation(lst[g])
+					c_name = re.sub("^([A-Z])", lambda m: m.group(1).lower(), self.getDocScript(g))
+				if not c_key:
+					c_key = utils.beautifulSht(lst[g])
+			if c_name and c_key:
+				doc += f"<tr><td>{c_name}</td><td>{c_key}</td></tr>"
+			else:
+				log.warning(("111", g, lst[g], c_name, c_key))
+		doc += "</table>"
 		return doc

@@ -205,8 +205,8 @@ def beautifulSht(t, curBD="noBraille", model=True, sep=" / "):
 	t = t.replace(',', ' ').replace(';', ' ').replace('  ', ' ')
 	reps = {
 		"b10": "b0",
-		"braillespacebar": "space",
-		"space": _('space'),
+		"braillespacebar": _("space"),
+		"space": _("space"),
 		"leftshiftkey": _("left SHIFT"),
 		"rightshiftkey": _("right SHIFT"),
 		"leftgdfbutton": _("left selector"),

@@ -192,6 +192,29 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			braille.handler.toggle_auto_scroll()
 		nextHandler()
 
+	_oldObj = None
+	_oldVal = None
+	def event_valueChange(self, obj, nextHandler):
+		if not config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"]:
+			return nextHandler()
+		List = objectpresentation.validProgressBar(obj)
+		if not List or False in List:
+			return nextHandler()
+		try:
+			if self._oldObj == obj and self._oldVal == obj.value:
+				return nextHandler()
+			value = obj.value
+			self._oldObj = obj
+			self._oldVal = value
+			if config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"] == 1:#show value
+				braille.handler.message(value)
+			else:
+				string = objectpresentation.generateProgressBarString(value, braille.handler.displaySize) or value
+				braille.handler.message(string)
+		except BaseException as e:
+			log.error(e)
+		nextHandler()
+
 	def createMenu(self):
 		self.submenu = wx.Menu()
 		item = self.submenu.Append(wx.ID_ANY, _("Docu&mentation"), _("Opens the addon's documentation."))

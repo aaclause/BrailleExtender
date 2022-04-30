@@ -1,13 +1,19 @@
 # objectpresentation.py
+# Part of BrailleExtender addon for NVDA
+# Copyright 2020-2022 Emil Hesmyr, André-Abush Clause, released under GPL.
+
+import re
+import gui
+import wx
+
 import addonHandler
 import braille
 import config
 import controlTypes
-import gui
 import queueHandler
 import ui
-import wx
 from logHandler import log
+from NVDAObjects.behaviors import ProgressBar
 
 from . import addoncfg
 from .common import N_, CHOICE_liblouis, CHOICE_none, ADDON_ORDER_PROPERTIES, IS_CURRENT_NO
@@ -315,6 +321,33 @@ def getPropertiesBraille(**propertyValues) -> str:
 	return TEXT_SEPARATOR.join(finalStr)
 
 
+def validProgressBar(obj):
+	List = [
+		isinstance(obj, ProgressBar),
+		config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"],
+		not controlTypes.STATE_INVISIBLE in obj.states,
+		not controlTypes.STATE_OFFSCREEN in obj.states
+	]
+	inForeground = obj.isInForeground
+	if not config.conf["brailleExtender"]["objectPresentation"]["reportBackgroundProgressBars"]:
+		List.append(config.conf["presentation"]["progressBarUpdates"]["reportBackgroundProgressBars"] or inForeground)
+	elif config.conf["brailleExtender"]["objectPresentation"]["reportBackgroundProgressBars"] == int(addoncfg.CHOICE_disabled):
+		List.append(inForeground)
+	return(List)
+
+
+def generateProgressBarString(value, displaySize):
+	if isinstance(value, str):
+		intString = ""
+		try:
+			intString = re.search(r"(\d+)", value).group(1)
+		except AttributeError: return
+		if not intString == "100" and len(intString) > 2:
+			intString = intString[:2]
+		value = int(intString)
+	return '⣿' * (value * displaySize // 100)
+
+
 class ManageOrderProperties(gui.settingsDialogs.SettingsDialog):
 	# Translators: title of a dialog.
 	title = _("Order Properties")
@@ -440,6 +473,21 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			choices=list(self.choices.values()),
 		)
 		self.selectedElement.SetSelection(itemToSelect)
+		self.progressBarUpdate = sHelper.addLabeledControl(
+			_("Progress bar output using braille messages:"),
+			wx.Choice,
+			choices=[_("disabled (original behavior)"), _("enabled, show raw value"), _("enabled, show a progress bar using ⣿")]
+		)
+		self.progressBarUpdate.SetSelection(config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"])
+		self.background = sHelper.addLabeledControl(
+			_("Report background progress bars:"),
+			wx.Choice,
+			choices=[_("like speech"), _("enabled"), _("disabled")]
+		)
+		self.background.SetSelection(config.conf["brailleExtender"]["objectPresentation"]["reportBackgroundProgressBars"])
+		
+		
+		
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.orderPropertiesBtn = bHelper.addButton(
 			self, label="&Order Properties..."
@@ -458,5 +506,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["objectPresentation"]["selectedElement"] = list(
 			self.choices.keys()
 		)[self.selectedElement.GetSelection()]
+		config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"] = self.progressBarUpdate.GetSelection()
+		config.conf["brailleExtender"]["objectPresentation"]["reportBackgroundProgressBars"] = self.background.GetSelection()
 
 REASON_FOCUS = get_output_reason("FOCUS")

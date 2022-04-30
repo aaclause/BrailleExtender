@@ -176,6 +176,8 @@ def getConfspec():
 		"objectPresentation": {
 			"orderProperties": f'string(default="{ADDON_ORDER_PROPERTIES}")',
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
+			"progressBarUpdate": "integer(default=1)",
+			"reportBackgroundProgressBars": f"integer(default={CHOICE_likeSpeech})",
 		},
 		"documentFormatting": {
 			"plainText": "boolean(default=False)",

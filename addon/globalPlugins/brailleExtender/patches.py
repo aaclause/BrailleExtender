@@ -438,7 +438,8 @@ def getControlFieldBraille(info, field, ancestors, reportStart, formatConfig):
 			text += content
 		elif role == get_control_type("ROLE_MATH"):
 			import mathPres
-			mathPres.ensureInit()
+			if hasattr(mathPres, "ensureInit"):
+				mathPres.ensureInit()
 			if mathPres.brailleProvider:
 				try:
 					if text:

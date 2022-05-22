@@ -1,6 +1,6 @@
 # patches.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
 import os
@@ -187,7 +187,10 @@ def update_region(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour:
+	if (self.parseUndefinedChars
+		and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour
+		and len(self.rawText) <= config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"]
+	):
 		undefinedchars.undefinedCharProcess(self)
 	if selectedElementEnabled():
 		d = {

@@ -1,6 +1,6 @@
 # addoncfg.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 
 import os
 
@@ -164,7 +164,8 @@ def getConfspec():
 			"start": "string(default=[)",
 			"end": "string(default=])",
 			"lang": "string(default=Windows)",
-			"table": "string(default=current)"
+			"table": "string(default=current)",
+			"characterLimit": "integer(min=0, default=2048)",
 		},
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,

@@ -112,12 +112,12 @@ index = 0
 
 def speak(
 	speechSequence,
-	symbolLevel=None,
-	priority=speech.Spri.NORMAL,
 	saveString=True,
-	allowReadEntry=False
+	allowReadEntry=False,
+	*args,
+	**kwargs
 ):
-	orig_speak(speechSequence, symbolLevel, priority)
+	orig_speak(speechSequence, *args, **kwargs)
 	if not saveString: return
 	string = ""
 	for i in speechSequence:

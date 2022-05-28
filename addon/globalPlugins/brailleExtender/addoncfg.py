@@ -1,6 +1,6 @@
 # addoncfg.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 
 import os
 
@@ -159,7 +159,7 @@ def getConfspec():
 		"tabSpace": "boolean(default=False)",
 		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
-			"method": f"integer(min=0, default=0)",
+			"method": f"integer(min=0, default=8)",
 			"hardSignPatternValue": "string(default=??)",
 			"hardDotPatternValue": "string(default=6-12345678)",
 			"desc": "boolean(default=True)",
@@ -169,7 +169,8 @@ def getConfspec():
 			"start": "string(default=[)",
 			"end": "string(default=])",
 			"lang": "string(default=Windows)",
-			"table": "string(default=current)"
+			"table": "string(default=current)",
+			"characterLimit": "integer(min=0, default=2048)",
 		},
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,

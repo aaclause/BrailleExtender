@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: BrailleExtender 20.02.27:19953a8\n"
+"Project-Id-Version: 22.05.28:9f462d1\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2022-02-02 22:05+0100\n"
-"PO-Revision-Date: 2022-02-10 10:41+0100\n"
-"Last-Translator: Daniel Gartmann <dg@danielgartmann.dk>\n"
+"POT-Creation-Date: 2022-05-28 07:16+0200\n"
+"PO-Revision-Date: 2022-05-29 20:15+0200\n"
+"Last-Translator: Daniel Gartmann <lists@danielgartmann.dk>\n"
 "Language-Team: \n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
@@ -883,7 +883,6 @@ msgid "normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"
 msgstr "normal (anbefales undtagen Windows konsoller, IntelliJ, PyCharm...)"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:70
-#| msgid "alternative, emulation of horizontal arrow keys with beeps"
 msgid "alternative, emulate left and right arrow keys with beeps"
 msgstr "alternativt gengiv tasterne Pil Venstre og Pil Højre med biplyde"
 
@@ -1693,7 +1692,7 @@ msgid "Input &method"
 msgstr "&Metode til indtastning"
 
 #. Translators: Reported when translation didn't succeed due to unsupported input.
-#: addon/globalPlugins/brailleExtender/patches.py:450
+#: addon/globalPlugins/brailleExtender/patches.py:453
 msgid "Unsupported input"
 msgstr "Input ikke understøttet"
 
@@ -2195,27 +2194,27 @@ msgid "&Number of last announcements to retain:"
 msgstr "Behold dette &antal senest oplæste informationer:"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:38
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:39
 msgid "&Prefix entries with their position in the history"
 msgstr "Elementer i Talehistorik står med positionen &først"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:43
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:44
 msgid "&Read entries while browsing history"
 msgstr "&Oplæs elementer ved gennemsyn af historik"
 
 #. Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:71
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:72
 msgid "to speech history"
 msgstr "til talehistorik"
 
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:179
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:182
 msgid "Announcement copied to clipboard"
 msgstr "Oplæsning kopieret til udklipsholder"
 
 #. Translators: Reports which position braille is tethered to
 #. (braille can be tethered automatically or to either focus or review position or speech history).
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:206
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:209
 msgid ""
 "Toggle tethering of braille between the focus, the review position and the "
 "speech history"
@@ -2461,6 +2460,14 @@ msgstr "Brug den aktuelle visningstabel"
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:325
 msgid "Braille &table:"
 msgstr "Punkt&tabel:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:330
+msgid ""
+"Character limit at which descriptions are disabled (to avoid freezes, >):"
+msgstr ""
+"Grænse for antal tegn hvorefter beskrivelser bliver slået fra (for at undgå "
+"at programmet fryser, >):"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:56
 #, python-brace-format

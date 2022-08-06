@@ -1,0 +1,2686 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the BrailleExtender package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: BrailleExtender 22.06.01:f39e052\n"
+"Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
+"POT-Creation-Date: 2022-06-01 10:48+0200\n"
+"PO-Revision-Date: 2022-08-06 16:39+0300\n"
+"Last-Translator: Umut KORKMAZ <umutkork@gmail.com>\n"
+"Language-Team: Umut KORKMAZ <umutkork@gmail.com>\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:57
+msgid "Default"
+msgstr "Varsayılan"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:58
+msgid "Moving in the text"
+msgstr "Metin içinde hareket etme"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:59
+msgid "Text selection"
+msgstr "Metin seçimi"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:60
+msgid "Objects"
+msgstr "Nesneler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:61
+msgid "Review"
+msgstr "Gözden geçir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:62
+msgid "Links"
+msgstr "Bağlantılar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:63
+msgid "Unvisited links"
+msgstr "Ziyaret edilmemiş bağlantılar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:64
+msgid "Visited links"
+msgstr "Ziyaret edilen bağlantılar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:65
+#: addon/globalPlugins/brailleExtender/rolelabels.py:37
+msgid "Landmarks"
+msgstr "Yerişaretleri"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:66
+msgid "Headings"
+msgstr "Başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:67
+msgid "Level 1 headings"
+msgstr "1. seviye başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:68
+msgid "Level 2 headings"
+msgstr "2. seviye başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:69
+msgid "Level 3 headings"
+msgstr "3. seviye başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:70
+msgid "Level 4 headings"
+msgstr "4. seviye başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:71
+msgid "Level 5 headings"
+msgstr "5. seviye başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:72
+msgid "Level 6 headings"
+msgstr "6. seviye başlıklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:73
+msgid "Lists"
+msgstr "Listeler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:74
+msgid "List items"
+msgstr "Liste öğeleri"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:75
+msgid "Graphics"
+msgstr "Grafikler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:76
+msgid "Block quotes"
+msgstr "Alıntı blokları"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:77
+msgid "Buttons"
+msgstr "Düğmeler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:78
+msgid "Form fields"
+msgstr "Form alanları"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:79
+msgid "Edit fields"
+msgstr "Düzenleme alanları"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:80
+msgid "Radio buttons"
+msgstr "Radyo düğmeleri"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:81
+msgid "Combo boxes"
+msgstr "Birleşik kutular"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:82
+msgid "Check boxes"
+msgstr "Onay kutuları"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:83
+msgid "Non-link blocks"
+msgstr "Bağlantısız bloklar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:84
+msgid "Frames"
+msgstr "Çerçeveler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:85
+msgid "Separators"
+msgstr "Ayırıcılar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:86
+msgid "Embedded objects"
+msgstr "Gömülü nesneler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:87
+msgid "Annotations"
+msgstr "Ek açıklamalar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:88
+msgid "Spelling errors"
+msgstr "Yazım hataları"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:89
+msgid "Tables"
+msgstr "Tablolar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:90
+msgid "Move in table"
+msgstr "Tabloda hareket et"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:96
+msgid "If pressed twice, presents the information in browse mode"
+msgstr "İki kez basılırsa, bilgileri tarama modunda sunar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:253
+msgid "Docu&mentation"
+msgstr "&Belgeler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:253
+msgid "Opens the addon's documentation."
+msgstr "Eklentinin belgelerini açar."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:259
+msgid "&Settings..."
+msgstr "&Ayarlar..."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:259
+msgid "Opens the addons' settings."
+msgstr "Eklenti ayarlarını açar."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:266
+msgid "Table &dictionaries"
+msgstr "&Tablo sözlükleri"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:266
+msgid "'Braille dictionaries' menu"
+msgstr "'Braille sözlükleri' menüsü"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:267
+msgid "&Global dictionary"
+msgstr "&Genel sözlük"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:267
+msgid ""
+"A dialog where you can set global dictionary by adding dictionary entries to "
+"the list."
+msgstr ""
+"Listeye sözlük girdileri ekleyerek global sözlüğü ayarlayabileceğiniz bir "
+"iletişim kutusu."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:269
+msgid "&Table dictionary"
+msgstr "&Tablo sözlüğü"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:269
+msgid ""
+"A dialog where you can set table-specific dictionary by adding dictionary "
+"entries to the list."
+msgstr ""
+"Listeye sözlük girdileri ekleyerek tabloya özgü sözlüğü ayarlayabileceğiniz "
+"bir iletişim kutusu."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:271
+msgid "Te&mporary dictionary"
+msgstr "Geçici s&özlük"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:271
+msgid ""
+"A dialog where you can set temporary dictionary by adding dictionary entries "
+"to the list."
+msgstr ""
+"Listeye sözlük girişleri ekleyerek geçici sözlük ayarlayabileceğiniz bir "
+"iletişim kutusu."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:274
+msgid "Advanced &input mode dictionary..."
+msgstr "Gel&işmiş giriş modu sözlüğü..."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:274
+msgid "Advanced input mode configuration"
+msgstr "Gelişmiş giriş modunu yapılandırma"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:280
+msgid "&Quick launches"
+msgstr "&Hızlı başlatmalar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:280
+msgid "Quick launches configuration"
+msgstr "Hızlı başlatmaları yapılandırma"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:286
+msgid "Braille input table &overview"
+msgstr "Braille giri&ş tablosuna genel bakış"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:286
+msgid "Overview of the current input braille table"
+msgstr "Geçerli giriş braille tablosuna genel bakış"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:288
+msgid "&Reload add-on"
+msgstr "&Eklentiyi yeniden yükle"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:288
+msgid "Reload this add-on."
+msgstr "Bu eklentiyi yeniden yükleyin."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:290
+msgid "Check for &update..."
+msgstr "&Güncellemeleri denetle..."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:290
+msgid "Checks if Braille Extender update is available"
+msgstr ""
+"Braille genişletici güncellemesinin mevcut olup olmadığını kontrol eder"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:292
+msgid "&Website"
+msgstr "&Web sayfası"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:292
+msgid "Open addon's website."
+msgstr "Eklenti Web sayfasını açar."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:294
+msgid "Get the latest template &translation file (.pot)"
+msgstr "En son şablon çeviri dosyasını (.po&t) alın"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:294
+msgid ""
+"Opens the URL to download the latest Portable Object Template file of the "
+"add-on"
+msgstr ""
+"Eklentinin en son Taşınabilir çeviri Şablonu dosyasını indirmek için URL'yi "
+"açar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:296
+msgid "&Braille Extender"
+msgstr "&Braille genişletici"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:309
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
+msgid "Global dictionary"
+msgstr "Genel sözlük"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:314
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
+msgid "Table dictionary ({})"
+msgstr "Tablo sözlüğü ({})"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:318
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
+msgid "Temporary dictionary"
+msgstr "Geçici sözlük"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:417
+msgid "Switches to the previous rotor setting"
+msgstr "Önceki rotor ayarına geçer"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:424
+msgid "Switches to the next rotor setting"
+msgstr "Sonraki rotor ayarına geçer"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:430
+#: addon/globalPlugins/brailleExtender/addondoc.py:36
+msgid "Character"
+msgstr "Karakter"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:431
+msgid "Word"
+msgstr "Kelime"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:432
+msgid "Line"
+msgstr "Satır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:433
+msgid "Paragraph"
+msgstr "Paragraf"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:434
+msgid "Page"
+msgstr "Sayfa"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:435
+msgid "Document"
+msgstr "Belge"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:461
+msgid "Not available here"
+msgstr "Burada mevcut değil"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:479
+#: addon/globalPlugins/brailleExtender/__init__.py:500
+msgid "Not supported here or not in browse mode"
+msgstr "Burada desteklenmiyor veya göz atma modunda desteklenmiyor"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:481
+#: addon/globalPlugins/brailleExtender/__init__.py:516
+msgid "Moves to the next item based on rotor setting"
+msgstr "Rotor ayarına göre sonraki öğeye gider"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:502
+#: addon/globalPlugins/brailleExtender/__init__.py:530
+msgid "Moves to the previous item based on rotor setting"
+msgstr "Rotor ayarına göre önceki öğeye gider"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:536
+msgid ""
+"Selects the item under the braille cursor e.g. doing default action if "
+"moving by objects"
+msgstr ""
+"Braille imlecinin altındaki öğeyi seçer Örneğin. nesneler tarafından hareket "
+"ettirilirse varsayılan eylemi yapar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:541
+msgid "Braille keyboard locked"
+msgstr "Braille klavye kilitli"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:543
+msgid "Braille keyboard unlocked"
+msgstr "Braille klavye kilitli değil"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:544
+msgid "Toggle braille keyboard lock"
+msgstr "Braille klavye kilidini açar/kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:549
+msgid "One-handed mode enabled"
+msgstr "Tek el modu etkin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:551
+msgid "One handed mode disabled"
+msgstr "Tek el modu devre dışı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:552
+msgid "Toggle one-handed mode"
+msgstr "Tek el modunu Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:557
+msgid "Dots 7 and 8 disabled"
+msgstr "7 ve 8 Nokta devre dışı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:559
+msgid "Dots 7 and 8 enabled"
+msgstr "7 ve 8 Nokta etkin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:561
+msgid "Toggle showing or hiding dots 7 and 8"
+msgstr "7 ve 8 numaralı noktaları gösterme veya gizleme arasında geçiş yapar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:567
+msgid "BRF mode enabled"
+msgstr "BRF modu etkin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:569
+msgid "BRF mode disabled"
+msgstr "BRF modu devre dışı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:570
+msgid "Toggle BRF mode"
+msgstr "BRF modunu açar/kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:575
+msgid "Modifier keys locked"
+msgstr "Değiştirici tuşlar kilitli"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:577
+msgid "Modifier keys unlocked"
+msgstr "Değiştirici tuşlar kilitli değil"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:578
+msgid "Toggle locking modifier keys when using braille input"
+msgstr "Braille girişini kullanırken değiştirici tuşlar kilidini açar/kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:587
+msgid "Toggle font attributes report"
+msgstr "Yazı tipi özellikleri bildirimini açar/kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:597
+msgid ""
+"Toggle between say current line while scrolling options between none, focus "
+"mode, review mode, or both"
+msgstr ""
+"Hiçbiri, odak modu, inceleme modu, her ikisi veya gezinirken geçerli satırı "
+"duyur seçenekleri arasında gezinmeyi Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:602
+msgid "Speech off"
+msgstr "Konuşma kapalı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:605
+msgid "Speech on"
+msgstr "Konuşma açık"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:606
+msgid "Toggle speech on or off"
+msgstr "Konuşmayı Açar veya Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:614
+msgid "No extra info for this element"
+msgstr "Bu öğe için daha fazla bilgi yok"
+
+#. Translators: Input help mode message for report extra infos command.
+#: addon/globalPlugins/brailleExtender/__init__.py:618
+msgid ""
+"Reports some extra infos for the current element. For example, the URL on a "
+"link"
+msgstr ""
+"Geçerli öğe için bazı ekstra bilgileri raporlar. Örneğin, bir bağlantıdaki "
+"URL"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:623
+msgid " Input table"
+msgstr " Giriş tablosu"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:623
+msgid "Output table"
+msgstr "Çıkış tablosu"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:625
+#, python-format
+msgid "Table overview (%s)"
+msgstr "Tabloya genel bakış (%s)"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:626
+msgid ""
+"Shows an overview of current input braille table in a browseable message"
+msgstr ""
+"Göz atılabilir bir mesajda mevcut giriş braille tablosuna genel bir bakış "
+"gösterir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:631
+#: addon/globalPlugins/brailleExtender/__init__.py:639
+#: addon/globalPlugins/brailleExtender/__init__.py:646
+msgid "No text selection"
+msgstr "Seçili metin yok"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:632
+msgid "Unicode Braille conversion"
+msgstr "Unicode Braille dönüştürme"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:633
+msgid ""
+"Convert the text selection in unicode braille and display it in a browseable "
+"message"
+msgstr ""
+"Metin seçimini unicode braille'e dönüştürür ve göz atılabilir bir mesajda "
+"görüntüler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:640
+msgid "Braille Unicode to cell descriptions"
+msgstr "Hücre açıklamalarına Braille Unicode"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:641
+msgid ""
+"Convert text selection in braille cell descriptions and display it in a "
+"browseable message"
+msgstr ""
+"Braille hücre açıklamalarındaki metin seçimini dönüştürür ve göz atılabilir "
+"bir mesajda görüntüler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:648
+msgid "Cell descriptions to braille Unicode"
+msgstr "Unicode'da braille için hücre açıklamaları"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:649
+msgid ""
+"Braille cell description to Unicode Braille. E.g.: in a edit field type "
+"'125-24-0-1-123-123'. Then select this text and execute this command"
+msgstr ""
+"Unicode Braille'e Braille hücre açıklaması. Örn: bir düzenleme alanına "
+"'125-24-0-1-123-123' yazın. Ardından bu metni seçin ve bu komutu yürütün"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:657
+msgid "Toggle advanced input mode"
+msgstr "Gelişmiş giriş modunu Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:662
+msgid "Describe undefined characters enabled"
+msgstr "Tanımlanmamış karakterleri tanımlama etkin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:664
+msgid "Describe undefined characters disabled"
+msgstr "Tanımlanmamış karakterleri tanımla devre dışı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:666
+msgid "Toggle description of undefined characters"
+msgstr "Tanımsız karakterlerin tanımlamasını Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:674
+msgid "No text"
+msgstr "Metin yok"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:675
+msgid "Reports the cursor position of text under the braille cursor"
+msgstr "Braille imlecinin altındaki metnin imleç konumunu bildirir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:700
+msgid "Shows hour and date changes automatically on a braille display"
+msgstr ""
+"Braille ekranında saat ve tarih değişikliklerini otomatik olarak gösterir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:709
+msgid "Toggle automatic braille scroll"
+msgstr "Otomatik braille kaydırmayı Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:714
+msgid "Increases the master volume"
+msgstr "Ana ses seviyesini artırır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:719
+msgid "Decreases the master volume"
+msgstr "Ana ses seviyesini azaltır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:724
+msgid "Toggle sound mute"
+msgstr "Sesi kapatmayı Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:735
+msgid "Shows the Braille Extender documentation"
+msgstr "Braille genişletici belgelerini gösterir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:773
+msgid "No such file or directory"
+msgstr "Böyle bir dosya ya da dizin yok"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:775
+msgid ""
+"Opens a custom program/file. Go to Braille Extender settings to define them"
+msgstr ""
+"Özel bir program/dosya açar. Bunları tanımlamak için Braille genişletici "
+"ayarlarına gidin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:781
+msgid "Checks for Braille Extender updates"
+msgstr "Braille genişletici güncellemelerini denetler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:787
+msgid "Increase braille autoscroll delay"
+msgstr "Braille otomatik kaydırma gecikmesini artırır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:793
+msgid "Decrease braille autoscroll delay"
+msgstr "Braille otomatik kaydırma gecikmesini azaltır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:797
+#: addon/globalPlugins/brailleExtender/__init__.py:812
+msgid "NVDA 2017.3 or later is required to use this feature"
+msgstr "Bu özelliği kullanmak için NVDA 2017.3 veya sonrası gereklidir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:799
+#: addon/globalPlugins/brailleExtender/__init__.py:814
+msgid ""
+"You must choose at least two tables for this feature. Please fill in the "
+"settings"
+msgstr "Bu özellik için en az iki tablo seçmelisiniz. Lütfen ayarları doldurun"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:806
+#, python-format
+msgid "Input: %s"
+msgstr "Giriş: %s"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:808
+msgid "Switches between configured braille input tables"
+msgstr "Yapılandırılmış braille giriş tabloları arasında geçiş yapar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:823
+#, python-format
+msgid "Output: %s"
+msgstr "Çıktı: %s"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:825
+msgid "Switches between configured braille output tables"
+msgstr "Yapılandırılmış braille çıktı tabloları arasında geçiş yapar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:831
+#, python-brace-format
+msgid "I⣿O:{I}"
+msgstr "I⣿O:{I}"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:832
+#, python-brace-format
+msgid "Input and output: {I}."
+msgstr "Giriş ve çıkış: {I}."
+
+#: addon/globalPlugins/brailleExtender/__init__.py:834
+#, python-brace-format
+msgid "I:{I} ⣿ O: {O}"
+msgstr "I:{I} ⣿ O: {O}"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:835
+#, python-brace-format
+msgid "Input: {I}; Output: {O}"
+msgstr "Giriş: {I}; Çıkış: {O}"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:837
+msgid "Reports the current braille input and output tables"
+msgstr "Mevcut braille giriş ve çıkış tablolarını duyurur"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:841
+msgid ""
+"Reports the Unicode value of the character where the cursor is located and "
+"the decimal, binary and octal values"
+msgstr ""
+"İmlecin bulunduğu karakterin Unicode değerini ve ondalık, ikili ve sekizlik "
+"değerleri duyurur"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:847
+msgid ""
+"Shows the output speech for selected text in braille, useful for emojis for "
+"example"
+msgstr ""
+"Seçilen metnin konuşma çıktısını braille olarak gösterir, örneğin emojiler "
+"için kullanışlıdır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:851
+msgid "No shortcut performed from a braille display"
+msgstr "Braille ekranından kısayol yapılmadı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:855
+msgid "Repeats the last shortcut performed from a braille display"
+msgstr "Braille ekranında gerçekleştirilen son kısayolu tekrarlar"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:869
+msgid "Braille Extender reloaded"
+msgstr "Braille genişletici yeniden yüklendi"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:886
+msgid "Reloads Braille Extender"
+msgstr "Braille genişletici'yi Yeniden Yükler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:889
+msgid "Reloads the primary braille display defined in settings"
+msgstr "Ayarlarda tanımlanan birincil braille ekranını yeniden yükler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:892
+msgid "Reloads the secondary braille display defined in settings"
+msgstr "Ayarlarda tanımlanan ikincil braille ekranını yeniden yükler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:898
+msgid "No braille display specified. No reload to do"
+msgstr "Braille ekranı belirtilmedi. Yüklenebilecek ekran yok"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:923
+msgid "WIN"
+msgstr "Win"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:924
+msgid "CTRL"
+msgstr "CTRL"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:925
+msgid "SHIFT"
+msgstr "Shift"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:926
+msgid "ALT"
+msgstr "ALT"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1028
+msgid "Keyboard shortcut cancelled"
+msgstr "Klavye kısayolu iptal edildi"
+
+#. /* docstrings for modifier keys */
+#: addon/globalPlugins/brailleExtender/__init__.py:1036
+msgid "Emulate pressing down "
+msgstr "Aşağı basmayı taklit eder "
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1037
+msgid " on the system keyboard"
+msgstr " sistem klavyesinde"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1093
+msgid "Current braille view saved"
+msgstr "Geçerli braille görünümü kaydedildi"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1096
+msgid "Buffer cleaned"
+msgstr "Arabellek temizlendi"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1097
+msgid "Saves the current braille view. Press twice quickly to clean the buffer"
+msgstr ""
+"Geçerli braille görünümünü kaydeder. Arabelleği temizlemek için hızlıca iki "
+"kez basılır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1102
+msgid "View saved"
+msgstr "Görünüm kaydedildi"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1103
+msgid "Buffer empty"
+msgstr "Arabellek boş"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1104
+msgid "Shows the saved braille view through a flash message"
+msgstr "Kaydedilmiş braille görünümünü bir hızlı mesaj aracılığıyla gösterir"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1138
+msgid "Pause"
+msgstr "Duraklat"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1138
+msgid "Resume"
+msgstr "Sürdür"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1180
+#: addon/globalPlugins/brailleExtender/__init__.py:1187
+#, python-format
+msgid "Auto test type %d"
+msgstr "Otomatik test türü %d"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1197
+msgid "Auto test stopped"
+msgstr "Otomatik test durduruldu"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1207
+msgid ""
+"Auto test started. Use the up and down arrow keys to change speed. Use the "
+"left and right arrow keys to change test type. Use space key to pause or "
+"resume the test. Use escape key to quit"
+msgstr ""
+"Otomatik test başladı. Hızı değiştirmek için yukarı ve aşağı ok tuşlarını "
+"kullanın. Test türünü değiştirmek için sol ve sağ ok tuşlarını kullanın. "
+"Testi duraklatmak veya devam ettirmek için boşluk tuşunu kullanın. Çıkmak "
+"için escape tuşunu kullanın"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1209
+msgid "Auto test"
+msgstr "Otomatik test"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1214
+msgid "Add dictionary entry or see a dictionary"
+msgstr "Sözlük girişi ekleyin veya bir sözlüğe bakın"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1215
+msgid "Adds an entry in braille dictionary"
+msgstr "Braille sözlüğüne bir giriş ekler"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1220
+msgid "Skip blank lines enabled"
+msgstr "Boş satırları atla etkin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1222
+msgid "Skip blank lines disabled"
+msgstr "Boş satırları atla devre dışı"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1223
+msgid "Toggle blank lines during text scrolling"
+msgstr "Metin kaydırma sırasında boş satırları Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1237
+msgid "Toggle routing cursors behavior in edit fields"
+msgstr "Düzenleme alanlarında yönlendirme imleçleri davranışını Açar/Kapatır"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1247
+#, python-format
+msgid "Speech History Mode disabled (%s)"
+msgstr "Konuşma Geçmişi Modu devre dışı (%s)"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1250
+msgid "Speech History Mode enabled"
+msgstr "Konuşma Geçmişi Modu etkin"
+
+#: addon/globalPlugins/brailleExtender/__init__.py:1252
+msgid "Toggle Speech History Mode"
+msgstr "Konuşma Geçmişi Modunu Açar/Kapatır"
+
+#. Add-on summary, usually the user visible name of the addon.
+#. Translators: Summary for this add-on to be shown on installation and add-on information.
+#: addon/globalPlugins/brailleExtender/__init__.py:1305
+#: addon/globalPlugins/brailleExtender/settings.py:41
+#: addon/globalPlugins/brailleExtender/settings.py:279
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:110
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:367
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:374
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:378
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:382 buildVars.py:36
+msgid "Braille Extender"
+msgstr "Braille Genişletici"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:41
+#: addon/globalPlugins/brailleExtender/addoncfg.py:48
+#: addon/globalPlugins/brailleExtender/addoncfg.py:62
+#: addon/globalPlugins/brailleExtender/settings.py:317
+msgid "none"
+msgstr "hiçbiri"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:42
+msgid "braille only"
+msgstr "sadece braille"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:43
+msgid "speech only"
+msgstr "sadece konuşma"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:44
+#: addon/globalPlugins/brailleExtender/addoncfg.py:65
+msgid "both"
+msgstr "ikisi"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:49
+msgid "dots 7 and 8"
+msgstr "7 ve8 nokta"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:50
+msgid "dot 7"
+msgstr "7 nokta"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:51
+msgid "dot 8"
+msgstr "8 nokta"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:57
+msgid "stable"
+msgstr "kararlı"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:58
+msgid "development"
+msgstr "geliştirici"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:63
+msgid "focus mode"
+msgstr "odak modu"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:64
+msgid "review mode"
+msgstr "inceleme modu"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:69
+msgid "normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"
+msgstr "normal (Windows konsolları, IntelliJ, PyCharm dışında önerilir...)"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:70
+msgid "alternative, emulate left and right arrow keys with beeps"
+msgstr "alternatif olarak, bip sesleriyle sol ve sağ ok tuşlarını taklit et"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:71
+msgid "alternative, emulate left and right arrow keys silently"
+msgstr "alternatif olarak, sol ve sağ ok tuşlarını sessizce taklit et"
+
+#: addon/globalPlugins/brailleExtender/addoncfg.py:98
+msgid "last known"
+msgstr "son bilinen"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:36
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:58
+msgid "Hexadecimal"
+msgstr "Onaltılık"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:36
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:59
+msgid "Decimal"
+msgstr "Ondalık"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:36
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:60
+msgid "Octal"
+msgstr "Sekizli"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:36
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:61
+msgid "Binary"
+msgstr "İkili"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:48
+msgid "Show punctuation/symbol &name for undefined characters if available"
+msgstr "Varsa, tanımlanmamış karakterler için noktalama/sembol &ad göster"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/addondoc.py:50
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:22 buildVars.py:59
+msgid "Speech History Mode"
+msgstr "Konuşma Geçmişi Modu"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:52
+msgid ""
+"This mode allows to review the last announcements that have been spoken by "
+"NVDA."
+msgstr ""
+"Bu mod, NVDA tarafından yapılan son duyuruların gözden geçirilmesini sağlar."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:54
+msgid ""
+"To enable this mode, you can use the appropriate toggle command or the basic "
+"gesture NVDA+Control+t."
+msgstr ""
+"Bu modu etkinleştirmek için uygun geçiş komutunu veya NVDA+Control+t temel "
+"hareketini kullanabilirsiniz."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:56
+msgid "In this mode, you can use:"
+msgstr "Bu modda şunları kullanabilirsiniz:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:58
+msgid ""
+"the first routing cursor to copy the current announcement to the Clipboard."
+msgstr "mevcut duyuruyu Panoya kopyalayan ilk yönlendirme imleci."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:59
+msgid ""
+"the last routing cursor to show the current announcement in a browseable "
+"message."
+msgstr ""
+"mevcut duyuruyu göz atılabilir bir mesajda göstermek için son yönlendirme "
+"imleci."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:60
+msgid "the other routing cursors to navigate through history entries."
+msgstr "geçmiş girişleri arasında gezinmek için diğer yönlendirme imleçleri."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:62
+msgid ""
+"Please note that specific settings are available for this feature under the "
+"category \"Speech History Mode\"."
+msgstr ""
+"Lütfen bu özellik için \"Konuşma Geçmişi Modu\" kategorisi altında belirli "
+"ayarların mevcut olduğunu unutmayın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:65
+msgid "Representation of undefined characters"
+msgstr "Tanımsız karakterlerin gösterilmesi"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:67
+msgid ""
+"The extension allows you to customize how an undefined character should be "
+"represented within a braille table. To do so, go to the — Representation of "
+"undefined characters — settings. You can choose between the following "
+"representations:"
+msgstr ""
+"Eklenti, tanımsız bir karakterin bir braille tablosunda nasıl gösterilmesi "
+"gerektiğini özelleştirmenize olanak tanır. Bunu yapmak için — Tanımsız "
+"karakterlerin gösterimi — ayarlarına gidin. Aşağıdaki gösterimler arasından "
+"seçim yapabilirsiniz:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:71
+msgid ""
+"You can also combine this option with the “describe the character if "
+"possible” setting."
+msgstr ""
+"Bu seçeneği “mümkünse karakteri tanımla” ayarıyla da birleştirebilirsiniz."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:73
+msgid "Notes:"
+msgstr "Notlar:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:75
+#, python-brace-format
+msgid ""
+"To distinguish the undefined set of characters while maximizing space, the "
+"best combination is the usage of the HUC8 representation without checking "
+"the “{contextualOption}” option."
+msgstr ""
+"Alanı en üst düzeye çıkarırken tanımsız karakter kümesini ayırt etmek için "
+"en iyi kombinasyon, \"{contextualOption}\" seçeneğini işaretlemeden HUC8 "
+"gösteriminin kullanılmasıdır."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:76
+#, python-brace-format
+msgid "To learn more about the HUC representation, see {url}"
+msgstr "HUC gösterimi hakkında daha fazla bilgi edinmek için bkz. {url}"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:77
+msgid ""
+"Keep in mind that definitions in tables and those in your table dictionaries "
+"take precedence over character descriptions, which also take precedence over "
+"the chosen representation for undefined characters."
+msgstr ""
+"Tablolardaki ve tablo sözlüklerinizdeki tanımların, tanımsız karakterler "
+"için seçilen gösterimden de öncelikli olan karakter açıklamalarından "
+"öncelikli olduğunu unutmayın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:80
+msgid "Getting Current Character Info"
+msgstr "Mevcut Karakter Bilgisini Alma"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:82
+msgid ""
+"This feature allows you to obtain various information regarding the "
+"character under the cursor using the current input braille table, such as:"
+msgstr ""
+"Bu özellik, geçerli giriş braille tablosunu kullanarak imlecin altındaki "
+"karakterle ilgili aşağıdakiler gibi çeşitli bilgiler elde etmenizi sağlar:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:84
+msgid ""
+"the HUC8 and HUC6 representations; the hexadecimal, decimal, octal or binary "
+"values; A description of the character if possible; the Unicode braille "
+"representation and the braille pattern dots."
+msgstr ""
+"huc8 ve HUC6 gösterimleri; onaltılık, ondalık, sekizlik veya ikili değerler; "
+"Mümkünse karakterin bir açıklaması; Unicode braille gösterimi ve braille "
+"desen noktaları."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:86
+msgid ""
+"Pressing the defined gesture associated to this function once shows you the "
+"information in a flash message and a double-press displays the same "
+"information in a virtual NVDA buffer."
+msgstr ""
+"Bu işlevle ilişkili tanımlı harekete bir kez basmak, bilgileri bir hızlı "
+"mesajda gösterir ve iki kez basmak, aynı bilgiyi sanal bir NVDA "
+"arabelleğinde görüntüler."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:88
+msgid ""
+"On supported displays the defined gesture is ⡉+space. No system gestures are "
+"defined by default."
+msgstr ""
+"Desteklenen ekranlarda tanımlanan hareket ⡉+boşluktur. Varsayılan olarak "
+"hiçbir sistem hareketi tanımlanmamıştır."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:90
+#, python-brace-format
+msgid ""
+"For example, for the '{chosenChar}' character, we will get the following "
+"information:"
+msgstr "Örneğin, '{chosenChar}' karakteri için aşağıdaki bilgileri alacağız:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:93
+msgid "Advanced braille input"
+msgstr "Gelişmiş braille girişi"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:95
+msgid ""
+"This feature allows you to enter any character from its HUC8 representation "
+"or its hexadecimal/decimal/octal/binary value. Moreover, it allows you to "
+"develop abbreviations. To use this function, enter the advanced input mode "
+"and then enter the desired pattern. Default gestures: NVDA+Windows+i or ⡊"
+"+space (on supported displays). Press the same gesture to exit this mode. "
+"Alternatively, an option allows you to automatically exit this mode after "
+"entering a single pattern. "
+msgstr ""
+"Bu özellik, HUC8 gösteriminden veya onaltılık/ondalık/sekizlik/ikili "
+"değerinden herhangi bir karakteri girmemize olanak tanır. Ayrıca, "
+"kısaltmalar geliştirmemize olanak tanır. Bu işlevi kullanmak için gelişmiş "
+"giriş modunu açıyor ve ardından istediğimiz deseni giriyoruz. Varsayılan "
+"hareketler: NVDA+Windows+i veya ⡊+boşluk (desteklenen ekranlarda). Bu moddan "
+"çıkmak için aynı harekete basıyoruz. Alternatif olarak, bir seçenek, tek bir "
+"desen girdikten sonra bu moddan otomatik olarak çıkmamıza izin verir "
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:97
+msgid ""
+"If you want to enter a character from its HUC8 representation, simply enter "
+"the HUC8 pattern. Since a HUC8 sequence must fit on 3 or 4 cells, the "
+"interpretation will be performed each time 3 or 4 dot combinations are "
+"entered. If you wish to enter a character from its hexadecimal, decimal, "
+"octal or binary value, do the following:"
+msgstr ""
+"HUC8 gösteriminden bir karakter girmek istiyorsanız, HUC8 modelini girmeniz "
+"yeterlidir. Bir HUC8 dizisinin 3 veya 4 hücreye sığması gerektiğinden, "
+"yorumlama her 3 veya 4 nokta kombinasyonu girildiğinde yapılacaktır. "
+"Onaltılık, ondalık, sekizlik veya ikili değerinden bir karakter girmek "
+"istiyorsanız aşağıdakileri yapın:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:99
+#, python-brace-format
+msgid "Enter {braillePattern}"
+msgstr "{braillePattern} girin"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:100
+msgid "Specify the basis as follows"
+msgstr "Temeli aşağıdaki gibi belirtin"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:102
+msgid "⠭ or ⠓"
+msgstr "⠭ veya ⠓"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:102
+msgid "for a hexadecimal value"
+msgstr "onaltılık bir değer için"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:103
+msgid "for a decimal value"
+msgstr "ondalık bir değer için"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:104
+msgid "for an octal value"
+msgstr "sekizlik bir değer için"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:105
+msgid "for a binary value"
+msgstr "ikili değer için"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:107
+msgid ""
+"Enter the value of the character according to the previously selected basis."
+msgstr "Daha önce seçilen esasa göre karakterin değerini girin."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:108
+msgid "Press Space to validate."
+msgstr "Doğrulamak için Boşluk çubuğuna basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:111
+msgid ""
+"For abbreviations, you must first add them in the dialog box — Advanced "
+"input mode dictionary —. Then, you just have to enter your abbreviation and "
+"press space to expand it. For example, you can define the following "
+"abbreviations: \"⠎⠺\" with \"sandwich\", \"⠋⠛⠋⠗\" to \"🇫🇷\"."
+msgstr ""
+"Kısaltmalar için, önce bunları iletişim kutusuna eklemelisiniz — Gelişmiş "
+"giriş modu sözlüğü —. Ardından, kısaltmanızı girmeniz ve genişletmek için "
+"boşluk tuşuna basmanız yeterlidir. Örneğin, şu kısaltmaları "
+"tanımlayabilirsiniz: \"⠎⠺\" ile \"sandviç\", \"⠋⠛⠋⠗\" ile \"🇫🇷\"."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:113
+msgid "Here are some examples of sequences to be entered for given characters:"
+msgstr "Verilen karakterler için girilecek dizilere ilişkin bazı örnekler:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:117
+msgid "Note: the HUC6 input is currently not supported."
+msgstr "Not: HUC6 girişi şu anda desteklenmemektedir."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:120
+msgid "One-hand mode"
+msgstr "Tek el modu"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:122
+msgid ""
+"This feature allows you to compose a cell in several steps. This can be "
+"activated in the general settings of the extension's preferences or on the "
+"fly using NVDA+Windows+h gesture by default (⡂+space on supported displays). "
+"Three input methods are available."
+msgstr ""
+"Bu özellik, birkaç adımda bir hücre oluşturmamıza olanak tanır. Bu, "
+"eklentitercihlerinin genel ayarlarında veya varsayılan olarak NVDA+Windows+h "
+"hareketi kullanılarak anında etkinleştirilebilir (desteklenen ekranlarda ⡂"
+"+boşluk). Üç giriş yöntemi mevcuttur."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:123
+msgid "Method #1: fill a cell in 2 stages on both sides"
+msgstr "Yöntem 1: bir hücreyi her iki tarafta 2 aşamada doldurun"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:125
+msgid ""
+"With this method, type the left side dots, then the right side dots. If one "
+"side is empty, type the dots correspondig to the opposite side twice, or "
+"type the dots corresponding to the non-empty side in 2 steps."
+msgstr ""
+"Bu yöntemle, sol taraftaki noktaları, ardından sağ taraftaki noktaları "
+"yazın. Bir taraf boşsa, karşı tarafa karşılık gelen noktaları iki kez yazın "
+"veya boş olmayan tarafa karşılık gelen noktaları 2 adımda yazın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:126
+#: addon/globalPlugins/brailleExtender/addondoc.py:135
+msgid "For example:"
+msgstr "Örneğin:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:128
+msgid "For ⠛: press dots 1-2 then dots 4-5."
+msgstr "⠛ için: 1-2 noktalarına ve ardından 4-5 noktalarına basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:129
+msgid "For ⠃: press dots 1-2 then dots 1-2, or dot 1 then dot 2."
+msgstr "⠃ için: önce 1-2'ye sonra 1-2'ye basın veya 1'e sonra 2'ye basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:130
+msgid "For ⠘: press 4-5 then 4-5, or dot 4 then dot 5."
+msgstr "⠘ için: 4-5'e, ardından 4-5'e veya 4'e ve ardından 5'e basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:132
+msgid "Method #2: fill a cell in two stages on one side (Space = empty side)"
+msgstr ""
+"Yöntem #2: bir hücreyi bir tarafta iki aşamada doldurun (Boşluk = boş taraf)"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:134
+msgid ""
+"Using this method, you can compose a cell with one hand, regardless of which "
+"side of the Braille keyboard you choose. The first step allows you to enter "
+"dots 1-2-3-7 and the second one 4-5-6-8. If one side is empty, press space. "
+"An empty cell will be obtained by pressing the space key twice."
+msgstr ""
+"Bu yöntemi kullanarak, Braille klavyesinin hangi tarafını seçerseniz seçin, "
+"tek elle bir hücre oluşturabilirsiniz. İlk adım 1-2-3-7 ve ikinci adım "
+"4-5-6-8 noktaları girmenizi sağlar. Bir taraf boşsa, boşluk tuşuna basın. "
+"Boşluk tuşuna iki kez basılarak boş bir hücre elde edilecektir."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:137
+msgid "For ⠛: press dots 1-2 then dots 1-2, or dots 4-5 then dots 4-5."
+msgstr "⠛ için: önce 1-2'ye sonra 1-2'ye veya 4-5'e sonra 4-5'e basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:138
+msgid "For ⠃: press dots 1-2 then space, or 4-5 then space."
+msgstr ""
+"⠃ için: 1-2 ve ardından boşluk veya 4-5 ve ardından boşluk tuşlarına basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:139
+msgid "For ⠘: press space then 1-2, or space then dots 4-5."
+msgstr ""
+"⠘ için: önce boşluk sonra 1-2 ya da boşluk ve ardından 4-5 noktalarına basın."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:141
+msgid ""
+"Method #3: fill a cell dots by dots (each dot is a toggle, press Space to "
+"validate the character)"
+msgstr ""
+"Yöntem 3: bir hücre noktalarını noktalarla doldurun (her nokta bir geçiştir, "
+"karakteri doğrulamak için Boşluk tuşuna basın)"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:143
+msgid ""
+"In this mode, each dot is a toggle. You must press the space key as soon as "
+"the cell you have entered is the desired one to input the character. Thus, "
+"the more dots are contained in the cell, the more ways you have to enter the "
+"character."
+msgstr ""
+"Bu modda, her nokta bir geçiştir. Girdiğiniz hücre, karakteri girmek "
+"istediğiniz hücre olur olmaz boşluk tuşuna basmalısınız. Bu nedenle, hücrede "
+"ne kadar çok nokta bulunursa, karakteri girmek için o kadar çok yolunuz olur."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:144
+msgid "For example, for ⠛, you can compose the cell in the following ways"
+msgstr "Örneğin, ⠛ için hücreyi aşağıdaki şekillerde oluşturabilirsiniz"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:146
+msgid "Dots 1-2, then dots 4-5, then space."
+msgstr "1-2 noktalar, sonra 4-5 noktalar, sonra boşluk."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:147
+msgid "Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space."
+msgstr ""
+"1-2-3 noktaları, ardından nokta 3 (düzeltmek için), ardından 4-5 noktaları, "
+"ardından boşluk."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:148
+msgid "Dot 1, then dots 2-4-5, then space."
+msgstr "Nokta 1, sonra noktalar 2-4-5, sonra boşluk."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:149
+msgid "Dots 1-2-4, then dot 5, then space."
+msgstr "Nokta 1-2-4, sonra nokta 5, sonra boşluk."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:150
+msgid "Dot 2, then dot 1, then dot 5, then dot 4, and then space."
+msgstr ""
+"2. nokta, sonra 1. nokta, sonra 5. nokta, sonra 4. nokta ve sonra boşluk."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:151
+msgid "Etc."
+msgstr "Vb."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:170
+msgid "Documentation"
+msgstr "Belgeler"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:172
+msgid "Let's explore some features"
+msgstr "Bazı özellikleri keşfedelim"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:174
+msgid "Profile gestures"
+msgstr "Profil hareketleri"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:180
+msgid "Driver loaded"
+msgstr "Sürücü yüklendi"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:181
+msgid "Profile"
+msgstr "Profil"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:195
+msgid "Simple keys"
+msgstr "Basit tuşlar"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:197
+msgid "Usual shortcuts"
+msgstr "Her zamanki kısayollar"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:199
+msgid "Standard NVDA commands"
+msgstr "Standart NVDA komutları"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:202
+msgid "Modifier keys"
+msgstr "Değiştirici tuşlar"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:205
+msgid "Quick navigation keys"
+msgstr "Hızlı gezinme tuşları"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:209
+msgid "Rotor feature"
+msgstr "Rotor özelliği"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:217
+msgid "Gadget commands"
+msgstr "Gadget komutları"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:230
+msgid "Shortcuts defined outside add-on"
+msgstr "Eklenti dışında tanımlanan kısayollar"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:258
+msgid "Keyboard configurations provided"
+msgstr "Sağlanan klavye yapılandırmaları"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:261
+msgid "Keyboard configurations are"
+msgstr "Klavye yapılandırmaları"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:270
+msgid "Warning:"
+msgstr "Uyarı:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:272
+msgid "BrailleExtender has no gesture map yet for your braille display."
+msgstr ""
+"Braille Genişletici, braille ekranınız için henüz bir hareket haritasına "
+"sahip değil."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:275
+msgid ""
+"However, you can still assign your own gestures in the \"Input Gestures\" "
+"dialog (under Preferences menu)."
+msgstr ""
+"Ancak yine de \"Girdi Hareketleri\" iletişim kutusunda (Tercihler menüsü "
+"altında) kendi hareketlerinizi atayabilirsiniz."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:279
+msgid "Add-on gestures on the system keyboard"
+msgstr "Sistem klavyesindeki eklenti hareketleri"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:302
+msgid "Arabic"
+msgstr "Arapça"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:303
+msgid "Chinese (Taiwan)"
+msgstr "Çince (Tayvan)"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:304
+msgid "Croatian"
+msgstr "Hırvatça"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:305
+msgid "Danish"
+msgstr "Danimarkaca"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:306
+msgid "English and French"
+msgstr "İngilizce ve Fransızca"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:307
+msgid "German"
+msgstr "Almanca"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:308
+msgid "Hebrew"
+msgstr "İbranice"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:309
+msgid "Italian"
+msgstr "İtalyanca"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:310
+msgid "Persian"
+msgstr "Farsça"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:311
+msgid "Polish"
+msgstr "Lehçe"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:312
+msgid "Russian"
+msgstr "Rusça"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:315
+msgid "Copyrights and acknowledgements"
+msgstr "Telif hakları ve onaylar"
+
+#. Author(s)
+#: addon/globalPlugins/brailleExtender/addondoc.py:321 buildVars.py:71
+msgid "and other contributors"
+msgstr "ve diğer katkıda bulunanlar"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:325
+msgid "Translators"
+msgstr "Çevirmenler"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:335
+msgid "Code contributions and other"
+msgstr "Kod katkıları ve diğer"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:337
+msgid "Speech mode feature:"
+msgstr "Konuşma modu özelliği:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:340
+msgid "Code maintenance (cleanup, rewrites, optimizations) thanks to:"
+msgstr ""
+"Aşağıdakiler sayesinde kod bakımı (temizleme, yeniden yazmalar, "
+"optimizasyonlar):"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:346
+msgid "Additional third party copyrighted code is included:"
+msgstr "Ek üçüncü taraf telif hakkıyla korunan kod dahildir:"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:352
+msgid "Thanks also to"
+msgstr "Ayrıca teşekkürler"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:354
+msgid "Finally thank you very much for all your feedback and comments."
+msgstr ""
+"Son olarak tüm geri bildirimleriniz ve yorumlarınız için çok teşekkür ederiz."
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:358
+#, python-format
+msgid "%s's documentation"
+msgstr "%s belgesi"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:377
+#, python-format
+msgid "Emulates pressing %s on the system keyboard"
+msgstr "Sistem klavyesinde %s basılmasını taklit eder"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:388
+msgid "description currently unavailable for this shortcut"
+msgstr "bu kısayol için açıklama mevcut değil"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:408
+msgid "caps lock"
+msgstr "büyük harf kilidi"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:193
+msgid "all tables"
+msgstr "tüm tablolar"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:203
+msgid "Advanced input mode dictionary"
+msgstr "Gelişmiş giriş modu sözlüğü"
+
+#. Translators: The label for the combo box of dictionary entries in
+#. advanced input mode dictionary dialog.
+#. Translators: The label for the combo box of dictionary entries in table dictionary dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:212
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:130
+msgid "Dictionary &entries"
+msgstr "Sözlük girişl&eri"
+
+#. Translators: The label for a column in dictionary entries list used
+#. to identify comments for the entry.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:221
+msgid "Replacement"
+msgstr "Değiştir"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:222
+msgid "Input"
+msgstr "Giriş"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:223
+msgid "Input table"
+msgstr "Giriş tablosu"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to add new entries.
+#. Translators: The label for a button in table dictionaries dialog to add new entries.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:230
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:147
+msgid "&Add"
+msgstr "&Ekle"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to edit existing entries.
+#. Translators: The label for a button in table dictionaries dialog to edit existing entries.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:237
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:153
+msgid "&Edit"
+msgstr "&Düzenle"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to remove existing entries.
+#. Translators: The label for a button in table dictionaries dialog to remove existing entries.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:244
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:159
+msgid "Re&move"
+msgstr "Kaldı&r"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to save entries.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:253
+msgid "&Save"
+msgstr "&Kaydet"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to open dictionary file in an editor.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:259
+msgid "&Open the dictionary file in an editor"
+msgstr "Sözlük d&osyasını bir düzenleyicide aç"
+
+#. Translators: The label for a button in advanced input mode
+#. dictionariy dialog to reload dictionary.
+#. Translators: The label for a button in table dictionaries dialog to reload dictionary.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:265
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:172
+msgid "&Reload the dictionary"
+msgstr "S&özlüğü yeniden yükle"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:283
+msgid "Don't get tired, this entry already exists!"
+msgstr "Yorulmayın, bu giriş zaten var!"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:286
+#, python-brace-format
+msgid ""
+"The abreviation \"{abreviation}\" is already used for \"{replacement}\". Do "
+"you want to update the existing entry?"
+msgstr ""
+"\"{abreviation}\" kısaltması zaten \"{replacement}\" için kullanılıyor. "
+"Mevcut girişi güncellemek istiyor musunuz?"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:305
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:216
+msgid "Add Dictionary Entry"
+msgstr "Sözlük Girişi Ekle"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:316
+msgid "Please select an entry first"
+msgstr "Lütfen önce bir giriş seçin"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:345
+msgid "File doesn't exist yet"
+msgstr "Dosya henüz mevcut değil"
+
+#. Translators: This is the label for the edit dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:373
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:288
+msgid "Edit Dictionary Entry"
+msgstr "Sözlük Girişini Düzenle"
+
+#. Translators: This is a label for an edit field in add dictionary
+#. entry dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:379
+msgid "&Abreviation"
+msgstr "kıs&altma"
+
+#. Translators: This is a label for an edit field in add dictionary
+#. entry dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:385
+msgid "&Replace by"
+msgstr "&Şuna göre değiştir"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:404
+msgid "The abreviation field is empty, please enter something."
+msgstr "Kısaltma alanı boş, lütfen bir şey girin."
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:407
+msgid "The remplacement field is empty, please enter something."
+msgstr "Değiştirme alanı boş, lütfen bir şey girin."
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/advancedinput.py:420
+msgid "Advanced input mode"
+msgstr "Gelişmiş giriş modu"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:427
+msgid "E&xit the advanced input mode after typing one pattern"
+msgstr "Bir desen yazdıktan sonra gelişmi&ş giriş modundan çık"
+
+#: addon/globalPlugins/brailleExtender/advancedinput.py:431
+msgid "&Escape character for Unicode values input"
+msgstr "Unicode değerleri girişi için &Escape karakteri"
+
+#: addon/globalPlugins/brailleExtender/autoscroll.py:98
+#, python-brace-format
+msgid "{delay} ms"
+msgstr "{delay} ms"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/autoscroll.py:114
+msgid "Auto scroll"
+msgstr "Otomatik kaydırma"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/autoscroll.py:120
+msgid "Autoscroll &delay for the active braille display (ms):"
+msgstr "Aktif braille ekranı için &otomatik kaydırma gecikmesi (ms):"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/autoscroll.py:129
+msgid "&Step for delay change (ms):"
+msgstr "&Gecikme değişikliği adımı (ms):"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/autoscroll.py:138
+msgid "&Adjust the delay to content"
+msgstr "Gecikmeyi içeriğe göre &ayarla"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/autoscroll.py:142
+msgid "Always ignore &blank line"
+msgstr "Her zaman &boş satırı yoksay"
+
+#: addon/globalPlugins/brailleExtender/onehand.py:17
+msgid "Fill a cell in two stages using one side only"
+msgstr "Yalnızca bir tarafı kullanarak bir hücreyi iki aşamada doldur"
+
+#: addon/globalPlugins/brailleExtender/onehand.py:18
+msgid "Fill a cell in two stages using both sides"
+msgstr "Her iki tarafı kullanarak bir hücreyi iki aşamada doldur"
+
+#: addon/globalPlugins/brailleExtender/onehand.py:19
+msgid "Fill a cell dots by dots"
+msgstr "Bir hücreyi nokta nokta doldur"
+
+#: addon/globalPlugins/brailleExtender/onehand.py:71
+msgid "Unsupported input method"
+msgstr "Bu giriş metodu desteklenmiyor"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/onehand.py:96
+msgid "One-handed mode"
+msgstr "Tek el modu"
+
+#: addon/globalPlugins/brailleExtender/onehand.py:100
+msgid "Enable &one-handed mode"
+msgstr "Tek el m&odunu etkinleştir"
+
+#: addon/globalPlugins/brailleExtender/onehand.py:105
+msgid "Input &method"
+msgstr "Giriş &metodu"
+
+#. Translators: Reported when translation didn't succeed due to unsupported input.
+#: addon/globalPlugins/brailleExtender/patches.py:453
+msgid "Unsupported input"
+msgstr "Desteklenmeyen giriş"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/rolelabels.py:26
+msgid "Role labels"
+msgstr "Kural etiketleri"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:34
+msgid "Use custom braille &role labels"
+msgstr "Özel braille ku&ral etiketlerini kullan"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:37
+msgid "Role cate&gory:"
+msgstr "Kural kate&gorisi:"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/rolelabels.py:37
+#: addon/globalPlugins/brailleExtender/settings.py:46
+msgid "General"
+msgstr "Genel"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:37
+msgid "Positive states"
+msgstr "Olumlu durumlar"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:37
+msgid "Negative states"
+msgstr "Olumsuz durumlar"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:45
+msgid "&Role:"
+msgstr "Ku&ral:"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:48
+msgid "Braille &label"
+msgstr "Brai&lle etiketi"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:52
+msgid "&Reset this role label"
+msgstr "Bu kural etiketini s&ıfırla"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:54
+msgid "Reset a&ll role labels"
+msgstr "&Tüm kural etiketlerini sıfırla"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:99
+#, python-format
+msgid ": %s"
+msgstr ": %s"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:142
+msgid "You have no customized role labels."
+msgstr "Özelleştirilmiş kural etiketiniz yok."
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:143
+#: addon/globalPlugins/brailleExtender/rolelabels.py:148
+msgid "Reset role labels"
+msgstr "Kural etiketlerini sıfırla"
+
+#: addon/globalPlugins/brailleExtender/rolelabels.py:146
+#, python-format
+msgid ""
+"You have %d customized role labels defined. Do you want to reset all labels?"
+msgstr ""
+"Tanımlanmış %d özelleştirilmiş kural etiketiniz var. Tüm etiketleri "
+"sıfırlamak istiyor musunuz?"
+
+#: addon/globalPlugins/brailleExtender/settings.py:40
+msgid "Feature implementation is in progress. Thanks for your patience."
+msgstr "Özellik uygulaması devam ediyor. Sabrınız için teşekkürler."
+
+#: addon/globalPlugins/brailleExtender/settings.py:55
+msgid "stable channel, automatic check"
+msgstr "kararlı kanalı, otomatik denetle"
+
+#: addon/globalPlugins/brailleExtender/settings.py:56
+msgid "dev channel, automatic check"
+msgstr "geliştirici kanalı, otomatik denetle"
+
+#: addon/globalPlugins/brailleExtender/settings.py:57
+msgid "stable channel, manual check"
+msgstr "kararlı kanalı, Elle denetle"
+
+#: addon/globalPlugins/brailleExtender/settings.py:58
+msgid "dev channel, manual check"
+msgstr "geliştirici kanalı, elle denetle"
+
+#: addon/globalPlugins/brailleExtender/settings.py:60
+msgid "Check for upd&ates:"
+msgstr "G&üncellemeleri denetle:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:69
+msgid "Say current line while &scrolling in:"
+msgstr "Kaydırırken geçerli &satırı bildir:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:73
+msgid "Speech &interrupt when scrolling on same line"
+msgstr "Aynı satırda gez&inirken konuşma kesintisi"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:77
+msgid "S&kip blank lines during text scrolling"
+msgstr "Metin &kaydırma sırasında boş satırları atla"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:81
+msgid "Smart Caps Loc&k"
+msgstr "Ak&ıllı Büyük Harf Kilidi"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:85
+msgid "Speech i&nterrupt for unknown gestures"
+msgstr "Bilinmeyen &hareketler için konuşma kesintisi"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:89
+msgid "Announce character when &routing braille cursor"
+msgstr "B&raille imlecini yönlendirirken karakteri bildir"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:93
+msgid "Routing cursors behavior in edit &fields:"
+msgstr "Düzenleme alanlarındaki yönlendirme imle&çleri davranışı:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:102
+msgid "&Display time and date infinitely"
+msgstr "&Tarih ve saati sürekli göster"
+
+#: addon/globalPlugins/brailleExtender/settings.py:104
+msgid ""
+"Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, "
+"PowerShell Maxima…)"
+msgstr ""
+"Terminal pencerelerinde otomatik olarak inceleme moduna geç (&cmd, bash, "
+"PuTTY, PowerShell Maxima…)"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:108
+msgid "Announce &volume changes:"
+msgstr "&Ses seviyesi değiştiğinde bildir:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:116
+msgid "Announce m&odifier key presses:"
+msgstr "Değiştirici t&uşlara basıldığında bildir:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:122
+msgid "Play &beeps for modifier keys"
+msgstr "Değiştirici tuşlar için &bip sesi çal"
+
+#: addon/globalPlugins/brailleExtender/settings.py:127
+msgid "&Right margin on cells for the active braille display"
+msgstr "Etkin b&raille ekranı için hücrelerde sağ kenar boşluğu"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:131
+msgid "Braille &keyboard configuration:"
+msgstr "Braille &klavye yapılandırması:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:135
+msgid "&Reverse forward and back scroll buttons"
+msgstr "İleri ve tersi &geri kaydırma düğmeleri"
+
+#: addon/globalPlugins/brailleExtender/settings.py:138
+msgid "Preferred &primary braille display:"
+msgstr "Tercih edilen &birincil braille ekranı:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:140
+msgid "Preferred &secondary braille display:"
+msgstr "Tercih edilen &ikincil braille ekranı:"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:177
+msgid "Text attributes"
+msgstr "Metin özellikleri"
+
+#: addon/globalPlugins/brailleExtender/settings.py:181
+msgid "Indicate text attributes in braille with &Attribra"
+msgstr "&Öznitelik ile metin özelliklerini braille'de belirt"
+
+#: addon/globalPlugins/brailleExtender/settings.py:183
+msgid "&Selected elements:"
+msgstr "&Seçilen öğeler:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:185
+msgid "Spelling &errors:"
+msgstr "Yazım hatala&rı:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:187
+msgid "&Bold:"
+msgstr "&Kalın:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:189
+msgid "&Italic:"
+msgstr "İtal&ik:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:191
+msgid "&Underline:"
+msgstr "&Altı çizili:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:193
+msgid "Strike&through:"
+msgstr "&üstü çizili:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:195
+msgid "Su&bscripts:"
+msgstr "Alt sim&geler:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:197
+msgid "Su&perscripts:"
+msgstr "Üst sim&geler:"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:225
+msgid "Braille tables"
+msgstr "Braille tabloları"
+
+#: addon/globalPlugins/brailleExtender/settings.py:230
+msgid "Use the current input table"
+msgstr "Geçerli giriş tablosunu kullan"
+
+#: addon/globalPlugins/brailleExtender/settings.py:239
+msgid "Prefered braille &tables (press F1 for help):"
+msgstr "Tercih edilen braille &tabloları (yardım için F1'e basın):"
+
+#: addon/globalPlugins/brailleExtender/settings.py:243
+msgid "Input braille table for &keyboard shortcut keys:"
+msgstr "Braille giriş tablosu için &klavye kısayolları:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:245
+msgid "None"
+msgstr "Hiçbiri"
+
+#: addon/globalPlugins/brailleExtender/settings.py:248
+msgid "&Secondary output table:"
+msgstr "&İkincil çıktı tablosu:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:252
+msgid "Display &tabs as spaces"
+msgstr "Sekmeleri boşluk olarak gös&ter"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:256
+msgid "&Spaces per tab for the active braille display:"
+msgstr "Etkin braille ekranı için &sekme başına boşluk:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:257
+msgid "Alternative and &custom braille tables..."
+msgstr "Alternati&f ve özel braille tabloları..."
+
+#: addon/globalPlugins/brailleExtender/settings.py:278
+msgid ""
+"NVDA must be restarted for changes to take effect. Would you like to restart "
+"now?"
+msgstr ""
+"Değişikliklerin etkili olması için NVDA'nın yeniden başlatılması gerekir. "
+"Şimdi yeniden başlaTmak ister misinİZ?"
+
+#: addon/globalPlugins/brailleExtender/settings.py:316
+msgid "input and output"
+msgstr "giriş ve çıkış"
+
+#: addon/globalPlugins/brailleExtender/settings.py:318
+msgid "input only"
+msgstr "sadece giriş"
+
+#: addon/globalPlugins/brailleExtender/settings.py:319
+msgid "output only"
+msgstr "sadece ÇIKIŞ"
+
+#: addon/globalPlugins/brailleExtender/settings.py:350
+#, python-format
+msgid "Table name: %s"
+msgstr "Tablo adı: %s"
+
+#: addon/globalPlugins/brailleExtender/settings.py:351
+#, python-format
+msgid "File name: %s"
+msgstr "Dosya adı: %s"
+
+#: addon/globalPlugins/brailleExtender/settings.py:352
+#, python-format
+msgid "In switches: %s"
+msgstr "Anahtarlarda: %s"
+
+#: addon/globalPlugins/brailleExtender/settings.py:353
+msgid "About this table"
+msgstr "Bu tablo hakkında"
+
+#: addon/globalPlugins/brailleExtender/settings.py:356
+msgid ""
+"Braille tables usable from NVDA are listed. Press space, left arrow, or "
+"right arrow keys to include (or exclude) the selected table in switches.\n"
+"\n"
+"\t\t\tYou can also press 'comma' key to get the file name of the selected "
+"table, and 'semicolon' key to view miscellaneous information on the selected "
+"table."
+msgstr ""
+"NVDA'dan kullanılabilen Braille tabloları listelenmiştir. Seçili tabloyu "
+"anahtarlara dahil etmek (veya hariç tutmak) için boşluk, sol ok veya sağ ok "
+"tuşlarına basın.\n"
+"\n"
+"\t\t\tAyrıca seçilen tablonun dosya adını almak için 'virgül' tuşuna, "
+"seçilen tablodaki çeşitli bilgileri görüntülemek için 'noktalı virgül' "
+"tuşuna basabilirsiniz."
+
+#: addon/globalPlugins/brailleExtender/settings.py:358
+msgid "Contextual help"
+msgstr "Bağlamsal yardım"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:374
+msgid "Custom braille tables"
+msgstr "Özel braille tabloları"
+
+#: addon/globalPlugins/brailleExtender/settings.py:384
+msgid "Use a custom table as &input table"
+msgstr "Gir&iş tablosu olarak özel bir tablo kullan"
+
+#: addon/globalPlugins/brailleExtender/settings.py:385
+msgid "Use a custom table as &output table"
+msgstr "Çıktı tabl&osu olarak özel bir tablo kullan"
+
+#: addon/globalPlugins/brailleExtender/settings.py:386
+msgid "&Add a braille table..."
+msgstr "Braille tablosu &ekle..."
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:410
+msgid "Add a braille table"
+msgstr "Braille tablosu ekleyin"
+
+#: addon/globalPlugins/brailleExtender/settings.py:416
+msgid "Display &name"
+msgstr "Ekran &adı"
+
+#: addon/globalPlugins/brailleExtender/settings.py:417
+msgid "&Description"
+msgstr "&Tanım"
+
+#: addon/globalPlugins/brailleExtender/settings.py:418
+msgid "&Path"
+msgstr "&Yol"
+
+#: addon/globalPlugins/brailleExtender/settings.py:419
+#: addon/globalPlugins/brailleExtender/settings.py:490
+msgid "&Browse..."
+msgstr "G&özat..."
+
+#: addon/globalPlugins/brailleExtender/settings.py:422
+msgid "This is a &contracted (grade 2) braille table"
+msgstr "Bu, s&özleşmeli (sınıf 2) bir braille tablosudur"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:424
+msgid "&Available for:"
+msgstr "&Mevcut:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:424
+msgid "Input and output"
+msgstr "Giriş ve çıkış"
+
+#: addon/globalPlugins/brailleExtender/settings.py:424
+msgid "Input only"
+msgstr "Yalnızca giriş"
+
+#: addon/globalPlugins/brailleExtender/settings.py:424
+msgid "Output only"
+msgstr "Yalnızca çıkış"
+
+#: addon/globalPlugins/brailleExtender/settings.py:430
+msgid "Choose a braille table file"
+msgstr "Bir braille tablosu dosyası seçin"
+
+#: addon/globalPlugins/brailleExtender/settings.py:430
+msgid "Liblouis table files"
+msgstr "Liblouis tablo dosyaları"
+
+#: addon/globalPlugins/brailleExtender/settings.py:442
+msgid "Please specify a display name."
+msgstr "Lütfen bir görünen ad belirtin."
+
+#: addon/globalPlugins/brailleExtender/settings.py:442
+msgid "Invalid display name"
+msgstr "Geçersiz görünen ad"
+
+#: addon/globalPlugins/brailleExtender/settings.py:446
+#, python-format
+msgid "The specified path is not valid (%s)."
+msgstr "Belirtilen yol geçerli değil (%s)."
+
+#: addon/globalPlugins/brailleExtender/settings.py:446
+msgid "Invalid path"
+msgstr "Geçersiz yol"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:474
+msgid "Braille Extender - Quick launches"
+msgstr "Braille genişletici - Hızlı başlatmalar"
+
+#: addon/globalPlugins/brailleExtender/settings.py:485
+msgid "&Gestures:"
+msgstr "&Hareketler:"
+
+#: addon/globalPlugins/brailleExtender/settings.py:488
+msgid "&Location (file path, URL or command)"
+msgstr "&Konum (dosya yolu, URL veya komut)"
+
+#: addon/globalPlugins/brailleExtender/settings.py:491
+msgid "&Remove this gesture"
+msgstr "Bu ha&reketi kaldır"
+
+#: addon/globalPlugins/brailleExtender/settings.py:492
+msgid "&Add a quick launch"
+msgstr "Hızlı başlatma &ekle"
+
+#: addon/globalPlugins/brailleExtender/settings.py:521
+msgid "Unable to associate this gesture. Please enter another gesture"
+msgstr "Bu hareket ilişkilendirilemiyor. Lütfen başka bir hareket girin"
+
+#: addon/globalPlugins/brailleExtender/settings.py:525
+#, python-brace-format
+msgid ""
+"Please enter a gesture from your {addoncfg.curBD} braille display. Press "
+"space to cancel."
+msgstr ""
+"Lütfen {addoncfg.curBD} braille ekranınızdan bir hareket girin. İptal etmek "
+"için boşluk tuşuna basın."
+
+#: addon/globalPlugins/brailleExtender/settings.py:529
+msgid "Out of capture"
+msgstr "Yakalanmadı"
+
+#: addon/globalPlugins/brailleExtender/settings.py:536
+#, python-format
+msgid "The gesture captured is %s"
+msgstr "Yakalanan hareket %s"
+
+#: addon/globalPlugins/brailleExtender/settings.py:553
+msgid "Are you sure you wish to delete this shortcut?"
+msgstr "Bu kısayolu silmek istediğinizden emin misiniz?"
+
+#: addon/globalPlugins/brailleExtender/settings.py:553
+msgid "Remove shortcut"
+msgstr "Kısayolu kaldır"
+
+#: addon/globalPlugins/brailleExtender/settings.py:562
+#, python-brace-format
+msgid "{g} removed"
+msgstr "{g} kaldırıldı"
+
+#: addon/globalPlugins/brailleExtender/settings.py:573
+msgid ""
+"Please enter the desired gesture for the new quick launch. Press \"space bar"
+"\" to cancel"
+msgstr ""
+"Lütfen yeni hızlı başlatma için istediğiniz hareketi girin. İptal etmek için "
+"\"boşluk çubuğuna\" basın"
+
+#: addon/globalPlugins/brailleExtender/settings.py:576
+msgid "Don't add a quick launch"
+msgstr "Hızlı başlatma ekleme"
+
+#: addon/globalPlugins/brailleExtender/settings.py:602
+#, python-brace-format
+msgid "Choose a file for {0}"
+msgstr "{0} için bir dosya seçin"
+
+#: addon/globalPlugins/brailleExtender/settings.py:615
+msgid "Please create or select a quick launch first"
+msgstr "Lütfen önce bir hızlı başlatma oluşturun veya seçin"
+
+#: addon/globalPlugins/brailleExtender/settings.py:615
+msgid "Error"
+msgstr "Hata"
+
+#. Translators: title of add-on settings dialog.
+#: addon/globalPlugins/brailleExtender/settings.py:632
+msgid "Braille Extender settings"
+msgstr "Braille Genişletici ayarları"
+
+#. Translators: The profile name for normal configuration
+#: addon/globalPlugins/brailleExtender/settings.py:647
+msgid "normal configuration"
+msgstr "normal yapılandırma"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:29
+msgid "&Number of last announcements to retain:"
+msgstr "Sakla&nacak son duyuru sayısı:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:39
+msgid "&Prefix entries with their position in the history"
+msgstr "&Geçmiş girdilerine tarih ön ekini ekle"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:44
+msgid "&Read entries while browsing history"
+msgstr "&Geçmişe göz atarken girişleri oku"
+
+#. Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:72
+msgid "to speech history"
+msgstr "konuşma geçmişine"
+
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:182
+msgid "Announcement copied to clipboard"
+msgstr "Duyuru panoya kopyalandı"
+
+#. Translators: Reports which position braille is tethered to
+#. (braille can be tethered automatically or to either focus or review position or speech history).
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:209
+msgid ""
+"Toggle tethering of braille between the focus, the review position and the "
+"speech history"
+msgstr ""
+"Odak, inceleme konumu ve konuşma geçmişi arasında braille bağlantısını "
+"değiştirir"
+
+#. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:29
+msgid "Sign"
+msgstr "İşaret"
+
+#. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:31
+msgid "Math"
+msgstr "Matematik"
+
+#. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:33
+msgid "Replace"
+msgstr "Ddeğiştirme"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:41
+msgid "Both (input and output)"
+msgstr "Her ikisi (giriş ve çıkış)"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:42
+msgid "Backward (input only)"
+msgstr "Geri (Sadece giriş)"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:43
+msgid "Forward (output only)"
+msgstr "İleri (sadece çıktı)"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:109
+#, python-format
+msgid ""
+"One or more errors are present in dictionary tables: %s. As a result, these "
+"dictionaries were not loaded."
+msgstr ""
+"Sözlük tablolarında bir veya daha fazla hata var: %s. Sonuç olarak, bu "
+"sözlükler yüklenmedi."
+
+#. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:133
+msgid "Comment"
+msgstr "Yorum"
+
+#. Translators: The label for a column in dictionary entries list used to identify original character.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:135
+msgid "Pattern"
+msgstr "Desen"
+
+#. Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:137
+msgid "Representation"
+msgstr "Açıklama"
+
+#. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:139
+msgid "Opcode"
+msgstr "İşlem kodu"
+
+#. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:141
+msgid "Direction"
+msgstr "Yön"
+
+#. Translators: The label for a button in table dictionaries dialog to open dictionary file in an editor.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:167
+msgid "&Open the current dictionary file in an editor"
+msgstr "Geçerli sözlük d&osyasını bir düzenleyicide aç"
+
+#. Translators: This is a label for an edit field in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:294
+msgid "Dictionary"
+msgstr "Sözlük"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
+msgid "Global"
+msgstr "Genel"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
+msgid "Table ({})"
+msgstr "Tablo ({})"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
+msgid "Temporary"
+msgstr "Geçici"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:302
+msgid "See &entries"
+msgstr "Girişleri g&ör"
+
+#. Translators: This is a label for an edit field in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:307
+msgid "&Text pattern/sign"
+msgstr "Me&tin deseni/işareti"
+
+#. Translators: This is a label for an edit field in add dictionary entry dialog and in punctuation/symbol pronunciation dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:312
+msgid "&Braille representation"
+msgstr "&Braille gösterimi"
+
+#. Translators: This is a label for an edit field in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:316
+msgid "&Comment"
+msgstr "&Yorum"
+
+#. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:320
+msgid "&Opcode"
+msgstr "İ&şlem kodu"
+
+#. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:325
+msgid "&Direction"
+msgstr "&Yön"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:366
+msgid "Text pattern/sign field is empty."
+msgstr "Metin deseni/işareti alanı boş."
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:373
+#, python-format
+msgid ""
+"Invalid value for 'text pattern/sign' field. You must specify a character "
+"with this opcode. E.g.: %s"
+msgstr ""
+"'Metin deseni/işareti' alanı için geçersiz değer. Bu işlem koduyla bir "
+"karakter belirtmelisiniz. Ör.: %s"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:377
+#, python-format
+msgid ""
+"'Braille representation' field is empty. You must specify something with "
+"this opcode. E.g.: %s"
+msgstr ""
+"'Braille gösterimi' alanı boş. Bu işlem koduyla bir şey belirtmelisiniz. "
+"Ör.: %s"
+
+#: addon/globalPlugins/brailleExtender/tabledictionaries.py:381
+#, python-format
+msgid ""
+"Invalid value for 'braille representation' field. You must enter dot "
+"patterns with this opcode. E.g.: %s"
+msgstr ""
+"'Braille gösterimi' alanı için geçersiz değer. Bu işlem koduyla nokta "
+"desenleri girmelisiniz. Ör.: %s"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:44
+msgid "Use braille table behavior (no description possible)"
+msgstr "Braille tablosu davranışını kullanın (açıklama mümkün değil)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:45
+msgid "Dots 1-8 (⣿)"
+msgstr "1-8 Nokta (⣿)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:46
+msgid "Dots 1-6 (⠿)"
+msgstr "1-6 Nokta (⠿)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:47
+msgid "Empty cell (⠀)"
+msgstr "Boş hücre (⠀)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:48
+#, python-brace-format
+msgid "Other dot pattern (e.g.: {dotPatternSample})"
+msgstr "Diğer nokta deseni (ör.: {dotPatternSample})"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:51
+msgid "Question mark (depending on output table)"
+msgstr "Soru işareti (çıktı tablosuna bağlı olarak)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:52
+#, python-brace-format
+msgid "Other sign/pattern (e.g.: {signPatternSample})"
+msgstr "Diğer işaret/desen (ör.: {signPatternSample})"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:55
+msgid "Hexadecimal, Liblouis style"
+msgstr "Onaltılık, Liblouis stili"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:56
+msgid "Hexadecimal, HUC8"
+msgstr "Onaltılık, HUC8"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:57
+msgid "Hexadecimal, HUC6"
+msgstr "Onaltılık, HUC6"
+
+#. Translators: title of a dialog.
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:237
+msgid "Undefined character representation"
+msgstr "Tanımsız karakter gösterimi"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:242
+msgid "Representation &method:"
+msgstr "Açıklama yönte&mi:"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:253
+msgid "Specify another &pattern"
+msgstr "Başka bir &desen belirtin"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:257
+msgid ""
+"Show punctuation/symbol &name for undefined characters if available (can "
+"cause a lag)"
+msgstr ""
+"Varsa ta&nımsız karakterler için noktalama/sembol adını göster (gecikmeye "
+"neden olabilir)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:267
+msgid "Also describe e&xtended characters (e.g.: country flags)"
+msgstr "Ayrıca genişletilmiş karakterleri de a&çıkla (ör.: ülke bayrakları)"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:277
+msgid "&Full extended description"
+msgstr "&Tam genişletilmiş açıklama"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:286
+msgid "Show the si&ze taken"
+msgstr "Alınan boyutu g&öster"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:293
+msgid "&Start tag:"
+msgstr "&Başlangıç ​​etiketi:"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:298
+msgid "&End tag:"
+msgstr "&Bitiş etiketi:"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:309
+msgid "&Language:"
+msgstr "Di&l:"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:312
+msgid "Use the current output table"
+msgstr "Geçerli çıktı tablosunu kullan"
+
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:325
+msgid "Braille &table:"
+msgstr "Braille &tablosu:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:330
+msgid ""
+"Character limit at which descriptions are disabled (to avoid freezes, >):"
+msgstr ""
+"Açıklamaların devre dışı bırakıldığı karakter sınırı (donmaları önlemek için "
+">):"
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:56
+#, python-brace-format
+msgid ""
+"{addonName} version {version} is available. Do you want to download it now?"
+msgstr "{addonName} sürümü {version} mevcut. Şimdi indirmek istiyor musunuz?"
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:72
+#, python-format
+msgid "You are up-to-date. %s is the latest version."
+msgstr "Güncel. %s en son sürüm."
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:81
+#, python-format
+msgid ""
+"Oops! There was a problem downloading Braille Extender update. Please retry "
+"later or download and install manually from %s. Do you want to open this URL "
+"in your browser?"
+msgstr ""
+"Hata! Braille genişletici güncellemesini indirirken bir sorun oluştu. Lütfen "
+"daha sonra tekrar deneyin veya %s adresinden manuel olarak indirip yükleyin. "
+"Bu URL'yi tarayıcınızda açmak istiyor musunuz?"
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:83
+msgid "Details:"
+msgstr "Detaylar:"
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:109
+#, python-brace-format
+msgid ""
+"Hashes do not match! Actual value is '{actualHash}'. Expected is "
+"'{expectedHash}'."
+msgstr ""
+"Hash'ler uyuşmuyor! Gerçek değer '{actualHash}'. Beklenen '{expectedHash}'."
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:132
+msgid "An update check dialog is already running!"
+msgstr "Güncelleme zaten denetleniyor!"
+
+#: addon/globalPlugins/brailleExtender/updatecheck.py:133
+msgid "Braille Extender update"
+msgstr "Braille Genişletici güncellemesi"
+
+#: addon/globalPlugins/brailleExtender/utils.py:40
+msgid "Muted sound"
+msgstr "Ses kapatıldı"
+
+#: addon/globalPlugins/brailleExtender/utils.py:86
+msgid "Reload successful"
+msgstr "Yeniden yükleme başarılı"
+
+#: addon/globalPlugins/brailleExtender/utils.py:89
+msgid "Reload failed"
+msgstr "Yeniden yüklenemedi"
+
+#: addon/globalPlugins/brailleExtender/utils.py:97
+#: addon/globalPlugins/brailleExtender/utils.py:116
+msgid "Not a character"
+msgstr "Karakter değil"
+
+#: addon/globalPlugins/brailleExtender/utils.py:101
+msgid "unknown"
+msgstr "bilinmeyen"
+
+#: addon/globalPlugins/brailleExtender/utils.py:115
+msgid "Char info"
+msgstr "Karakter bilgisi"
+
+#: addon/globalPlugins/brailleExtender/utils.py:198
+msgid "Available combinations"
+msgstr "Mevcut kombinasyonlar"
+
+#: addon/globalPlugins/brailleExtender/utils.py:200
+msgid "One combination available"
+msgstr "Bir kombinasyon mevcut"
+
+#: addon/globalPlugins/brailleExtender/utils.py:209
+msgid "space"
+msgstr "boşluk"
+
+#: addon/globalPlugins/brailleExtender/utils.py:210
+msgid "left SHIFT"
+msgstr "sol shift"
+
+#: addon/globalPlugins/brailleExtender/utils.py:211
+msgid "right SHIFT"
+msgstr "sağa shift"
+
+#: addon/globalPlugins/brailleExtender/utils.py:212
+msgid "left selector"
+msgstr "sol seçici"
+
+#: addon/globalPlugins/brailleExtender/utils.py:213
+msgid "right selector"
+msgstr "sağ seçici"
+
+#: addon/globalPlugins/brailleExtender/utils.py:214
+msgid "dot"
+msgstr "nokta"
+
+#: addon/globalPlugins/brailleExtender/utils.py:229
+#, python-brace-format
+msgid "{gesture} on {brailleDisplay}"
+msgstr "{brailleDisplay} de {gesture}"
+
+#: addon/globalPlugins/brailleExtender/utils.py:289
+msgid "No text selected"
+msgstr "Seçili metin yok"
+
+#: buildVars.py:40
+msgid ""
+"BrailleExtender is a NVDA add-on that provides various features at braille "
+"level. Currently, the following features are implemented"
+msgstr ""
+"Braille Genişletici, braille düzeyinde çeşitli özellikler sağlayan bir NVDA "
+"eklentisidir. Şu anda, aşağıdaki özellikler uygulanmaktadır"
+
+#: buildVars.py:41
+msgid "reload two favorite braille display with shortcuts"
+msgstr "kısayollarla iki favori braille ekranını yeniden yükleyin"
+
+#: buildVars.py:42
+msgid ""
+"automatic review cursor tethering in terminal role like in PuTTY, "
+"Powershell, bash, cmd"
+msgstr ""
+"puTTY, Powershell, bash, cmd'deki gibi terminal rolünde otomatik inceleme "
+"imleci bağlama"
+
+#: buildVars.py:43
+msgid "auto scroll"
+msgstr "otomatik kaydırma"
+
+#: buildVars.py:44
+msgid "switch between several input/output braille tables"
+msgstr "birkaç giriş/çıkış braille tablosu arasında geçiş yapın"
+
+#: buildVars.py:45
+msgid "mark the text with special attributes through dot 7, dot 8 or both"
+msgstr ""
+"metni özel niteliklerle 7 nokta, 8 nokta veya her ikisi aracılığıyla "
+"işaretleyin"
+
+#: buildVars.py:46
+msgid "use two output braille tables simultaneously"
+msgstr "aynı anda iki çıkış braille tablosu kullanın"
+
+#: buildVars.py:47
+msgid "display tab signs as spaces"
+msgstr "sekme işaretlerini boşluk olarak göster"
+
+#: buildVars.py:48
+msgid "reverse forward scroll and back scroll buttons"
+msgstr "ileri kaydırma ve tersi geri kaydırma düğmeleri"
+
+#: buildVars.py:49
+msgid ""
+"say the current line during text scrolling either in review mode, or in "
+"focus mode or both"
+msgstr ""
+"gözden geçirme modunda veya odak modunda veya her ikisinde de metin kaydırma "
+"sırasında geçerli satırı duyur"
+
+#: buildVars.py:50
+msgid "translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"
+msgstr "unicode braille'de metni kolayca çevirin veya tam tersi. Örn: z <--> ⠵"
+
+#: buildVars.py:51
+msgid ""
+"convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"
+msgstr ""
+"hücre açıklamasını Unicode braille'e veya tam tersine dönüştürün. Ör.: 123 "
+"<--> ⠇"
+
+#: buildVars.py:52
+msgid "lock braille keyboard"
+msgstr "braille klavyesini kilitle"
+
+#: buildVars.py:53
+msgid "launch an application/URL with gesture"
+msgstr "hareket ile bir uygulama/URL başlat"
+
+#: buildVars.py:54
+msgid "braille dictionaries"
+msgstr "braille sözlükleri"
+
+#: buildVars.py:55
+msgid "type with one-hand from braille keyboard"
+msgstr "braille klavyeden tek elle yazın"
+
+#: buildVars.py:56
+msgid ""
+"display undefined characters from braille tables (including emojis) using "
+"altenative representations"
+msgstr ""
+"alternatif gösterimleri kullanarak braille tablolarından (emojiler dahil) "
+"tanımsız karakterleri görüntüleyin"
+
+#: buildVars.py:57
+msgid "enter any character from braille keyboard (including emojis)"
+msgstr "braille klavyesinden herhangi bir karakter girin (emojiler dahil)"
+
+#: buildVars.py:58
+msgid "skip blank lines during text scrolling"
+msgstr "metin kaydırma sırasında boş satırları atla"
+
+#: buildVars.py:60
+msgid "and much more!"
+msgstr "ve daha fazlası!"
+
+#: buildVars.py:62
+msgid ""
+"For some braille displays, it extends the braille display commands to provide"
+msgstr ""
+"Bazı braille ekranları için, braille ekran komutlarını şu şekilde genişletir"
+
+#: buildVars.py:63
+msgid ""
+"offer complete gesture maps including function keys, multimedia keys, quick "
+"navigation, etc."
+msgstr ""
+"işlev tuşları, multimedya tuşları, hızlı gezinme vb. dahil olmak üzere "
+"eksiksiz hareket haritaları sunar."
+
+#: buildVars.py:64
+msgid "emulate modifier keys, and thus any keyboard shortcut"
+msgstr ""
+"değiştirici tuşları ve dolayısıyla herhangi bir klavye kısayolunu taklit eder"
+
+#: buildVars.py:65
+msgid ""
+"offer several keyboard configurations concerning the possibility to input "
+"dots 7 and 8, enter and backspace"
+msgstr ""
+"7 ve 8 noktalarını girme, enter ve geri alma olasılığı ile ilgili çeşitli "
+"klavye konfigürasyonları sunar"
+
+#: buildVars.py:66
+msgid "add actions and quick navigation through a rotor"
+msgstr "bir rotor aracılığıyla eylemler ve hızlı gezinme ekleyin"

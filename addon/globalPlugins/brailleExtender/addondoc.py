@@ -311,6 +311,7 @@ class AddonDoc:
 			_("Polish"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Dorota Krać",
 			_("Russian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Pavel Kaplan <pavel46@gmail.com>, Artem Plaksin <admin@maniyax.ru>",
 			_("Turkish"): "Umut Korkmaz <umutkork@gmail.com>",
+			_("Ukrainian"): "VovaMobile",
 		}
 		doc += (
 			"<h2>" + _("Copyrights and acknowledgements") + "</h2>"

@@ -135,6 +135,8 @@ if versionInfo.version_year < 2021:
 	speech.speak = speak
 else:
 	speech.speech.speak = speak
+	if hasattr(speech, "speak"):
+		speech.speak = speak
 oldScrollBack = braille.BrailleBuffer.scrollBack
 
 

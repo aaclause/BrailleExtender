@@ -61,7 +61,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		if config.conf["brailleExtender"]["updateChannel"] in addoncfg.updateChannels.keys():
 			itemToSelect = list(addoncfg.updateChannels.keys()).index(config.conf["brailleExtender"]["updateChannel"])
 		else:
-			itemToSelect = list(config.conf["brailleExtender"]["updateChannel"]).index(addoncfg.CHANNEL_stable)
+			itemToSelect = list(addoncfg.updateChannels.keys()).index(addoncfg.CHANNEL_stable)
 		if not config.conf["brailleExtender"]["autoCheckUpdate"]: itemToSelect += len(addoncfg.updateChannels.keys())
 		self.updateCheck.SetSelection(itemToSelect)
 

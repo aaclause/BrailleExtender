@@ -1,6 +1,6 @@
 # addoncfg.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 
 import os
 
@@ -12,7 +12,9 @@ import globalVars
 import inputCore
 from logHandler import log
 
-from .common import addonUpdateChannel, configDir, profilesDir, MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE
+from .common import (addonUpdateChannel, configDir, profilesDir,
+	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 addonHandler.initTranslation()
@@ -20,7 +22,6 @@ addonHandler.initTranslation()
 Validator = configobj.validate.Validator
 
 CHANNEL_stable = "stable"
-CHANNEL_testing = "testing"
 CHANNEL_dev = "dev"
 
 CHOICE_none = "none"
@@ -63,9 +64,14 @@ focusOrReviewChoices = dict([
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+routingCursorsEditFields_labels = {
+	RC_NORMAL: _("normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("alternative, emulate left and right arrow keys with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("alternative, emulate left and right arrow keys silently")
+}
 curBD = braille.handler.display.name
 backupDisplaySize = braille.handler.displaySize
-backupRoleLabels = {}
+
 iniGestures = {}
 iniProfile = {}
 profileFileExists = gesturesFileExists = False
@@ -88,7 +94,7 @@ def getConfspec():
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
-		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={addonUpdateChannel})",
+		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, default={addonUpdateChannel})",
 		"lastCheckUpdate": "float(min=0, default=0)",
 		"profile_%s" % curBD: 'string(default="default")',
 		"keyboardLayout_%s" % curBD: "string(default=\"?\")",
@@ -128,7 +134,15 @@ def getConfspec():
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
-		"routingReviewModeWithCursorKeys": "boolean(default=False)",
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
+		"speechHistoryMode": {
+			"enabled": "boolean(default=False)",
+			"limit": "integer(min=0, default=50)",
+			"numberEntries": "boolean(default=True)",
+			"speakEntries": "boolean(default=True)",
+			"backup_tetherTo": 'string(default="focus")',
+			"backup_autoTether": "boolean(default=True)",
+		},
 		"tabSpace": "boolean(default=False)",
 		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
@@ -142,13 +156,14 @@ def getConfspec():
 			"start": "string(default=[)",
 			"end": "string(default=])",
 			"lang": "string(default=Windows)",
-			"table": "string(default=current)"
+			"table": "string(default=current)",
+			"characterLimit": "integer(min=0, default=2048)",
 		},
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
 			"attributes": "boolean(default=True)",
-			"roleLabels": "boolean(default=True)"
+			"roleLabels": "boolean(default=False)"
 		},
 		"attributes": {
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
@@ -197,6 +212,7 @@ def getConfspec():
 		},
 		"quickLaunches": {},
 		"roleLabels": {},
+		"brailleTables": {},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
 			"escapeSignUnicodeValue": "string(default=⠼)",
@@ -213,38 +229,19 @@ def getConfspec():
 		},
 	}
 
-def getLabelFromID(idCategory, idLabel):
-	if idCategory == 0: return braille.roleLabels[int(idLabel)]
-	if idCategory == 1: return braille.landmarkLabels[idLabel]
-	if idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
-	if idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
+def loadPreferedTables():
+	global inputTables, outputTables
+	listInputTables = [table[0] for table in brailleTables.listTables() if table.input]
+	listOutputTables = [table[0] for table in brailleTables.listTables() if table.output]
+	inputTables = config.conf["brailleExtender"]["inputTables"]
+	outputTables = config.conf["brailleExtender"]["outputTables"]
+	if not isinstance(inputTables, list):
+		inputTables = inputTables.replace(', ', ',').split(',')
+	if not isinstance(outputTables, list):
+		outputTables = outputTables.replace(', ', ',').split(',')
+	inputTables = [t for t in inputTables if t in listInputTables]
+	outputTables = [t for t in outputTables if t in listOutputTables]
 
-def setLabelFromID(idCategory, idLabel, newLabel):
-	if idCategory == 0: braille.roleLabels[int(idLabel)] = newLabel
-	elif idCategory == 1: braille.landmarkLabels[idLabel] = newLabel
-	elif idCategory == 2: braille.positiveStateLabels[int(idLabel)] = newLabel
-	elif idCategory == 3: braille.negativeStateLabels[int(idLabel)] = newLabel
-
-def loadRoleLabels(roleLabels):
-	global backupRoleLabels
-	for k, v in roleLabels.items():
-		try:
-			arg1 = int(k.split(':')[0])
-			arg2 = k.split(':')[1]
-			backupRoleLabels[k] = (v, getLabelFromID(arg1, arg2))
-			setLabelFromID(arg1, arg2, v)
-		except BaseException as err:
-			log.error("Error during loading role label `%s` (%s)" % (k, err))
-			roleLabels.pop(k)
-			config.conf["brailleExtender"]["roleLabels"] = roleLabels
-
-def discardRoleLabels():
-	global backupRoleLabels
-	for k, v in backupRoleLabels.items():
-		arg1 = int(k.split(':')[0])
-		arg2 = k.split(':')[1]
-		setLabelFromID(arg1, arg2, v[1])
-	backupRoleLabels = {}
 
 def loadConf():
 	global curBD, gesturesFileExists, profileFileExists, iniProfile
@@ -281,8 +278,6 @@ def loadConf():
 	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
 	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
 		braille.handler.displaySize = backupDisplaySize-limitCellsRight
-	if config.conf["brailleExtender"]["features"]["roleLabels"]:
-		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
 
 def loadGestures():

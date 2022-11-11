@@ -290,7 +290,7 @@ def getSpeechSymbols(text = None):
 	if not text: text = getTextSelection()
 	if not text: return ui.message(_("No text selected"))
 	locale = languageHandler.getLanguage()
-	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_CHAR).strip()
+	return characterProcessing.processSpeechSymbols(locale, text, get_symbol_level("SYMLVL_CHAR")).strip()
 
 def getTether():
 	if hasattr(braille.handler, "getTether"):
@@ -359,3 +359,25 @@ def set_speech_talk():
 	if hasattr(speech, "SpeechMode"):
 		return speech.setSpeechMode(speech.SpeechMode.talk)
 	speech.speechMode = speech.speechMode_talk
+
+newControlTypes = hasattr(controlTypes, "Role")
+def get_control_type(control_type):
+	if not isinstance(control_type, str):
+		raise TypeError()
+	if newControlTypes:
+		attr = '_'.join(control_type.split('_')[1:])
+		if control_type.startswith("ROLE_"):
+			return getattr(controlTypes.Role, attr)
+		elif control_type.startswith("STATE_"):
+			return getattr(controlTypes.State, attr)
+		else:
+			raise ValueError(control_type)
+	return getattr(controlTypes, control_type)
+
+newSymbolLevel = hasattr(characterProcessing, "SymbolLevel")
+def get_symbol_level(symbol_level):
+	if not isinstance(symbol_level, str):
+		raise TypeError()
+	if newSymbolLevel:
+		return getattr(characterProcessing.SymbolLevel, '_'.join(symbol_level.split('_')[1:]))
+	return getattr(characterProcessing, symbol_level)

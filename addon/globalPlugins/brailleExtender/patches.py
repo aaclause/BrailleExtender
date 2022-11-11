@@ -1,6 +1,6 @@
 # patches.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
 
 import os
@@ -13,7 +13,6 @@ import api
 import braille
 import brailleInput
 import config
-import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -29,6 +28,7 @@ except ModuleNotFoundError:
 import scriptHandler
 import speech
 import textInfos
+import tones
 import treeInterceptorHandler
 import watchdog
 import winUser
@@ -39,10 +39,11 @@ from . import advancedinput
 from . import autoscroll
 from . import huc
 from . import regionhelper
+from . import speechhistorymode
 from . import undefinedchars
-from .common import baseDir
+from .common import baseDir, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT
 from .onehand import process as processOneHandMode
-from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason
+from .utils import getCurrentChar, getSpeechSymbols, getTether, getCharFromValue, getCurrentBrailleTables, get_output_reason, get_control_type
 
 addonHandler.initTranslation()
 
@@ -73,29 +74,7 @@ def sayCurrentLine():
 			speech.speakTextInfo(info, unit=textInfos.UNIT_LINE, reason=REASON_CARET)
 
 # globalCommands.GlobalCommands.script_braille_routeTo()
-def script_braille_routeTo(self, gesture):
-	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
-		braille.handler.toggle_auto_scroll()
-	obj = obj = api.getNavigatorObject()
-	if (config.conf["brailleExtender"]['routingReviewModeWithCursorKeys'] and
-			obj.hasFocus and
-			braille.handler._cursorPos and
-			(obj.role == controlTypes.ROLE_TERMINAL or
-			 (obj.role == controlTypes.ROLE_EDITABLETEXT and
-			 getTether() == braille.handler.TETHER_REVIEW))):
-		speechMode = speech.speechMode
-		speech.speechMode = 0
-		nb = braille.handler._cursorPos-gesture.routingIndex
-		i = 0
-		key = "leftarrow" if nb > 0 else "rightarrow"
-		while i < abs(nb):
-			keyboardHandler.KeyboardInputGesture.fromName(key).send()
-			i += 1
-		speech.speechMode = speechMode
-		speech.speakSpelling(getCurrentChar())
-		return
-	try: braille.handler.routeTo(gesture.routingIndex)
-	except LookupError: pass
+def say_character_under_braille_routing_cursor(gesture):
 	if not braille.handler._auto_scroll and scriptHandler.getLastScriptRepeatCount() == 0 and config.conf["brailleExtender"]["speakRoutingTo"]:
 		region = braille.handler.buffer
 		if region.cursorPos is None: return
@@ -107,6 +86,54 @@ def script_braille_routeTo(self, gesture):
 			if ch:
 				speech.speakMessage(getSpeechSymbols(ch))
 		except IndexError: pass
+
+
+def script_braille_routeTo(self, gesture):
+	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether() == "speech":
+		return speechhistorymode.showSpeechFromRoutingIndex(gesture.routingIndex)
+	if braille.handler._auto_scroll and braille.handler.buffer is braille.handler.mainBuffer:
+		braille.handler.toggle_auto_scroll()
+	obj = api.getNavigatorObject()
+	if (config.conf["brailleExtender"]["routingCursorsEditFields"] in [RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT] and
+		braille.handler.buffer is braille.handler.mainBuffer and
+		braille.handler.mainBuffer.cursorPos is not None and
+		obj.hasFocus and
+		obj.role in [get_control_type("ROLE_TERMINAL"), get_control_type("ROLE_EDITABLETEXT")]
+	):
+		play_beeps = config.conf["brailleExtender"]["routingCursorsEditFields"] == RC_EMULATE_ARROWS_BEEP
+		nb = 0
+		key = "rightarrow"
+		region = braille.handler.mainBuffer
+		cur_pos = region.brailleToRawPos[region.cursorPos]
+		size = region.brailleToRawPos[-1]
+		try:
+			new_pos = region.brailleToRawPos[braille.handler.buffer.windowStartPos + gesture.routingIndex]
+		except IndexError:
+			new_pos = size
+		log.debug(f"Moving from position {cur_pos} to position {new_pos}")
+		if play_beeps: tones.beep(100, 100)
+		if new_pos == 0:
+			keyboardHandler.KeyboardInputGesture.fromName("home").send()
+		elif new_pos >= size:
+			keyboardHandler.KeyboardInputGesture.fromName("end").send()
+		else:
+			if cur_pos > new_pos:
+				key = "leftarrow"
+				nb = cur_pos - new_pos
+			else:
+				nb = new_pos - cur_pos
+			i = 0
+			gestureKB = keyboardHandler.KeyboardInputGesture.fromName(key)
+			while i < nb:
+				gestureKB.send()
+				i += 1
+		if play_beeps: tones.beep(150, 100)
+		say_character_under_braille_routing_cursor(gesture)
+		return
+	try: braille.handler.routeTo(gesture.routingIndex)
+	except LookupError: pass
+	say_character_under_braille_routing_cursor(gesture)
+
 
 # braille.Region.update()
 def update(self):
@@ -127,7 +154,10 @@ def update(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour:
+	if (self.parseUndefinedChars
+		and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour
+		and len(self.rawText) <= config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"]
+	):
 		undefinedchars.undefinedCharProcess(self)
 	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != addoncfg.CHOICE_none:
 		d = {
@@ -137,7 +167,7 @@ def update(self):
 		}
 		if config.conf["brailleExtender"]["attributes"]["selectedElement"] in d:
 			addDots = d[config.conf["brailleExtender"]["attributes"]["selectedElement"]]
-			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and controlTypes.STATE_SELECTED in self.obj.states:
+			if hasattr(self, "obj") and self.obj and hasattr(self.obj, "states") and self.obj.states and self.obj.name and get_control_type("STATE_SELECTED") in self.obj.states:
 				name = self.obj.name
 				if name in self.rawText:
 					start = self.rawText.index(name)
@@ -396,7 +426,7 @@ def input_(self, dots):
 				else: self._reportUntranslated(pos)
 			elif abreviations:
 				if len(abreviations) == 1:
-					res = abreviations[0].replaceBy
+					res = abreviations[0].replacement
 					sendChar(res)
 				else: return self._reportUntranslated(pos)
 			else:
@@ -418,7 +448,7 @@ def input_(self, dots):
 		if self._translate(endWord):
 			if not endWord:
 				self.cellsWithText.add(pos)
-		elif self.bufferText and not self.useContractedForCurrentFocus:
+		elif self.bufferText and not self.useContractedForCurrentFocus and self._table.contracted:
 			# Translators: Reported when translation didn't succeed due to unsupported input.
 			speech.speakMessage(_("Unsupported input"))
 			self.flushBuffer()

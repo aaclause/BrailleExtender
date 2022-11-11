@@ -5,597 +5,623 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: BrailleExtender 20.11.01:7dbcfed\n"
+"Project-Id-Version: BrailleExtender 22.08.06:ce4069f\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2022-03-07 20:30+0100\n"
-"PO-Revision-Date: 2022-03-27 04:08+0800\n"
-"Last-Translator: 蔡宗豪 <surfer0627@gmail.com>\n"
-"Language-Team: NVDA-Taiwan Volunteers Team\n"
-"Language: zh_TW\n"
+"POT-Creation-Date: 2022-08-06 18:29+0200\n"
+"PO-Revision-Date: 2022-08-29 14:53+0300\n"
+"Last-Translator: Ukrainian NVDA Community <vp88.mobile@gmail.com>\n"
+"Language-Team: \n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.0.1\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:57
 msgid "Default"
-msgstr "預設"
+msgstr "Початково"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:58
 msgid "Moving in the text"
-msgstr "在文字間移動"
+msgstr "Переміщення в тексті"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:59
 msgid "Text selection"
-msgstr "文字選取"
+msgstr "Виділення тексту"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:60
 msgid "Objects"
-msgstr "物件"
+msgstr "Об'єкти"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:61
 msgid "Review"
-msgstr "檢閱"
+msgstr "Перегляд"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:62
 msgid "Links"
-msgstr "連結"
+msgstr "Посилання"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:63
 msgid "Unvisited links"
-msgstr "未到訪過的連結"
+msgstr "Невідвідані посилання"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:64
 msgid "Visited links"
-msgstr "到訪過的連結"
+msgstr "Відвідані посилання"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:65
 #: addon/globalPlugins/brailleExtender/rolelabels.py:37
 msgid "Landmarks"
-msgstr "地標"
+msgstr "Орієнтири"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:66
 msgid "Headings"
-msgstr "標題"
+msgstr "Заголовки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:67
 msgid "Level 1 headings"
-msgstr "一級標題"
+msgstr "Заголовки рівня 1"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:68
 msgid "Level 2 headings"
-msgstr "二級標題"
+msgstr "Заголовки рівня 2"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:69
 msgid "Level 3 headings"
-msgstr "三級標題"
+msgstr "Заголовки рівня 3"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:70
 msgid "Level 4 headings"
-msgstr "四級標題"
+msgstr "Заголовки рівня 4"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:71
 msgid "Level 5 headings"
-msgstr "五級標題"
+msgstr "Заголовки рівня 5"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:72
 msgid "Level 6 headings"
-msgstr "六級標題"
+msgstr "Заголовки рівня 6"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:73
 msgid "Lists"
-msgstr "清單"
+msgstr "Списки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:74
 msgid "List items"
-msgstr "清單項目"
+msgstr "Елементи списку"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:75
 msgid "Graphics"
-msgstr "圖片"
+msgstr "Графіка"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:76
 msgid "Block quotes"
-msgstr "引述"
+msgstr "Цитати"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:77
 msgid "Buttons"
-msgstr "按鈕"
+msgstr "Кнопки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:78
 msgid "Form fields"
-msgstr "表單欄位"
+msgstr "Поля форми"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:79
 msgid "Edit fields"
-msgstr "編輯區"
+msgstr "Поля редагування"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:80
 msgid "Radio buttons"
-msgstr "單選鈕"
+msgstr "Радіокнопки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:81
 msgid "Combo boxes"
-msgstr "下拉式方塊"
+msgstr "Комбіновані списки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:82
 msgid "Check boxes"
-msgstr "核取方塊"
+msgstr "Прапорці"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:83
 msgid "Non-link blocks"
-msgstr "非連結區"
+msgstr "Блоки без посилань"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:84
 msgid "Frames"
-msgstr "頁框"
+msgstr "Фрейми"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:85
 msgid "Separators"
-msgstr "分隔線"
+msgstr "Роздільники"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:86
 msgid "Embedded objects"
-msgstr "嵌入式物件"
+msgstr "Вбудовані об'єкти"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:87
 msgid "Annotations"
-msgstr "標記"
+msgstr "Примітки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:88
 msgid "Spelling errors"
-msgstr "拼錯字"
+msgstr "Орфографічні помилки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:89
 msgid "Tables"
-msgstr "表格"
+msgstr "Таблиці"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:90
 msgid "Move in table"
-msgstr "在表格內移動(&M)"
+msgstr "Переміщення в таблиці"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:96
 msgid "If pressed twice, presents the information in browse mode"
-msgstr "連按兩次，在瀏覽模式顯示資訊"
+msgstr "Якщо натиснуто двічі, надає інформацію в режимі огляду"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:253
 msgid "Docu&mentation"
-msgstr "說明(&M)"
+msgstr "Доку&ментація"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:253
 msgid "Opens the addon's documentation."
-msgstr "開啟附加元件說明"
+msgstr "Відкриває документацію додатка."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:259
 msgid "&Settings..."
-msgstr "設定(&S)..."
+msgstr "&Налаштування..."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:259
 msgid "Opens the addons' settings."
-msgstr "開啟附加元件設定"
+msgstr "Відкриває налаштування додатка."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:266
 msgid "Table &dictionaries"
-msgstr "點字字典(&D)"
+msgstr "Словники &таблиць"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:266
 msgid "'Braille dictionaries' menu"
-msgstr "點字字典 功能表"
+msgstr "Меню брайлівських словників"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:267
 msgid "&Global dictionary"
-msgstr "通用字典(&G)"
+msgstr "&Глобальний словник"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:267
 msgid ""
 "A dialog where you can set global dictionary by adding dictionary entries to "
 "the list."
-msgstr "設定通用字典對話方塊，可以新增字典條目到此清單"
+msgstr ""
+"Діалог, у якому ви можете налаштувати глобальний словник, додаючи до списку "
+"словникові статті."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:269
 msgid "&Table dictionary"
-msgstr "點字字典(&T)"
+msgstr "&Словник таблиці"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:269
 msgid ""
 "A dialog where you can set table-specific dictionary by adding dictionary "
 "entries to the list."
-msgstr "設定個別字典對話方塊，可以新增字典條目到此清單"
+msgstr ""
+"Діалог, у якому ви можете налаштувати словник для конкретної таблиці, "
+"додаючи до списку словникові статті."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:271
 msgid "Te&mporary dictionary"
-msgstr "暫存點字字典(&M)"
+msgstr "Т&имчасовий словник"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:271
 msgid ""
 "A dialog where you can set temporary dictionary by adding dictionary entries "
 "to the list."
-msgstr "設定臨時字典對話方塊，可以新增字典條目到此清單"
+msgstr ""
+"Діалог, у якому ви можете налаштувати тимчасовий словник, додаючи до списку "
+"словникові статті."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:274
 msgid "Advanced &input mode dictionary..."
-msgstr "進階輸入模式字典(&I)..."
+msgstr "&Словник розширеного режиму введення..."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:274
 msgid "Advanced input mode configuration"
-msgstr "進階輸入模式設定"
+msgstr "Налаштування розширеного брайлівського введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:280
 msgid "&Quick launches"
-msgstr "快速啟動(&Q)"
+msgstr "&Швидкий запуск"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:280
 msgid "Quick launches configuration"
-msgstr "快速啟動設定"
+msgstr "Налаштування швидкого запуску"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:286
 msgid "Braille input table &overview"
-msgstr "點字輸入表概覽(&O)"
+msgstr "&Огляд брайлівської таблиці введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:286
 msgid "Overview of the current input braille table"
-msgstr "目前輸入點字表概覽"
+msgstr "Огляд поточної брайлівської таблиці введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:288
 msgid "&Reload add-on"
-msgstr "重新載入附加元建(&R)"
+msgstr "&Перезавантажити додаток"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:288
 msgid "Reload this add-on."
-msgstr "重新載入此附加元建"
+msgstr "Перезавантажити цей додаток."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:290
 msgid "Check for &update..."
-msgstr "檢查更新(&U)..."
+msgstr "Перевірити &оновлення..."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:290
 msgid "Checks if Braille Extender update is available"
-msgstr "檢查 Braille Extender 是否有更新"
+msgstr "Перевірити, якщо доступне оновлення Розширювача брайля"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:292
 msgid "&Website"
-msgstr "網站(&W)"
+msgstr "&Сайт"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:292
 msgid "Open addon's website."
-msgstr "開啟附加元件網站"
+msgstr "Відкрити сайт додатка."
 
 #: addon/globalPlugins/brailleExtender/__init__.py:294
 msgid "Get the latest template &translation file (.pot)"
-msgstr "取得最新翻譯 .pot 檔案(&T)"
+msgstr "Отримати найновіший шаблон &файлу перекладу (.pot)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:294
 msgid ""
 "Opens the URL to download the latest Portable Object Template file of the "
 "add-on"
-msgstr "開啟 URL 以下載最新翻譯用可攜式檔案。"
+msgstr ""
+"Відкриває посилання для завантаження найновішого файлу шаблону перекладу "
+"додатка"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:296
 msgid "&Braille Extender"
-msgstr "Braille Extender(&B)"
+msgstr "&Розширювач брайля"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:309
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
 msgid "Global dictionary"
-msgstr "通用點字字典"
+msgstr "Глобальний словник"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:314
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
 msgid "Table dictionary ({})"
-msgstr "個別字典 ({})"
+msgstr "Словник таблиці ({})"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:318
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:342
 msgid "Temporary dictionary"
-msgstr "暫存字典"
+msgstr "Тимчасовий словник"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:417
 msgid "Switches to the previous rotor setting"
-msgstr "切換到上一個轉輪設定"
+msgstr "Переходить до попереднього налаштування ротора"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:424
 msgid "Switches to the next rotor setting"
-msgstr "切換到下一個轉輪設定"
+msgstr "Переходить до наступного налаштування ротора"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:430
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 msgid "Character"
-msgstr "字元"
+msgstr "Символ"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:431
 msgid "Word"
-msgstr "字詞"
+msgstr "Слово"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:432
 msgid "Line"
-msgstr "每行"
+msgstr "Рядок"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:433
 msgid "Paragraph"
-msgstr "段落"
+msgstr "Абзац"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:434
 msgid "Page"
-msgstr "頁"
+msgstr "Сторінка"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:435
 msgid "Document"
-msgstr "文件"
+msgstr "Документ"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:461
 msgid "Not available here"
-msgstr "在此不可用"
+msgstr "Тут недоступно"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:479
 #: addon/globalPlugins/brailleExtender/__init__.py:500
 msgid "Not supported here or not in browse mode"
-msgstr "此處不支援或不再瀏覽模式中"
+msgstr "Тут не підтримується або не в режимі огляду"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:481
 #: addon/globalPlugins/brailleExtender/__init__.py:516
 msgid "Moves to the next item based on rotor setting"
-msgstr "依轉輪設定移到後一個項目"
+msgstr "Переходить до наступного елемента, базованого на налаштуванні ротора"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:502
 #: addon/globalPlugins/brailleExtender/__init__.py:530
 msgid "Moves to the previous item based on rotor setting"
-msgstr "依轉輪設定移到前一個項目"
+msgstr "Переходить до попереднього елемента, базованого на налаштуванні ротора"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:536
 msgid ""
 "Selects the item under the braille cursor e.g. doing default action if "
 "moving by objects"
-msgstr "選擇點字游標下的項目，例如如果按物件移動，則執行預設操作"
+msgstr ""
+"Вибирає елемент під брайлівським курсором, наприклад, виконує стандартну дію "
+"при переміщенні по об'єктах"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:541
 msgid "Braille keyboard locked"
-msgstr "點字鍵盤鎖定"
+msgstr "Брайлівську клавіатуру заблоковано"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:543
 msgid "Braille keyboard unlocked"
-msgstr "點字鍵盤解鎖"
+msgstr "Брайлівську клавіатуру розблоковано"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:544
 msgid "Toggle braille keyboard lock"
-msgstr "點字鍵盤鎖定開關"
+msgstr "Перемикає блокування брайлівської клавіатури"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:549
 msgid "One-handed mode enabled"
-msgstr "啟用單手模式"
+msgstr "Режим однієї руки увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:551
 msgid "One handed mode disabled"
-msgstr "停用單手模式"
+msgstr "Режим однієї руки вимкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:552
 msgid "Toggle one-handed mode"
-msgstr "單手模式開關"
+msgstr "Перемикає режим однієї руки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:557
 msgid "Dots 7 and 8 disabled"
-msgstr "停用七、八點"
+msgstr "Крапки 7 і 8 вимкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:559
 msgid "Dots 7 and 8 enabled"
-msgstr "啟用七、八點"
+msgstr "Крапки 7 і 8 увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:561
 msgid "Toggle showing or hiding dots 7 and 8"
-msgstr "切換顯示或隱藏七、八點"
+msgstr "Перемикає показ або приховування крапок 7 і 8"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:567
 msgid "BRF mode enabled"
-msgstr "啟用 BRF 模式"
+msgstr "Режим BRF увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:569
 msgid "BRF mode disabled"
-msgstr "停用 BRF 模式"
+msgstr "Режим BRF вимкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:570
 msgid "Toggle BRF mode"
-msgstr "BRF 模式開關"
+msgstr "Перемикає режим BRF"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:575
 msgid "Modifier keys locked"
-msgstr "組合鍵已鎖定"
+msgstr "Клавіші-модифікатори заблоковано"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:577
 msgid "Modifier keys unlocked"
-msgstr "組合鍵已解鎖"
+msgstr "Клавіші-модифікатори розблоковано"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:578
 msgid "Toggle locking modifier keys when using braille input"
-msgstr "使用點字輸入時切換鎖定組合鍵"
+msgstr ""
+"Перемикає блокування клавіш-модифікаторів при використанні брайлівського "
+"введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:587
 msgid "Toggle font attributes report"
-msgstr "顯示字型屬性開關"
+msgstr "Перемикає повідомлення про атрибути шрифту"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:597
 msgid ""
 "Toggle between say current line while scrolling options between none, focus "
 "mode, review mode, or both"
 msgstr ""
-"在捲動選項中設定朗讀本行內容開關，選項包括無、焦點模式、檢閱模式或兩者皆是"
+"Перемкнути параметр промовляння поточного рядка під час прокрутки між \"немає"
+"\", \"режимом фокуса\", \"режимом перегляду\" чи одночасно"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:602
 msgid "Speech off"
-msgstr "語音關"
+msgstr "Мовлення вимкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:605
 msgid "Speech on"
-msgstr "語音開"
+msgstr "Мовлення увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:606
 msgid "Toggle speech on or off"
-msgstr "切換語音的開或關"
+msgstr "Перемикає мовлення між \"увімкнено\" і \"вимкнено\""
 
 #: addon/globalPlugins/brailleExtender/__init__.py:614
 msgid "No extra info for this element"
-msgstr "沒有此元素的額外資訊"
+msgstr "Для цього елемента немає додаткової інформації"
 
 #. Translators: Input help mode message for report extra infos command.
 #: addon/globalPlugins/brailleExtender/__init__.py:618
 msgid ""
 "Reports some extra infos for the current element. For example, the URL on a "
 "link"
-msgstr "顯示目前元素的額外資訊，例如連結的 URL"
+msgstr ""
+"Повідомляє деяку додаткову інформацію для поточного елемента. Наприклад, URL "
+"на посиланні"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:623
 msgid " Input table"
-msgstr "輸入轉譯表"
+msgstr " Таблиця введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:623
 msgid "Output table"
-msgstr "輸出轉譯表"
+msgstr "Таблиця виведення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:625
 #, python-format
 msgid "Table overview (%s)"
-msgstr "轉譯表概覽 (%s)"
+msgstr "Огляд таблиці (%s)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:626
 msgid ""
 "Shows an overview of current input braille table in a browseable message"
-msgstr "在瀏覽模式訊息中顯示目前的輸入點字表概覽"
+msgstr ""
+"Показує огляд поточної таблиці виведення у повідомленні, доступному для "
+"перегляду"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:631
 #: addon/globalPlugins/brailleExtender/__init__.py:639
 #: addon/globalPlugins/brailleExtender/__init__.py:646
 msgid "No text selection"
-msgstr "沒有選取文字"
+msgstr "Немає виділення тексту"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:632
 msgid "Unicode Braille conversion"
-msgstr "Unicode 點字轉換"
+msgstr "Перетворення в Unicode Braille"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:633
 msgid ""
 "Convert the text selection in unicode braille and display it in a browseable "
 "message"
-msgstr "將所選文字轉換為 Unicode 點字並顯示在瀏覽模式訊息中"
+msgstr ""
+"Перетворити виділений текст в unicode braille і показати його в "
+"повідомленні, доступному для перегляду"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:640
 msgid "Braille Unicode to cell descriptions"
-msgstr "Unicode 點字轉換為點位描述"
+msgstr "Braille Unicode для опису комірок"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:641
 msgid ""
 "Convert text selection in braille cell descriptions and display it in a "
 "browseable message"
-msgstr "將所選文字轉換為點字點位並顯示在瀏覽模式訊息中"
+msgstr ""
+"Перетворити виділений текст в описі брайлівських комірок і показати його в "
+"повідомленні, доступному для перегляду"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:648
 msgid "Cell descriptions to braille Unicode"
-msgstr "點位描述轉換為 Unicode 點字"
+msgstr "Опис брайлівських комірок у braille Unicode"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:649
 msgid ""
 "Braille cell description to Unicode Braille. E.g.: in a edit field type "
 "'125-24-0-1-123-123'. Then select this text and execute this command"
 msgstr ""
-"將所選典位轉換為 Unicode 點字。例如:在編輯區輸入「 125-24-0-1-123-123」，然後"
-"選取此文字並執行此命令"
+"Опис брайлівської комірки в Unicode Braille. Наприклад, у полі редагування "
+"введіть '125-24-0-1-123-123'. Потім виділіть цей текст і виконайте цю команду"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:657
 msgid "Toggle advanced input mode"
-msgstr "進階輸入模式開關"
+msgstr "Перемкнути режим розширеного введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:662
 msgid "Describe undefined characters enabled"
-msgstr "啟用描述未定義自原"
+msgstr "Опис невизначених символів увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:664
 msgid "Describe undefined characters disabled"
-msgstr "停用描述未定義自原"
+msgstr "Опис невизначених символів вимкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:666
 msgid "Toggle description of undefined characters"
-msgstr "描述未定義自原開關"
+msgstr "Перемикає опис невизначених символів"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:674
 msgid "No text"
-msgstr "没有文字"
+msgstr "Немає тексту"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:675
 msgid "Reports the cursor position of text under the braille cursor"
-msgstr "讀出點字游標下文字的游標位置"
+msgstr "Повідомляє позицію курсора в тексті під брайлівським курсором"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:700
 msgid "Shows hour and date changes automatically on a braille display"
-msgstr "在點顯器上自動顯示日期和時間改變"
+msgstr "Показує автоматичну зміну часу й дати на брайлівському дисплеї"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:709
 msgid "Toggle automatic braille scroll"
-msgstr "自動點字捲動開關"
+msgstr "Перемкнути автопрокрутку брайлівського дисплея"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:714
 msgid "Increases the master volume"
-msgstr "增加主音量"
+msgstr "Збільшує системну гучність"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:719
 msgid "Decreases the master volume"
-msgstr "降低主音量"
+msgstr "Збільшує основну гучність"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:724
 msgid "Toggle sound mute"
-msgstr "靜音開關"
+msgstr "Перемикає вимкнення звуку"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:735
 msgid "Shows the Braille Extender documentation"
-msgstr "顯示 Braille Extender 說明"
+msgstr "Показує документацію Розширювача брайля"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:773
 msgid "No such file or directory"
-msgstr "無此檔案或目錄"
+msgstr "Немає такого файлу або папки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:775
 msgid ""
 "Opens a custom program/file. Go to Braille Extender settings to define them"
-msgstr "打開自定程式/檔案。請到 Braille Extender 設定去定義"
+msgstr ""
+"Відкриває призначену користувачем програму чи файл. Увійдіть до налаштувань "
+"Розширювача брайля для її призначення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:781
 msgid "Checks for Braille Extender updates"
-msgstr "檢查 Braille Extender 更新"
+msgstr "Перевірити оновлення для Розширювача брайля"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:787
 msgid "Increase braille autoscroll delay"
-msgstr "增加自動捲動延遲時間"
+msgstr "Збільшити затримку автопрокрутки брайлівського дисплея"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:793
 msgid "Decrease braille autoscroll delay"
-msgstr "減少自動捲動延遲時間"
+msgstr "Зменшити затримку автопрокрутки брайлівського дисплея"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:797
 #: addon/globalPlugins/brailleExtender/__init__.py:812
 msgid "NVDA 2017.3 or later is required to use this feature"
-msgstr "使用此功能，需要 NVDA 2017.3 或更高版本"
+msgstr "Для використання цієї функції потрібна NVDA 2017.3 або пізніша"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:799
 #: addon/globalPlugins/brailleExtender/__init__.py:814
 msgid ""
 "You must choose at least two tables for this feature. Please fill in the "
 "settings"
-msgstr "您必須為此功能選擇至少兩個點字表。請調整設定"
+msgstr ""
+"Для цієї функції ви повинні обрати щонайменше дві таблиці. Будь ласка, "
+"зробіть це в налаштуваннях"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:806
 #, python-format
 msgid "Input: %s"
-msgstr "輸入: %s"
+msgstr "Введення: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:808
 msgid "Switches between configured braille input tables"
-msgstr "在設定的點字輸入表之間切換"
+msgstr "Перемикає між налаштованими брайлівськими таблицями введення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:823
 #, python-format
 msgid "Output: %s"
-msgstr "輸出: %s"
+msgstr "Виведення: %s"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:825
 msgid "Switches between configured braille output tables"
-msgstr "在設定的點字輸出表之間切換"
+msgstr "Перемикає між налаштованими брайлівськими таблицями виведення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:831
 #, python-brace-format
@@ -605,7 +631,7 @@ msgstr "I⣿O:{I}"
 #: addon/globalPlugins/brailleExtender/__init__.py:832
 #, python-brace-format
 msgid "Input and output: {I}."
-msgstr "輸入與輸出: {I}."
+msgstr "Введення і виведення: {I}"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:834
 #, python-brace-format
@@ -615,51 +641,55 @@ msgstr "I:{I} ⣿ O: {O}"
 #: addon/globalPlugins/brailleExtender/__init__.py:835
 #, python-brace-format
 msgid "Input: {I}; Output: {O}"
-msgstr "輸入: {I};輸出: {O}"
+msgstr "Введення: {I}; виведення: {O}"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:837
 msgid "Reports the current braille input and output tables"
-msgstr "讀出目前的輸入與輸出轉譯表"
+msgstr "Повідомляє поточні брайлівські таблиці введення й виведення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:841
 msgid ""
 "Reports the Unicode value of the character where the cursor is located and "
 "the decimal, binary and octal values"
-msgstr "讀出游標所在自原的Unicode值以及十進位值，二進位值和八進位值"
+msgstr ""
+"Повідомляє юнікодне значення символу, на якому розташований курсор, а також "
+"його десяткове, двійкове й вісімкове значення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:847
 msgid ""
 "Shows the output speech for selected text in braille, useful for emojis for "
 "example"
-msgstr "以點字顯示選定文字的輸出語音，例如對於表情符號很有用"
+msgstr ""
+"Показує вимовлений вибраний текст брайлем, корисно, наприклад, для емодзі"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:851
 msgid "No shortcut performed from a braille display"
-msgstr "點顯器不執行快速鍵"
+msgstr "Немає комбінацій для виконання на брайлівському дисплеї"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:855
 msgid "Repeats the last shortcut performed from a braille display"
-msgstr "重複從點顯器執行的最後一個快速鍵"
+msgstr "Повторює останню комбінацію, виконану на брайлівському дисплеї"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:869
 msgid "Braille Extender reloaded"
-msgstr "已重新載入 Braille Extender"
+msgstr "Розширювач брайля перезавантажено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:886
 msgid "Reloads Braille Extender"
-msgstr "重新載入 Braille Extender"
+msgstr "Перезавантажує Розширювач брайля"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:889
 msgid "Reloads the primary braille display defined in settings"
-msgstr "重新載入主要點顯器"
+msgstr "Перезавантажує основний брайлівський дисплей, вказаний у налаштуваннях"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:892
 msgid "Reloads the secondary braille display defined in settings"
-msgstr "重新載入第二台點顯器"
+msgstr ""
+"Перезавантажує другорядний брайлівський дисплей, вказаний у налаштуваннях"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:898
 msgid "No braille display specified. No reload to do"
-msgstr "沒有指定點顯器，無從重新載入"
+msgstr "Брайлівський дисплей не вказано. Перезавантажувати не потрібно"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:923
 msgid "WIN"
@@ -667,7 +697,7 @@ msgstr "WIN"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:924
 msgid "CTRL"
-msgstr "control"
+msgstr "CTRL"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:925
 msgid "SHIFT"
@@ -675,62 +705,64 @@ msgstr "shift"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:926
 msgid "ALT"
-msgstr "alt"
+msgstr "ALT"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1028
 msgid "Keyboard shortcut cancelled"
-msgstr "鍵盤快速鍵已取消"
+msgstr "Конфігурації клавіатури скасовано"
 
 #. /* docstrings for modifier keys */
 #: addon/globalPlugins/brailleExtender/__init__.py:1036
 msgid "Emulate pressing down "
-msgstr "模擬按下"
+msgstr "Емулювати натискання стрілки вниз "
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1037
 msgid " on the system keyboard"
-msgstr "在系統鍵盤上"
+msgstr " на системній клавіатурі"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1093
 msgid "Current braille view saved"
-msgstr "點字檢視已儲存"
+msgstr "Поточний брайлівський перегляд збережено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1096
 msgid "Buffer cleaned"
-msgstr "緩衝以清除"
+msgstr "Буфер очищено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1097
 msgid "Saves the current braille view. Press twice quickly to clean the buffer"
-msgstr "儲存目前的點字檢視。快速按兩次以清除緩衝"
+msgstr ""
+"Зберігає поточний брайлівський перегляд. Швидко натисніть двічі для очищення "
+"буфера"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1102
 msgid "View saved"
-msgstr "已儲存檢視"
+msgstr "Переглянути збережене"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1103
 msgid "Buffer empty"
-msgstr "緩衝區為空"
+msgstr "Буфер порожній"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1104
 msgid "Shows the saved braille view through a flash message"
-msgstr "透過閃現訊息顯示儲存的點字檢視"
+msgstr "Показує збережений брайлівський вигляд як миттєве повідомлення"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1138
 msgid "Pause"
-msgstr "暫停"
+msgstr "Пауза"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1138
 msgid "Resume"
-msgstr "繼續"
+msgstr "Відновити"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1180
 #: addon/globalPlugins/brailleExtender/__init__.py:1187
 #, python-format
 msgid "Auto test type %d"
-msgstr "自動測試類型 %d"
+msgstr "Тип тестування автопрокрутки %d"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1197
 msgid "Auto test stopped"
-msgstr "自動測試停止"
+msgstr "Тестування автопрокрутки зупинено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1207
 msgid ""
@@ -738,49 +770,51 @@ msgid ""
 "left and right arrow keys to change test type. Use space key to pause or "
 "resume the test. Use escape key to quit"
 msgstr ""
-"自動測試開始。使用上下方向鍵更改速度。使用左右方向鍵更改測試類型。使用空格鍵"
-"暫停或繼續測試。使用 ESC 鍵退出"
+"Тестування автопрокрутки розпочато. Використовуйте стрілки вгору і вниз  для "
+"зміни швидкості. Використовуйте стрілки вліво і вправо для зміни типу "
+"тестування. Використовуйте пробіл для паузи чи відновлення тестування. "
+"Використовуйте escape для виходу"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1209
 msgid "Auto test"
-msgstr "自動測試"
+msgstr "Тестування автопрокрутки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1214
 msgid "Add dictionary entry or see a dictionary"
-msgstr "新增字典條目或查看字典"
+msgstr "Додати словникову статтю або переглянути словник"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1215
 msgid "Adds an entry in braille dictionary"
-msgstr "在點字字典新增條目"
+msgstr "Додає статтю в брайлівський словник"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1220
 msgid "Skip blank lines enabled"
-msgstr "啟用跳過空白"
+msgstr "Пропуск порожніх рядків увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1222
 msgid "Skip blank lines disabled"
-msgstr "停用跳過空白"
+msgstr "Пропуск порожніх рядків вимкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1223
 msgid "Toggle blank lines during text scrolling"
-msgstr "文字捲動時跳過空白開關"
+msgstr "Перемикає пропуск порожніх рядків під час прокрутки"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1237
 msgid "Toggle routing cursors behavior in edit fields"
-msgstr "在編輯欄位中切換游標定位鍵行為"
+msgstr "Перемикає поведінку курсорів маршрутизації в полях редагування"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1247
 #, python-format
 msgid "Speech History Mode disabled (%s)"
-msgstr "停用語音歷史模式 (%s)"
+msgstr "Режим історії мовлення вимкнено (%s)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1250
 msgid "Speech History Mode enabled"
-msgstr "啟用語音歷史模式"
+msgstr "Режим історії мовлення увімкнено"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:1252
 msgid "Toggle Speech History Mode"
-msgstr "切換語音歷史模式開關"
+msgstr "Перемикає режим історії мовлення"
 
 #. Add-on summary, usually the user visible name of the addon.
 #. Translators: Summary for this add-on to be shown on installation and add-on information.
@@ -793,142 +827,152 @@ msgstr "切換語音歷史模式開關"
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:378
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:382 buildVars.py:36
 msgid "Braille Extender"
-msgstr "Braille Extender"
+msgstr "Розширювач брайля"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:41
 #: addon/globalPlugins/brailleExtender/addoncfg.py:48
 #: addon/globalPlugins/brailleExtender/addoncfg.py:62
 #: addon/globalPlugins/brailleExtender/settings.py:317
 msgid "none"
-msgstr "無"
+msgstr "немає"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:42
 msgid "braille only"
-msgstr "只有點字"
+msgstr "лише брайль"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:43
 msgid "speech only"
-msgstr "只有語音"
+msgstr "лише мовлення"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:44
 #: addon/globalPlugins/brailleExtender/addoncfg.py:65
 msgid "both"
-msgstr "兩者皆是"
+msgstr "одночасно"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:49
 msgid "dots 7 and 8"
-msgstr "七、八點"
+msgstr "крапки 7 і 8"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:50
 msgid "dot 7"
-msgstr "第七點"
+msgstr "крапка 7"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:51
 msgid "dot 8"
-msgstr "第八點"
+msgstr "крапка 8"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:57
 msgid "stable"
-msgstr "穩定版"
+msgstr "стабільний"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:58
 msgid "development"
-msgstr "開發版"
+msgstr "розробка"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:63
 msgid "focus mode"
-msgstr "焦點模式"
+msgstr "режимі фокуса"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:64
 msgid "review mode"
-msgstr "檢閱模式"
+msgstr "режимі перегляду"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:69
 msgid "normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"
-msgstr "正常（建議在Windows控制台，IntelliJ，PyCharm...g使用）"
+msgstr ""
+"звичайна (рекомендовано за межами консолей Windows, IntelliJ, PyCharm...)"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:70
 msgid "alternative, emulate left and right arrow keys with beeps"
-msgstr "發出嗶嗶聲"
+msgstr "альтернативно, емулювати стрілки вліво і вправо з сигналами"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:71
 msgid "alternative, emulate left and right arrow keys silently"
-msgstr "無聲"
+msgstr "альтернативно, емулювати стрілки вліво і вправо без звуку"
 
 #: addon/globalPlugins/brailleExtender/addoncfg.py:98
 msgid "last known"
-msgstr "最後已知"
+msgstr "останній відомий"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:58
 msgid "Hexadecimal"
-msgstr "十六進位值"
+msgstr "Шістнадцятковий"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:59
 msgid "Decimal"
-msgstr "十進位值"
+msgstr "Десятковий"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:60
 msgid "Octal"
-msgstr "八進位值"
+msgstr "Вісімковий"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:36
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:61
 msgid "Binary"
-msgstr "二進位值"
+msgstr "Двійковий"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:48
 msgid "Show punctuation/symbol &name for undefined characters if available"
-msgstr "未定義自原，顯示其提供的標點或符號名稱(&n)"
+msgstr ""
+"Показувати ім'я &символу/знака пунктуації для невизначених символів якщо "
+"доступно"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/addondoc.py:50
 #: addon/globalPlugins/brailleExtender/speechhistorymode.py:22 buildVars.py:59
 msgid "Speech History Mode"
-msgstr "語音歷史模式"
+msgstr "Режим історії мовлення"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:52
 msgid ""
 "This mode allows to review the last announcements that have been spoken by "
 "NVDA."
-msgstr "此模式允許查看 NVDA 已朗讀的內容。"
+msgstr "Цей режим дозволяє переглянути останнє оголошення, яке промовила NVDA."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:54
 msgid ""
 "To enable this mode, you can use the appropriate toggle command or the basic "
 "gesture NVDA+Control+t."
-msgstr "要啟用此模式，您可以使用相應的切換指令或基本手勢NVDA + Control + t。"
+msgstr ""
+"Щоб увімкнути цей режим, ви можете скористатися відповідною командою "
+"перемикання або стандартним жестом NVDA+Control+t."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:56
 msgid "In this mode, you can use:"
-msgstr "在此模式，您可以使用:"
+msgstr "В цьому режимі ви можете використовувати:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:58
 msgid ""
 "the first routing cursor to copy the current announcement to the Clipboard."
-msgstr "第一個游標定位鍵，用於將目前內容複製到剪貼簿。"
+msgstr "перший  курсор маршрутизації копіює поточне оголошення в буфер обміну."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:59
 msgid ""
 "the last routing cursor to show the current announcement in a browseable "
 "message."
-msgstr "最後一個游標定位鍵，在瀏覽模式訊息中顯示目前朗讀內容"
+msgstr ""
+"останній курсор маршрутизації показує поточне оголошення в повідомленні, "
+"доступному для перегляду."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:60
 msgid "the other routing cursors to navigate through history entries."
-msgstr "其他游標定位鍵，可在歷史記錄條目中導航。"
+msgstr ""
+"інші курсори маршрутизації дозволяють переміщатися у записах в історії."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:62
 msgid ""
 "Please note that specific settings are available for this feature under the "
 "category \"Speech History Mode\"."
-msgstr "請注意，「語音歷史記錄模式」類別下有此功能的設定。"
+msgstr ""
+"Зауважте, що вказані налаштування для цієї функції доступні в категорії "
+"\"Режим історії мовлення\"."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:65
 msgid "Representation of undefined characters"
-msgstr "未定義字元的表示法"
+msgstr "Подання невизначених  символів"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:67
 msgid ""
@@ -937,18 +981,21 @@ msgid ""
 "undefined characters — settings. You can choose between the following "
 "representations:"
 msgstr ""
-"本擴充允許您在點字表中自訂如何表示一個未定義字元。要這麼做請到『未定義字元的"
-"表示法』設定。您可以選擇以下的表示法:"
+"Додаток дозволяє вам персоналізувати подання символів, яких немає у "
+"брайлівській таблиці. Щоб це зробити, перейдіть до налаштувань подання "
+"невизначених символів. Ви можете обрати між такими поданнями:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:71
 msgid ""
 "You can also combine this option with the “describe the character if "
 "possible” setting."
-msgstr "您也可以將此選項與“盡可能描述自原”設定結合。"
+msgstr ""
+"Ви також можете налаштувати цей параметр за допомогою налаштування "
+"“Описувати символи, якщо можливо”."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:73
 msgid "Notes:"
-msgstr "注意:"
+msgstr "Примітки:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:75
 #, python-brace-format
@@ -957,13 +1004,14 @@ msgid ""
 "best combination is the usage of the HUC8 representation without checking "
 "the “{contextualOption}” option."
 msgstr ""
-"在最大話空間區別未定義字元集，最佳的組合是使用 HUC8 表示法兒不何取 "
-"“{contextualOption}” 選項。"
+"Щоб відокремити невизначений набір символів при максимальному використанні "
+"простору, найкращою комбінацією є використання подання HUC8 без позначення "
+"параметра \"{contextualOption}\"."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:76
 #, python-brace-format
 msgid "To learn more about the HUC representation, see {url}"
-msgstr "要學習更多關於 HUC 表示法，請參見 {url}"
+msgstr "Щоб дізнатися більше про подання HUC, перегляньте {url}"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:77
 msgid ""
@@ -971,19 +1019,21 @@ msgid ""
 "take precedence over character descriptions, which also take precedence over "
 "the chosen representation for undefined characters."
 msgstr ""
-"記住，通用點字表和那些您的點字字典的定義優先於字元描述，也優先於所選的未定義"
-"字元表示法。"
+"Пам'ятайте, що визначення в таблицях і словниках ваших таблиць мають "
+"пріоритет над описами символів, які також мають пріоритет над вибраним "
+"поданням для невизначених символів."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:80
 msgid "Getting Current Character Info"
-msgstr "獲取目前字元訊息"
+msgstr "Отримання інформації про поточний символ"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:82
 msgid ""
 "This feature allows you to obtain various information regarding the "
 "character under the cursor using the current input braille table, such as:"
 msgstr ""
-"這個功能可以讓您利用目前的點字輸入表，獲得有關游標所指字元的各種資訊，例如:"
+"Ця функція дозволяє отримати різну інформацію про символ під курсором, "
+"використовуючи поточну брайлівську таблицю введення, наприклад:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:84
 msgid ""
@@ -991,8 +1041,9 @@ msgid ""
 "values; A description of the character if possible; the Unicode braille "
 "representation and the braille pattern dots."
 msgstr ""
-"HUC8 與 HUC6 表示法；十六進位、十進位、八進位或二進位值；可能的話一個字元描"
-"述；Unicode 點字表示法和點位圖樣。"
+"подання HUC6 і HUC8; шістнадцяткове, десяткове, вісімкове чи двійкове "
+"значення; опис символу, якщо можливо; юнікодне брайлівське подання і шаблон "
+"брайлівських крапок."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:86
 msgid ""
@@ -1000,25 +1051,28 @@ msgid ""
 "information in a flash message and a double-press displays the same "
 "information in a virtual NVDA buffer."
 msgstr ""
-"按一次與此功能榜定的按鍵，會在閃現的訊息中顯示資訊，按兩次則會在虛擬NVDA緩衝"
-"李顯示相同的資訊。"
+"Одноразове натискання  конкретного жесту, пов'язаного з цією функцією, "
+"відображає інформацію у миттєвому повідомленні, а подвійне натискання - у "
+"віртуальному буфері NVDA."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:88
 msgid ""
 "On supported displays the defined gesture is ⡉+space. No system gestures are "
 "defined by default."
-msgstr "在支援的點顯器，定義的手勢為⡉+空格。預設情況，未定義任何系統手勢。"
+msgstr ""
+"На підтримуваних дисплеях призначено жест ⡉+пробіл. Початково призначеного "
+"системного жесту немає."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:90
 #, python-brace-format
 msgid ""
 "For example, for the '{chosenChar}' character, we will get the following "
 "information:"
-msgstr "例如，對於「{chosenChar}」自原，我們將得到以下資訊:"
+msgstr "Наприклад, для символу '{chosenChar}', ви отримаєте таку інформацію:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:93
 msgid "Advanced braille input"
-msgstr "進階點字輸入"
+msgstr "Розширене брайлівське введення"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:95
 msgid ""
@@ -1030,10 +1084,14 @@ msgid ""
 "Alternatively, an option allows you to automatically exit this mode after "
 "entering a single pattern. "
 msgstr ""
-"此功能可以讓您輸入任何 HUC8 表示法或十六進位/十進位/八進位/二進位值的字元。此"
-"外它允許您開發縮寫。要使用此功能請先進入進階輸入模式然後輸入需要的點字。預設"
-"按鍵: NVDA+Windows+i 或 I+空格（在支援的點顯器）。按相同的按鍵退出此模式。另"
-"外有一個選項可讓您在輸入單方點字後自動退出此模式。"
+"Ця функція дозволяє вводити будь-який символ із його подання в HUC8 або "
+"шістнадцяткового/десяткового/ вісімкового/двійкового значення. Крім того, "
+"вона дозволяє розробляти скорочення. Щоб скористатися цією функцією, "
+"увійдіть в режим розширеного введення, а потім введіть потрібний символ. "
+"Початкові жести: NVDA+Windows+i чи ⡊+пробіл (на підтримуваних дисплеях). Для "
+"виходу з цього режиму натисніть той самий жест. Альтернативно, є параметр, "
+"який дозволяє автоматично виходити з цього режиму після введення одного "
+"шаблону. "
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:97
 msgid ""
@@ -1043,47 +1101,49 @@ msgid ""
 "entered. If you wish to enter a character from its hexadecimal, decimal, "
 "octal or binary value, do the following:"
 msgstr ""
-"如果您要以 HUC8 表示法輸入字元只要輸入 HUC8 樣式。因為一個 HUC8 序列由 3 或 "
-"4 方點字組成，所以每次輸入 3 或 4 方點字就會執行解譯。如果您想要以十六進位、"
-"十進位、八進位或二進位值來輸入字元，操作如下:"
+"Якщо ви хочете ввести символ так, як він представлений у HUC8, просто "
+"введіть шаблон HUC8. Оскільки послідовність HUC8 має міститися в 3 або 4 "
+"клітинках, інтерпретація виконуватиметься щоразу, коли вводиться комбінація "
+"з 3 або 4 крапок. Якщо ви бажаєте ввести символ із його шістнадцяткового, "
+"десяткового, вісімкового чи двійкового значення, виконайте такі дії:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:99
 #, python-brace-format
 msgid "Enter {braillePattern}"
-msgstr "輸入 {braillePattern}"
+msgstr "Enter {braillePattern}"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:100
 msgid "Specify the basis as follows"
-msgstr "指定基底如下:"
+msgstr "Вкажіть основу так"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:102
 msgid "⠭ or ⠓"
-msgstr "⠭ 或 ⠓"
+msgstr "⠭ чи ⠓"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:102
 msgid "for a hexadecimal value"
-msgstr "對於十六進位值"
+msgstr "для шістнадцяткового значення"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:103
 msgid "for a decimal value"
-msgstr "對於十進位值"
+msgstr "для десяткового значення"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:104
 msgid "for an octal value"
-msgstr "對於八進位值"
+msgstr "для вісімкового значення"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:105
 msgid "for a binary value"
-msgstr "對於二進位值"
+msgstr "для двійкового значення"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:107
 msgid ""
 "Enter the value of the character according to the previously selected basis."
-msgstr "根據上面選擇的基底輸入字元值"
+msgstr "Введіть значення символу у відповідності до раніше вибраної основи."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:108
 msgid "Press Space to validate."
-msgstr "按空格鍵進行驗證。"
+msgstr "Натисніть пробіл для перевірки."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:111
 msgid ""
@@ -1092,21 +1152,24 @@ msgid ""
 "press space to expand it. For example, you can define the following "
 "abbreviations: \"⠎⠺\" with \"sandwich\", \"⠋⠛⠋⠗\" to \"🇫🇷\"."
 msgstr ""
-"對於縮寫，您必須先將他們加入進階輸入模式字典的對話方塊中，之後您只需要輸入您"
-"的縮寫並按空白來展開。例如您可以定義以下縮寫: \\\"⠎⠺\\\" 代表 \\\"sandwich\\"
-"\", \\\"⠋⠛fr\\\" 變成 \\\"🇫 🇷 \\\".\""
+"Для скорочень, спершу ви маєте додати їх у діалозі — Словник режиму "
+"розширеного введення —. Потім ввести ваше скорочення і натиснути пробіл щоб "
+"розгорнути його. Наприклад, ви можете вказати такі скорочення: \"⠎⠺\" для "
+"\"сендвіч\", \"⠋⠛⠋⠗\" для \"🇫🇷\"."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:113
 msgid "Here are some examples of sequences to be entered for given characters:"
-msgstr "這裡是一些序列範利用來輸入給予的字元:"
+msgstr ""
+"Нижче наведено приклади послідовностей, які необхідно ввести для заданих "
+"символів:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:117
 msgid "Note: the HUC6 input is currently not supported."
-msgstr "注意:目前不支援 HUC6 輸入。"
+msgstr "Примітка: введення HUC6 наразі не підтримується."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:120
 msgid "One-hand mode"
-msgstr "單手模式"
+msgstr "Режим однієї руки"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:122
 msgid ""
@@ -1115,13 +1178,14 @@ msgid ""
 "fly using NVDA+Windows+h gesture by default (⡂+space on supported displays). "
 "Three input methods are available."
 msgstr ""
-"這個功能可以讓您用幾個步驟打出一方點字。可在附加元件的偏好設定中的一般設定李"
-"啟用，或著預設按 NVDA+Windows+h （支援的點顯器是 ⡂+空白）來隨時啟用。有三種輸"
-"入方式。"
+"Ця функція дозволяє скласти комірку кількома способами. Її можна активувати "
+"в загальних налаштуваннях додатка чи на льоту, скориставшись початково "
+"призначеним жестом NVDA+Windows+h (⡂+пробіл на підтримуваних дисплеях).. "
+"Доступні три методи введення."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:123
 msgid "Method #1: fill a cell in 2 stages on both sides"
-msgstr "方法 ＃1:兩側兩階段輸入"
+msgstr "Метод #1: заповніть комірку у два етапи з використанням обох сторін"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:125
 msgid ""
@@ -1129,30 +1193,33 @@ msgid ""
 "side is empty, type the dots correspondig to the opposite side twice, or "
 "type the dots corresponding to the non-empty side in 2 steps."
 msgstr ""
-"With this method, type the left side dots, then the right side dots. If one "
-"side is empty, type the dots correspondig to the opposite side twice, or "
-"type the dots corresponding to the non-empty side in 2 steps."
+"За допомогою цього методу введіть крапки зліва, потім крапки справа. Якщо "
+"одна сторона порожня, двічі введіть крапки, що відповідають протилежній "
+"стороні, або введіть крапки, що відповідають непорожній стороні, у 2 кроки."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:126
 #: addon/globalPlugins/brailleExtender/addondoc.py:135
 msgid "For example:"
-msgstr "例如:"
+msgstr "Наприклад:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:128
 msgid "For ⠛: press dots 1-2 then dots 4-5."
-msgstr "對於⠛:按一、二點，然後按四、五點。"
+msgstr "Для ⠛: натисніть крапки 1-2 потім крапки 4-5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:129
 msgid "For ⠃: press dots 1-2 then dots 1-2, or dot 1 then dot 2."
-msgstr "對於⠃:按一-二點，然後按一-二點，或第一點，然後按第二點。"
+msgstr ""
+"Для ⠃: натисніть крапки 1-2 потім крапки 1-2, або крапку 1, потім крапку 2."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:130
 msgid "For ⠘: press 4-5 then 4-5, or dot 4 then dot 5."
-msgstr "對於⠘:按四-五點，然後按四-五點，或者先按第四點，再按第五點。"
+msgstr "Для ⠘: натисніть 4-5 потім 4-5, або крапку 4 потім крапку 5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:132
 msgid "Method #2: fill a cell in two stages on one side (Space = empty side)"
-msgstr "方法 ＃2:一側兩階段輸入（空格表示空側）"
+msgstr ""
+"Метод #2: заповніть комірку у два етапи з використанням однієї сторони "
+"(пробіл = порожня сторона)"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:134
 msgid ""
@@ -1161,27 +1228,33 @@ msgid ""
 "dots 1-2-3-7 and the second one 4-5-6-8. If one side is empty, press space. "
 "An empty cell will be obtained by pressing the space key twice."
 msgstr ""
-"使用此方法，無論選擇哪種點字鍵盤，都可以用單手打出一方點字。第一步允許您輸入"
-"一、二、三、七點，第二步輸入四、五、六、八點。如果一側為空，請按空格鍵。按下"
-"空格鍵兩次將輸入一個空格。"
+"Використовуючи цей метод, ви можете скласти комірку однією рукою, незалежно "
+"від того, яку сторону брайлівської клавіатури ви виберете. Перший крок "
+"дозволяє ввести крапки 1-2-3-7, а другий - 4-5-6-8. Якщо одна сторона "
+"порожня, натисніть пробіл. Порожню комірку можна отримати, якщо двічі "
+"натиснути пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:137
 msgid "For ⠛: press dots 1-2 then dots 1-2, or dots 4-5 then dots 4-5."
-msgstr "對於⠛:按一-二點，然後按一-二點，或按四-五點，再按四-五點。"
+msgstr ""
+"Для ⠛: натисніть крапки 1-2 потім крапки 1-2, або крапки 4-5 потім крапки "
+"4-5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:138
 msgid "For ⠃: press dots 1-2 then space, or 4-5 then space."
-msgstr "對於⠃:按一-二點，然後按空格，或按四-五點，然後按空格。"
+msgstr "Для ⠃: натисніть крапки 1-2 потім пробіл, або 4-5 потім пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:139
 msgid "For ⠘: press space then 1-2, or space then dots 4-5."
-msgstr "對於⠘:先按空格再按一-二點，或先按空格再按四-五點。"
+msgstr "Для ⠘: натисніть пробіл потім 1-2, або пробіл потім крапки 4-5."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:141
 msgid ""
 "Method #3: fill a cell dots by dots (each dot is a toggle, press Space to "
 "validate the character)"
-msgstr "方法3:一點一點輸入（按空格鍵以驗證字元）"
+msgstr ""
+"Метод #3: заповніть комірку крапка за крапкою (кожна крапка є перемикачем, "
+"натисніть пробіл, щоб перевірити символ)"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:143
 msgid ""
@@ -1190,223 +1263,236 @@ msgid ""
 "the more dots are contained in the cell, the more ways you have to enter the "
 "character."
 msgstr ""
-"在此模式下，輸入一方的每個點。\n"
-"只有在輸入一方或輸入一個字元後，才須按空格鍵。因此，一方中包含的點越多，輸入"
-"字元的方式就越多。"
+"У цьому режимі кожна крапка є перемикачем. Ви повинні натиснути клавішу "
+"пробілу, як тільки комірка, яку ви ввели, стане потрібною для введення "
+"символу. Таким чином, чим більше крапок міститься в комірці, тим більше "
+"способів у вас буде ввести символ."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:144
 msgid "For example, for ⠛, you can compose the cell in the following ways"
-msgstr "例如，對於⠛，您可以通過以下方式組成一方"
+msgstr "Наприклад, для ⠛ ви можете скласти комірку нижченаведеними способами"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:146
 msgid "Dots 1-2, then dots 4-5, then space."
-msgstr "一-二點，然後四-五點，然後空格。"
+msgstr "Крапки 1-2, потім крапки 4-5, потім пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:147
 msgid "Dots 1-2-3, then dot 3 (to correct), then dots 4-5, then space."
-msgstr "一-二-三點，地三點（校正），四-五點，然後空格。"
+msgstr ""
+"Крапки 1-2-3, потім крапка 3 (для коректування), потім крапки 4-5, потім "
+"пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:148
 msgid "Dot 1, then dots 2-4-5, then space."
-msgstr "第一點，然後二-四-五點，然後空格。"
+msgstr "Крапка 1, потім крапки 2-4-5, потім пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:149
 msgid "Dots 1-2-4, then dot 5, then space."
-msgstr "一-二-四點，五點，然後空格。"
+msgstr "Крапки 1-2-4, потім крапка 5, потім пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:150
 msgid "Dot 2, then dot 1, then dot 5, then dot 4, and then space."
-msgstr "第二點，然後第一點，然後第五點，再第四點，然後空格。"
+msgstr ""
+"Крапка 2, потім крапка 1, потім крапка 5, потім крапка 4 і потім пробіл."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:151
 msgid "Etc."
-msgstr "等等"
+msgstr "І так далі."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:170
 msgid "Documentation"
-msgstr "文件"
+msgstr "Документація"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:172
 msgid "Let's explore some features"
-msgstr "讓我們探索一些功能"
+msgstr "Розгляньмо деякі функції"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:174
 msgid "Profile gestures"
-msgstr "輸入手勢"
+msgstr "Жести профілів"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:180
 msgid "Driver loaded"
-msgstr "驅動程式已載入"
+msgstr "Драйвер завантажено"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:181
 msgid "Profile"
-msgstr "設定"
+msgstr "Профіль"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:195
 msgid "Simple keys"
-msgstr "簡易按鍵"
+msgstr "Прості клавіші"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:197
 msgid "Usual shortcuts"
-msgstr "常用快速鍵"
+msgstr "Звичайні комбінації"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:199
 msgid "Standard NVDA commands"
-msgstr "標準 NVDA 命令"
+msgstr "Стандартні команди NVDA"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:202
 msgid "Modifier keys"
-msgstr "組合鍵"
+msgstr "Клавіші-модифікатори"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:205
 msgid "Quick navigation keys"
-msgstr "快速導航鍵"
+msgstr "Клавіші швидкої навігації"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:209
 msgid "Rotor feature"
-msgstr "轉輪功能"
+msgstr "Функція ротора"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:217
 msgid "Gadget commands"
-msgstr "小工具命令"
+msgstr "Команди пристрою"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:230
 msgid "Shortcuts defined outside add-on"
-msgstr "外部程序中定義的快速鍵"
+msgstr "Комбінації, визначені поза додатком"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:258
 msgid "Keyboard configurations provided"
-msgstr "提供的鍵盤設定"
+msgstr "Конфігурації клавіатури надано"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:261
 msgid "Keyboard configurations are"
-msgstr "鍵盤設定為"
+msgstr "Конфігурації клавіатури"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:270
 msgid "Warning:"
-msgstr "警告:"
+msgstr "Увага:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:272
 msgid "BrailleExtender has no gesture map yet for your braille display."
-msgstr "BrailleExtender 尚無用於您點顯器的手勢。"
+msgstr ""
+"Розширювач брайля ще не має призначених жестів для вашого брайлівського "
+"дисплея."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:275
 msgid ""
 "However, you can still assign your own gestures in the \"Input Gestures\" "
 "dialog (under Preferences menu)."
-msgstr "但是，您仍然可以在“輸入手勢”對話方塊（“偏好設定”下）中指定自己的手勢。"
+msgstr ""
+"Однак, ви завжди можете призначити свої власні жести в діалозі \"Жести вводу"
+"\" (підменю \"Параметри\")"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:279
 msgid "Add-on gestures on the system keyboard"
-msgstr "系統鍵盤上的附加手勢"
+msgstr "Жести додатка на системній клавіатурі"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:302
 msgid "Arabic"
-msgstr "阿拉伯文"
+msgstr "Арабська"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:303
 msgid "Chinese (Taiwan)"
-msgstr "中文（臺灣）"
+msgstr "Китайська (Тайвань)"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:304
 msgid "Croatian"
-msgstr "克羅埃西亞文"
+msgstr "Хорватська"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:305
 msgid "Danish"
-msgstr "丹麥文"
+msgstr "Данська"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:306
 msgid "English and French"
-msgstr "英文和法文"
+msgstr "Англійська і французька"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:307
 msgid "German"
-msgstr "德文"
+msgstr "Німецька"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:308
 msgid "Hebrew"
-msgstr "希伯來文"
+msgstr "Іврит"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:309
 msgid "Italian"
-msgstr "斜體"
+msgstr "Італійська"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:310
 msgid "Persian"
-msgstr "波斯文"
+msgstr "Перська"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:311
 msgid "Polish"
-msgstr "波蘭文"
+msgstr "Польська"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:312
 msgid "Russian"
-msgstr "俄文"
+msgstr "Російська"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:315
+#: addon/globalPlugins/brailleExtender/addondoc.py:313
+msgid "Turkish"
+msgstr "Турецька"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:316
 msgid "Copyrights and acknowledgements"
-msgstr "版權和致謝"
+msgstr "Подяки й авторські права"
 
 #. Author(s)
-#: addon/globalPlugins/brailleExtender/addondoc.py:321 buildVars.py:71
+#: addon/globalPlugins/brailleExtender/addondoc.py:322 buildVars.py:71
 msgid "and other contributors"
-msgstr "和其他貢獻者"
+msgstr "та інші учасники"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:325
+#: addon/globalPlugins/brailleExtender/addondoc.py:326
 msgid "Translators"
-msgstr "譯者"
+msgstr "Перекладачі"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:335
+#: addon/globalPlugins/brailleExtender/addondoc.py:336
 msgid "Code contributions and other"
-msgstr "代碼貢獻及其他"
+msgstr "Допомога в коді та інше"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:337
+#: addon/globalPlugins/brailleExtender/addondoc.py:338
 msgid "Speech mode feature:"
-msgstr "語音模式功能:"
+msgstr "Функція режиму мовлення:"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:340
+#: addon/globalPlugins/brailleExtender/addondoc.py:341
 msgid "Code maintenance (cleanup, rewrites, optimizations) thanks to:"
-msgstr "由於以下原因，代碼維護（清理，重寫，優化）得以實現:"
+msgstr "Обслуговування коду (очищення, переписування, оптимізація) дякуємо:"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:346
+#: addon/globalPlugins/brailleExtender/addondoc.py:347
 msgid "Additional third party copyrighted code is included:"
-msgstr "包括其他第三方版權代碼:"
+msgstr ""
+"Додатково включає захищений авторським правом код сторонніх розробників:"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:352
+#: addon/globalPlugins/brailleExtender/addondoc.py:353
 msgid "Thanks also to"
-msgstr "也感謝"
+msgstr "Також дякуємо"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:354
+#: addon/globalPlugins/brailleExtender/addondoc.py:355
 msgid "Finally thank you very much for all your feedback and comments."
-msgstr "最後，非常感謝您提供的所有回饋和意見。"
+msgstr "На завершення, дякуємо вам за ваші відгуки й коментарі."
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:358
+#: addon/globalPlugins/brailleExtender/addondoc.py:359
 #, python-format
 msgid "%s's documentation"
-msgstr "%s說明文件"
+msgstr "Документація %s"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:377
+#: addon/globalPlugins/brailleExtender/addondoc.py:378
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
-msgstr "模擬在系統鍵盤上按%s"
+msgstr "Емулювати натискання %s на системній клавіатурі"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:388
+#: addon/globalPlugins/brailleExtender/addondoc.py:389
 msgid "description currently unavailable for this shortcut"
-msgstr "該快速鍵目前不可用"
+msgstr "для цієї комбінації відсутній опис"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:408
+#: addon/globalPlugins/brailleExtender/addondoc.py:409
 msgid "caps lock"
-msgstr "大寫鎖定"
+msgstr "caps lock"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:193
 msgid "all tables"
-msgstr "所有表格"
+msgstr "всі таблиці"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:203
 msgid "Advanced input mode dictionary"
-msgstr "進階輸入模式字典"
+msgstr "Словник розширеного режиму введення"
 
 #. Translators: The label for the combo box of dictionary entries in
 #. advanced input mode dictionary dialog.
@@ -1414,21 +1500,21 @@ msgstr "進階輸入模式字典"
 #: addon/globalPlugins/brailleExtender/advancedinput.py:212
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:130
 msgid "Dictionary &entries"
-msgstr "字典項目(&E)"
+msgstr "&Словникові статті"
 
 #. Translators: The label for a column in dictionary entries list used
 #. to identify comments for the entry.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:221
 msgid "Replacement"
-msgstr "取代"
+msgstr "Заміна"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:222
 msgid "Input"
-msgstr "輸入"
+msgstr "Введення"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:223
 msgid "Input table"
-msgstr "輸入轉譯表"
+msgstr "Таблиця введення"
 
 #. Translators: The label for a button in advanced input mode
 #. dictionariy dialog to add new entries.
@@ -1436,7 +1522,7 @@ msgstr "輸入轉譯表"
 #: addon/globalPlugins/brailleExtender/advancedinput.py:230
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:147
 msgid "&Add"
-msgstr "新增(&A)"
+msgstr "&Додати"
 
 #. Translators: The label for a button in advanced input mode
 #. dictionariy dialog to edit existing entries.
@@ -1444,7 +1530,7 @@ msgstr "新增(&A)"
 #: addon/globalPlugins/brailleExtender/advancedinput.py:237
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:153
 msgid "&Edit"
-msgstr "&編輯"
+msgstr "&Редагувати"
 
 #. Translators: The label for a button in advanced input mode
 #. dictionariy dialog to remove existing entries.
@@ -1452,19 +1538,19 @@ msgstr "&編輯"
 #: addon/globalPlugins/brailleExtender/advancedinput.py:244
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:159
 msgid "Re&move"
-msgstr "移除(&M)"
+msgstr "&Видалити"
 
 #. Translators: The label for a button in advanced input mode
 #. dictionariy dialog to save entries.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:253
 msgid "&Save"
-msgstr "&儲存"
+msgstr "&Зберегти"
 
 #. Translators: The label for a button in advanced input mode
 #. dictionariy dialog to open dictionary file in an editor.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:259
 msgid "&Open the dictionary file in an editor"
-msgstr "在編輯器中開啟字典文件(&O)"
+msgstr "&Відкрити файл словника в редакторі"
 
 #. Translators: The label for a button in advanced input mode
 #. dictionariy dialog to reload dictionary.
@@ -1472,11 +1558,11 @@ msgstr "在編輯器中開啟字典文件(&O)"
 #: addon/globalPlugins/brailleExtender/advancedinput.py:265
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:172
 msgid "&Reload the dictionary"
-msgstr "重新載入字典(&R)"
+msgstr "&Перезавантажити словник"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:283
 msgid "Don't get tired, this entry already exists!"
-msgstr "這個條目已經存在了！"
+msgstr "Не втомлюйтесь, ця стаття вже існує!"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:286
 #, python-brace-format
@@ -1484,166 +1570,167 @@ msgid ""
 "The abreviation \"{abreviation}\" is already used for \"{replacement}\". Do "
 "you want to update the existing entry?"
 msgstr ""
-"縮寫 \"{abreviation}\" 已經用於 \"{replacement}\"。是否要更新現有條目？"
+"Скорочення \"{abreviation}\" вже використовується для \"{replacement}\". "
+"Хочете оновити наявний запис?"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:305
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:216
 msgid "Add Dictionary Entry"
-msgstr "新增字典項目"
+msgstr "Додати словникову статтю"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:316
 msgid "Please select an entry first"
-msgstr "請先選擇一個條目"
+msgstr "Спершу оберіть запис"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:345
 msgid "File doesn't exist yet"
-msgstr "文件不存在"
+msgstr "Файл поки що не існує"
 
 #. Translators: This is the label for the edit dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:373
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:288
 msgid "Edit Dictionary Entry"
-msgstr "編輯字典項目"
+msgstr "Змінити словникову статтю"
 
 #. Translators: This is a label for an edit field in add dictionary
 #. entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:379
 msgid "&Abreviation"
-msgstr "縮寫(&A)"
+msgstr "&Скорочення"
 
 #. Translators: This is a label for an edit field in add dictionary
 #. entry dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:385
 msgid "&Replace by"
-msgstr "取代為(&R)"
+msgstr "&Замінити на"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:404
 msgid "The abreviation field is empty, please enter something."
-msgstr "縮寫欄位為空，請輸入一些內容。"
+msgstr "Поле скорочення порожнє, будь ласка, введіть щось."
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:407
 msgid "The remplacement field is empty, please enter something."
-msgstr "取代欄位為空，請輸入一些內容。"
+msgstr "Поле заміни порожнє, будь ласка, введіть щось."
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/advancedinput.py:420
 msgid "Advanced input mode"
-msgstr "進階輸入模式"
+msgstr "Розширений режим введення"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:427
 msgid "E&xit the advanced input mode after typing one pattern"
-msgstr "輸入一個詞後退出進階輸入模式"
+msgstr "Ви&йти з режиму розширеного введення після введення одного шаблону"
 
 #: addon/globalPlugins/brailleExtender/advancedinput.py:431
 msgid "&Escape character for Unicode values input"
-msgstr "輸入 Unicode 碼的前導字元(&E)"
+msgstr "Символ &Escape для значення введення Unicode"
 
 #: addon/globalPlugins/brailleExtender/autoscroll.py:98
 #, python-brace-format
 msgid "{delay} ms"
-msgstr "{delay} 毫秒"
+msgstr "{delay} мс"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:114
 msgid "Auto scroll"
-msgstr "自動捲動"
+msgstr "Автопрокрутка"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:120
 msgid "Autoscroll &delay for the active braille display (ms):"
-msgstr "自動捲動／延遲點字顯示（以毫秒計）(&D)"
+msgstr "Затримка &автопрокрутки для активного брайлівського дисплея (мс):"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:129
 msgid "&Step for delay change (ms):"
-msgstr "延遲捲動（毫秒）:"
+msgstr "&Крок затримки зміни (мс):"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:138
 msgid "&Adjust the delay to content"
-msgstr ""
+msgstr "&Налаштувати затримку для вмісту"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:142
 msgid "Always ignore &blank line"
-msgstr "始終忽略 &空白"
+msgstr "Завжди ігнорувати &порожні рядки"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:17
 msgid "Fill a cell in two stages using one side only"
-msgstr "一側兩階段輸入（先左半，後右半）"
+msgstr "Заповніть комірку у два етапи, використовуючи лише одну сторону"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:18
 msgid "Fill a cell in two stages using both sides"
-msgstr "兩側兩階段輸入（先左半，後右半）"
+msgstr "Заповніть комірку у два етапи, використовуючи дві сторони"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:19
 msgid "Fill a cell dots by dots"
-msgstr "一點一點輸入（忽略點位順序）"
+msgstr "Заповнюйте комірку крапка за крапкою"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:71
 msgid "Unsupported input method"
-msgstr "不支援的輸入法"
+msgstr "Непідтримуваний метод введення"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/onehand.py:96
 msgid "One-handed mode"
-msgstr "單手輸入"
+msgstr "Режим однієї руки"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:100
 msgid "Enable &one-handed mode"
-msgstr "啟用單手輸入(&O)"
+msgstr "Увімкнути режим однієї руки"
 
 #: addon/globalPlugins/brailleExtender/onehand.py:105
 msgid "Input &method"
-msgstr "輸入法(&M)"
+msgstr "&Метод введення"
 
 #. Translators: Reported when translation didn't succeed due to unsupported input.
-#: addon/globalPlugins/brailleExtender/patches.py:450
+#: addon/globalPlugins/brailleExtender/patches.py:453
 msgid "Unsupported input"
-msgstr "不支援的輸入"
+msgstr "Непідтримуване введення"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/rolelabels.py:26
 msgid "Role labels"
-msgstr "控制項標籤"
+msgstr "Скорочення ролей"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:34
 msgid "Use custom braille &role labels"
-msgstr "自定點字和控制項標籤"
+msgstr "Використовувати власні мітки для ролей шрифтом &Брайля"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:37
 msgid "Role cate&gory:"
-msgstr "類型(&C):"
+msgstr "Категорія &ролі:"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/rolelabels.py:37
 #: addon/globalPlugins/brailleExtender/settings.py:46
 msgid "General"
-msgstr "一般"
+msgstr "Загальні"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:37
 msgid "Positive states"
-msgstr "正態"
+msgstr "Позитивні стани"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:37
 msgid "Negative states"
-msgstr "負態"
+msgstr "Негативні стани"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:45
 msgid "&Role:"
-msgstr "控制項(&R):"
+msgstr "&Роль:"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:48
 msgid "Braille &label"
-msgstr "點字標籤(&L)"
+msgstr "Брайлівське &скорочення"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:52
 msgid "&Reset this role label"
-msgstr "重置此控制項標籤(&R)"
+msgstr "&Скинути скорочення цієї ролі"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:54
 msgid "Reset a&ll role labels"
-msgstr "重置所有控制項標籤"
+msgstr "Скинути всі скорочення брайлівських &ролей"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:99
 #, python-format
@@ -1652,244 +1739,246 @@ msgstr ": %s"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:142
 msgid "You have no customized role labels."
-msgstr "您沒有自定控制項標籤。"
+msgstr "Ви не маєте персоналізованих міток ролей."
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:143
 #: addon/globalPlugins/brailleExtender/rolelabels.py:148
 msgid "Reset role labels"
-msgstr "重置控制項標籤"
+msgstr "Скинути всі скорочення брайлівських ролей"
 
 #: addon/globalPlugins/brailleExtender/rolelabels.py:146
 #, python-format
 msgid ""
 "You have %d customized role labels defined. Do you want to reset all labels?"
-msgstr "您已定義%d個控制項標籤。您要重設所有標籤嗎？"
+msgstr "Ви маєте  %d персоналізованих міток ролей. Хочете скинути всі мітки?"
 
 #: addon/globalPlugins/brailleExtender/settings.py:40
 msgid "Feature implementation is in progress. Thanks for your patience."
-msgstr "功能實現正在進行中。謝謝你的耐心。"
+msgstr "Реалізація цієї функції триває. Дякуємо за ваше терпіння."
 
 #: addon/globalPlugins/brailleExtender/settings.py:55
 msgid "stable channel, automatic check"
-msgstr "穩定版，自動檢查"
+msgstr "стабільний канал, автоматична перевірка"
 
 #: addon/globalPlugins/brailleExtender/settings.py:56
 msgid "dev channel, automatic check"
-msgstr "開發版，自動檢查"
+msgstr "розробницький канал, автоматична перевірка"
 
 #: addon/globalPlugins/brailleExtender/settings.py:57
 msgid "stable channel, manual check"
-msgstr "穩定版，手動檢查"
+msgstr "стабільний канал, перевірка вручну"
 
 #: addon/globalPlugins/brailleExtender/settings.py:58
 msgid "dev channel, manual check"
-msgstr "開發版，手動檢查"
+msgstr "розробницький канал, перевірка вручну"
 
 #: addon/globalPlugins/brailleExtender/settings.py:60
 msgid "Check for upd&ates:"
-msgstr "檢查更新(&A):"
+msgstr "Перевірити о&новлення:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:69
 msgid "Say current line while &scrolling in:"
-msgstr "捲動石讀出該行(&S)"
+msgstr "Промовляти поточний &рядок під час прокрутки у:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:73
 msgid "Speech &interrupt when scrolling on same line"
-msgstr "同一行捲動時中斷報讀(&i)"
+msgstr "Переривати &мовлення прокруткою в межах рядка"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:77
 msgid "S&kip blank lines during text scrolling"
-msgstr "捲動時忽略空白(&K)"
+msgstr "П&ропускати порожні рядки під час прокрутки тексту"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:81
 msgid "Smart Caps Loc&k"
-msgstr "允許點顯器鍵盤使用大寫鎖定(&K)"
+msgstr "Розумний Caps Loc&k"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:85
 msgid "Speech i&nterrupt for unknown gestures"
-msgstr "按下未知的手勢時中斷報讀(&N)"
+msgstr "Пере&ривати мовлення невідомими жестами"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:89
 msgid "Announce character when &routing braille cursor"
-msgstr "按下游標定位鍵讀出自元"
+msgstr "Промовляти символи під час &маршрутизації брайлівського курсора"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:93
 msgid "Routing cursors behavior in edit &fields:"
-msgstr "編輯欄位的游標定位鍵行為:"
+msgstr "Поведінка курсорів маршрутизації у полях &редагування:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:102
 msgid "&Display time and date infinitely"
-msgstr "持續顯示日期時間(&D)"
+msgstr "Показувати &час і дату нескінченно"
 
 #: addon/globalPlugins/brailleExtender/settings.py:104
 msgid ""
 "Automatically Switch to review mode in &terminal windows (cmd, bash, PuTTY, "
 "PowerShell Maxima…)"
-msgstr "在終端機自動切換檢閱模式（例如PuTTY，Powershell，bash，cmd）"
+msgstr ""
+"Автоматичний перехід в режим перегляду у &вікнах терміналів (cmd, bash, "
+"PuTTY, PowerShell Maxima…)"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:108
 msgid "Announce &volume changes:"
-msgstr "音量改變(&V)"
+msgstr "Оголошувати &зміну  гучності:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:116
 msgid "Announce m&odifier key presses:"
-msgstr ""
-"組合鍵按下時\n"
-"(&O)"
+msgstr "Оголошувати натискання &клавіш-модифікаторів:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:122
 msgid "Play &beeps for modifier keys"
-msgstr "按組合鍵時發出嗶嗶聲(&B)"
+msgstr "Відтворювати &сигнали для клавіш-модифікаторів"
 
 #: addon/globalPlugins/brailleExtender/settings.py:127
 msgid "&Right margin on cells for the active braille display"
-msgstr "點顯器右邊界(&R)"
+msgstr "&Праве поле на комірках активного брайлівського дисплея"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:131
 msgid "Braille &keyboard configuration:"
-msgstr "點字鍵盤設定(&K)"
+msgstr "Конфігурація брайлівської &клавіатури:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:135
 msgid "&Reverse forward and back scroll buttons"
-msgstr "前後捲動鍵互換(&R)"
+msgstr "&Поміняти місцями кнопки прокрутки вперед і назад"
 
 #: addon/globalPlugins/brailleExtender/settings.py:138
 msgid "Preferred &primary braille display:"
-msgstr "主要點顯器(&P)"
+msgstr "Пріоритетний основний брайлівський &дисплей:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:140
 msgid "Preferred &secondary braille display:"
-msgstr "第二台點顯器(&S)"
+msgstr "Пріоритетний д&ругорядний брайлівський дисплей:"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:177
 msgid "Text attributes"
-msgstr "文字屬性"
+msgstr "Атрибути тексту"
 
 #: addon/globalPlugins/brailleExtender/settings.py:181
 msgid "Indicate text attributes in braille with &Attribra"
-msgstr "用 Attribra 指示點字的文字屬性(&A)"
+msgstr "Показувати атрибути тексту брайлем за допомогою &Attribra"
 
 #: addon/globalPlugins/brailleExtender/settings.py:183
 msgid "&Selected elements:"
-msgstr "選取的元素(&S)"
+msgstr "Виділені &елементи:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:185
 msgid "Spelling &errors:"
-msgstr "拼錯字(&E)"
+msgstr "&Орфографічні помилки:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:187
 msgid "&Bold:"
-msgstr "粗體(&B):"
+msgstr "&Жирний:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:189
 msgid "&Italic:"
-msgstr "斜體(&I):"
+msgstr "&Курсив:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:191
 msgid "&Underline:"
-msgstr "底線(&U):"
+msgstr "&Підкреслений:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:193
 msgid "Strike&through:"
-msgstr "刪除線(&I):"
+msgstr "&Закреслений:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:195
 msgid "Su&bscripts:"
-msgstr "下標(&B):"
+msgstr "&Підрядкові:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:197
 msgid "Su&perscripts:"
-msgstr "上標(&P):"
+msgstr "&Надрядкові:"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:225
 msgid "Braille tables"
-msgstr "點字表"
+msgstr "Брайлівські таблиці"
 
 #: addon/globalPlugins/brailleExtender/settings.py:230
 msgid "Use the current input table"
-msgstr "使用目前輸入表"
+msgstr "Використовувати поточну таблицю введення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:239
 msgid "Prefered braille &tables (press F1 for help):"
-msgstr "常用點字表（請按F1鍵尋求幫助）:"
+msgstr "Пріоритетні брайлівські &таблиці (натисніть F1 для довідки):"
 
 #: addon/globalPlugins/brailleExtender/settings.py:243
 msgid "Input braille table for &keyboard shortcut keys:"
-msgstr "輸入點字表 鍵盤快速鍵:"
+msgstr "Брайлівська таблиця введення для &комбінацій клавіш:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:245
 msgid "None"
-msgstr "無"
+msgstr "Немає"
 
 #: addon/globalPlugins/brailleExtender/settings.py:248
 msgid "&Secondary output table:"
-msgstr "第二輸出表(&S):"
+msgstr "&Друга таблиця виведення:"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:252
 msgid "Display &tabs as spaces"
-msgstr "將 tabs 顯示為空格(&T)"
+msgstr "&Показувати табуляцію як пробіли"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:256
 msgid "&Spaces per tab for the active braille display:"
-msgstr "設定一個 tab 替代為幾個空格:"
+msgstr "&Пробілів на табуляцію на брайлівському дисплеї:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:257
 msgid "Alternative and &custom braille tables..."
-msgstr "替代和自定點字表..."
+msgstr "Альтернативна і &користувацька брайлівська таблиця..."
 
 #: addon/globalPlugins/brailleExtender/settings.py:278
 msgid ""
 "NVDA must be restarted for changes to take effect. Would you like to restart "
 "now?"
-msgstr "必須重新啟動 NVDA 才能使設定生效。您要現在重新啟動嗎？"
+msgstr ""
+"Щоб зміни почали діяти, потрібно перезапустити NVDA. Бажаєте перезапустити "
+"зараз?"
 
 #: addon/globalPlugins/brailleExtender/settings.py:316
 msgid "input and output"
-msgstr "輸入和輸出"
+msgstr "введення і виведення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:318
 msgid "input only"
-msgstr "僅輸入"
+msgstr "лише введення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:319
 msgid "output only"
-msgstr "僅輸出"
+msgstr "лише виведення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:350
 #, python-format
 msgid "Table name: %s"
-msgstr "表格名稱: %s"
+msgstr "Назва таблиці: %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:351
 #, python-format
 msgid "File name: %s"
-msgstr "檔案名稱: %s"
+msgstr "Ім'я файлу: %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:352
 #, python-format
 msgid "In switches: %s"
-msgstr "在交換機中:%s"
+msgstr "У перемиканні: %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:353
 msgid "About this table"
-msgstr "關於這個表"
+msgstr "Про цю таблицю"
 
 #: addon/globalPlugins/brailleExtender/settings.py:356
 msgid ""
@@ -1900,458 +1989,484 @@ msgid ""
 "table, and 'semicolon' key to view miscellaneous information on the selected "
 "table."
 msgstr ""
-"列出了 NVDA 可用的點字表。按空格鍵，向左方向鍵或向右方向鍵可在開關中包含（或"
-"排除）所選表。\n"
+"У списку показано брайлівські таблиці, які використовує NVDA. Натисніть "
+"пробіл, стрілку вліво чи стрілку вправо щоб включити (або виключити) вибрану "
+"таблицю з автоперемикання.\n"
 "\n"
-"您也可以按“逗號”鍵獲取所選表的文件名，按“分號”鍵查看所選表的其他訊息。"
+"\t\t\tВи також можете натиснути клавішу 'кома' для отримання імені файлу "
+"виділеної таблиці, і клавішу 'крапка з комою' для перегляду решти інформації "
+"про таблицю."
 
 #: addon/globalPlugins/brailleExtender/settings.py:358
 msgid "Contextual help"
-msgstr "說明與幫助"
+msgstr "Контекстна довідка"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:374
 msgid "Custom braille tables"
-msgstr "自定點字表"
+msgstr "Користувацькі брайлівські таблиці"
 
 #: addon/globalPlugins/brailleExtender/settings.py:384
 msgid "Use a custom table as &input table"
-msgstr "使用自訂輸入轉譯表(&I)"
+msgstr "Використовувати &користувацьку таблицю як таблицю введення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:385
 msgid "Use a custom table as &output table"
-msgstr "使用自訂輸出轉譯表(&O)"
+msgstr "Використовувати &користувацьку таблицю як таблицю виведення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:386
 msgid "&Add a braille table..."
-msgstr "新增點字表(&A)..."
+msgstr "&Додати брайлівську таблицю..."
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:410
 msgid "Add a braille table"
-msgstr "新增點字表"
+msgstr "Додати брайлівську таблицю"
 
 #: addon/globalPlugins/brailleExtender/settings.py:416
 msgid "Display &name"
-msgstr "名稱(&N)"
+msgstr "Ім'я &дисплея"
 
 #: addon/globalPlugins/brailleExtender/settings.py:417
 msgid "&Description"
-msgstr "描述(&D)"
+msgstr "&Опис"
 
 #: addon/globalPlugins/brailleExtender/settings.py:418
 msgid "&Path"
-msgstr "路徑(&P)"
+msgstr "&Шлях"
 
 #: addon/globalPlugins/brailleExtender/settings.py:419
 #: addon/globalPlugins/brailleExtender/settings.py:490
 msgid "&Browse..."
-msgstr "瀏覽(&B)..."
+msgstr "&Огляд..."
 
 #: addon/globalPlugins/brailleExtender/settings.py:422
 msgid "This is a &contracted (grade 2) braille table"
-msgstr "這是一張帶有縮寫的（二級）點字表"
+msgstr "Це &скорописна (grade 2) брайлівська таблиця"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:424
 msgid "&Available for:"
-msgstr "點字表用於(&A):"
+msgstr "&Доступно для:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:424
 msgid "Input and output"
-msgstr "輸入和輸出"
+msgstr "Введення і виведення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:424
 msgid "Input only"
-msgstr "僅輸入"
+msgstr "Лише введення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:424
 msgid "Output only"
-msgstr "僅輸出"
+msgstr "Лише виведення"
 
 #: addon/globalPlugins/brailleExtender/settings.py:430
 msgid "Choose a braille table file"
-msgstr "選擇點字表檔案"
+msgstr "Оберіть файл брайлівської таблиці"
 
 #: addon/globalPlugins/brailleExtender/settings.py:430
 msgid "Liblouis table files"
-msgstr "Liblouis 表格檔"
+msgstr "Файли таблиці Liblouis"
 
 #: addon/globalPlugins/brailleExtender/settings.py:442
 msgid "Please specify a display name."
-msgstr "請指定顯示名稱"
+msgstr "Будь ласка, вкажіть ім'я дисплея."
 
 #: addon/globalPlugins/brailleExtender/settings.py:442
 msgid "Invalid display name"
-msgstr "顯示名稱無效"
+msgstr "Неправильне ім'я дисплея"
 
 #: addon/globalPlugins/brailleExtender/settings.py:446
 #, python-format
 msgid "The specified path is not valid (%s)."
-msgstr "指定的路徑無效（%s）。"
+msgstr "Вказаний шлях неправильний (%s)."
 
 #: addon/globalPlugins/brailleExtender/settings.py:446
 msgid "Invalid path"
-msgstr "路徑無效"
+msgstr "Неправильний шлях"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:474
 msgid "Braille Extender - Quick launches"
-msgstr "Braille Extender 快速啟動"
+msgstr "Розширювач брайля - швидкий запуск"
 
 #: addon/globalPlugins/brailleExtender/settings.py:485
 msgid "&Gestures:"
-msgstr "手勢(&G):"
+msgstr "&Жести:"
 
 #: addon/globalPlugins/brailleExtender/settings.py:488
 msgid "&Location (file path, URL or command)"
-msgstr "位置（檔案路徑，URL或命令）"
+msgstr "&Розташування (шлях до файлу, URL чи команда)"
 
 #: addon/globalPlugins/brailleExtender/settings.py:491
 msgid "&Remove this gesture"
-msgstr "刪除此手勢(&R)"
+msgstr "&Видалити цей жест"
 
 #: addon/globalPlugins/brailleExtender/settings.py:492
 msgid "&Add a quick launch"
-msgstr "新增快速啟動(&A)"
+msgstr "&Додати команду швидкого запуску"
 
 #: addon/globalPlugins/brailleExtender/settings.py:521
 msgid "Unable to associate this gesture. Please enter another gesture"
-msgstr "無法關聯此手勢。請輸入其他手勢"
+msgstr "Неможливо асоціювати цей жест. Будь ласка, введіть інший жест"
 
 #: addon/globalPlugins/brailleExtender/settings.py:525
 #, python-brace-format
 msgid ""
 "Please enter a gesture from your {addoncfg.curBD} braille display. Press "
 "space to cancel."
-msgstr "請從 {addoncfg.curBD} 點顯器輸入手勢。按空格鍵取消。"
+msgstr ""
+"Будь ласка, введіть жест зі свого {addoncfg.curBD} брайлівського дисплея. "
+"Натисніть пробіл для скасування."
 
 #: addon/globalPlugins/brailleExtender/settings.py:529
 msgid "Out of capture"
-msgstr "無法找到"
+msgstr "Поза захопленням"
 
 #: addon/globalPlugins/brailleExtender/settings.py:536
 #, python-format
 msgid "The gesture captured is %s"
-msgstr "找到的手勢為 %s"
+msgstr "Захоплений жест %s"
 
 #: addon/globalPlugins/brailleExtender/settings.py:553
 msgid "Are you sure you wish to delete this shortcut?"
-msgstr "您確定要刪除此快速鍵嗎？"
+msgstr "Ви впевнені, що бажаєте видалити цю комбінацію?"
 
 #: addon/globalPlugins/brailleExtender/settings.py:553
 msgid "Remove shortcut"
-msgstr "刪除快速鍵"
+msgstr "Видалити комбінацію"
 
 #: addon/globalPlugins/brailleExtender/settings.py:562
 #, python-brace-format
 msgid "{g} removed"
-msgstr "{g} 移除"
+msgstr "{g} видалено"
 
 #: addon/globalPlugins/brailleExtender/settings.py:573
 msgid ""
 "Please enter the desired gesture for the new quick launch. Press \"space bar"
 "\" to cancel"
-msgstr "請輸入所需手勢以進行新的快速啟動。按“空格鍵”取消"
+msgstr ""
+"Будь ласка, введіть бажаний жест для нового швидкого запуску. Натисніть "
+"пробіл для скасування"
 
 #: addon/globalPlugins/brailleExtender/settings.py:576
 msgid "Don't add a quick launch"
-msgstr "不要新增快速啟動"
+msgstr "Не додавати до швидкого запуску"
 
 #: addon/globalPlugins/brailleExtender/settings.py:602
 #, python-brace-format
 msgid "Choose a file for {0}"
-msgstr "選擇檔案 {0}"
+msgstr "Оберіть файл для {0}"
 
 #: addon/globalPlugins/brailleExtender/settings.py:615
 msgid "Please create or select a quick launch first"
-msgstr "請先創建或選擇一個快速啟動"
+msgstr "Будь ласка, спершу створіть або виберіть щось для швидкого запуску"
 
 #: addon/globalPlugins/brailleExtender/settings.py:615
 msgid "Error"
-msgstr "錯誤"
+msgstr "Помилка"
 
 #. Translators: title of add-on settings dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:632
 msgid "Braille Extender settings"
-msgstr "Braille Extender 設定"
+msgstr "Налаштування Розширювача брайля"
 
 #. Translators: The profile name for normal configuration
 #: addon/globalPlugins/brailleExtender/settings.py:647
 msgid "normal configuration"
-msgstr "一般設定"
+msgstr "нормальна конфігурація"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/speechhistorymode.py:29
 msgid "&Number of last announcements to retain:"
-msgstr "要保留的最後內容數量(&N):"
+msgstr "&Кількість останніх оголошень для збереження:"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:38
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:39
 msgid "&Prefix entries with their position in the history"
-msgstr "&前綴條目及其在歷史記錄中的位置(&P)"
+msgstr "&Префікс записів із вказуванням їхньої позиції в історії"
 
 #. Translators: label of a dialog.
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:43
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:44
 msgid "&Read entries while browsing history"
-msgstr "在瀏覽歷史記錄時讀取條目(&R)"
+msgstr "&Читати записи під час перегляду історії"
 
 #. Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:71
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:72
 msgid "to speech history"
-msgstr "語音歷史模式"
+msgstr "до історії мовлення"
 
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:181
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:182
 msgid "Announcement copied to clipboard"
-msgstr "將通知複製到剪貼簿"
+msgstr "Оголошувати «скопійовано в буфер обміну»"
 
 #. Translators: Reports which position braille is tethered to
 #. (braille can be tethered automatically or to either focus or review position or speech history).
-#: addon/globalPlugins/brailleExtender/speechhistorymode.py:208
+#: addon/globalPlugins/brailleExtender/speechhistorymode.py:209
 msgid ""
 "Toggle tethering of braille between the focus, the review position and the "
 "speech history"
-msgstr "切換點字跟隨系統焦點、檢閱游標或語音歷史"
+msgstr ""
+"Перемикає прив'язку брайля між фокусом, переглядом та історією мовлення"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:29
 msgid "Sign"
-msgstr "符號"
+msgstr "Знак"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:31
 msgid "Math"
-msgstr "數學"
+msgstr "Математичний вираз"
 
 #. Translators: This is a label for an Entry Type radio button in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:33
 msgid "Replace"
-msgstr "取代"
+msgstr "Заміна"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:41
 msgid "Both (input and output)"
-msgstr "兩者（輸入和輸出）"
+msgstr "Одночасно (введення і виведення)"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:42
 msgid "Backward (input only)"
-msgstr "向後（僅輸入）"
+msgstr "Назад (лише введення)"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:43
 msgid "Forward (output only)"
-msgstr "向前（僅輸出）"
+msgstr "Вперед (лише виведення)"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:109
 #, python-format
 msgid ""
 "One or more errors are present in dictionary tables: %s. As a result, these "
 "dictionaries were not loaded."
-msgstr "字典表%s中存在一個或多個錯誤。這些字典沒有被載入。"
+msgstr ""
+"Одна або кілька помилок наявні у словниках таблиць: %s. У результаті, ці "
+"словники не завантажено."
 
 #. Translators: The label for a column in dictionary entries list used to identify comments for the entry.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:133
 msgid "Comment"
-msgstr "註解"
+msgstr "Коментар"
 
 #. Translators: The label for a column in dictionary entries list used to identify original character.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:135
 msgid "Pattern"
-msgstr "模式"
+msgstr "Шаблон"
 
 #. Translators: The label for a column in dictionary entries list and in a list of symbols from symbol pronunciation dialog used to identify replacement for a pattern or a symbol
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:137
 msgid "Representation"
-msgstr "表示"
+msgstr "Подання"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:139
 msgid "Opcode"
-msgstr "操作碼"
+msgstr "Операційний код"
 
 #. Translators: The label for a column in dictionary entries list used to identify whether the entry is a sign, math, replace
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:141
 msgid "Direction"
-msgstr "方向"
+msgstr "Напрямок"
 
 #. Translators: The label for a button in table dictionaries dialog to open dictionary file in an editor.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:167
 msgid "&Open the current dictionary file in an editor"
-msgstr "在編輯器中開啟目前字典檔按"
+msgstr "&Відкрити файл поточного словника в редакторі"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:294
 msgid "Dictionary"
-msgstr "字典"
+msgstr "Словник"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
 msgid "Global"
-msgstr "通用"
+msgstr "Глобально"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
 msgid "Table ({})"
-msgstr "表 ({})"
+msgstr "Таблиця ({})"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:296
 msgid "Temporary"
-msgstr "暫存"
+msgstr "Тимчасово"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:302
 msgid "See &entries"
-msgstr "查看字典項目(&D)"
+msgstr "Переглянути &записи"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:307
 msgid "&Text pattern/sign"
-msgstr "文字/符號(&P)"
+msgstr "Текстовий шаблон/знак"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog and in punctuation/symbol pronunciation dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:312
 msgid "&Braille representation"
-msgstr "點字表示"
+msgstr "&Брайлівське подання"
 
 #. Translators: This is a label for an edit field in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:316
 msgid "&Comment"
-msgstr "註解(&C)"
+msgstr "&Коментар"
 
 #. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:320
 msgid "&Opcode"
-msgstr "操作碼(&O)"
+msgstr "&Операційний код"
 
 #. Translators: This is a label for a set of radio buttons in add dictionary entry dialog.
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:325
 msgid "&Direction"
-msgstr "方向(&D)"
+msgstr "&Напрямок"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:366
 msgid "Text pattern/sign field is empty."
-msgstr "文字/符號欄位為空"
+msgstr "Поле \"Текстовий шаблон/знак\" порожнє."
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:373
 #, python-format
 msgid ""
 "Invalid value for 'text pattern/sign' field. You must specify a character "
 "with this opcode. E.g.: %s"
-msgstr "“文字/符號”欄位的值無效。您必須使用此操作碼指定一個自原。例如:%s"
+msgstr ""
+"Неправильне значення для поля 'шаблон тексту/знака'. Ви маєте вказати символ "
+"за допомогою цього операційного коду. Наприклад: %s"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:377
 #, python-format
 msgid ""
 "'Braille representation' field is empty. You must specify something with "
 "this opcode. E.g.: %s"
-msgstr "“點字表示”欄位為空。您必須使用此操作碼指定內容。例如:%s"
+msgstr ""
+"Поле брайлівської репрезентації порожнє. Ви повинні щось вказати за "
+"допомогою цього операційного коду. Наприклад: %s"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:381
 #, python-format
 msgid ""
 "Invalid value for 'braille representation' field. You must enter dot "
 "patterns with this opcode. E.g.: %s"
-msgstr "“點字表示”欄位的值無效。您必須使用此操作碼輸入點。例如:%s"
+msgstr ""
+"Неправильне значення для поля  'брайлівське подання'. Ви маєте ввести шаблон "
+"крапок за допомогою цього операційного  коду. Наприклад: %s"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:44
 msgid "Use braille table behavior (no description possible)"
-msgstr "使用點字表格行為（無法進行描述）"
+msgstr "Використовувати поведінку брайлівської таблиці (опис неможливий)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:45
 msgid "Dots 1-8 (⣿)"
-msgstr "八點 (⣿)"
+msgstr "Крапки 1-8 (⣿)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:46
 msgid "Dots 1-6 (⠿)"
-msgstr "六點 (⠿)"
+msgstr "Крапки 1-6 (⠿)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:47
 msgid "Empty cell (⠀)"
-msgstr "空格 (⠀)"
+msgstr "Порожня комірка (⠀)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:48
 #, python-brace-format
 msgid "Other dot pattern (e.g.: {dotPatternSample})"
-msgstr "其他表示法（例如:{dotPatternSample}）"
+msgstr "Інший шаблон крапок (наприклад: {dotPatternSample})"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:51
 msgid "Question mark (depending on output table)"
-msgstr "問號（取決於輸出表）"
+msgstr "Знак питання (залежить від таблиці виведення)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:52
 #, python-brace-format
 msgid "Other sign/pattern (e.g.: {signPatternSample})"
-msgstr "其他符號/樣式（例如:{signPatternSample}）"
+msgstr "Інший знак/шаблон (наприклад: {signPatternSample})"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:55
 msgid "Hexadecimal, Liblouis style"
-msgstr "十六進位值"
+msgstr "Шістнадцятковий у стилі Liblouis"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:56
 msgid "Hexadecimal, HUC8"
-msgstr "十六進位值，HUC8"
+msgstr "Шістнадцятковий, HUC8"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:57
 msgid "Hexadecimal, HUC6"
-msgstr "十六進位值，HUC6"
+msgstr "Шістнадцятковий, HUC6"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:237
 msgid "Undefined character representation"
-msgstr "未定義字元"
+msgstr "Подання невизначених символів"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:242
 msgid "Representation &method:"
-msgstr "表示法(&M)"
+msgstr "&Метод подання:"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:253
 msgid "Specify another &pattern"
-msgstr "指定另一個＆pattern(&P)"
+msgstr "Вказати інший &шаблон"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:257
 msgid ""
 "Show punctuation/symbol &name for undefined characters if available (can "
 "cause a lag)"
-msgstr "如果可能，顯示未定義自原的標點/符號和名稱（可能會導致延遲）"
+msgstr ""
+"Показувати ім'я &символу/знака пунктуації для невизначених символів якщо "
+"доступно (може викликати відставання)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:267
 msgid "Also describe e&xtended characters (e.g.: country flags)"
-msgstr "同時描述擴充自原（例如:國家/地區標誌）"
+msgstr "Також описувати &розширені символи (наприклад, прапори країн)"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:277
 msgid "&Full extended description"
-msgstr "完整的擴充說明(&F)"
+msgstr "&Повний розширений опис"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:286
 msgid "Show the si&ze taken"
-msgstr "顯示所佔大小(&Z)"
+msgstr "Показати взятий р&озмір"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:293
 msgid "&Start tag:"
-msgstr "開始標記(&S)"
+msgstr "&Тег початку:"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:298
 msgid "&End tag:"
-msgstr "結束標記(&E)"
+msgstr "&Тег завершення:"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:309
 msgid "&Language:"
-msgstr "語言(&L):"
+msgstr "&Мова:"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:312
 msgid "Use the current output table"
-msgstr "使用目前輸出轉譯表"
+msgstr "Використовувати поточну таблицю виведення"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:325
 msgid "Braille &table:"
-msgstr "點字表(&T)"
+msgstr "Брайлівська &таблиця:"
+
+#. Translators: label of a dialog.
+#: addon/globalPlugins/brailleExtender/undefinedchars.py:330
+msgid ""
+"Character limit at which descriptions are disabled (to avoid freezes, >):"
+msgstr ""
+"Обмеження символів, за якого описи вимикаються (для уникнення зависань, >):"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:56
 #, python-brace-format
 msgid ""
 "{addonName} version {version} is available. Do you want to download it now?"
-msgstr "{addonName} 版本 {version} 已可用。您要立即下載嗎？"
+msgstr ""
+"Доступний {addonName} версії {version}. Ви хочете завантажити його зараз?"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:72
 #, python-format
 msgid "You are up-to-date. %s is the latest version."
-msgstr "這是最新版。%s是最新版本。"
+msgstr "Оновлено. Остання версія %s."
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:81
 #, python-format
@@ -2360,234 +2475,226 @@ msgid ""
 "later or download and install manually from %s. Do you want to open this URL "
 "in your browser?"
 msgstr ""
-"糟糕！下載 Braille Extender 更新時出現問題。請稍後重試，或從%s下載並手動安"
-"裝。您要在瀏覽器中打開此URL嗎？"
+"Ой! Під час завантаження оновлення Розширювача брайля виникла проблема. Будь "
+"ласка, повторіть пізніше або завантажте і встановіть його вручну з %s. "
+"Хочете відкрити це посилання у своєму браузері?"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:83
 msgid "Details:"
-msgstr "細節:"
+msgstr "Подробиці:"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:109
 #, python-brace-format
 msgid ""
 "Hashes do not match! Actual value is '{actualHash}'. Expected is "
 "'{expectedHash}'."
-msgstr "雜湊比對不符！實際值為 \"{actualHash}\"。預期值為 \"{expectedHash}\"。"
+msgstr ""
+"Хеші не збігаються! Актуальне значення - '{actualHash}'. Очікуване значення "
+"- '{expectedHash}'."
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:132
 msgid "An update check dialog is already running!"
-msgstr "檢查更新已在執行！"
+msgstr "Діалог перевірки оновлень вже запущено!"
 
 #: addon/globalPlugins/brailleExtender/updatecheck.py:133
 msgid "Braille Extender update"
-msgstr "Braille Extender 更新"
+msgstr "Оновлення Розширювача брайля"
 
 #: addon/globalPlugins/brailleExtender/utils.py:40
 msgid "Muted sound"
-msgstr "靜音"
+msgstr "Звук вимкнено"
 
 #: addon/globalPlugins/brailleExtender/utils.py:86
 msgid "Reload successful"
-msgstr "重新載入附加元建成功"
+msgstr "Успішне перезавантаження"
 
 #: addon/globalPlugins/brailleExtender/utils.py:89
 msgid "Reload failed"
-msgstr "重新載入附加元建失敗"
+msgstr "Помилка перезавантаження"
 
 #: addon/globalPlugins/brailleExtender/utils.py:97
 #: addon/globalPlugins/brailleExtender/utils.py:116
 msgid "Not a character"
-msgstr "不是字元"
+msgstr "Не символ"
 
 #: addon/globalPlugins/brailleExtender/utils.py:101
 msgid "unknown"
-msgstr "未知"
+msgstr "невідомо"
 
 #: addon/globalPlugins/brailleExtender/utils.py:115
 msgid "Char info"
-msgstr "字元訊息"
+msgstr "Інформація про символ"
 
 #: addon/globalPlugins/brailleExtender/utils.py:198
 msgid "Available combinations"
-msgstr "可用組合"
+msgstr "Доступні комбінації"
 
 #: addon/globalPlugins/brailleExtender/utils.py:200
 msgid "One combination available"
-msgstr "一種組合可用"
+msgstr "Доступна одна комбінація"
 
 #: addon/globalPlugins/brailleExtender/utils.py:209
 msgid "space"
-msgstr "空白鍵"
+msgstr "пробіл"
 
 #: addon/globalPlugins/brailleExtender/utils.py:210
 msgid "left SHIFT"
-msgstr "左邊 shift"
+msgstr "лівий SHIFT"
 
 #: addon/globalPlugins/brailleExtender/utils.py:211
 msgid "right SHIFT"
-msgstr "右邊 shift"
+msgstr "правий шіфт"
 
 #: addon/globalPlugins/brailleExtender/utils.py:212
 msgid "left selector"
-msgstr "左邊 selector"
+msgstr "лівий селектор"
 
 #: addon/globalPlugins/brailleExtender/utils.py:213
 msgid "right selector"
-msgstr "右邊 selector"
+msgstr "правий селектор"
 
 #: addon/globalPlugins/brailleExtender/utils.py:214
 msgid "dot"
-msgstr "點"
+msgstr "крапка"
 
 #: addon/globalPlugins/brailleExtender/utils.py:229
 #, python-brace-format
 msgid "{gesture} on {brailleDisplay}"
-msgstr "在 {brailleDisplay} 上 {gesture}"
+msgstr "{gesture} на {brailleDisplay}"
 
 #: addon/globalPlugins/brailleExtender/utils.py:289
 msgid "No text selected"
-msgstr "未選取文字"
+msgstr "Немає виділеного тексту"
 
 #: buildVars.py:40
 msgid ""
 "BrailleExtender is a NVDA add-on that provides various features at braille "
 "level. Currently, the following features are implemented"
-msgstr "BrailleExtender 是 NVDA 附加元件，可提供各種點字功能。目前，包括了"
+msgstr ""
+"Розширювач брайля — це додаток для NVDA, який надає низку функцій для "
+"брайля. Наразі він має такі функції"
 
 #: buildVars.py:41
 msgid "reload two favorite braille display with shortcuts"
-msgstr "使用快速鍵重新載入兩台最常用的點顯器"
+msgstr "перезавантажити два обрані брайлівські дисплеї комбінацією клавіш"
 
 #: buildVars.py:42
 msgid ""
 "automatic review cursor tethering in terminal role like in PuTTY, "
 "Powershell, bash, cmd"
-msgstr "在終端機（如 PuTTY，Powershell，bash，cmd）中自動跟隨檢閱游標"
+msgstr ""
+"автоматично прив'язувати брайль до переглядового курсора у терміналах на "
+"зразок PuTTY, Powershell, bash, cmd"
 
 #: buildVars.py:43
 msgid "auto scroll"
-msgstr "自動捲動"
+msgstr "автопрокрутка"
 
 #: buildVars.py:44
 msgid "switch between several input/output braille tables"
-msgstr "在多個輸入/輸出點字表之間切換"
+msgstr "перемикання між кількома брайлівськими таблицями введення/виведення"
 
 #: buildVars.py:45
 msgid "mark the text with special attributes through dot 7, dot 8 or both"
-msgstr "通過第七點，第八點，或七、八點，標記特殊屬性文字"
+msgstr ""
+"маркувати текст спеціальними атрибутами з крапки 7, крапки 8 або з обох"
 
 #: buildVars.py:46
 msgid "use two output braille tables simultaneously"
-msgstr "同時使用兩個輸出點字表"
+msgstr "використовувати дві брайлівські таблиці виведення одночасно"
 
 #: buildVars.py:47
 msgid "display tab signs as spaces"
-msgstr "將 tab 顯示為空格"
+msgstr "показувати знаки табуляції як пробіли"
 
 #: buildVars.py:48
 msgid "reverse forward scroll and back scroll buttons"
-msgstr "前後捲動鍵互換"
+msgstr "поміняти місцями кнопки прокрутки вперед і назад"
 
 #: buildVars.py:49
 msgid ""
 "say the current line during text scrolling either in review mode, or in "
 "focus mode or both"
-msgstr "在檢閱模式或焦點模式，或同時在這兩種情況下，讀出文字捲動時的目前行"
+msgstr ""
+"промовляє поточний рядок під час прокрутки або в режимі перегляду, або в "
+"режимі фокуса, або в обох"
 
 #: buildVars.py:50
 msgid "translate text easily in Unicode braille and vice versa. E.g.: z <--> ⠵"
-msgstr "輕鬆用 Unicode 點字翻譯文字，反之亦然。例如:z <--> ⠵"
+msgstr ""
+"легко переводить текст в Unicode braille і навпаки. Наприклад: z <--> ⠵"
 
 #: buildVars.py:51
 msgid ""
 "convert cell description to Unicode braille and vice versa. E.g.: 123 <--> ⠇"
-msgstr "將一方點字描述轉換為 Unicode 點字，反之亦然。例如:123 <--> ⠇"
+msgstr ""
+"перетворювати опис брайлівських комірок в Unicode braille і навпаки. "
+"Наприклад: 123 <--> ⠇"
 
 #: buildVars.py:52
 msgid "lock braille keyboard"
-msgstr "鎖定點字鍵盤"
+msgstr "блокувати брайлівську клавіатуру"
 
 #: buildVars.py:53
 msgid "launch an application/URL with gesture"
-msgstr "用手勢啟動應用程式/ URL"
+msgstr "запустити застосунок/URL жестом"
 
 #: buildVars.py:54
 msgid "braille dictionaries"
-msgstr "點字字典"
+msgstr "брайлівські словники"
 
 #: buildVars.py:55
 msgid "type with one-hand from braille keyboard"
-msgstr "用點字鍵盤單手打字"
+msgstr "друкувати однією рукою на брайлівській клавіатурі"
 
 #: buildVars.py:56
 msgid ""
 "display undefined characters from braille tables (including emojis) using "
 "altenative representations"
-msgstr "從點字表顯示未定義字元（包括表情符號）中的未定義自原"
+msgstr ""
+"показувати невизначені у брайлівській таблиці символи (включно з емодзі), "
+"використовуючи альтернативне подання"
 
 #: buildVars.py:57
 msgid "enter any character from braille keyboard (including emojis)"
-msgstr "從點字鍵盤輸入任何自原（包括表情符號）"
+msgstr "вводити будь-які символи з брайлівської клавіатури (включаючи емодзі)"
 
 #: buildVars.py:58
 msgid "skip blank lines during text scrolling"
-msgstr "文字捲動中跳過空白"
+msgstr "пропускати порожні рядки під час прокрутки тексту"
 
 #: buildVars.py:60
 msgid "and much more!"
-msgstr "以及更多功能！"
+msgstr "і набагато більше!"
 
 #: buildVars.py:62
 msgid ""
 "For some braille displays, it extends the braille display commands to provide"
-msgstr "對於某些點顯器，它擴充了點顯器命令以提供"
+msgstr ""
+"Для деяких брайлівських дисплеїв він розширює команди брайлівських дисплеїв, "
+"які надають"
 
 #: buildVars.py:63
 msgid ""
 "offer complete gesture maps including function keys, multimedia keys, quick "
 "navigation, etc."
-msgstr "提供完整手勢，包括功能鍵，多媒體鍵，快速導航等。"
+msgstr ""
+"пропонує повний набір жестів, включаючи функціональні клавіші, мультимедійні "
+"клавіші, швидку навігацію тощо."
 
 #: buildVars.py:64
 msgid "emulate modifier keys, and thus any keyboard shortcut"
-msgstr "模擬組合鍵，從而模擬任何鍵盤快速鍵"
+msgstr ""
+"емулювати клавіші-модифікатори і, відповідно, будь-яку комбінацію клавіш"
 
 #: buildVars.py:65
 msgid ""
 "offer several keyboard configurations concerning the possibility to input "
 "dots 7 and 8, enter and backspace"
-msgstr "提供幾種與輸入第七點、第八點，輸入和倒退鍵有關的鍵盤設定"
+msgstr ""
+"пропонує кілька конфігурацій клавіатури для введення крапок 7 і 8, ентера і "
+"бекспейса"
 
 #: buildVars.py:66
 msgid "add actions and quick navigation through a rotor"
-msgstr "通過轉輪新增動作和快速導航"
-
-#~ msgid "Advanced braille input mode enabled"
-#~ msgstr "啟用進階點字輸入模式"
-
-#~ msgid "Advanced braille input mode disabled"
-#~ msgstr "停用進階點字輸入模式"
-
-#~ msgid "Autoscroll stopped"
-#~ msgstr "自動捲動停止"
-
-#~ msgid "Unable to start autoscroll. More info in NVDA log"
-#~ msgstr "無法啟動自動捲動。更多資訊請查看 NVDA 事件紀錄"
-
-#~ msgid "Abbreviation"
-#~ msgstr "公司類型簡稱"
-
-#~ msgid "Replace by"
-#~ msgstr "取代為"
-
-#~ msgid "&Automatically check for Braille Extender updates"
-#~ msgstr "自動檢查 Braille Extender 更新(&A)"
-
-#~ msgid "Add-on &update channel:"
-#~ msgstr "選擇更新版本(&U)"
-
-#~ msgid "&Use cursor keys to route cursor in review mode"
-#~ msgstr "在檢閱模式使用方向鍵來定位游標(&U)"
-
-#~ msgid "Landmark"
-#~ msgstr "地標 (Landmark)"
+msgstr "додати дії і швидку навігацію за допомогою ротора"

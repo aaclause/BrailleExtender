@@ -23,9 +23,11 @@ from logHandler import log
 from . import addoncfg
 from . import utils
 from .advancedinput import SettingsDlg as AdvancedInputModeDlg
-from .common import addonName, baseDir, punctuationSeparator
+from .common import addonName, baseDir, punctuationSeparator, RC_NORMAL
 from .autoscroll import SettingsDlg as AutoScrollDlg
 from .onehand import SettingsDlg as OneHandModeDlg
+from .rolelabels import SettingsDlg as RoleLabelsDlg
+from .speechhistorymode import SettingsDlg as SpeechHistorymodeDlg
 from .tablegroups import SettingsDlg as BrailleTablesDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
 
@@ -48,16 +50,21 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		# Translators: label of a dialog.
-		self.autoCheckUpdate = sHelper.addItem(wx.CheckBox(self, label=_("&Automatically check for Braille Extender updates")))
-		self.autoCheckUpdate.SetValue(config.conf["brailleExtender"]["autoCheckUpdate"])
 
 		# Translators: label of a dialog.
-		self.updateChannel = sHelper.addLabeledControl(_("Add-on &update channel:"), wx.Choice, choices=list(addoncfg.updateChannels.values()))
+		choices = [
+			_("stable channel, automatic check"),
+			_("dev channel, automatic check"),
+			_("stable channel, manual check"),
+			_("dev channel, manual check"),
+		]
+		self.updateCheck = sHelper.addLabeledControl(_("Check for upd&ates:"), wx.Choice, choices=choices)
 		if config.conf["brailleExtender"]["updateChannel"] in addoncfg.updateChannels.keys():
 			itemToSelect = list(addoncfg.updateChannels.keys()).index(config.conf["brailleExtender"]["updateChannel"])
-		else: itemToSelect = list(config.conf["brailleExtender"]["updateChannel"]).index(addoncfg.CHANNEL_stable)
-		self.updateChannel.SetSelection(itemToSelect)
+		else:
+			itemToSelect = list(addoncfg.updateChannels.keys()).index(addoncfg.CHANNEL_stable)
+		if not config.conf["brailleExtender"]["autoCheckUpdate"]: itemToSelect += len(addoncfg.updateChannels.keys())
+		self.updateCheck.SetSelection(itemToSelect)
 
 		# Translators: label of a dialog.
 		self.speakScroll = sHelper.addLabeledControl(_("Say current line while &scrolling in:"), wx.Choice, choices=list(addoncfg.focusOrReviewChoices.values()))
@@ -84,8 +91,13 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.speakRoutingTo.SetValue(config.conf["brailleExtender"]["speakRoutingTo"])
 
 		# Translators: label of a dialog.
-		self.routingReviewModeWithCursorKeys = sHelper.addItem(wx.CheckBox(self, label=_("&Use cursor keys to route cursor in review mode")))
-		self.routingReviewModeWithCursorKeys.SetValue(config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"])
+		label = _("Routing cursors behavior in edit &fields:")
+		self.routingCursorsEditFields = sHelper.addLabeledControl(label, wx.Choice, choices=list(addoncfg.routingCursorsEditFields_labels.values()))
+		if config.conf["brailleExtender"]["routingCursorsEditFields"] in addoncfg.routingCursorsEditFields_labels:
+			itemToSelect = list(addoncfg.routingCursorsEditFields_labels.keys()).index(config.conf["brailleExtender"]["routingCursorsEditFields"])
+		else:
+			itemToSelect = list(addoncfg.routingCursorsEditFields_labels.keys()).index(RC_NORMAL)
+		self.routingCursorsEditFields.SetSelection(itemToSelect)
 
 		# Translators: label of a dialog.
 		self.hourDynamic = sHelper.addItem(wx.CheckBox(self, label=_("&Display time and date infinitely")))
@@ -125,14 +137,24 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.reverseScrollBtns.SetValue(config.conf["brailleExtender"]["reverseScrollBtns"])
 
 		self.brailleDisplay1 = sHelper.addLabeledControl(_("Preferred &primary braille display:"), wx.Choice, choices=self.bds_v)
-		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
+		driver_name = "last"
+		if config.conf["brailleExtender"]["brailleDisplay1"] in self.bds_k:
+			driver_name = config.conf["brailleExtender"]["brailleDisplay1"]
+		self.brailleDisplay1.SetSelection(self.bds_k.index(driver_name))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Preferred &secondary braille display:"), wx.Choice, choices=self.bds_v)
-		self.brailleDisplay2.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
+		driver_name = "last"
+		if config.conf["brailleExtender"]["brailleDisplay2"] in self.bds_k:
+			driver_name = config.conf["brailleExtender"]["brailleDisplay2"]
+		self.brailleDisplay2.SetSelection(self.bds_k.index(driver_name))
 
 	def postInit(self): self.autoCheckUpdate.SetFocus()
 
 	def onSave(self):
-		config.conf["brailleExtender"]["autoCheckUpdate"] = self.autoCheckUpdate.IsChecked()
+		updateCheckChoice = self.updateCheck.GetSelection()
+		size = len(addoncfg.updateChannels.keys())
+		config.conf["brailleExtender"]["autoCheckUpdate"] = updateCheckChoice < size
+		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[updateCheckChoice % size]
+
 		config.conf["brailleExtender"]["hourDynamic"] = self.hourDynamic.IsChecked()
 		config.conf["brailleExtender"]["reviewModeTerminal"] = self.reviewModeTerminal.IsChecked()
 		if self.reverseScrollBtns.IsChecked(): instanceGP.reverseScrollBtns()
@@ -143,9 +165,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["smartCapsLock"] = self.smartCapsLock.IsChecked()
 		config.conf["brailleExtender"]["stopSpeechUnknown"] = self.stopSpeechUnknown.IsChecked()
 		config.conf["brailleExtender"]["speakRoutingTo"] = self.speakRoutingTo.IsChecked()
-		config.conf["brailleExtender"]["routingReviewModeWithCursorKeys"] = self.routingReviewModeWithCursorKeys.IsChecked()
 
-		config.conf["brailleExtender"]["updateChannel"] = list(addoncfg.updateChannels.keys())[self.updateChannel.GetSelection()]
 		config.conf["brailleExtender"]["speakScroll"] = list(addoncfg.focusOrReviewChoices.keys())[self.speakScroll.GetSelection()]
 
 		config.conf["brailleExtender"]["rightMarginCells_%s" % addoncfg.curBD] = self.rightMarginCells.Value
@@ -153,6 +173,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["brailleDisplay2"] = self.bds_k[self.brailleDisplay2.GetSelection()]
 		if addoncfg.gesturesFileExists:
 			config.conf["brailleExtender"]["keyboardLayout_%s" % addoncfg.curBD] = addoncfg.iniProfile["keyboardLayouts"].keys()[self.KBMode.GetSelection()]
+		config.conf["brailleExtender"]["routingCursorsEditFields"] = list(addoncfg.routingCursorsEditFields_labels.keys())[self.routingCursorsEditFields.GetSelection()]
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = list(addoncfg.outputMessage.keys())[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = list(addoncfg.outputMessage.keys())[self.modifierKeysFeedback.GetSelection()]
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
@@ -204,136 +225,6 @@ class AttribraDlg(gui.settingsDialogs.SettingsPanel):
 			idx = 0
 		return idx
 
-class RoleLabelsDlg(gui.settingsDialogs.SettingsPanel):
-
-	# Translators: title of a dialog.
-	title = _("Role labels")
-
-	roleLabels  = {}
-
-	def makeSettings(self, settingsSizer):
-		self.roleLabels = config.conf["brailleExtender"]["roleLabels"].copy()
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.toggleRoleLabels = sHelper.addItem(wx.CheckBox(self, label=_("Use custom braille &role labels")))
-		self.toggleRoleLabels.SetValue(config.conf["brailleExtender"]["features"]["roleLabels"])
-		self.categories = sHelper.addLabeledControl(_("Role &category:"), wx.Choice, choices=[_("General"), _("Landmark"), _("Positive state"), _("Negative state")])
-		self.categories.Bind(wx.EVT_CHOICE, self.onCategories)
-		self.categories.SetSelection(0)
-		sHelper2 = gui.guiHelper.BoxSizerHelper(self, orientation=wx.HORIZONTAL)
-		self.labels = sHelper2.addLabeledControl(_("&Role:"), wx.Choice, choices=[controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()])
-		self.labels.Bind(wx.EVT_CHOICE, self.onLabels)
-		self.label = sHelper2.addLabeledControl(_("Braille &label"), wx.TextCtrl)
-		self.label.Bind(wx.EVT_TEXT, self.onLabel)
-		sHelper.addItem(sHelper2)
-		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
-		self.resetLabelBtn = bHelper.addButton(self, wx.NewId(), _("&Reset this role label"), wx.DefaultPosition)
-		self.resetLabelBtn.Bind(wx.EVT_BUTTON, self.onResetLabelBtn)
-		self.resetAllLabelsBtn = bHelper.addButton(self, wx.NewId(), _("Reset all role labels"), wx.DefaultPosition)
-		self.resetAllLabelsBtn.Bind(wx.EVT_BUTTON, self.onResetAllLabelsBtn)
-		sHelper.addItem(bHelper)
-		self.onCategories(None)
-
-	def onCategories(self, event):
-		idCategory = self.categories.GetSelection()
-		if idCategory == 0:
-			labels = [controlTypes.roleLabels[int(k)] for k in braille.roleLabels.keys()]
-		elif idCategory == 1:
-			labels = list(braille.landmarkLabels.keys())
-		elif idCategory == 2:
-			labels = [controlTypes.stateLabels[k] for k in braille.positiveStateLabels.keys()]
-		elif idCategory == 3:
-			labels = [controlTypes.stateLabels[k] for k in braille.negativeStateLabels.keys()]
-		else: labels = []
-		for iLabel, label in enumerate(labels):
-			idLabel = self.getIDFromIndexes(idCategory, iLabel)
-			actualLabel = self.getLabelFromID(idCategory, idLabel)
-			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-			labels[iLabel] += "%s: %s" % (punctuationSeparator, actualLabel)
-			if actualLabel != originalLabel: labels[iLabel] += " (%s)" % originalLabel
-		self.labels.SetItems(labels)
-		if idCategory > -1 and idCategory < 4: self.labels.SetSelection(0)
-		self.onLabels(None)
-
-	def onLabels(self, event):
-		idCategory = self.categories.GetSelection()
-		idLabel = self.getIDFromIndexes(idCategory, self.labels.GetSelection())
-		key = "%d:%s" % (idCategory, idLabel)
-		if key in self.roleLabels.keys(): self.label.SetValue(self.roleLabels[key])
-		else: self.label.SetValue(self.getOriginalLabel(idCategory, idLabel))
-
-	def onLabel(self, evt):
-		idCategory = self.categories.GetSelection()
-		iLabel = self.labels.GetSelection()
-		idLabel = self.getIDFromIndexes(idCategory, iLabel)
-		key = "%d:%s" % (idCategory, idLabel)
-		label = self.label.GetValue()
-		if idCategory >= 0 and iLabel >= 0:
-			if self.getOriginalLabel(idCategory, idLabel, chr(4)) == label:
-				if key in self.roleLabels.keys():
-					self.roleLabels.pop(key)
-					log.debug("Key %s deleted" % key)
-				else: log.info("Key %s not present" % key)
-			else: self.roleLabels[key] = label
-			actualLabel = self.getLabelFromID(idCategory, idLabel)
-			originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-			if label != originalLabel: self.resetLabelBtn.Enable()
-			else: self.resetLabelBtn.Disable()
-
-	def onResetLabelBtn(self, event):
-		idCategory = self.categories.GetSelection()
-		iLabel = self.labels.GetSelection()
-		idLabel = self.getIDFromIndexes(idCategory, iLabel)
-		key = "%d:%s" % (idCategory, idLabel)
-		actualLabel = self.getLabelFromID(idCategory, idLabel)
-		originalLabel = self.getOriginalLabel(idCategory, idLabel, actualLabel)
-		self.label.SetValue(originalLabel)
-		self.onLabel(None)
-		self.label.SetFocus()
-
-	def onResetAllLabelsBtn(self, event):
-		nbCustomizedLabels = len(self.roleLabels)
-		if not nbCustomizedLabels:
-			queueHandler.queueFunction(queueHandler.eventQueue, ui.message, _("You have no customized role labels."))
-			return
-		res = gui.messageBox(
-			_("You have %d customized role labels defined. Do you want to reset all labels?") % nbCustomizedLabels,
-			_("Reset role labels"),
-			wx.YES|wx.NO|wx.ICON_INFORMATION)
-		if res == wx.YES:
-			self.roleLabels = {}
-			config.conf["brailleExtender"]["roleLabels"] = {}
-			self.onCategories(None)
-
-	def getOriginalLabel(self, idCategory, idLabel, defaultValue = ''):
-		if "%s:%s" % (idCategory, idLabel) in addoncfg.backupRoleLabels.keys():
-			return addoncfg.backupRoleLabels["%s:%s" % (idCategory, idLabel)][1]
-		return self.getLabelFromID(idCategory, idLabel)
-
-	@staticmethod
-	def getIDFromIndexes(idCategory, idLabel):
-		try:
-			if idCategory == 0: return list(braille.roleLabels.keys())[idLabel]
-			if idCategory == 1: return list(braille.landmarkLabels.keys())[idLabel]
-			if idCategory == 2: return list(braille.positiveStateLabels.keys())[idLabel]
-			if idCategory == 3: return list(braille.negativeStateLabels.keys())[idLabel]
-			raise ValueError("Invalid value for ID category: %d" % idCategory)
-		except BaseException: return -1
-
-	def getLabelFromID(self, idCategory, idLabel):
-		if idCategory == 0: return braille.roleLabels[idLabel]
-		if idCategory == 1: return braille.landmarkLabels[idLabel]
-		if idCategory == 2: return braille.positiveStateLabels[idLabel]
-		if idCategory == 3: return braille.negativeStateLabels[idLabel]
-		raise ValueError("Invalid value: %d" % idCategory)
-
-	def postInit(self): self.toggleRoleLabels.SetFocus()
-
-	def onSave(self):
-		config.conf["brailleExtender"]["features"]["roleLabels"] = self.toggleRoleLabels.IsChecked()
-		config.conf["brailleExtender"]["roleLabels"] = self.roleLabels
-		addoncfg.discardRoleLabels()
-		if config.conf["brailleExtender"]["features"]["roleLabels"]:
-			addoncfg.loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 
 
 class QuickLaunchesDlg(gui.settingsDialogs.SettingsDialog):
@@ -486,6 +377,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 	categoryClasses=[
 		GeneralDlg,
 		AutoScrollDlg,
+		SpeechHistorymodeDlg,
 		AttribraDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,

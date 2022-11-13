@@ -76,8 +76,7 @@ def setUndefinedChar(t=None):
 		t = config.conf["brailleExtender"]["undefinedCharsRepr"]["method"]
 	if t == 0:
 		return
-	louis.compileString(getCurrentBrailleTables(), bytes(
-		f"undefined {HUCDotPattern}", "ASCII"))
+	louis.compileString(getCurrentBrailleTables(), f"undefined {HUCDotPattern}")
 
 
 def getExtendedSymbolsForString(s: str, lang) -> dict:

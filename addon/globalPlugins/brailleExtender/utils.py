@@ -309,21 +309,33 @@ def getCharFromValue(s):
 	return chr(n)
 
 def getCurrentBrailleTables(input_=False, brf=False):
+	tables = []
 	if brf:
-		tables = [
-			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8"),
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
+		tables.append(
+			os.path.join(baseDir, "res", "brf.ctb").encode("UTF-8")
+		)
 	else:
-		tables = []
 		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
 		if app and app.appName != "nvda": tables += tabledictionaries.dictTables
-		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
-		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
-		tables += [
-			mainTable,
-			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
-		]
+		if input_:
+			groupTable = tablegroups._currentGroup[0]
+			if groupTable:
+				tables.extend(groupTable.get_tables())
+			else:
+				tables.append(
+					os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
+				)
+		else:
+			groupTable = tablegroups._currentGroup[1]
+			if groupTable:
+				tables.extend(groupTable.get_tables())
+			else:
+				tables.append(
+					os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
+				)
+	tables.append(
+		os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
+	)
 	return tables
 
 

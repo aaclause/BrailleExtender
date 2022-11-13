@@ -46,6 +46,7 @@ from . import tabledictionaries
 from . import undefinedchars
 from . import updatecheck
 from . import utils
+from .tablehelper import get_table_by_file_name
 from .common import (addonName, addonURL, addonVersion, punctuationSeparator,
 	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 
@@ -232,7 +233,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 				self.switchedMode = True
 			elif self.switchedMode and obj.role != utils.get_control_type("ROLE_TERMINAL"): self.restorReviewCursorTethering()
 
-		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
+		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"]["tables"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)
 		if self.autoTestPlayed: self.script_autoTest(None)
 		if braille.handler is not None and addoncfg.curBD != braille.handler.display.name:
@@ -296,9 +297,10 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.submenu_item = gui.mainFrame.sysTrayIcon.menu.Insert(2, wx.ID_ANY, "%s (%s)" % (_("&Braille Extender"), addonVersion), self.submenu)
 
 	def reloadBrailleTables(self):
-		tabledictionaries.setDictTables()
-		tabledictionaries.notifyInvalidTables()
-		if config.conf["brailleExtender"]["tabSpace"]:
+		patches.louis.liblouis.lou_free()
+		#tabledictionaries.setDictTables()
+		#tabledictionaries.notifyInvalidTables()
+		if config.conf["brailleExtender"]["tables"]["tabSpace"]:
 			liblouisDef = r"always \t " + ("0-" * addoncfg.getTabSize()).strip('-')
 			patches.louis.compileString(patches.getCurrentBrailleTables(), bytes(liblouisDef, "ASCII"))
 		undefinedchars.setUndefinedChar()
@@ -792,45 +794,66 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	script_decreaseDelayAutoScroll.__doc__ = _("Decrease braille autoscroll delay")
 
 	def script_switchInputBrailleTable(self, gesture):
+		table = config.conf["braille"]["inputTable"]
 		usageIn = tablegroups.USAGE_INPUT
-		choices = tablegroups.getPreferredTables()[0] + tablegroups.getGroups(0)[0]
+		choices = tablegroups.TableGroups(
+			tablegroups.tablesToGroups(
+				tablegroups.getPreferredTables()[0] + tablegroups._groups.get_groups()[0],
+				usageIn
+			)
+		)
 		if len(choices) < 2:
 			return ui.message(_("Please fill at least two tables and/or groups of tables for this feature first"))
 		newGroup = tablegroups.getGroup(
 			position=tablegroups.POSITION_NEXT,
-			usageIn=usageIn
-		)
-		res = tablegroups.setTableOrGroup(
 			usageIn=usageIn,
-			e=newGroup
+			choices=choices
 		)
-		table = tablegroups.get_table_by_file_name(newGroup.members[0] if newGroup else config.conf["braille"]["inputTable"])
-		if table: brailleInput.handler._table = table
-		if not res: raise RuntimeError("error")
+		if newGroup:
+			res = tablegroups.setTableOrGroup(
+				usageIn=usageIn,
+				e=newGroup
+			)
+			if not res:
+				log.error(f"Unable to set table or group (res={res}, usageIn={usageIn} newGroup={newGroup})")
+				ui.message(_(f"Unable to set table or group"))
+				return
+		brailleInput.handler.table = newGroup.members[0]
 		self.reloadBrailleTables()
 		utils.refreshBD()
-		dictionaries.setDictTables()
+		#tabledictionaries.setDictTables()
 		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else _("Default") + " (%s)" % brailleInput.handler.table.displayName)
 		ui.message(_("Input: %s") % desc)
 	script_switchInputBrailleTable.__doc__ = _("Switch between your favorite input braille tables including groups")
 
 	def script_switchOutputBrailleTable(self, gesture):
+		table = config.conf["braille"]["translationTable"]
 		usageIn = tablegroups.USAGE_OUTPUT
-		choices = tablegroups.getPreferredTables()[1] + tablegroups.getGroups(0)[1]
+		choices = tablegroups.TableGroups(
+			tablegroups.tablesToGroups(
+				tablegroups.getPreferredTables()[1] + tablegroups._groups.get_groups()[1],
+				usageIn
+			)
+		)
 		if len(choices) < 2:
 			return ui.message(_("Please fill at least two tables and/or groups of tables for this feature first"))
 		newGroup = tablegroups.getGroup(
 			position=tablegroups.POSITION_NEXT,
-			usageIn=usageIn
-		)
-		res = tablegroups.setTableOrGroup(
 			usageIn=usageIn,
-			e=newGroup
+			choices=choices
 		)
-		if not res: raise RuntimeError("error")
+		if newGroup:
+			res = tablegroups.setTableOrGroup(
+				usageIn=usageIn,
+				e=newGroup
+			)
+			if not res:
+				log.error(f"Unable to set table or group (res={res}, usageIn={usageIn} newGroup={newGroup})")
+				ui.message(_(f"Unable to set table or group"))
+				return
 		self.reloadBrailleTables()
 		utils.refreshBD()
-		dictionaries.setDictTables()
+		#tabledictionaries.setDictTables()
 		desc = (newGroup.name + (" (%s)" % _("group") if len(newGroup.members) > 1 else '') if newGroup else (_("Default") + " (%s)" % tablegroups.fileName2displayName([config.conf["braille"]["translationTable"]])[0]))
 		ui.message(_("Output: %s") % desc)
 
@@ -1310,7 +1333,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		if braille.handler._auto_scroll:
 			braille.handler.toggle_auto_scroll()
 		if self.autoTestPlayed: self.autoTestTimer.Stop()
-		tabledictionaries.removeTmpDict()
+		#tabledictionaries.removeTmpDict()
 		advancedinput.terminate()
 		super().terminate()
 

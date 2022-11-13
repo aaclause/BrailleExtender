@@ -143,8 +143,6 @@ def getConfspec():
 			"backup_tetherTo": 'string(default="focus")',
 			"backup_autoTether": "boolean(default=True)",
 		},
-		"tabSpace": "boolean(default=False)",
-		f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		"undefinedCharsRepr": {
 			"method": f"integer(min=0, default=8)",
 			"hardSignPatternValue": "string(default=??)",
@@ -212,7 +210,6 @@ def getConfspec():
 		},
 		"quickLaunches": {},
 		"roleLabels": {},
-		"brailleTables": {},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
 			"escapeSignUnicodeValue": "string(default=⠼)",
@@ -226,6 +223,8 @@ def getConfspec():
 			"shortcuts": 'string(default="?")',
 			"preferredInput": f'string(default="{config.conf["braille"]["inputTable"]}|unicode-braille.utb")',
 			"preferredOutput": f'string(default="{config.conf["braille"]["translationTable"]}")',
+			"tabSpace": "boolean(default=False)",
+			f"tabSize_{curBD}": "integer(min=1, default=2, max=42)",
 		},
 	}
 

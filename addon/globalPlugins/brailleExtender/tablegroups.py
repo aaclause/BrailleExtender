@@ -1,6 +1,6 @@
-# brailleTablesExt.py
+# tablegroups.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush Clause, released under GPL.
 
 import codecs
 import json
@@ -11,11 +11,14 @@ import wx
 import addonHandler
 import config
 from itertools import permutations
-from typing import Optional, List, Tuple
-from brailleTables import listTables
+from brailleTables import listTables, TABLES_DIR
 from logHandler import log
 from . import addoncfg
 from .common import baseDir, configDir
+from .tablehelper import (
+	getPreferredTables, getPreferredTablesIndexes,
+	get_display_names, get_tables, get_tables_file_name_by_id, get_file_names_by_display_names, get_table_by_file_name
+)
 
 addonHandler.initTranslation()
 
@@ -27,7 +30,7 @@ POSITIONS = [POSITION_CURRENT, POSITION_PREVIOUS, POSITION_NEXT]
 USAGE_INPUT = 0
 USAGE_OUTPUT = 1
 USAGE_BOTH = 2
-USAGES = [USAGE_INPUT, USAGE_OUTPUT, USAGE_BOTH]
+USAGES = (USAGE_INPUT, USAGE_OUTPUT, USAGE_BOTH)
 
 USAGE_LABELS = {
 	USAGE_INPUT: _("input only"),
@@ -35,20 +38,120 @@ USAGE_LABELS = {
 	USAGE_BOTH: _("input and output")
 }
 
-class GroupTable:
+class TableGroups:
+
+	_groups = []
+
+	def __init__(self, groups=[]):
+		self._groups = []
+		if groups:
+			for group in groups: self.add_group(group)
+
+	def __len__(self):
+		return len(self._groups)
+
+	def __getitem__(self, item):
+		return self._groups[item]
+
+	def __contains__(self, value):
+		for i, group in enumerate(self._groups):
+			if self.is_similar(value, group): return True
+		return False
+
+	def index(self, value):
+		for i, group in enumerate(self._groups):
+			if self.is_similar(value, group): return i
+		raise IndexError ("Group is not in list group")
+
+	def add_group(self, groupTable):
+		if not isinstance(groupTable, TableGroup):
+			raise TypeError("groupTable: wrong type")
+		self._groups.append(groupTable)
+
+	def is_similar(self, group1, group2):
+		if group1.usageIn != group2.usageIn:
+			return False
+		if len(group1.members) != len(group2.members):
+			return False
+		if group1.members != group2.members:
+			return False
+		return True
+
+	def get_json(self):
+		data = [
+			{
+				"name": group.name,
+				"members": [m.fileName for m in group.members],
+				"usageIn": group.usageIn,
+			}
+			for group in self._groups
+		]
+		return data
+
+	def load_json(self, data):
+		for group in data:
+			self.add_group(
+				TableGroups(
+					entry["name"],
+					entry["members"],
+					entry["usageIn"]
+				)
+			)
+
+	def get_groups(self):
+		groups = self._groups
+		i = [group for group in groups if group.usageIn in [USAGE_INPUT, USAGE_BOTH]]
+		o = [group for group in groups if group.usageIn in [USAGE_OUTPUT, USAGE_BOTH]]
+		return i, o
+
+
+class TableGroup:
+
 	name = None
 	members: list = []
 	usageIn = None
+
+	def __init__(self,
+		name: str,
+		members: list,
+		usageIn
+	):
+		if not isinstance(name, str):
+			raise TypeError("name: wrong type")
+		if not isinstance(members, list):
+			raise TypeError("members: wrong type")
+		if not isinstance(members, list):
+			raise TypeError("wrong type")
+		members = [member for member in members if member]
+		if len(members) < 1:
+			raise ValueError("Missing member")
+		self.name = name
+		self.usageIn = usageIn
+		self.members = []
+		for member in members:
+			table = get_table_by_file_name(member)
+			if table:
+				self.members.append(table)
+			else:
+				raise ValueError(f"invalid table ({member})")
+
+	def __str__(self):
+		name = self.name
+		members = self.members
+		usageIn = self.usageIn
+		return f'{{name="{name}", members={members}, usageIn={usageIn}}}'
+
+	def get_tables(self):
+		return [
+			os.path.join(TABLES_DIR, member.fileName)
+			for member in self.members
+		]
+
 
 
 def translateUsageIn(s):
 	labels = USAGE_LABELS
 	return labels[s] if s in labels.keys() else _("None")
-
-
-def setDict(newGroups):
-	global _groups
-	_groups = newGroups
 
 
 def getPathGroups():
@@ -57,47 +160,25 @@ def getPathGroups():
 
 def initializeGroups():
 	global _groups
-	_groups = []
+	_groups = TableGroups()
 	fp = getPathGroups()
-	if not os.path.exists(fp):
-		return
-	json_ = json.load(codecs.open(fp, "r", "UTF-8"))
-	for entry in json_:
-		_groups.append(
-			GroupTables(
-				entry["name"], entry["members"], entry["usageIn"]
-			)
-		)
+	if os.path.exists(fp):
+		json_ = json.load(codecs.open(fp, "r", "UTF-8"))
+		_groups.load_json(json_)
 
 
 def saveGroups(entries=None):
-	if not entries:
-		entries = getGroups()
-	entries = [
-		{
-			"name": entry.name,
-			"members": entry.members,
-			"usageIn": entry.usageIn,
-		}
-		for entry in entries
-	]
+	data = tableGroups.get_json()
 	with codecs.open(getPathGroups(), "w", "UTF-8") as outfile:
 		json.dump(entries, outfile, ensure_ascii=False, indent=2)
 
 
-def getGroups(plain=True):
-	if plain:
-		return _groups if _groups else []
-	groups = getGroups()
-	i = [group for group in groups if group.usageIn in [USAGE_INPUT, USAGE_BOTH]]
-	o = [group for group in groups if group.usageIn in [USAGE_OUTPUT, USAGE_BOTH]]
-	return i, o
-
-
 def getAllGroups(usageIn):
-	return [None]
 	usageInIndex = USAGES.index(usageIn)
-	return [None] + tablesToGroups(getPreferredTables()[usageInIndex], usageIn=usageIn) + getGroups(0)[usageInIndex]
+	groups = []
+	groups.extend(tablesToGroups(getPreferredTables()[usageInIndex], usageIn=usageIn))
+	groups.extend(_groups.get_groups()[usageInIndex])
+	return groups
 
 
 def getGroup(
@@ -106,40 +187,65 @@ def getGroup(
 	choices=None
 ):
 	global _currentGroup
-	if position not in POSITIONS or usageIn not in USAGES:
-		return None
+	if choices and not isinstance(choices, TableGroups):
+		raise TypeError("choices: wrong type")
+	if position not in POSITIONS:
+		raise ValueError("Invalid position")
+	if usageIn not in USAGES:
+		raise ValueError("Invalid usage")
 	usageInIndex = USAGES.index(usageIn)
 	currentGroup = _currentGroup[usageInIndex]
 	if not choices:
-		choices = getAllGroups(usageIn)
-	if currentGroup not in choices:
+		choices = getAllGroups(usageIn=usageIn)
+		if not choices:
+			return None
+	if not currentGroup:
 		currentGroup = choices[0]
+	if currentGroup not in choices:
+		choices_str = "\n  - ".join([str(c) for c in choices])
+		log.error(f"Unable to find the current group in group list\n- currentGroup={currentGroup}\n- choices={choices_str}")
+		raise RuntimeError()
 	curPos = choices.index(currentGroup)
 	newPos = curPos
 	if position == POSITION_PREVIOUS:
 		newPos = curPos - 1
 	elif position == POSITION_NEXT:
 		newPos = curPos + 1
-	return choices[newPos % len(choices)]
+	newChoice = choices[newPos % len(choices)]
+	if not isinstance(newChoice, TableGroup):
+		log.error(choices)
+		log.error(newChoice)
+		raise TypeError("newChoice: wrong type")
+	return newChoice
 
 
-def setTableOrGroup(usageIn, e, choices=None):
+def setTableOrGroup(
+	usageIn,
+	e,
+	choices=None
+):
 	global _currentGroup
+	if not isinstance(e, TableGroup):
+		raise TypeError("e: wrong type")
 	if not usageIn in USAGES:
-		return False
+		raise ValueError("invalid usageIn")
 	usageInIndex = USAGES.index(usageIn)
-	choices = getAllGroups(usageIn)
-	if not e in choices:
-		return False
+	if not choices:
+		choices = getAllGroups(usageIn)
+	"""if not e in choices:
+		log.error(f"e={e}, choices={[str(e) for e in choices]}")
+		return False"""
 	_currentGroup[usageInIndex] = e
 	return True
 
 
 def tablesToGroups(tables, usageIn):
+	if not tables: return []
+	if not isinstance(tables, list):
+		raise ValueError("tables wrong type")
 	groups = []
 	for table in tables:
-		groups.append(GroupTables(
-			", ".join(get_file_name_by_display_name([table])),
+		groups.append(TableGroup(", ".join(get_file_names_by_display_names([table])),
 			[table],
 			usageIn
 		))
@@ -152,7 +258,7 @@ def groupEnabled():
 
 _groups = None
 _currentGroup = [None, None]
-
+conf = config.conf["brailleExtender"]["tables"]
 
 class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
@@ -161,6 +267,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def makeSettings(self, settingsSizer):
 		listPreferredTablesIndexes = getPreferredTablesIndexes()
+		log.info(listPreferredTablesIndexes)
 		currentTableLabel = _("Use the current input table")
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		bHelper1 = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
@@ -183,8 +290,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 		label = _("Input braille table to use for keyboard shortcuts")
 		try:
-			selectedItem = 0 if conf["shortcuts"] == '?' else listTablesFileName(
-				get_tables(input=True, contracted=False)
+			selectedItem = 0 if conf["shortcuts"] == '?' else listTablesFileName(get_tables(input=True, contracted=False)
 			).index(conf["shortcuts"]) + 1
 		except ValueError:
 			selectedItem = 0
@@ -206,12 +312,15 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		# Translators: label of a dialog.
 		self.tabSpace = sHelper.addItem(wx.CheckBox(
 			self, label=_("Display &tab signs as spaces")))
-		self.tabSpace.SetValue(config.conf["brailleExtender"]["tabSpace"])
+		self.tabSpace.SetValue(conf["tabSpace"])
 		self.tabSpace.Bind(wx.EVT_CHECKBOX, self.onTabSpace)
 
 		# Translators: label of a dialog.
-		self.tabSize = sHelper.addLabeledControl(_("Number of &space for a tab sign")+" "+_("for the currrent braille display"),
-												 gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(config.conf["brailleExtender"]["tabSize_%s" % addoncfg.curBD]))
+		label =  _("Number of &space for a tab sign")+" "+_("for the currrent braille display")
+		self.tabSize = sHelper.addLabeledControl(
+			label,
+			gui.nvdaControls.SelectOnFocusSpinCtrl, min=1, max=42, initial=int(conf["tabSize_%s" % addoncfg.curBD])
+		)
 		sHelper.addItem(bHelper1)
 		self.onTabSpace()
 
@@ -262,8 +371,8 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		conf["preferredInput"] = inputTables
 		conf["preferredOutput"] = outputTables
 		conf["shortcuts"] = tablesShortcuts
-		config.conf["brailleExtender"]["tabSpace"] = self.tabSpace.IsChecked()
-		config.conf["brailleExtender"][f"tabSize_{addoncfg.curBD}"] = self.tabSize.Value
+		conf["tabSpace"] = self.tabSpace.IsChecked()
+		conf[f"tabSize_{addoncfg.curBD}"] = self.tabSize.Value
 
 	def postSave(self):
 		pass #initializePreferredTables()
@@ -471,7 +580,7 @@ class GroupEntryDlg(wx.Dialog):
 				self
 			)
 			return self.members.SetFocus()
-		self.groupEntry = GroupTables(name, members, usageIn)
+		self.groupEntry = TableGroups(name, members, usageIn)
 		evt.Skip()
 
 
@@ -572,7 +681,7 @@ class AddBrailleTablesDlg(gui.settingsDialogs.SettingsDialog):
 			self.isContracted.IsChecked(), path.decode("UTF-8"), displayName
 		)
 		k = hashlib.md5(path).hexdigest()[:15]
-		config.conf["brailleExtender"]["brailleTables"][k] = v
+		conf["brailleTables"][k] = v
 		super().onOk(evt)
 
 	@staticmethod

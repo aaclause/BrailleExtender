@@ -162,10 +162,6 @@ def removeTmpDict():
 		os.remove(path)
 
 
-setDictTables()
-notifyInvalidTables()
-
-
 class DictionaryDlg(gui.settingsDialogs.SettingsDialog):
 
 	def __init__(self, parent, title, type_):

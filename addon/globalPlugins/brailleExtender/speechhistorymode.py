@@ -1,3 +1,4 @@
+# coding: utf-8
 # speechhistorymode.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2021 Emil Hesmyr, André-Abush Clause, released under GPL.

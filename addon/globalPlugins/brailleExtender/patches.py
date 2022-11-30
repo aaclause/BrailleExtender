@@ -1,7 +1,9 @@
+# coding: utf-8
 # patches.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
+# coding: utf-8
 
 import os
 import struct

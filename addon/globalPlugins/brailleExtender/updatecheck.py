@@ -1,3 +1,4 @@
+# coding: utf-8
 # updatecheck.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2021 André-Abush Clause, released under GPL.

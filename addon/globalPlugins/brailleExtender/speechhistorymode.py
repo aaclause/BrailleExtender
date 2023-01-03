@@ -186,7 +186,7 @@ def showSpeechFromRoutingIndex(routingNumber):
 	elif routingNumber == braille.handler.displaySize - 1:
 		ui.browseableMessage(speechList[index])
 	else:
-		direction = routingNumber > braille.handler.displaySize / 2
+		direction = routingNumber + 1 > braille.handler.displaySize / 2
 		if direction:
 			index = index - (braille.handler.displaySize - routingNumber) + 1
 		else:

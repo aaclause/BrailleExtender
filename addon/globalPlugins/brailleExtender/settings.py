@@ -1,3 +1,4 @@
+# coding: utf-8
 # settings.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
@@ -63,7 +64,7 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		if config.conf["brailleExtender"]["updateChannel"] in addoncfg.updateChannels.keys():
 			itemToSelect = list(addoncfg.updateChannels.keys()).index(config.conf["brailleExtender"]["updateChannel"])
 		else:
-			itemToSelect = list(config.conf["brailleExtender"]["updateChannel"]).index(addoncfg.CHANNEL_stable)
+			itemToSelect = list(addoncfg.updateChannels.keys()).index(addoncfg.CHANNEL_stable)
 		if not config.conf["brailleExtender"]["autoCheckUpdate"]: itemToSelect += len(addoncfg.updateChannels.keys())
 		self.updateCheck.SetSelection(itemToSelect)
 
@@ -138,9 +139,15 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		self.reverseScrollBtns.SetValue(config.conf["brailleExtender"]["reverseScrollBtns"])
 
 		self.brailleDisplay1 = sHelper.addLabeledControl(_("Preferred &primary braille display:"), wx.Choice, choices=self.bds_v)
-		self.brailleDisplay1.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay1"]))
+		driver_name = "last"
+		if config.conf["brailleExtender"]["brailleDisplay1"] in self.bds_k:
+			driver_name = config.conf["brailleExtender"]["brailleDisplay1"]
+		self.brailleDisplay1.SetSelection(self.bds_k.index(driver_name))
 		self.brailleDisplay2 = sHelper.addLabeledControl(_("Preferred &secondary braille display:"), wx.Choice, choices=self.bds_v)
-		self.brailleDisplay2.SetSelection(self.bds_k.index(config.conf["brailleExtender"]["brailleDisplay2"]))
+		driver_name = "last"
+		if config.conf["brailleExtender"]["brailleDisplay2"] in self.bds_k:
+			driver_name = config.conf["brailleExtender"]["brailleDisplay2"]
+		self.brailleDisplay2.SetSelection(self.bds_k.index(driver_name))
 
 	def postInit(self): self.autoCheckUpdate.SetFocus()
 

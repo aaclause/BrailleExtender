@@ -1,7 +1,8 @@
+# coding: utf-8
 # BrailleExtender Addon for NVDA
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
-# Copyright (C) 2016-2020 André-Abush Clause <dev@andreabc.net>
+# Copyright (C) 2016-2023 André-Abush Clause <dev@andreabc.net>
 
 import subprocess
 import time
@@ -109,8 +110,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	if not addoncfg.noUnicodeTable:
 		backupInputTable = brailleInput.handler.table
 	backupMessageTimeout = None
-	backupTether = utils.getTether()
-	switchedMode = False
 
 	def __init__(self):
 		startTime = time.time()
@@ -159,22 +158,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			rotorItem = 0
 			self.bindRotorGES()
 
-		if config.conf["brailleExtender"]["reviewModeTerminal"]:
-			if not self.switchedMode and obj.role == utils.get_control_type("ROLE_TERMINAL") and obj.hasFocus:
-				if not hasattr(braille.handler, "TETHER_AUTO"):
-					self.backupTether = utils.getTether()
-					braille.handler.tether = braille.handler.TETHER_REVIEW
-				else:
-					if config.conf["braille"]["autoTether"]:
-						self.backupTether = braille.handler.TETHER_AUTO
-						config.conf["braille"]["autoTether"] = False
-					else:
-						self.backupTether = utils.getTether()
-					braille.handler.setTether(braille.handler.TETHER_REVIEW, auto=False)
-					braille.handler.handleReviewMove(shouldAutoTether=False)
-				self.switchedMode = True
-			elif self.switchedMode and obj.role != utils.get_control_type("ROLE_TERMINAL"): self.restorReviewCursorTethering()
-
 		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)
 		if self.autoTestPlayed: self.script_autoTest(None)
@@ -183,9 +166,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			self.onReload(None, 1)
 
 		if self.backup__brailleTableDict != config.conf["braille"]["translationTable"]: self.reloadBrailleTables()
-
 		nextHandler()
-		return
 
 	def event_foreground(self, obj, nextHandler):
 		if braille.handler._auto_scroll:
@@ -283,27 +264,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	@staticmethod
 	def onTemporaryDictionary(evt):
 		gui.mainFrame._popupSettingsDialog(tabledictionaries.DictionaryDlg, _("Temporary dictionary"), "tmp")
-
-	def restorReviewCursorTethering(self):
-		if not self.switchedMode: return
-		if not hasattr(braille.handler, "TETHER_AUTO"):
-			braille.handler.tether = self.backupTether
-		else:
-			if self.backupTether == braille.handler.TETHER_AUTO:
-				config.conf["braille"]["autoTether"] = True
-				config.conf["braille"]["tetherTo"] = braille.handler.TETHER_FOCUS
-			else:
-				config.conf["braille"]["autoTether"] = False
-				braille.handler.setTether(self.backupTether, auto=False)
-				if self.backupTether == braille.handler.TETHER_REVIEW:
-					braille.handler.handleReviewMove(shouldAutoTether=False)
-				else:
-					focus = api.getFocusObject()
-					if focus.treeInterceptor and not focus.treeInterceptor.passThrough:
-						braille.handler.handleGainFocus(focus.treeInterceptor,shouldAutoTether=False)
-					else:
-						braille.handler.handleGainFocus(focus,shouldAutoTether=False)
-		self.switchedMode = False
 
 	def getGestureWithBrailleIdentifier(self, gesture = ''):
 		return ("br(%s):" % addoncfg.curBD if ':' not in gesture else '') + gesture
@@ -1238,15 +1198,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
 	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
 	__gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
-	__gestures["kb:shift+NVDA+y"] = "autoScroll"
-	__gestures["kb:nvda+k"] = "reload_brailledisplay1"
-	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay2"
-	__gestures["kb:nvda+alt+h"] = "toggleDots78"
+	__gestures["kb:nvda+j"] = "reload_brailledisplay1"
+	__gestures["kb:nvda+shift+j"] = "reload_brailledisplay2"
 	__gestures["kb:nvda+alt+f"] = "toggleBRFMode"
 	__gestures["kb:nvda+windows+i"] = "advancedInput"
 	__gestures["kb:nvda+windows+u"] = "undefinedCharsDesc"
-	__gestures["kb:nvda+windows+h"] = "toggleOneHandMode"
-	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"
 	__gestures["kb:volumeDown"] = "volumeMinus"
@@ -1254,7 +1210,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+i"] = "charsToCellDescriptions"
 	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
 	__gestures["kb:nvda+alt+y"] = "addDictionaryEntry"
-	__gestures["kb:nvda+shift+j"] = "toggleTextAttributes"
 
 	def terminate(self):
 		if braille.handler.getTether() == "speech":
@@ -1264,7 +1219,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		braille.TextInfoRegion.update = self.backup__update
 		braille.TextInfoRegion._getTypeformFromFormatField = self.backup__getTypeformFromFormatField
 		self.removeMenu()
-		self.restorReviewCursorTethering()
 		rolelabels.discardRoleLabels()
 		if addoncfg.noUnicodeTable:
 			brailleInput.handler.table = self.backupInputTable

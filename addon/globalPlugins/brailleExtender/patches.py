@@ -564,17 +564,6 @@ def getFormatFieldBraille(field, fieldCache, isAtStart, formatConfig):
 				# A style is a collection of formatting settings and depends on the application.
 				text = N_("default style")
 			textList.append("⣏%s⣹" % text)
-	if formatConfig["reportBorderStyle"]:
-		borderStyle = field.get("border-style")
-		oldBorderStyle = fieldCache.get(
-			"border-style") if fieldCache is not None else None
-		if borderStyle != oldBorderStyle:
-			if borderStyle:
-				text = borderStyle
-			else:
-				# Translators: Indicates that cell does not have border lines.
-				text = N_("no border lines")
-			textList.append("⣏%s⣹" % text)
 	if formatConfig["reportFontName"]:
 		fontFamily = field.get("font-family")
 		oldFontFamily = fieldCache.get(

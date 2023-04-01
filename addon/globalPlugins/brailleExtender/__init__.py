@@ -1257,15 +1257,11 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:shift+NVDA+p"] = "currentBrailleTable"
 	__gestures["kb:shift+NVDA+i"] = "switchInputBrailleTable"
 	__gestures["kb:shift+NVDA+u"] = "switchOutputBrailleTable"
-	__gestures["kb:shift+NVDA+y"] = "autoScroll"
-	__gestures["kb:nvda+k"] = "reload_brailledisplay1"
-	__gestures["kb:nvda+shift+k"] = "reload_brailledisplay2"
-	__gestures["kb:nvda+alt+h"] = "toggleDots78"
+	__gestures["kb:nvda+j"] = "reload_brailledisplay1"
+	__gestures["kb:nvda+shift+j"] = "reload_brailledisplay2"
 	__gestures["kb:nvda+alt+f"] = "toggleBRFMode"
 	__gestures["kb:nvda+windows+i"] = "advancedInput"
 	__gestures["kb:nvda+windows+u"] = "undefinedCharsDesc"
-	__gestures["kb:nvda+windows+h"] = "toggleOneHandMode"
-	__gestures["kb:nvda+windows+k"] = "reloadAddon"
 	__gestures["kb:volumeMute"] = "toggleVolume"
 	__gestures["kb:volumeUp"] = "volumePlus"
 	__gestures["kb:volumeDown"] = "volumeMinus"
@@ -1273,7 +1269,6 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	__gestures["kb:nvda+alt+i"] = "charsToCellDescriptions"
 	__gestures["kb:nvda+alt+o"] = "cellDescriptionsToChars"
 	__gestures["kb:nvda+alt+y"] = "addDictionaryEntry"
-	__gestures["kb:nvda+shift+j"] = "toggleAttribra"
 
 	def terminate(self):
 		if braille.handler.getTether() == "speech":

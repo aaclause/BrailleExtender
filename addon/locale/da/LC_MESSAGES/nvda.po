@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 22.05.28:9f462d1\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
-"POT-Creation-Date: 2022-05-28 07:16+0200\n"
-"PO-Revision-Date: 2022-05-29 20:15+0200\n"
+"POT-Creation-Date: 2022-09-29 00:11+0200\n"
+"PO-Revision-Date: 2023-02-04 19:00+0100\n"
 "Last-Translator: Daniel Gartmann <lists@danielgartmann.dk>\n"
 "Language-Team: \n"
 "Language: da\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,398,-1,-1,-1,-1,-1\n"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:57
@@ -585,11 +585,11 @@ msgstr "Søger efter opdateringer til Udvidelse til Punktskrift"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:787
 msgid "Increase braille autoscroll delay"
-msgstr "Forøg forsinkelse ved autorul"
+msgstr "Forøg forsinkelse ved auto-rul"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:793
 msgid "Decrease braille autoscroll delay"
-msgstr "Formindsk forsinkelse ved autorul"
+msgstr "Formindsk forsinkelse ved auto-rul"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:797
 #: addon/globalPlugins/brailleExtender/__init__.py:812
@@ -970,8 +970,8 @@ msgid ""
 "Please note that specific settings are available for this feature under the "
 "category \"Speech History Mode\"."
 msgstr ""
-"Vær venligst opmærksom på, at der under kategorien \"Tilstanden Talehistorik"
-"\" findes særlige indstillinger for denne funktion."
+"Vær venligst opmærksom på, at der under kategorien \"Tilstanden "
+"Talehistorik\" findes særlige indstillinger for denne funktion."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:65
 msgid "Representation of undefined characters"
@@ -1082,8 +1082,8 @@ msgid ""
 "This feature allows you to enter any character from its HUC8 representation "
 "or its hexadecimal/decimal/octal/binary value. Moreover, it allows you to "
 "develop abbreviations. To use this function, enter the advanced input mode "
-"and then enter the desired pattern. Default gestures: NVDA+Windows+i or ⡊"
-"+space (on supported displays). Press the same gesture to exit this mode. "
+"and then enter the desired pattern. Default gestures: NVDA+Windows+i or "
+"⡊+space (on supported displays). Press the same gesture to exit this mode. "
 "Alternatively, an option allows you to automatically exit this mode after "
 "entering a single pattern. "
 msgstr ""
@@ -1091,8 +1091,8 @@ msgstr ""
 "HUC8-repræsentationen eller via hexadecimal/decimal/octal/binær værdien. Den "
 "giver desuden mulighed for at opbygge egne forkortelser. Gå til den "
 "avancerede indtastningstilstand for at få adgang til denne funktion og "
-"indtast det ønskede mønster. Standard inputbevægelser: NVDA+Windows+i eller ⡊"
-"+mellemrum (på understøttede displays). Brug samme inputbevægelse til at "
+"indtast det ønskede mønster. Standard inputbevægelser: NVDA+Windows+i eller "
+"⡊+mellemrum (på understøttede displays). Brug samme inputbevægelse til at "
 "forlade denne tilstand. Alternativt giver en indstilling mulighed for at "
 "forlade denne tilstand efter indtastning af et enkelt mønster. "
 
@@ -1157,8 +1157,8 @@ msgid ""
 msgstr ""
 "Forkortelser skal først tilføjes i dialogboksen — Avanceret "
 "indtastningstilstand ordbog —. Indskriv derefter forkortelsen og tryk "
-"Mellemrum for at udvide den. Man kan fx definere følgende forkortelser: \"⠎⠺"
-"\" for \"sandwich\", \"⠋⠛⠋⠗\" for \"🇫🇷\"."
+"Mellemrum for at udvide den. Man kan fx definere følgende forkortelser: "
+"\"⠎⠺\" for \"sandwich\", \"⠋⠛⠋⠗\" for \"🇫🇷\"."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:113
 msgid "Here are some examples of sequences to be entered for given characters:"
@@ -1383,8 +1383,8 @@ msgid ""
 "However, you can still assign your own gestures in the \"Input Gestures\" "
 "dialog (under Preferences menu)."
 msgstr ""
-"Du kan imidlertid tildele dine egne bevægelser i dialogen \"Inputbevægelser"
-"\" (under menuen Opsætning)."
+"Du kan imidlertid tildele dine egne bevægelser i dialogen "
+"\"Inputbevægelser\" (under menuen Opsætning)."
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:279
 msgid "Add-on gestures on the system keyboard"
@@ -1434,60 +1434,68 @@ msgstr "Polsk"
 msgid "Russian"
 msgstr "Russisk"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:315
+#: addon/globalPlugins/brailleExtender/addondoc.py:313
+msgid "Turkish"
+msgstr "Tyrkisk"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:314
+msgid "Ukrainian"
+msgstr "Ukrainsk"
+
+#: addon/globalPlugins/brailleExtender/addondoc.py:317
 msgid "Copyrights and acknowledgements"
 msgstr "Copyright og anerkendelser"
 
 #. Author(s)
-#: addon/globalPlugins/brailleExtender/addondoc.py:321 buildVars.py:71
+#: addon/globalPlugins/brailleExtender/addondoc.py:323 buildVars.py:71
 msgid "and other contributors"
 msgstr "og andre bidragydere"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:325
+#: addon/globalPlugins/brailleExtender/addondoc.py:327
 msgid "Translators"
 msgstr "Oversættere"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:335
+#: addon/globalPlugins/brailleExtender/addondoc.py:337
 msgid "Code contributions and other"
 msgstr "Bidrag til koden og andre"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:337
+#: addon/globalPlugins/brailleExtender/addondoc.py:339
 msgid "Speech mode feature:"
 msgstr "Taletilstands-funktionen:"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:340
+#: addon/globalPlugins/brailleExtender/addondoc.py:342
 msgid "Code maintenance (cleanup, rewrites, optimizations) thanks to:"
 msgstr ""
 "Vedligeholdelse af kildekoden (oprydning, gennemskrivninger, optimeringer) "
 "tak til:"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:346
+#: addon/globalPlugins/brailleExtender/addondoc.py:348
 msgid "Additional third party copyrighted code is included:"
 msgstr "Yderliere ophavsretligt beskyttet kode fra tredjeparter er inkluderet:"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:352
+#: addon/globalPlugins/brailleExtender/addondoc.py:354
 msgid "Thanks also to"
 msgstr "Også tak til"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:354
+#: addon/globalPlugins/brailleExtender/addondoc.py:356
 msgid "Finally thank you very much for all your feedback and comments."
 msgstr "Og til sidst mange tak for alle tilbagemeldinger og kommentarer."
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:358
+#: addon/globalPlugins/brailleExtender/addondoc.py:360
 #, python-format
 msgid "%s's documentation"
 msgstr "%s's dokumentation"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:377
+#: addon/globalPlugins/brailleExtender/addondoc.py:379
 #, python-format
 msgid "Emulates pressing %s on the system keyboard"
 msgstr "Svarer til at trykke %s på systemets tastatur"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:388
+#: addon/globalPlugins/brailleExtender/addondoc.py:390
 msgid "description currently unavailable for this shortcut"
 msgstr "Beskrivelse i øjeblikket ikke tilgængelig for denne genvej"
 
-#: addon/globalPlugins/brailleExtender/addondoc.py:408
+#: addon/globalPlugins/brailleExtender/addondoc.py:410
 msgid "caps lock"
 msgstr "caps lock"
 
@@ -1640,12 +1648,12 @@ msgstr "{delay} ms"
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:114
 msgid "Auto scroll"
-msgstr "autorul"
+msgstr "auto-rul"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:120
 msgid "Autoscroll &delay for the active braille display (ms):"
-msgstr "&Forsinkelse på autorul for det aktive punktdisplay (ms):"
+msgstr "&Forsinkelse på auto-rul for det aktive punktdisplay (ms):"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:129
@@ -2155,8 +2163,8 @@ msgstr "{g} fjernet"
 
 #: addon/globalPlugins/brailleExtender/settings.py:573
 msgid ""
-"Please enter the desired gesture for the new quick launch. Press \"space bar"
-"\" to cancel"
+"Please enter the desired gesture for the new quick launch. Press \"space "
+"bar\" to cancel"
 msgstr ""
 "Angiv venligst den ønskede bevægelse til den nye hurtigstarter. Tryk "
 "\"Mellemrum\" for at annullere"
@@ -2601,7 +2609,7 @@ msgstr ""
 
 #: buildVars.py:43
 msgid "auto scroll"
-msgstr "autorul"
+msgstr "auto-rul"
 
 #: buildVars.py:44
 msgid "switch between several input/output braille tables"
@@ -2659,7 +2667,7 @@ msgstr "punktskriftordbøger"
 
 #: buildVars.py:55
 msgid "type with one-hand from braille keyboard"
-msgstr "Skriv med én hånd fra punktskrifttastatur"
+msgstr "type with one-hand from braille keyboard"
 
 #: buildVars.py:56
 msgid ""

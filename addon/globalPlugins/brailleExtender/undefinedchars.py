@@ -1,6 +1,8 @@
+# coding: utf-8
 # undefinedchars.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
+
 import re
 
 import addonHandler

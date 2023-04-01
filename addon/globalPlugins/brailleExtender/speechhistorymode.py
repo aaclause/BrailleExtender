@@ -1,3 +1,4 @@
+# coding: utf-8
 # speechhistorymode.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2021 Emil Hesmyr, André-Abush Clause, released under GPL.
@@ -135,6 +136,8 @@ if versionInfo.version_year < 2021:
 	speech.speak = speak
 else:
 	speech.speech.speak = speak
+	if hasattr(speech, "speak"):
+		speech.speak = speak
 oldScrollBack = braille.BrailleBuffer.scrollBack
 
 
@@ -183,7 +186,7 @@ def showSpeechFromRoutingIndex(routingNumber):
 	elif routingNumber == braille.handler.displaySize - 1:
 		ui.browseableMessage(speechList[index])
 	else:
-		direction = routingNumber > braille.handler.displaySize / 2
+		direction = routingNumber + 1 > braille.handler.displaySize / 2
 		if direction:
 			index = index - (braille.handler.displaySize - routingNumber) + 1
 		else:

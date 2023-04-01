@@ -1,7 +1,9 @@
+# coding: utf-8
 # patches.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
+# coding: utf-8
 
 import os
 import re
@@ -15,6 +17,7 @@ import braille
 import brailleInput
 import colors
 import config
+import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -1232,6 +1235,20 @@ def _displayWithCursor(self):
 			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
 	self._writeCells(cells)
 
+origGetTether = braille.BrailleHandler.getTether
+
+def getTetherWithRoleTerminal(self):
+	role = None
+	obj = api.getNavigatorObject()
+	if obj:
+		role = api.getNavigatorObject().role
+	if (
+		config.conf["brailleExtender"]["reviewModeTerminal"] 
+		and role == controlTypes.ROLE_TERMINAL
+	):
+		return braille.handler.TETHER_REVIEW
+	return origGetTether(self)
+
 
 # braille.handler.display.display
 def display(cells):
@@ -1281,3 +1298,4 @@ if addoncfg.getRightMarginCells():
 	braille.handler.display.display = display
 
 REASON_CARET = get_output_reason("CARET")
+braille.BrailleHandler.getTether = getTetherWithRoleTerminal

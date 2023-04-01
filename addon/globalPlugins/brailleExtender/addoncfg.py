@@ -1,3 +1,4 @@
+# coding: utf-8
 # addoncfg.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
@@ -28,7 +29,6 @@ addonHandler.initTranslation()
 Validator = configobj.validate.Validator
 
 CHANNEL_stable = "stable"
-CHANNEL_testing = "testing"
 CHANNEL_dev = "dev"
 
 CHOICE_braille = "braille"
@@ -98,7 +98,7 @@ def getConfspec():
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
-		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={addonUpdateChannel})",
+		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, default={addonUpdateChannel})",
 		"lastCheckUpdate": "float(min=0, default=0)",
 		"profile_%s" % curBD: 'string(default="default")',
 		"keyboardLayout_%s" % curBD: "string(default=\"?\")",

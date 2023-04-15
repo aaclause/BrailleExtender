@@ -1212,6 +1212,11 @@ def _createTablesString(tablesList):
 	"""Creates a tables string for liblouis calls"""
 	return b",".join([x.encode(sys.getfilesystemencoding()) if isinstance(x, str) else bytes(x) for x in tablesList])
 
+# braille.handler.display.display
+def display(cells):
+	nb = addoncfg.backupDisplaySize - braille.handler.displaySize
+	if nb: cells += [0] * nb
+	origFunc["display"](cells)
 
 def _displayWithCursor(self):
 	if not self._cells:
@@ -1238,14 +1243,6 @@ def getTetherWithRoleTerminal(self):
 		return braille.handler.TETHER_REVIEW
 	return origGetTether(self)
 
-
-# braille.handler.display.display
-def display(cells):
-	nb = addoncfg.backupDisplaySize - braille.handler.displaySize
-	if nb: cells += [0] * nb
-	origFunc["display"](cells)
-
-
 # applying patches
 braille.getControlFieldBraille = getControlFieldBraille
 braille.getFormatFieldBraille = getFormatFieldBraille
@@ -1268,10 +1265,11 @@ braille.getPropertiesBraille = getPropertiesBraille
 
 # This variable tells if braille region should parse undefined characters
 braille.Region.parseUndefinedChars = True
-REASON_CARET = get_output_reason("CARET")
-
 braille.Region.brlex_typeforms = {}
 braille.Region._len_brlex_typeforms = 0
+
+if addoncfg.getRightMarginCells():
+	braille.handler.display.display = display
 
 braille.BrailleHandler.AutoScroll = autoscroll.AutoScroll
 braille.BrailleHandler._auto_scroll = None

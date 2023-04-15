@@ -565,6 +565,8 @@ def _displayWithCursor(self):
 origGetTether = braille.BrailleHandler.getTether
 
 def getTetherWithRoleTerminal(self):
+	if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
+		return speechhistorymode.TETHER_SPEECH
 	role = None
 	obj = api.getNavigatorObject()
 	if obj:

@@ -289,7 +289,11 @@ def setRightMarginCells():
 		if not backupDisplaySize:
 			backupDisplaySize = braille.handler.displaySize
 		displaySize = backupDisplaySize-rightMarginCells
-		if displaySize: braille.handler.displaySize = displaySize
+		if displaySize:
+			try:
+				braille.handler.displaySize = displaySize
+			except AttributeError: # NVDA >= 2023.1
+				pass # TODO
 
 def getRightMarginCells():
 	key = f"rightMarginCells_{curBD}"

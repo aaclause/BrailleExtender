@@ -1,3 +1,4 @@
+# coding: utf-8
 # regionhelper.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2020 André-Abush CLAUSE, released under GPL.

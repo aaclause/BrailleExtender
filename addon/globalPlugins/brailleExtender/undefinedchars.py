@@ -1,6 +1,8 @@
+# coding: utf-8
 # undefinedchars.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
+
 import re
 
 import addonHandler
@@ -12,10 +14,10 @@ import louis
 import wx
 from logHandler import log
 
-from . import addoncfg, huc
+from . import addoncfg
+from . import huc
 from . import regionhelper
-# from .common import
-from .utils import getCurrentBrailleTables, getTextInBraille
+from .utils import getCurrentBrailleTables, getTextInBraille, get_symbol_level
 
 addonHandler.initTranslation()
 
@@ -113,7 +115,7 @@ def getDescChar(c, lang="Windows", start="", end=""):
 	if lang == "Windows":
 		lang = languageHandler.getLanguage()
 	desc = characterProcessing.processSpeechSymbols(
-		lang, c, characterProcessing.SYMLVL_CHAR).replace(' ', '').strip()
+		lang, c, get_symbol_level("SYMLVL_CHAR")).strip()
 	if not desc or desc == c:
 		return getAlternativeDescChar(c, method)
 	return f"{start}{desc}{end}"
@@ -239,7 +241,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
 		# Translators: label of a dialog.
-		label = _("Representation &method")
+		label = _("Representation &method:")
 		self.undefinedCharReprList = sHelper.addLabeledControl(
 			label, wx.Choice, choices=list(CHOICES_LABELS.values())
 		)
@@ -290,12 +292,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			config.conf["brailleExtender"]["undefinedCharsRepr"]["showSize"]
 		)
 		self.startTag = sHelper.addLabeledControl(
-			_("&Start tag"),
+			_("&Start tag:"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["start"],
 		)
 		self.endTag = sHelper.addLabeledControl(
-			_("&End tag"),
+			_("&End tag:"),
 			wx.TextCtrl,
 			value=config.conf["brailleExtender"]["undefinedCharsRepr"]["end"],
 		)
@@ -306,7 +308,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			undefinedCharLang = keys[-1]
 		undefinedCharLangID = keys.index(undefinedCharLang)
 		self.undefinedCharLang = sHelper.addLabeledControl(
-			_("&Language"), wx.Choice, choices=values
+			_("&Language:"), wx.Choice, choices=values
 		)
 		self.undefinedCharLang.SetSelection(undefinedCharLangID)
 		values = [_("Use the current output table")] + [
@@ -322,9 +324,20 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			undefinedCharTable = "current"
 		undefinedCharTableID = keys.index(undefinedCharTable)
 		self.undefinedCharTable = sHelper.addLabeledControl(
-			_("Braille &table"), wx.Choice, choices=values
+			_("Braille &table:"), wx.Choice, choices=values
 		)
 		self.undefinedCharTable.SetSelection(undefinedCharTableID)
+
+		# Translators: label of a dialog.
+		label = _("Character limit at which descriptions are disabled (to avoid freezes, >):")
+		self.characterLimit = sHelper.addLabeledControl(
+			label,
+			gui.nvdaControls.SelectOnFocusSpinCtrl,
+			min=0,
+			max=1000000,
+			initial=config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"]
+		)
+
 		self.onExtendedDesc()
 		self.onUndefinedCharDesc()
 		self.onUndefinedCharReprList()
@@ -341,7 +354,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			]
 		return ""
 
-	def onUndefinedCharDesc(self, evt=None):
+	def onUndefinedCharDesc(self, evt=None, forceDisable=False):
 		l = [
 			self.extendedDesc,
 			self.fullExtendedDesc,
@@ -352,7 +365,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			self.undefinedCharTable,
 		]
 		for e in l:
-			if self.undefinedCharDesc.IsChecked():
+			if self.undefinedCharDesc.IsChecked() and not forceDisable:
 				e.Enable()
 			else:
 				e.Disable()
@@ -367,6 +380,12 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 
 	def onUndefinedCharReprList(self, evt=None):
 		selected = self.undefinedCharReprList.GetSelection()
+		if selected == CHOICE_tableBehaviour:
+			self.undefinedCharDesc.Disable()
+			self.onUndefinedCharDesc(forceDisable=True)
+		else:
+			self.undefinedCharDesc.Enable()
+			self.onUndefinedCharDesc()
 		if selected in [CHOICE_otherDots, CHOICE_otherSign]:
 			self.undefinedCharReprEdit.Enable()
 		else:
@@ -415,12 +434,19 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["table"] = keys[
 			undefinedCharTable
 		]
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"] = self.characterLimit.Value
 
 
 def getExtendedSymbols(locale):
 	if locale == "Windows":
 		locale = languageHandler.getLanguage()
-	b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+	if '_' in locale:
+		try:
+			b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
+		except LookupError:
+			return getExtendedSymbols(locale.split('_')[0])
+	else:
+		b, u = characterProcessing._getSpeechSymbolsForLocale(locale)
 	if not b and not u: return None
 	a = {
 		k.strip(): v.replacement.replace(' ', '').strip()

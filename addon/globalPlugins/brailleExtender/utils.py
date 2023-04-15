@@ -1,6 +1,7 @@
+# coding: utf-8
 # utils.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
 
 import os
 import re
@@ -13,6 +14,7 @@ import brailleInput
 import brailleTables
 import characterProcessing
 import config
+import controlTypes
 import languageHandler
 import louis
 import scriptHandler
@@ -88,20 +90,30 @@ def reload_brailledisplay(bd_name):
 	ui.message(_("Reload failed"))
 	return False
 
-def currentCharDesc(ch='', display=True):
+def currentCharDesc(
+		ch: str='',
+		display: bool=True
+	) -> str:
 	if not ch: ch = getCurrentChar()
 	if not ch: return ui.message(_("Not a character"))
 	c = ord(ch)
 	if c:
-		try: descChar = unicodedata.name(ch)
-		except ValueError: descChar = _("unknown")
-		HUCrepr = " (%s, %s)" % (huc.translate(ch, False), huc.translate(ch, True))
-		brch = getTextInBraille(ch)
-		s = "%c%s: %s; %s; %s; %s; %s [%s]\n%s (%s)" % (ch, HUCrepr, hex(c), c, oct(c), bin(c), descChar, unicodedata.category(ch), brch, huc.unicodeBrailleToDescription(brch))
+		try: char_name = unicodedata.name(ch)
+		except ValueError: char_name = _("unknown")
+		char_category = unicodedata.category(ch)
+		HUC_repr = "%s, %s" % (huc.translate(ch, False), huc.translate(ch, True))
+		speech_output = getSpeechSymbols(ch)
+		brl_repr = getTextInBraille(ch)
+		brl_repr_desc = huc.unicodeBrailleToDescription(brl_repr)
+		s = (
+			f"{ch}: {hex(c)}, {c}, {oct(c)}, {bin(c)}\n"
+			f"{speech_output} ({char_name} [{char_category}])\n"
+			f"{brl_repr} ({brl_repr_desc})\n"
+			f"{HUC_repr}")
 		if not display: return s
 		if scriptHandler.getLastScriptRepeatCount() == 0: ui.message(s)
 		elif scriptHandler.getLastScriptRepeatCount() == 1:
-			ui.browseableMessage(s, (r"\x%d (%s) - " % (c, ch)) + _("Char info"))
+			ui.browseableMessage(s, (r"U+%.4x (%s) - " % (c, ch)) + _("Char info"))
 	else: ui.message(_("Not a character"))
 
 def getCurrentChar():
@@ -138,22 +150,16 @@ def getKeysTranslation(n):
 def getTextInBraille(t=None, table=[]):
 	if not isinstance(table, list): raise TypeError("Wrong type for table parameter: %s" % repr(table))
 	if not t: t = getTextSelection()
-	if not t.strip(): return ''
+	if not t: return ''
 	if not table or "current" in table:
 		table = getCurrentBrailleTables()
 	else:
 		for i, e in enumerate(table):
 			if '\\' not in e and '/' not in e:
 				table[i] = "%s\\%s" % (brailleTables.TABLES_DIR, e)
-	nt = []
-	res = ''
 	t = t.split("\n")
-	for l in t:
-		l = l.rstrip()
-		if not l: res = ''
-		else: res = ''.join([chr(ord(ch)-0x8000+0x2800) for ch in louis.translateString(table, l, mode=louis.dotsIO)])
-		nt.append(res)
-	return '\n'.join(nt)
+	res = [louis.translateString(table, l, mode=louis.ucBrl|louis.dotsIO) for l in t if l]
+	return '\n'.join(res)
 
 def combinationDesign(dots, noDot = '⠤'):
 	out = ""
@@ -258,30 +264,6 @@ def getLine():
 	info.expand(textInfos.UNIT_LINE)
 	return info.text
 
-def isLastLine():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
-		p1.expand(textInfos.UNIT_LINE)
-		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
-		if p1.compareEndPoints(p2, "endToEnd") == 1: return True
-	except BaseException: return True
-	return False
-
-def isEnd():
-	obj = api.getFocusObject()
-	treeInterceptor = obj.treeInterceptor
-	if hasattr(treeInterceptor, 'TextInfo') and not treeInterceptor.passThrough:
-		obj = treeInterceptor
-	try:
-		p1 = obj.makeTextInfo(textInfos.POSITION_CARET)
-		p2 = obj.makeTextInfo(textInfos.POSITION_LAST)
-		if p1.compareEndPoints(p2, "startToEnd") == 0: return True
-	except BaseException: pass
-	return False
 
 def getTextPosition():
 	try:
@@ -307,7 +289,7 @@ def getSpeechSymbols(text = None):
 	if not text: text = getTextSelection()
 	if not text: return ui.message(_("No text selected"))
 	locale = languageHandler.getLanguage()
-	return characterProcessing.processSpeechSymbols(locale, text, characterProcessing.SYMLVL_CHAR).strip()
+	return characterProcessing.processSpeechSymbols(locale, text, get_symbol_level("SYMLVL_CHAR")).strip()
 
 def getTether():
 	if hasattr(braille.handler, "getTether"):
@@ -334,7 +316,7 @@ def getCurrentBrailleTables(input_=False, brf=False):
 	else:
 		tables = []
 		app = appModuleHandler.getAppModuleForNVDAObject(api.getNavigatorObject())
-		if brailleInput.handler._table.fileName == config.conf["braille"]["translationTable"] and app and app.appName != "nvda": tables += tabledictionaries.dictTables
+		if app and app.appName != "nvda": tables += tabledictionaries.dictTables
 		if input_: mainTable = os.path.join(brailleTables.TABLES_DIR, brailleInput.handler._table.fileName)
 		else: mainTable = os.path.join(brailleTables.TABLES_DIR, config.conf["braille"]["translationTable"])
 		tables += [
@@ -342,3 +324,59 @@ def getCurrentBrailleTables(input_=False, brf=False):
 			os.path.join(brailleTables.TABLES_DIR, "braille-patterns.cti")
 		]
 	return tables
+
+
+def get_output_reason(reason_name):
+	old_attr = "REASON_%s" % reason_name
+	if hasattr(controlTypes, "OutputReason") and hasattr(controlTypes.OutputReason, reason_name):
+		return getattr(controlTypes.OutputReason, reason_name)
+	elif hasattr(controlTypes, old_attr):
+		return getattr(controlTypes, old_attr)
+	else:
+		raise AttributeError("Reason \"%s\" unknown" % reason_name)
+
+def get_speech_mode():
+	if hasattr(speech, "getState"):
+		return speech.getState().speechMode
+	return speech.speechMode
+
+
+def is_speechMode_talk() -> bool:
+	speechMode = get_speech_mode()
+	if hasattr(speech, "SpeechMode"):
+		return speechMode == speech.SpeechMode.talk
+	return speechMode == speech.speechMode_talk 
+
+
+def set_speech_off():
+	if hasattr(speech, "SpeechMode"):
+		return speech.setSpeechMode(speech.SpeechMode.off)
+	speech.speechMode = speech.speechMode_off
+
+
+def set_speech_talk():
+	if hasattr(speech, "SpeechMode"):
+		return speech.setSpeechMode(speech.SpeechMode.talk)
+	speech.speechMode = speech.speechMode_talk
+
+newControlTypes = hasattr(controlTypes, "Role")
+def get_control_type(control_type):
+	if not isinstance(control_type, str):
+		raise TypeError()
+	if newControlTypes:
+		attr = '_'.join(control_type.split('_')[1:])
+		if control_type.startswith("ROLE_"):
+			return getattr(controlTypes.Role, attr)
+		elif control_type.startswith("STATE_"):
+			return getattr(controlTypes.State, attr)
+		else:
+			raise ValueError(control_type)
+	return getattr(controlTypes, control_type)
+
+newSymbolLevel = hasattr(characterProcessing, "SymbolLevel")
+def get_symbol_level(symbol_level):
+	if not isinstance(symbol_level, str):
+		raise TypeError()
+	if newSymbolLevel:
+		return getattr(characterProcessing.SymbolLevel, '_'.join(symbol_level.split('_')[1:]))
+	return getattr(characterProcessing, symbol_level)

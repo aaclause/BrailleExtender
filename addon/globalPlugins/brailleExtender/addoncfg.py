@@ -1,6 +1,7 @@
+# coding: utf-8
 # addoncfg.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2020 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 
 import os
 
@@ -12,7 +13,9 @@ import globalVars
 import inputCore
 from logHandler import log
 
-from .common import addonUpdateChannel, configDir, profilesDir
+from .common import (addonUpdateChannel, configDir, profilesDir,
+	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 addonHandler.initTranslation()
@@ -20,7 +23,6 @@ addonHandler.initTranslation()
 Validator = configobj.validate.Validator
 
 CHANNEL_stable = "stable"
-CHANNEL_testing = "testing"
 CHANNEL_dev = "dev"
 
 CHOICE_none = "none"
@@ -63,9 +65,13 @@ focusOrReviewChoices = dict([
 	(CHOICE_focusAndReview, _("both"))
 ])
 
+routingCursorsEditFields_labels = {
+	RC_NORMAL: _("normal (recommended outside Windows consoles, IntelliJ, PyCharm...)"),
+	RC_EMULATE_ARROWS_BEEP:   _("alternative, emulate left and right arrow keys with beeps"),
+	RC_EMULATE_ARROWS_SILENT: _("alternative, emulate left and right arrow keys silently")
+}
 curBD = braille.handler.display.name
 backupDisplaySize = 0
-backupRoleLabels = {}
 iniGestures = {}
 iniProfile = {}
 profileFileExists = gesturesFileExists = False
@@ -97,7 +103,7 @@ def getConfspec():
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
-		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, {CHANNEL_testing}, default={addonUpdateChannel})",
+		"updateChannel": f"option({CHANNEL_dev}, {CHANNEL_stable}, default={addonUpdateChannel})",
 		"lastCheckUpdate": "float(min=0, default=0)",
 		"profile_%s" % curBD: 'string(default="default")',
 		"keyboardLayout_%s" % curBD: "string(default=\"?\")",
@@ -120,9 +126,12 @@ def getConfspec():
 		"leftMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"rightMarginCells_%s" % curBD: "integer(min=0, default=0, max=80)",
 		"reverseScrollBtns": "boolean(default=False)",
-		"autoScrollDelay_%s" % curBD: "integer(min=125, default=3000, max=42000)",
-		"smartDelayScroll": "boolean(default=False)",
-		"ignoreBlankLineScroll": "boolean(default=True)",
+		"autoScroll": {
+			"delay_%s" % curBD: f"integer(min={MIN_AUTO_SCROLL_DELAY}, default={DEFAULT_AUTO_SCROLL_DELAY}, max={MAX_AUTO_SCROLL_DELAY})",
+			"stepDelayChange": f"integer(min={MIN_STEP_DELAY_CHANGE}, default={DEFAULT_STEP_DELAY_CHANGE}, max={MAX_STEP_DELAY_CHANGE})",
+			"adjustToContent": "boolean(default=False)",
+			"ignoreBlankLine": "boolean(default=True)",
+		},
 		"skipBlankLinesScroll": "boolean(default=False)",
 		"speakScroll": "option({CHOICE_none}, {CHOICE_focus}, {CHOICE_review}, {CHOICE_focusAndReview}, default={CHOICE_focusAndReview})".format(
 			CHOICE_none=CHOICE_none,
@@ -130,10 +139,19 @@ def getConfspec():
 			CHOICE_review=CHOICE_review,
 			CHOICE_focusAndReview=CHOICE_focusAndReview
 		),
+		"smartCapsLock": "boolean(default=True)",
 		"stopSpeechScroll": "boolean(default=False)",
 		"stopSpeechUnknown": "boolean(default=True)",
 		"speakRoutingTo": "boolean(default=True)",
-		"routingReviewModeWithCursorKeys": "boolean(default=False)",
+		"routingCursorsEditFields": f"option({RC_NORMAL}, {RC_EMULATE_ARROWS_BEEP}, {RC_EMULATE_ARROWS_SILENT}, default={RC_NORMAL})",
+		"speechHistoryMode": {
+			"enabled": "boolean(default=False)",
+			"limit": "integer(min=0, default=50)",
+			"numberEntries": "boolean(default=True)",
+			"speakEntries": "boolean(default=True)",
+			"backup_tetherTo": 'string(default="focus")',
+			"backup_autoTether": "boolean(default=True)",
+		},
 		"inputTableShortcuts": 'string(default="?")',
 		"inputTables": 'string(default="%s")' % config.conf["braille"]["inputTable"] + ", unicode-braille.utb",
 		"outputTables": "string(default=%s)" % config.conf["braille"]["translationTable"],
@@ -150,14 +168,15 @@ def getConfspec():
 			"start": "string(default=[)",
 			"end": "string(default=])",
 			"lang": "string(default=Windows)",
-			"table": "string(default=current)"
+			"table": "string(default=current)",
+			"characterLimit": "integer(min=0, default=2048)",
 		},
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
 			"attributes": "boolean(default=True)",
-			"roleLabels": "boolean(default=True)"
+			"roleLabels": "boolean(default=False)"
 		},
 		"attributes": {
 			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
@@ -205,7 +224,6 @@ def getConfspec():
 			)
 		},
 		"quickLaunches": {},
-		"roleLabels": {},
 		"brailleTables": {},
 		"advancedInputMode": {
 			"stopAfterOneChar": "boolean(default=True)",
@@ -230,38 +248,6 @@ def loadPreferedTables():
 	inputTables = [t for t in inputTables if t in listInputTables]
 	outputTables = [t for t in outputTables if t in listOutputTables]
 
-def getLabelFromID(idCategory, idLabel):
-	if idCategory == 0: return braille.roleLabels[int(idLabel)]
-	if idCategory == 1: return braille.landmarkLabels[idLabel]
-	if idCategory == 2: return braille.positiveStateLabels[int(idLabel)]
-	if idCategory == 3: return braille.negativeStateLabels[int(idLabel)]
-
-def setLabelFromID(idCategory, idLabel, newLabel):
-	if idCategory == 0: braille.roleLabels[int(idLabel)] = newLabel
-	elif idCategory == 1: braille.landmarkLabels[idLabel] = newLabel
-	elif idCategory == 2: braille.positiveStateLabels[int(idLabel)] = newLabel
-	elif idCategory == 3: braille.negativeStateLabels[int(idLabel)] = newLabel
-
-def loadRoleLabels(roleLabels):
-	global backupRoleLabels
-	for k, v in roleLabels.items():
-		try:
-			arg1 = int(k.split(':')[0])
-			arg2 = k.split(':')[1]
-			backupRoleLabels[k] = (v, getLabelFromID(arg1, arg2))
-			setLabelFromID(arg1, arg2, v)
-		except BaseException as err:
-			log.error("Error during loading role label `%s` (%s)" % (k, err))
-			roleLabels.pop(k)
-			config.conf["brailleExtender"]["roleLabels"] = roleLabels
-
-def discardRoleLabels():
-	global backupRoleLabels
-	for k, v in backupRoleLabels.items():
-		arg1 = int(k.split(':')[0])
-		arg2 = k.split(':')[1]
-		setLabelFromID(arg1, arg2, v[1])
-	backupRoleLabels = {}
 
 def loadConf():
 	global curBD, gesturesFileExists, profileFileExists, iniProfile, backupDisplaySize
@@ -294,8 +280,6 @@ def loadConf():
 	setRightMarginCells()
 	if not noUnicodeTable: loadPreferedTables()
 	if config.conf["brailleExtender"]["inputTableShortcuts"] not in tablesUFN: config.conf["brailleExtender"]["inputTableShortcuts"] = '?'
-	if config.conf["brailleExtender"]["features"]["roleLabels"]:
-		loadRoleLabels(config.conf["brailleExtender"]["roleLabels"].copy())
 	return True
 
 def setRightMarginCells():

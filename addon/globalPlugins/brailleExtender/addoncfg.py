@@ -311,9 +311,7 @@ def loadConf():
 		if curBD != "noBraille": log.warn("%s inaccessible" % confGen)
 		else: log.debug("No braille display present")
 
-	limitCellsRight = int(config.conf["brailleExtender"]["rightMarginCells_%s" % curBD])
-	if (backupDisplaySize-limitCellsRight <= backupDisplaySize and limitCellsRight > 0):
-		braille.handler.displaySize = backupDisplaySize-limitCellsRight
+	setRightMarginCells()
 	return True
 
 def setRightMarginCells():

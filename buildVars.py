@@ -23,7 +23,7 @@ out = subprocess.check_output(
 if not out.strip():
 	label = subprocess.check_output(
 		["git", "rev-parse", "--short", "HEAD"]).strip().decode()
-	if hashCommit and len(hashCommit) == 7:
+	if label and len(label) == 7:
 		hashCommit = label
 if outBranchName.strip():
 	updateChannel = "stable" if outBranchName in ["stable", "master"] else "dev"

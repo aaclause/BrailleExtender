@@ -15,7 +15,7 @@ def _(arg):
 	return arg
 
 updateChannel = None
-hashCommit = "unknown"
+hashCommit = None
 outBranchName = subprocess.check_output(
 	["git", "branch", "--show-current"]).strip().decode()
 out = subprocess.check_output(
@@ -23,7 +23,7 @@ out = subprocess.check_output(
 if not out.strip():
 	label = subprocess.check_output(
 		["git", "rev-parse", "--short", "HEAD"]).strip().decode()
-	if len(hashCommit) == 7:
+	if label and len(label) == 7:
 		hashCommit = label
 if outBranchName.strip():
 	updateChannel = "stable" if outBranchName in ["stable", "master"] else "dev"
@@ -68,7 +68,7 @@ addon_info = {
 		"\n* ", _("add actions and quick navigation through a rotor"), "."
 	],
 	# version
-	"addon_version": time.strftime("%y.%m.%d-") + hashCommit,
+	"addon_version": time.strftime("%y.%m.%d"),
 	# Author(s)
 	"addon_author": "André-Abush Clause <dev@andreabc.net> " + _("and other contributors"),
 	# URL for the add-on documentation support
@@ -90,6 +90,8 @@ addon_info = {
 	# URL for the license document the ad-on is licensed under
 	"addon_licenseURL": "https://www.gnu.org/licenses/gpl-2.0.html",
 }
+if hashCommit:
+	addon_info["addon_version"] += '-' + hashCommit
 
 # Define the python files that are the sources of your add-on.
 # You can either list every file (using ""/") as a path separator,

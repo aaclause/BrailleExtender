@@ -27,6 +27,7 @@ from .advancedinput import SettingsDlg as AdvancedInputModeDlg
 from .common import addonName, baseDir, punctuationSeparator, RC_NORMAL
 from .autoscroll import SettingsDlg as AutoScrollDlg
 from .onehand import SettingsDlg as OneHandModeDlg
+from .rotor import SettingsDlg as RotorDlg
 from .rolelabels import SettingsDlg as RoleLabelsDlg
 from .speechhistorymode import SettingsDlg as SpeechHistorymodeDlg
 from .undefinedchars import SettingsDlg as UndefinedCharsDlg
@@ -632,6 +633,7 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		AdvancedInputModeDlg,
 		OneHandModeDlg,
 		RoleLabelsDlg,
+		RotorDlg,
 	]
 
 	def __init__(self, parent, initialCategory=None):

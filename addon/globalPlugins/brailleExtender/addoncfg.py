@@ -172,6 +172,9 @@ def getConfspec():
 			"table": "string(default=current)",
 			"characterLimit": "integer(min=0, default=2048)",
 		},
+		"rotor": {
+			"enabledItems": 'string(default="moveInText,textSelection,object,review,volume,brailleTable,heading,error,moveInTable")'
+		},
 		"postTable": 'string(default="None")',
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",

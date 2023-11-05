@@ -39,6 +39,7 @@ config.conf.spec["brailleExtender"] = addoncfg.getConfspec()
 from . import advancedinput
 from . import huc
 from . import patches
+from . import rotor
 from . import rolelabels
 from . import settings
 from . import tabledictionaries
@@ -53,48 +54,7 @@ addonHandler.initTranslation()
 instanceGP = None
 ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
 logTextInfo = False
-rotorItems = [
-	("default", _("Default")),
-	("moveInText", _("Moving in the text")),
-	("textSelection", _("Text selection")),
-	("object", _("Objects")),
-	("review", _("Review")),
-	("Link", _("Links")),
-	("UnvisitedLink", _("Unvisited links")),
-	("VisitedLink", _("Visited links")),
-	("Landmark", _("Landmarks")),
-	("Heading", _("Headings")),
-	("Heading1", _("Level 1 headings")),
-	("Heading2", _("Level 2 headings")),
-	("Heading3", _("Level 3 headings")),
-	("Heading4", _("Level 4 headings")),
-	("Heading5", _("Level 5 headings")),
-	("Heading6", _("Level 6 headings")),
-	("List", _("Lists")),
-	("ListItem", _("List items")),
-	("Graphic", _("Graphics")),
-	("BlockQuote", _("Block quotes")),
-	("Button", _("Buttons")),
-	("FormField", _("Form fields")),
-	("Edit", _("Edit fields")),
-	("RadioButton", _("Radio buttons")),
-	("ComboBox", _("Combo boxes")),
-	("CheckBox", _("Check boxes")),
-	("NotLinkBlock", _("Non-link blocks")),
-	("Frame", _("Frames")),
-	("Separator", _("Separators")),
-	("EmbeddedObject", _("Embedded objects")),
-	("Annotation", _("Annotations")),
-	("Error", _("Spelling errors")),
-	("Table", _("Tables")),
-	("moveInTable", _("Move in table")),
-]
-rotorItem = 0
-rotorRange = 0
-lastRotorItemInVD = 0
-lastRotorItemInVDSaved = True
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
-
 # ***** Attribra code *****
 def attribraEnabled():
 	if instanceGP and instanceGP.BRFMode: return False
@@ -201,6 +161,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):
+		"""
 		global rotorItem, lastRotorItemInVD, lastRotorItemInVDSaved
 		isVirtualBuff = obj is not None and isinstance(obj.treeInterceptor, virtualBuffers.VirtualBuffer)
 		if lastRotorItemInVDSaved and isVirtualBuff:
@@ -212,6 +173,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			lastRotorItemInVDSaved = True
 			rotorItem = 0
 			self.bindRotorGES()
+		"""
 
 		if "tabSize_%s" % addoncfg.curBD not in config.conf["brailleExtender"].copy().keys(): self.onReload(None, 1)
 		if self.hourDatePlayed: self.script_hourDate(None)

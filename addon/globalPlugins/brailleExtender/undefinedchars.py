@@ -1,6 +1,8 @@
+# coding: utf-8
 # undefinedchars.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
+
 import re
 
 import addonHandler
@@ -325,6 +327,17 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			_("Braille &table:"), wx.Choice, choices=values
 		)
 		self.undefinedCharTable.SetSelection(undefinedCharTableID)
+
+		# Translators: label of a dialog.
+		label = _("Character limit at which descriptions are disabled (to avoid freezes, >):")
+		self.characterLimit = sHelper.addLabeledControl(
+			label,
+			gui.nvdaControls.SelectOnFocusSpinCtrl,
+			min=0,
+			max=1000000,
+			initial=config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"]
+		)
+
 		self.onExtendedDesc()
 		self.onUndefinedCharDesc()
 		self.onUndefinedCharReprList()
@@ -421,6 +434,7 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["undefinedCharsRepr"]["table"] = keys[
 			undefinedCharTable
 		]
+		config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"] = self.characterLimit.Value
 
 
 def getExtendedSymbols(locale):

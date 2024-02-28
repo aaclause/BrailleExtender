@@ -1,7 +1,9 @@
+# coding: utf-8
 # patches.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
+# Copyright 2016-2022 André-Abush CLAUSE, released under GPL.
 # This file modify some functions from core.
+# coding: utf-8
 
 import os
 import struct
@@ -13,6 +15,7 @@ import api
 import braille
 import brailleInput
 import config
+import controlTypes
 import core
 import globalCommands
 import inputCore
@@ -154,7 +157,10 @@ def update(self):
 		mode=mode,
 		cursorPos=self.cursorPos
 	)
-	if self.parseUndefinedChars and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour:
+	if (self.parseUndefinedChars
+		and config.conf["brailleExtender"]["undefinedCharsRepr"]["method"] != undefinedchars.CHOICE_tableBehaviour
+		and len(self.rawText) <= config.conf["brailleExtender"]["undefinedCharsRepr"]["characterLimit"]
+	):
 		undefinedchars.undefinedCharProcess(self)
 	if config.conf["brailleExtender"]["features"]["attributes"] and config.conf["brailleExtender"]["attributes"]["selectedElement"] != addoncfg.CHOICE_none:
 		d = {
@@ -556,6 +562,22 @@ def _displayWithCursor(self):
 			cells[self._cursorPos] |= config.conf["braille"]["cursorShapeReview"]
 	self._writeCells(cells)
 
+origGetTether = braille.BrailleHandler.getTether
+
+def getTetherWithRoleTerminal(self):
+	if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
+		return speechhistorymode.TETHER_SPEECH
+	role = None
+	obj = api.getNavigatorObject()
+	if obj:
+		role = api.getNavigatorObject().role
+	if (
+		config.conf["brailleExtender"]["reviewModeTerminal"] 
+		and role == controlTypes.ROLE_TERMINAL
+	):
+		return braille.handler.TETHER_REVIEW
+	return origGetTether(self)
+
 
 # applying patches
 braille.Region.update = update
@@ -585,3 +607,4 @@ braille.BrailleHandler.toggle_auto_scroll = autoscroll.toggle_auto_scroll
 braille.BrailleHandler._displayWithCursor = _displayWithCursor
 
 REASON_CARET = get_output_reason("CARET")
+braille.BrailleHandler.getTether = getTetherWithRoleTerminal

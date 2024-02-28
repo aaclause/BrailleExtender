@@ -1,3 +1,4 @@
+# coding: utf-8
 # addondoc.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2016-2021 André-Abush CLAUSE, released under GPL.
@@ -306,10 +307,13 @@ class AddonDoc:
 			_("English and French"): "Sof <hellosof@gmail.com>, Joseph Lee, André-Abush Clause <dev@andreabc.net>, Oreonan <corentin@progaccess.net>",
 			_("German"): "Adriani Botez <adriani.botez@gmail.com>, Karl Eick <hozosch@web.de>, Rene Linke <rene.linke@hamburg.de>, Jürgen Schwingshandl <jbs@b-a-c.at>",
 			_("Hebrew"): "Shmuel Naaman <shmuel_naaman@yahoo.com>, Afik Sofer, David Rechtman, Pavel Kaplan",
-			_("Italian"): "Fabrizio Marini <marini.carlo@fastwebnet.it>",
+			_("Italian"): "Simone Dal Maso <simone.dalmaso@gmail.com>, Fabrizio Marini <marini.carlo@fastwebnet.it>",
 			_("Persian"): "Mohammadreza Rashad <mohammadreza5712@gmail.com>",
 			_("Polish"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Dorota Krać",
 			_("Russian"): "Zvonimir Stanečić <zvonimirek222@yandex.com>, Pavel Kaplan <pavel46@gmail.com>, Artem Plaksin <admin@maniyax.ru>",
+			_("Spanish"): "Eric Duarte Quintanilla <https://ericdq.com/>",
+			_("Turkish"): "Umut Korkmaz <umutkork@gmail.com>",
+			_("Ukrainian"): "VovaMobile",
 		}
 		doc += (
 			"<h2>" + _("Copyrights and acknowledgements") + "</h2>"

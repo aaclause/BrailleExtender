@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: BrailleExtender 20.11.01:7dbcfed\n"
 "Report-Msgid-Bugs-To: nvda-translations@groups.io\n"
 "POT-Creation-Date: 2022-03-07 20:30+0100\n"
-"PO-Revision-Date: 2022-03-27 04:08+0800\n"
+"PO-Revision-Date: 2024-02-28 11:08+0800\n"
 "Last-Translator: 蔡宗豪 <surfer0627@gmail.com>\n"
 "Language-Team: NVDA-Taiwan Volunteers Team\n"
 "Language: zh_TW\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:57
 msgid "Default"
@@ -239,11 +239,11 @@ msgstr "目前輸入點字表概覽"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:288
 msgid "&Reload add-on"
-msgstr "重新載入附加元建(&R)"
+msgstr "重新載入附加元件(&R)"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:288
 msgid "Reload this add-on."
-msgstr "重新載入此附加元建"
+msgstr "重新載入此附加元件"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:290
 msgid "Check for &update..."
@@ -495,7 +495,7 @@ msgid ""
 "Braille cell description to Unicode Braille. E.g.: in a edit field type "
 "'125-24-0-1-123-123'. Then select this text and execute this command"
 msgstr ""
-"將所選典位轉換為 Unicode 點字。例如:在編輯區輸入「 125-24-0-1-123-123」，然後"
+"將所選點位轉換為 Unicode 點字。例如:在編輯區輸入「 125-24-0-1-123-123」，然後"
 "選取此文字並執行此命令"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:657
@@ -504,15 +504,15 @@ msgstr "進階輸入模式開關"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:662
 msgid "Describe undefined characters enabled"
-msgstr "啟用描述未定義自原"
+msgstr "啟用描述未定義字元"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:664
 msgid "Describe undefined characters disabled"
-msgstr "停用描述未定義自原"
+msgstr "停用描述未定義字元"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:666
 msgid "Toggle description of undefined characters"
-msgstr "描述未定義自原開關"
+msgstr "描述未定義字元開關"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:674
 msgid "No text"
@@ -625,7 +625,7 @@ msgstr "讀出目前的輸入與輸出轉譯表"
 msgid ""
 "Reports the Unicode value of the character where the cursor is located and "
 "the decimal, binary and octal values"
-msgstr "讀出游標所在自原的Unicode值以及十進位值，二進位值和八進位值"
+msgstr "讀出游標所在字元的 Unicode 值以及十進位值，二進位值和八進位值"
 
 #: addon/globalPlugins/brailleExtender/__init__.py:847
 msgid ""
@@ -881,7 +881,7 @@ msgstr "二進位值"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:48
 msgid "Show punctuation/symbol &name for undefined characters if available"
-msgstr "未定義自原，顯示其提供的標點或符號名稱(&n)"
+msgstr "未定義字元，顯示其提供的標點或符號名稱(&n)"
 
 #. Translators: title of a dialog.
 #: addon/globalPlugins/brailleExtender/addondoc.py:50
@@ -899,7 +899,7 @@ msgstr "此模式允許查看 NVDA 已朗讀的內容。"
 msgid ""
 "To enable this mode, you can use the appropriate toggle command or the basic "
 "gesture NVDA+Control+t."
-msgstr "要啟用此模式，您可以使用相應的切換指令或基本手勢NVDA + Control + t。"
+msgstr "要啟用此模式，您可以使用相應的切換指令或基本手勢 NVDA + Control + t。"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:56
 msgid "In this mode, you can use:"
@@ -944,7 +944,7 @@ msgstr ""
 msgid ""
 "You can also combine this option with the “describe the character if "
 "possible” setting."
-msgstr "您也可以將此選項與“盡可能描述自原”設定結合。"
+msgstr "您也可以將此選項與“盡可能描述字元”設定結合。"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:73
 msgid "Notes:"
@@ -957,7 +957,7 @@ msgid ""
 "best combination is the usage of the HUC8 representation without checking "
 "the “{contextualOption}” option."
 msgstr ""
-"在最大話空間區別未定義字元集，最佳的組合是使用 HUC8 表示法兒不何取 "
+"在最大化空間區別未定義字元集，最佳的組合是使用 HUC8 表示法而不核取 "
 "“{contextualOption}” 選項。"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:76
@@ -1000,8 +1000,8 @@ msgid ""
 "information in a flash message and a double-press displays the same "
 "information in a virtual NVDA buffer."
 msgstr ""
-"按一次與此功能榜定的按鍵，會在閃現的訊息中顯示資訊，按兩次則會在虛擬NVDA緩衝"
-"李顯示相同的資訊。"
+"按一次與此功能綁定的按鍵，會在閃現的訊息中顯示資訊，按兩次則會在虛擬NVDA緩衝"
+"裡顯示相同的資訊。"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:88
 msgid ""
@@ -1014,7 +1014,7 @@ msgstr "在支援的點顯器，定義的手勢為⡉+空格。預設情況，�
 msgid ""
 "For example, for the '{chosenChar}' character, we will get the following "
 "information:"
-msgstr "例如，對於「{chosenChar}」自原，我們將得到以下資訊:"
+msgstr "例如，對於「{chosenChar}」字元，我們將得到以下資訊:"
 
 #: addon/globalPlugins/brailleExtender/addondoc.py:93
 msgid "Advanced braille input"
@@ -1025,8 +1025,8 @@ msgid ""
 "This feature allows you to enter any character from its HUC8 representation "
 "or its hexadecimal/decimal/octal/binary value. Moreover, it allows you to "
 "develop abbreviations. To use this function, enter the advanced input mode "
-"and then enter the desired pattern. Default gestures: NVDA+Windows+i or ⡊"
-"+space (on supported displays). Press the same gesture to exit this mode. "
+"and then enter the desired pattern. Default gestures: NVDA+Windows+i or "
+"⡊+space (on supported displays). Press the same gesture to exit this mode. "
 "Alternatively, an option allows you to automatically exit this mode after "
 "entering a single pattern. "
 msgstr ""
@@ -1115,7 +1115,7 @@ msgid ""
 "fly using NVDA+Windows+h gesture by default (⡂+space on supported displays). "
 "Three input methods are available."
 msgstr ""
-"這個功能可以讓您用幾個步驟打出一方點字。可在附加元件的偏好設定中的一般設定李"
+"這個功能可以讓您用幾個步驟打出一方點字。可在附加元件的偏好設定中的一般設定裡"
 "啟用，或著預設按 NVDA+Windows+h （支援的點顯器是 ⡂+空白）來隨時啟用。有三種輸"
 "入方式。"
 
@@ -1561,7 +1561,7 @@ msgstr "延遲捲動（毫秒）:"
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:138
 msgid "&Adjust the delay to content"
-msgstr ""
+msgstr "\"根據內容調整延遲\""
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/autoscroll.py:142
@@ -1692,7 +1692,7 @@ msgstr "檢查更新(&A):"
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:69
 msgid "Say current line while &scrolling in:"
-msgstr "捲動石讀出該行(&S)"
+msgstr "捲動時讀出該行(&S)"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:73
@@ -1717,7 +1717,7 @@ msgstr "按下未知的手勢時中斷報讀(&N)"
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:89
 msgid "Announce character when &routing braille cursor"
-msgstr "按下游標定位鍵讀出自元"
+msgstr "按下游標定位鍵讀出字元"
 
 #. Translators: label of a dialog.
 #: addon/globalPlugins/brailleExtender/settings.py:93
@@ -2050,8 +2050,8 @@ msgstr "{g} 移除"
 
 #: addon/globalPlugins/brailleExtender/settings.py:573
 msgid ""
-"Please enter the desired gesture for the new quick launch. Press \"space bar"
-"\" to cancel"
+"Please enter the desired gesture for the new quick launch. Press \"space "
+"bar\" to cancel"
 msgstr "請輸入所需手勢以進行新的快速啟動。按“空格鍵”取消"
 
 #: addon/globalPlugins/brailleExtender/settings.py:576
@@ -2232,7 +2232,7 @@ msgstr "文字/符號欄位為空"
 msgid ""
 "Invalid value for 'text pattern/sign' field. You must specify a character "
 "with this opcode. E.g.: %s"
-msgstr "“文字/符號”欄位的值無效。您必須使用此操作碼指定一個自原。例如:%s"
+msgstr "“文字/符號”欄位的值無效。您必須使用此操作碼指定一個字元。例如:%s"
 
 #: addon/globalPlugins/brailleExtender/tabledictionaries.py:377
 #, python-format
@@ -2308,11 +2308,11 @@ msgstr "指定另一個＆pattern(&P)"
 msgid ""
 "Show punctuation/symbol &name for undefined characters if available (can "
 "cause a lag)"
-msgstr "如果可能，顯示未定義自原的標點/符號和名稱（可能會導致延遲）"
+msgstr "如果可能，顯示未定義字元的標點/符號和名稱（可能會導致延遲）"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:267
 msgid "Also describe e&xtended characters (e.g.: country flags)"
-msgstr "同時描述擴充自原（例如:國家/地區標誌）"
+msgstr "同時描述擴充字元（例如:國家/地區標誌）"
 
 #: addon/globalPlugins/brailleExtender/undefinedchars.py:277
 msgid "&Full extended description"
@@ -2388,11 +2388,11 @@ msgstr "靜音"
 
 #: addon/globalPlugins/brailleExtender/utils.py:86
 msgid "Reload successful"
-msgstr "重新載入附加元建成功"
+msgstr "重新載入附加元件成功"
 
 #: addon/globalPlugins/brailleExtender/utils.py:89
 msgid "Reload failed"
-msgstr "重新載入附加元建失敗"
+msgstr "重新載入附加元件失敗"
 
 #: addon/globalPlugins/brailleExtender/utils.py:97
 #: addon/globalPlugins/brailleExtender/utils.py:116
@@ -2523,7 +2523,7 @@ msgstr "用點字鍵盤單手打字"
 msgid ""
 "display undefined characters from braille tables (including emojis) using "
 "altenative representations"
-msgstr "從點字表顯示未定義字元（包括表情符號）中的未定義自原"
+msgstr "從點字表顯示未定義字元（包括表情符號）中的未定義字元"
 
 #: buildVars.py:57
 msgid "enter any character from braille keyboard (including emojis)"

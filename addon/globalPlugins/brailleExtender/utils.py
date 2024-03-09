@@ -26,7 +26,7 @@ from keyboardHandler import KeyboardInputGesture
 addonHandler.initTranslation()
 import treeInterceptorHandler
 import unicodedata
-from .addoncfg import CHOICE_braille,CHOICE_speech , CHOICE_speechAndBraille
+from .addoncfg import CHOICE_braille, CHOICE_speech, CHOICE_speechAndBraille
 from .common import INSERT_AFTER, INSERT_BEFORE, REPLACE_TEXT, baseDir
 from . import huc
 from . import tabledictionaries
@@ -334,6 +334,7 @@ def get_output_reason(reason_name):
 		return getattr(controlTypes, old_attr)
 	else:
 		raise AttributeError("Reason \"%s\" unknown" % reason_name)
+
 
 def get_speech_mode():
 	if hasattr(speech, "getState"):

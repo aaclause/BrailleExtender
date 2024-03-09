@@ -3,12 +3,7 @@
 # This file is covered by the GNU General Public License.
 # See the file LICENSE for more details.
 # Copyright (C) 2016-2023 André-Abush Clause <dev@andreabc.net>
-#
-# Additional third party copyrighted code is included:
-#  - *Attribra*: Copyright (C) 2017 Alberto Zanella <lapostadialberto@gmail.com>
-#  -> https://github.com/albzan/attribra/
 
-import os
 import subprocess
 import time
 from collections import OrderedDict
@@ -38,6 +33,8 @@ from . import addoncfg
 config.conf.spec["brailleExtender"] = addoncfg.getConfspec()
 from . import advancedinput
 from . import huc
+from . import documentformatting
+from . import objectpresentation
 from . import patches
 from . import rolelabels
 from . import settings
@@ -51,8 +48,7 @@ from .common import (addonName, addonURL, addonVersion, punctuationSeparator,
 addonHandler.initTranslation()
 
 instanceGP = None
-ATTRS = config.conf["brailleExtender"]["attributes"].copy().keys()
-logTextInfo = False
+
 rotorItems = [
 	("default", _("Default")),
 	("moveInText", _("Moving in the text")),
@@ -95,60 +91,6 @@ lastRotorItemInVD = 0
 lastRotorItemInVDSaved = True
 HLP_browseModeInfo = ". %s" % _("If pressed twice, presents the information in browse mode")
 
-# ***** Attribra code *****
-def attribraEnabled():
-	if instanceGP and instanceGP.BRFMode: return False
-	return config.conf["brailleExtender"]["features"]["attributes"]
-
-def decorator(fn, s):
-	def _getTypeformFromFormatField(self, field, formatConfig=None):
-		for attr in ATTRS:
-			v = attr.split(':')
-			k = v[0]
-			v = True if len(v) == 1 else v[1]
-			if k in field and (field[k] == v or field[k] == '1'):
-				if config.conf["brailleExtender"]["attributes"][attr] == addoncfg.CHOICE_dot7: return 7
-				if config.conf["brailleExtender"]["attributes"][attr] == addoncfg.CHOICE_dot8: return 8
-				if config.conf["brailleExtender"]["attributes"][attr] == addoncfg.CHOICE_dots78: return 78
-		# if COMPLCOLORS != None:
-			# col = field.get("color",False)
-			# if col and (col != COMPLCOLORS):
-				# return 4
-		return 0
-
-	def addTextWithFields_edit(self, info, formatConfig, isSelection=False):
-		conf = formatConfig.copy()
-		if attribraEnabled():
-			conf["reportFontAttributes"] = True
-			conf["reportColor"] = True
-			conf["reportSpellingErrors"] = True
-			if logTextInfo: log.info(info.getTextWithFields(conf))
-		fn(self, info, conf, isSelection)
-
-	def update(self):
-		fn(self)
-		if not attribraEnabled(): return
-		DOT7 = 64
-		DOT8 = 128
-		size = len(self.rawTextTypeforms)
-		for i, j in enumerate(self.rawTextTypeforms):
-			try:
-				start = self.rawToBraillePos[i]
-				end = self.rawToBraillePos[i+1 if i+1 < size else (i if i<size else size-1)]
-			except IndexError as e:
-				log.debug(e)
-				return
-			k = start
-			for k in range(start, end):
-				if j == 78: self.brailleCells[k] |= DOT7 | DOT8
-				if j == 7: self.brailleCells[k] |= DOT7
-				if j == 8: self.brailleCells[k] |= DOT8
-
-	if s == "addTextWithFields": return addTextWithFields_edit
-	if s == "update": return update
-	if s == "_getTypeformFromFormatField": return _getTypeformFromFormatField
-# *************************
-
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = addonName
@@ -190,14 +132,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		self.backup__update = braille.TextInfoRegion.update
 		self.backup__getTypeformFromFormatField = braille.TextInfoRegion._getTypeformFromFormatField
 		self.backup__brailleTableDict = config.conf["braille"]["translationTable"]
-		braille.TextInfoRegion._addTextWithFields = decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
-		braille.TextInfoRegion.update = decorator(braille.TextInfoRegion.update, "update")
-		braille.TextInfoRegion._getTypeformFromFormatField = decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
+		braille.TextInfoRegion._addTextWithFields = documentformatting.decorator(braille.TextInfoRegion._addTextWithFields, "addTextWithFields")
+		braille.TextInfoRegion.update = documentformatting.decorator(braille.TextInfoRegion.update, "update")
+		braille.TextInfoRegion._getTypeformFromFormatField = documentformatting.decorator(braille.TextInfoRegion._getTypeformFromFormatField, "_getTypeformFromFormatField")
 		if config.conf["brailleExtender"]["reverseScrollBtns"]: self.reverseScrollBtns()
 		self.createMenu()
 		advancedinput.initialize()
 		if config.conf["brailleExtender"]["features"]["roleLabels"]:
 			rolelabels.loadRoleLabels()
+		objectpresentation.loadOrderProperties()
+		documentformatting.load_tags()
 		log.info(f"{addonName} {addonVersion} loaded ({round(time.time()-startTime, 2)}s)")
 
 	def event_gainFocus(self, obj, nextHandler):
@@ -226,6 +170,29 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	def event_foreground(self, obj, nextHandler):
 		if braille.handler._auto_scroll:
 			braille.handler.toggle_auto_scroll()
+		nextHandler()
+
+	_oldObj = None
+	_oldVal = None
+	def event_valueChange(self, obj, nextHandler):
+		if not config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"]:
+			return nextHandler()
+		List = objectpresentation.validProgressBar(obj)
+		if not List or False in List:
+			return nextHandler()
+		try:
+			if self._oldObj == obj and self._oldVal == obj.value:
+				return nextHandler()
+			value = obj.value
+			self._oldObj = obj
+			self._oldVal = value
+			if config.conf["brailleExtender"]["objectPresentation"]["progressBarUpdate"] == 1:#show value
+				braille.handler.message(value)
+			else:
+				string = objectpresentation.generateProgressBarString(value, braille.handler.displaySize) or value
+				braille.handler.message(string)
+		except BaseException as e:
+			log.error(e)
 		nextHandler()
 
 	def createMenu(self):
@@ -536,14 +503,30 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			ui.message(_("Modifier keys unlocked"))
 	script_toggleLockModifiers.__doc__ = _("Toggle locking modifier keys when using braille input")
 
-	def script_toggleAttribra(self, gesture):
-		config.conf["brailleExtender"]["features"]["attributes"] = not attribraEnabled()
+	def script_toggleTextAttributes(self, gesture):
+		key = "fontAttributes"
+		documentformatting.toggle_report(key)
+		documentformatting.report_formatting(key)
 		utils.refreshBD()
-		if config.conf["brailleExtender"]["features"]["attributes"]:
-			speech.speakMessage("Attribra enabled")
+	script_toggleTextAttributes.__doc__ = _("Toggle font attributes report")
+
+	def script_toggleReportAlignments(self, gesture):
+		key = "alignment"
+		documentformatting.toggle_report(key)
+		documentformatting.report_formatting(key)
+		utils.refreshBD()
+	script_toggleReportAlignments.__doc__ = _("Toggle alignments report")
+
+	def script_toggle_plain_text(self, gesture):
+		cur = config.conf["brailleExtender"]["documentFormatting"]["plainText"]
+		config.conf["brailleExtender"]["documentFormatting"]["plainText"] = not cur
+		cur = config.conf["brailleExtender"]["documentFormatting"]["plainText"]
+		if cur:
+			ui.message(_("Plain text mode enabled"))
 		else:
-			speech.speakMessage("Attribra disabled")
-	script_toggleAttribra.__doc__ = _("Toggle font attributes report")
+			ui.message(_("Plain text mode disabled"))
+		utils.refreshBD()
+	script_toggle_plain_text.__doc__ = _("Toggle plain text mode")
 
 	def script_toggleSpeechScrollFocusMode(self, gesture):
 		choices = addoncfg.focusOrReviewChoices
@@ -1041,10 +1024,9 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		return
 
 	def script_logFieldsAtCursor(self, gesture):
-		global logTextInfo
-		logTextInfo = not logTextInfo
+		documentformatting.logTextInfo = not documentformatting.logTextInfo
 		msg = ["stop", "start"]
-		ui.message("debug textInfo " + msg[logTextInfo])
+		ui.message(f"debug textInfo {msg[documentformatting.logTextInfo]}")
 
 	def script_saveCurrentBrailleView(self, gesture):
 		if scriptHandler.getLastScriptRepeatCount() == 0:

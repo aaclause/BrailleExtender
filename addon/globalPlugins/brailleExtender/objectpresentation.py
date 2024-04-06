@@ -1,3 +1,4 @@
+# coding: utf-8
 # objectpresentation.py
 # Part of BrailleExtender addon for NVDA
 # Copyright 2020-2022 Emil Hesmyr, André-Abush Clause, released under GPL.

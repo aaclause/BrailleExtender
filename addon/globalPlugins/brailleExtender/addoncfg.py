@@ -13,9 +13,14 @@ import globalVars
 import inputCore
 from logHandler import log
 
-from .common import (addonUpdateChannel, configDir, profilesDir,
+from .common import (
+	addonUpdateChannel, configDir, profilesDir,
 	MIN_AUTO_SCROLL_DELAY, DEFAULT_AUTO_SCROLL_DELAY, MAX_AUTO_SCROLL_DELAY, MIN_STEP_DELAY_CHANGE, DEFAULT_STEP_DELAY_CHANGE, MAX_STEP_DELAY_CHANGE,
-	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT)
+	RC_NORMAL, RC_EMULATE_ARROWS_BEEP, RC_EMULATE_ARROWS_SILENT,
+	CHOICE_none, CHOICE_dot7, CHOICE_dot8, CHOICE_dots78, CHOICE_tags,
+	CHOICE_likeSpeech, CHOICE_disabled, CHOICE_enabled,
+	ADDON_ORDER_PROPERTIES, CHOICE_spacing, TAG_SEPARATOR
+)
 from .onehand import DOT_BY_DOT, ONE_SIDE, BOTH_SIDES
 
 addonHandler.initTranslation()
@@ -25,13 +30,9 @@ Validator = configobj.validate.Validator
 CHANNEL_stable = "stable"
 CHANNEL_dev = "dev"
 
-CHOICE_none = "none"
 CHOICE_braille = "braille"
 CHOICE_speech = "speech"
 CHOICE_speechAndBraille = "speechAndBraille"
-CHOICE_dot7 = "dot7"
-CHOICE_dot8 = "dot8"
-CHOICE_dots78 = "dots78"
 CHOICE_focus = "focus"
 CHOICE_review = "review"
 CHOICE_focusAndReview = "focusAndReview"
@@ -43,15 +44,6 @@ outputMessage = dict([
 	(CHOICE_speech,           _("speech only")),
 	(CHOICE_speechAndBraille, _("both"))
 ])
-
-attributeChoices = dict([
-	(CHOICE_none,   _("none")),
-	(CHOICE_dots78, _("dots 7 and 8")),
-	(CHOICE_dot7,   _("dot 7")),
-	(CHOICE_dot8,   _("dot 8"))
-])
-attributeChoicesKeys = list(attributeChoices)
-attributeChoicesValues = list(attributeChoices.values())
 
 updateChannels = dict([
 	(CHANNEL_stable,  _("stable")),
@@ -92,6 +84,8 @@ def getValidBrailleDisplayPreferred():
 def getConfspec():
 	global curBD
 	curBD = braille.handler.display.name
+	REPORT_CHOICES = f'option({CHOICE_likeSpeech}, {CHOICE_disabled}, {CHOICE_enabled}, default={CHOICE_likeSpeech})'
+	REPORT_CHOICES_E = f'option({CHOICE_likeSpeech}, {CHOICE_disabled}, {CHOICE_enabled}, default={CHOICE_enabled})'
 	return {
 		"autoCheckUpdate": "boolean(default=True)",
 		"lastNVDAVersion": 'string(default="unknown")',
@@ -161,53 +155,93 @@ def getConfspec():
 		"viewSaved": "string(default=%s)" % NOVIEWSAVED,
 		"reviewModeTerminal": "boolean(default=True)",
 		"features": {
+			"roleLabels": "boolean(default=False)",
 			"attributes": "boolean(default=True)",
-			"roleLabels": "boolean(default=False)"
 		},
-		"attributes": {
-			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})",
-			"bold": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"italic": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"underline": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"strikethrough": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"text-position:sub": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"text-position:super": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_none})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			),
-			"invalid-spelling": "option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, default={CHOICE_dots78})".format(
-				CHOICE_none=CHOICE_none,
-				CHOICE_dot7=CHOICE_dot7,
-				CHOICE_dot8=CHOICE_dot8,
-				CHOICE_dots78=CHOICE_dots78
-			)
+		"objectPresentation": {
+			"orderProperties": f'string(default="{ADDON_ORDER_PROPERTIES}")',
+			"selectedElement": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_dots78})",
+			"progressBarUpdate": "integer(default=1)",
+			"reportBackgroundProgressBars": f"integer(default={CHOICE_likeSpeech})",
+		},
+		"documentFormatting": {
+			"plainText": "boolean(default=False)",
+			"processLinePerLine": "boolean(default=False)",
+			"alignments": {
+				"enabled": "boolean(default=True)",
+				"left": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+				"right": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+				"center": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+				"justified": f"option({CHOICE_none}, {CHOICE_spacing}, {CHOICE_tags}, default={CHOICE_tags})",
+			},
+			"cellFormula": "boolean(default=True)",
+			"methods": {
+				"bold": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"italic": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"underline": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"strikethrough": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"text-position:sub": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"text-position:super": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"invalid-spelling": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+				"invalid-grammar": f"option({CHOICE_none}, {CHOICE_dot7}, {CHOICE_dot8}, {CHOICE_dots78}, {CHOICE_tags}, default={CHOICE_tags})",
+			},
+			"lists": {
+				"showLevelItem": "boolean(default=True)",
+			},
+			"reports": {
+				"alignment": REPORT_CHOICES,
+				"borderColor": REPORT_CHOICES,
+				"borderStyle": REPORT_CHOICES,
+				"color": REPORT_CHOICES,
+				"emphasis": REPORT_CHOICES,
+				"fontAttributes": REPORT_CHOICES,
+				"fontName": REPORT_CHOICES,
+				"fontSize": REPORT_CHOICES,
+				"highlight": REPORT_CHOICES,
+				"layoutTables": REPORT_CHOICES,
+				"lineIndentation": REPORT_CHOICES,
+				"lineNumber": REPORT_CHOICES,
+				"lineSpacing": REPORT_CHOICES,
+				"page": REPORT_CHOICES,
+				"paragraphIndentation": REPORT_CHOICES,
+				"spellingErrors": REPORT_CHOICES_E,
+				"style": REPORT_CHOICES,
+				"superscriptsAndSubscripts": REPORT_CHOICES_E,
+				"tables": REPORT_CHOICES,
+				"tableCellCoords": REPORT_CHOICES,
+				"tableHeaders": REPORT_CHOICES,
+				"links": REPORT_CHOICES,
+				"graphics": REPORT_CHOICES,
+				"headings": REPORT_CHOICES,
+				"lists": REPORT_CHOICES,
+				"blockQuotes": REPORT_CHOICES,
+				"groupings": REPORT_CHOICES,
+				"landmarks": REPORT_CHOICES,
+				"articles": REPORT_CHOICES,
+				"frames": REPORT_CHOICES,
+				"clickable": REPORT_CHOICES,
+				"comments": REPORT_CHOICES,
+				"revisions": REPORT_CHOICES
+			},
+			"tags": {
+				"invalid-spelling": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠑⣹", "⣏⡑⣹"]),
+				"invalid-grammar": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠛⣹", "⣏⡛⣹"]),
+				"bold": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠃⣹", "⣏⡃⣹"]),
+				"italic": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠊⣹", "⣏⡊⣹"]),
+				"underline": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠥⣹", "⣏⡥⣹"]),
+				"strikethrough": "string(default=%s)" % TAG_SEPARATOR.join(["⣏⠅⣹", "⣏⡅⣹"]),
+				"text-align:center": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ac⣹", ""]),
+				"text-align:distribute": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ai⣹", ""]),
+				"text-align:justified": "string(default=%s)" % TAG_SEPARATOR.join(["⣏aj⣹", ""]),
+				"text-align:left": "string(default=%s)" % TAG_SEPARATOR.join(["⣏al⣹", ""]),
+				"text-align:right": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ar⣹", ""]),
+				"text-align:start": "string(default=%s)" % TAG_SEPARATOR.join(["⣏ad⣹", ""]),
+				"text-position:sub": "string(default=%s)" % TAG_SEPARATOR.join(["_{", "}"]),
+				"text-position:super": "string(default=%s)" % TAG_SEPARATOR.join(["^{", "}"]),
+				"revision-insertion": "string(default=%s)" % TAG_SEPARATOR.join(["⣏+⣹", "⣏/⣹"]),
+				"revision-deletion": "string(default=%s)" % TAG_SEPARATOR.join(["⣏-⣹", "⣏/⣹"]),
+				"comments": "string(default=%s)" % TAG_SEPARATOR.join(["⣏com⣹", "⣏/⣹"]),
+			}
 		},
 		"quickLaunches": {},
 		"roleLabels": {},

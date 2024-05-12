@@ -26,6 +26,8 @@ from . import utils
 from .advancedinput import SettingsDlg as AdvancedInputModeDlg
 from .common import addonName, baseDir, punctuationSeparator, RC_NORMAL
 from .autoscroll import SettingsDlg as AutoScrollDlg
+from .documentformatting import SettingsDlg as DocumentFormattingDlg
+from .objectpresentation import SettingsDlg as ObjectPresentationDlg
 from .onehand import SettingsDlg as OneHandModeDlg
 from .rolelabels import SettingsDlg as RoleLabelsDlg
 from .speechhistorymode import SettingsDlg as SpeechHistorymodeDlg
@@ -178,53 +180,6 @@ class GeneralDlg(gui.settingsDialogs.SettingsPanel):
 		config.conf["brailleExtender"]["volumeChangeFeedback"] = list(addoncfg.outputMessage.keys())[self.volumeChangeFeedback.GetSelection()]
 		config.conf["brailleExtender"]["modifierKeysFeedback"] = list(addoncfg.outputMessage.keys())[self.modifierKeysFeedback.GetSelection()]
 		config.conf["brailleExtender"]["beepsModifiers"] = self.beepsModifiers.IsChecked()
-
-class AttribraDlg(gui.settingsDialogs.SettingsPanel):
-
-	# Translators: title of a dialog.
-	title = _("Text attributes")
-
-	def makeSettings(self, settingsSizer):
-		sHelper = gui.guiHelper.BoxSizerHelper(self, sizer=settingsSizer)
-		self.toggleAttribra = sHelper.addItem(wx.CheckBox(self, label=_("Indicate text attributes in braille with &Attribra")))
-		self.toggleAttribra.SetValue(config.conf["brailleExtender"]["features"]["attributes"])
-		self.selectedElement = sHelper.addLabeledControl(_("&Selected elements:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.selectedElement.SetSelection(self.getItemToSelect("selectedElement"))
-		self.spellingErrorsAttribute = sHelper.addLabeledControl(_("Spelling &errors:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.spellingErrorsAttribute.SetSelection(self.getItemToSelect("invalid-spelling"))
-		self.boldAttribute = sHelper.addLabeledControl(_("&Bold:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.boldAttribute.SetSelection(self.getItemToSelect("bold"))
-		self.italicAttribute = sHelper.addLabeledControl(_("&Italic:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.italicAttribute.SetSelection(self.getItemToSelect("italic"))
-		self.underlineAttribute = sHelper.addLabeledControl(_("&Underline:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.underlineAttribute.SetSelection(self.getItemToSelect("underline"))
-		self.strikethroughAttribute = sHelper.addLabeledControl(_("Strike&through:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.strikethroughAttribute.SetSelection(self.getItemToSelect("strikethrough"))
-		self.subAttribute = sHelper.addLabeledControl(_("Su&bscripts:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.subAttribute.SetSelection(self.getItemToSelect("text-position:sub"))
-		self.superAttribute = sHelper.addLabeledControl(_("Su&perscripts:"), wx.Choice, choices=addoncfg.attributeChoicesValues)
-		self.superAttribute.SetSelection(self.getItemToSelect("text-position:super"))
-
-	def postInit(self): self.toggleAttribra.SetFocus()
-
-	def onSave(self):
-		config.conf["brailleExtender"]["features"]["attributes"] = self.toggleAttribra.IsChecked()
-		config.conf["brailleExtender"]["attributes"]["selectedElement"] = addoncfg.attributeChoicesKeys[self.selectedElement.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["invalid-spelling"] = addoncfg.attributeChoicesKeys[self.spellingErrorsAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["bold"] = addoncfg.attributeChoicesKeys[self.boldAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["italic"] = addoncfg.attributeChoicesKeys[self.italicAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["underline"] = addoncfg.attributeChoicesKeys[self.underlineAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["strikethrough"] = addoncfg.attributeChoicesKeys[self.strikethroughAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["text-position:sub"] = addoncfg.attributeChoicesKeys[self.subAttribute.GetSelection()]
-		config.conf["brailleExtender"]["attributes"]["text-position:super"] = addoncfg.attributeChoicesKeys[self.superAttribute.GetSelection()]
-
-	@staticmethod
-	def getItemToSelect(attribute):
-		try: idx = addoncfg.attributeChoicesKeys.index(config.conf["brailleExtender"]["attributes"][attribute])
-		except BaseException as err:
-			log.error(err)
-			idx = 0
-		return idx
 
 
 
@@ -379,7 +334,8 @@ class AddonSettingsDialog(gui.settingsDialogs.MultiCategorySettingsDialog):
 		GeneralDlg,
 		AutoScrollDlg,
 		SpeechHistorymodeDlg,
-		AttribraDlg,
+		DocumentFormattingDlg,
+		ObjectPresentationDlg,
 		BrailleTablesDlg,
 		UndefinedCharsDlg,
 		AdvancedInputModeDlg,

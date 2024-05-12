@@ -6,8 +6,16 @@
 import os
 
 import addonHandler
+import controlTypes
 import globalVars
 import languageHandler
+
+def get_is_current_no():
+	if hasattr(controlTypes, "IsCurrent"):
+		return controlTypes.IsCurrent.NO
+	return False
+
+IS_CURRENT_NO = get_is_current_no()
 
 configDir = "%s/brailleExtender" % globalVars.appArgs.configPath
 baseDir = os.path.dirname(__file__)
@@ -27,9 +35,30 @@ punctuationSeparator = ' ' if 'fr' in lang else ''
 
 profilesDir = os.path.join(baseDir, "Profiles")
 
+N_ = lambda s: _(s)
+
+CHOICE_none = "none"
+
+# text attributes
+CHOICE_liblouis = "liblouis"
+CHOICE_dot7 = "dot7"
+CHOICE_dot8 = "dot8"
+CHOICE_dots78 = "dots78"
+CHOICE_tags = "tags"
+CHOICE_spacing = "spacing"
+TAG_SEPARATOR = chr(5)
+CHOICE_likeSpeech = '0'
+CHOICE_enabled = '1'
+CHOICE_disabled = '2'
+
 REPLACE_TEXT = 0
 INSERT_AFTER = 1
 INSERT_BEFORE = 2
+
+ADDON_ORDER_PROPERTIES = "states,cellCoordsText,value,name,roleText,description,keyboardShortcut,positionInfo,positionInfoLevel,current,placeholder"
+
+ROLE_LABEL = 0
+FORMATTING_LABEL = 1
 
 # auto scroll
 DEFAULT_AUTO_SCROLL_DELAY = 3000

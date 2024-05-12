@@ -1,7 +1,7 @@
 # coding: utf-8
 # speechhistorymode.py
 # Part of BrailleExtender addon for NVDA
-# Copyright 2021 Emil Hesmyr, André-Abush Clause, released under GPL.
+# Copyright 2021-2023 Emil Hesmyr, André-Abush Clause, released under GPL.
 import braille
 import config
 import speech
@@ -56,40 +56,7 @@ if versionInfo.version_year < 2021:
 	orig_speak= speech.speak
 else:
 	orig_speak = speech.speech.speak
-speechInList = False
-for i in braille.handler.tetherValues:
-	if TETHER_SPEECH in i:
-		speechInList = True
-if not speechInList:
-	# the speech option can not be positioned such that the user goes directly
-	# from it to "automaticly" when using the NVDA + ctrl + t command. If it
-	# is, the braille display does not show the focus propperly until the user
-	# either switches to another tether option or moves the focus.
-	for i in range(len(braille.handler.tetherValues)):
-		if braille.handler.tetherValues[i][0] == braille.handler.TETHER_AUTO:
-			braille.handler.tetherValues.insert(
-				i + 1, (TETHER_SPEECH,
-				# Translators: The label for a braille setting indicating that braille should be tethered to the speech history.
-				_("to speech history")))
 
-def enable():
-	if not config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
-		tetherTo = braille.handler.getTether()
-		config.conf["brailleExtender"]["speechHistoryMode"]["backup_tetherTo"] = tetherTo if tetherTo != TETHER_SPEECH else braille.handler.TETHER_FOCUS
-		config.conf["brailleExtender"]["speechHistoryMode"]["backup_autoTether"] = config.conf["braille"]["autoTether"]
-	config.conf["braille"]["autoTether"] = False
-	braille.handler.setTether(TETHER_SPEECH)
-
-def disable():
-	backup_tetherTo = config.conf["brailleExtender"]["speechHistoryMode"]["backup_tetherTo"]
-	backup_autoTether = config.conf["brailleExtender"]["speechHistoryMode"]["backup_autoTether"]
-	if backup_tetherTo == TETHER_SPEECH:
-		backup_tetherTo = braille.handler.TETHER_FOCUS
-		backup_autoTether = True
-	config.conf["braille"]["autoTether"] = backup_autoTether
-	braille.handler.setTether(backup_tetherTo, backup_autoTether)
-	braille.handler.initialDisplay()
-	braille.handler.update()
 
 def showSpeech(index, allowReadEntry=False):
 	try:
@@ -100,6 +67,7 @@ def showSpeech(index, allowReadEntry=False):
 				text = f"#%.{size_limit}d:{text}" % (index+1)
 			region = braille.TextRegion(text)
 			region.update()
+			region.obj = None
 			braille.handler._doNewObject([region])
 			if allowReadEntry and config.conf["brailleExtender"]["speechHistoryMode"]["speakEntries"]:
 				speech.cancelSpeech()
@@ -138,13 +106,12 @@ else:
 	speech.speech.speak = speak
 	if hasattr(speech, "speak"):
 		speech.speak = speak
-oldScrollBack = braille.BrailleBuffer.scrollBack
 
 
 def scrollBack(self):
 	windowRawText = braille.handler.mainBuffer.windowRawText
 	windowEndPos = braille.handler.buffer.windowEndPos
-	oldScrollBack(self)
+	orig_ScrollBack(self)
 	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether(
 	) == TETHER_SPEECH and braille.handler.buffer.windowRawText == windowRawText and braille.handler.buffer.windowEndPos == windowEndPos:
 		global index
@@ -153,14 +120,10 @@ def scrollBack(self):
 		showSpeech(index, allowReadEntry=True)
 
 
-braille.BrailleBuffer.scrollBack = scrollBack
-oldScrollForward = braille.BrailleBuffer.scrollForward
-
-
 def scrollForward(self):
 	windowRawText = braille.handler.mainBuffer.windowRawText
 	windowEndPos = braille.handler.buffer.windowEndPos
-	oldScrollForward(self)
+	orig_ScrollForward(self)
 	if braille.handler.buffer == braille.handler.mainBuffer and braille.handler.getTether(
 	) == TETHER_SPEECH and braille.handler.buffer.windowRawText == windowRawText and braille.handler.buffer.windowEndPos == windowEndPos:
 		global index
@@ -169,13 +132,9 @@ def scrollForward(self):
 			showSpeech(index, allowReadEntry=True)
 
 
-braille.BrailleBuffer.scrollForward = scrollForward
-oldBrailleMessage = braille.handler.message
-
-
-def newBrailleMessage(*args, **kwargs):
+def newBrailleMessage(self, *args, **kwargs):
 	if braille.handler.getTether() != TETHER_SPEECH:
-		oldBrailleMessage(*args, **kwargs)
+		orig_BrailleMessage(self, *args, **kwargs)
 
 
 def showSpeechFromRoutingIndex(routingNumber):
@@ -198,18 +157,9 @@ def showSpeechFromRoutingIndex(routingNumber):
 	showSpeech(index, allowReadEntry=True)
 
 
-orig_setTether = braille.BrailleHandler.setTether
-
-def setTether(*args, **kwargs):
-	orig_setTether(*args, **kwargs)
-	config.conf["brailleExtender"]["speechHistoryMode"]["enabled"] = braille.handler.getTether() == TETHER_SPEECH
-
-braille.BrailleHandler.setTether = setTether
-braille.handler.message = newBrailleMessage
-
-# Translators: Reports which position braille is tethered to
-# (braille can be tethered automatically or to either focus or review position or speech history).
-globalCommands.GlobalCommands.script_braille_toggleTether.__doc__ = _("Toggle tethering of braille between the focus, the review position and the speech history")
-
-if config.conf["brailleExtender"]["speechHistoryMode"]["enabled"]:
-	enable()
+orig_ScrollBack = braille.BrailleBuffer.scrollBack
+braille.BrailleBuffer.scrollBack = scrollBack
+orig_BrailleMessage = braille.BrailleHandler.message
+braille.BrailleHandler.message = newBrailleMessage
+orig_ScrollForward = braille.BrailleBuffer.scrollForward
+braille.BrailleBuffer.scrollForward = scrollForward

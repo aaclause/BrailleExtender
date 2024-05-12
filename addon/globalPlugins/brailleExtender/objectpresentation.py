@@ -486,9 +486,9 @@ class SettingsDlg(gui.settingsDialogs.SettingsPanel):
 			choices=[_("like speech"), _("enabled"), _("disabled")]
 		)
 		self.background.SetSelection(config.conf["brailleExtender"]["objectPresentation"]["reportBackgroundProgressBars"])
-		
-		
-		
+
+
+
 		bHelper = gui.guiHelper.ButtonHelper(orientation=wx.HORIZONTAL)
 		self.orderPropertiesBtn = bHelper.addButton(
 			self, label="&Order Properties..."

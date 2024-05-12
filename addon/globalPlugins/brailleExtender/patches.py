@@ -1191,7 +1191,7 @@ def getTetherWithRoleTerminal(self):
 	if obj:
 		role = api.getNavigatorObject().role
 	if (
-		config.conf["brailleExtender"]["reviewModeTerminal"] 
+		config.conf["brailleExtender"]["reviewModeTerminal"]
 		and role == controlTypes.ROLE_TERMINAL
 	):
 		return braille.handler.TETHER_REVIEW
